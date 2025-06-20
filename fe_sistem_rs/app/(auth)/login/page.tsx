@@ -20,7 +20,8 @@ export default function LoginPage() {
       });
 
       Cookies.set("token", res.data.token);
-      router.push("/");
+      router.push("/dashboard");
+      alert("Login berhasil!");
     } catch (err) {
       alert("Login gagal. Username atau password salah.");
       console.error("Login error:", err);
