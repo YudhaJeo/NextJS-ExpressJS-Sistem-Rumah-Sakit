@@ -4,8 +4,12 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
+type User = {
+  username: string;
+};
+
 export default function DashboardPage() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   const fetchProfile = async () => {
