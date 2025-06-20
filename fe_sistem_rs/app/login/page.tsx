@@ -61,7 +61,7 @@ export default function LoginPage() {
           }}
         >
           <h2 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "2rem", textAlign: "center" }}>
-            Monitor Suhu
+            Sistem Rumah Sakit
           </h2>
 
           <form onSubmit={handleLogin}>
@@ -124,7 +124,7 @@ export default function LoginPage() {
         {/* Image Section */}
         <div style={{ flex: 1 }}>
           <img
-            src="/login-banner.jpg"
+            src="/login.png"
             alt="Login Banner"
             style={{
               width: "100%",
