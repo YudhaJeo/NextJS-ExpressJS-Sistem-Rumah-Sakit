@@ -31,11 +31,12 @@ export default function LoginPage() {
   return (
     <div
       style={{
+        fontFamily: "'Poppins', sans-serif", // ✅ Tambahkan ini
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         minHeight: "100vh",
-        background: "linear-gradient(to right, #f7971e, #a955a1)",
+        background: "linear-gradient(to right, #1e3c72, #2a5298)", // Biru gradasi
         padding: "1rem",
       }}
     >
@@ -61,7 +62,14 @@ export default function LoginPage() {
             justifyContent: "center",
           }}
         >
-          <h2 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "2rem", textAlign: "center" }}>
+          <h2
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              marginBottom: "2rem",
+              textAlign: "center",
+            }}
+          >
             Sistem Rumah Sakit
           </h2>
 
@@ -109,7 +117,7 @@ export default function LoginPage() {
               style={{
                 width: "100%",
                 padding: "0.75rem",
-                backgroundColor: "#6C63FF",
+                backgroundColor: "#007BFF",
                 color: "white",
                 fontWeight: "bold",
                 border: "none",
@@ -117,7 +125,7 @@ export default function LoginPage() {
                 cursor: "pointer",
               }}
             >
-              login
+              LOGIN
             </button>
           </form>
         </div>
