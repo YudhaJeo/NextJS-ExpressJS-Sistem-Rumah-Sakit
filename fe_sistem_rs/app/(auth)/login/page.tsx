@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
@@ -15,7 +15,7 @@ export default function LoginPage() {
 
     try {
       const res = await axios.post("http://localhost:4000/login", {
-        username,
+        email,
         password,
       });
 
@@ -23,7 +23,7 @@ export default function LoginPage() {
       router.push("/");
       alert("Login berhasil!");
     } catch (err) {
-      alert("Login gagal. Username atau password salah.");
+      alert("Login gagal. email atau password salah.");
       console.error("Login error:", err);
     }
   };
@@ -75,14 +75,14 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin}>
             <div style={{ marginBottom: "1.5rem" }}>
-              <label htmlFor="username" style={{ display: "block", marginBottom: "0.5rem" }}>
+              <label htmlFor="email" style={{ display: "block", marginBottom: "0.5rem" }}>
                 Email
               </label>
               <input
-                id="username"
+                id="email"
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 style={{
                   width: "100%",

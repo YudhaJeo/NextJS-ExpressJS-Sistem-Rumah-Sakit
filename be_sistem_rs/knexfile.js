@@ -1,14 +1,22 @@
-// Update with your config settings.
-
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
-module.exports = {
+const config = {
 
   development: {
-    client: 'sqlite3',
+    client: 'mysql2',
     connection: {
-      filename: './dev.sqlite3'
+      host: 'localhost',
+      user: 'root',
+      password: '', // ganti jika ada password
+      database: 'db_rumah_sakit'
+    },
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      tableName: 'knex_migrations'
     }
   },
 
@@ -45,3 +53,5 @@ module.exports = {
   }
 
 };
+
+export default config;
