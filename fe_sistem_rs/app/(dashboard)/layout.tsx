@@ -1,32 +1,29 @@
-// app/layout.tsx
-"use client";
+import { Metadata } from 'next';
+import Layout from '../../layout/layout';
 
-import "../globals.css";
-import { AppTopbar } from "../layout/components/AppTopbar";
-import { AppSidebar } from "../layout/components/AppSidebar";
-import { AppFooter } from "../layout/components/AppFooter";
-import { useEffect } from "react";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
+interface AppLayoutProps {
+    children: React.ReactNode;
+}
 
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (!token) router.push("/login");
-  }, []);
+export const metadata: Metadata = {
+    title: 'PrimeReact Sakai',
+    description: 'The ultimate collection of design-agnostic, flexible and accessible React UI Components.',
+    robots: { index: false, follow: false },
+    viewport: { initialScale: 1, width: 'device-width' },
+    openGraph: {
+        type: 'website',
+        title: 'PrimeReact SAKAI-REACT',
+        url: 'https://sakai.primereact.org/',
+        description: 'The ultimate collection of design-agnostic, flexible and accessible React UI Components.',
+        images: ['https://www.primefaces.org/static/social/sakai-react.png'],
+        ttl: 604800
+    },
+    icons: {
+        icon: '/favicon.ico'
+    }
+};
 
-  return (
-    <html lang="id">
-      <body>
-        <AppTopbar />
-        <div className="flex">
-          <AppSidebar />
-          <main className="p-4 flex-1 bg-gray-50">{children}</main>
-        </div>
-        <AppFooter />
-      </body>
-    </html>
-  );
+export default function AppLayout({ children }: AppLayoutProps) {
+    return <Layout>{children}</Layout>;
 }

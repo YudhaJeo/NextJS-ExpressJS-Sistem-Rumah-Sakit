@@ -1,4 +1,4 @@
-// app/page.tsx
+
 "use client";
 
 import { Card } from "primereact/card";

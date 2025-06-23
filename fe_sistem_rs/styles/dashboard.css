@@ -1,0 +1,23 @@
+
+.animated-gradient-bg {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(-45deg, #1e3a8a, #9333ea, #f59e0b, #10b981);
+  background-size: 400% 400%;
+  animation: gradientMove 60s ease infinite;
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
