@@ -133,7 +133,7 @@ export default function LoginPage() {
         {/* Image Section */}
         <div style={{ flex: 1 }}>
           <img
-            src="/login.png"
+            src="/layout/login.png"
             alt="Login Banner"
             style={{
               width: "100%",

@@ -71,7 +71,7 @@ const AppMenu = () => {
               to: "/rekam-medis/file-dokumen",
             },
             {
-              label: "Tracer",
+              label: "Tracer Rekam Medis",
               icon: "pi pi-fw pi-book",
               to: "/rekam-medis/tracer-rekam-medis",
             },
