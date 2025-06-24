@@ -78,7 +78,7 @@ const MasterPasien = () => {
     try {
       const payload = {
         ...form,
-        TANGGALLAHIR: form.TANGGALLAHIR, // format sudah string "YYYY-MM-DD"
+        TANGGALLAHIR: form.TANGGALLAHIR, 
       };
 
       if (isEdit) {

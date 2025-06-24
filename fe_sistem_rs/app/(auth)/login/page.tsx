@@ -9,7 +9,7 @@ import { InputText } from "primereact/inputtext";
 import React from "react";
 import "@/styles/gradient.css";
 
-export default function LoginPage() {
+function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -93,3 +93,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+export default LoginPage;

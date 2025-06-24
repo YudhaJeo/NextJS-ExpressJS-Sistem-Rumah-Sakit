@@ -17,4 +17,6 @@ app.use('/', authRoutes);
 app.use('/api/pasien', pasienRoutes);
 app.use('/api/reservasi', reservasiRoutes);
 app.use('/api/dokumen', dokumenRoutes);
+app.use('/api/pendaftaran', pendaftaranRoutes);
+
 export default app;
