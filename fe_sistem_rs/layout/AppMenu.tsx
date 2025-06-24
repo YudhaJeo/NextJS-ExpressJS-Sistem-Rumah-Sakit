@@ -47,7 +47,7 @@ const AppMenu = () => {
             {
               label: "Reservasi",
               icon: "pi pi-fw pi-calendar",
-              to: "/pendaftaran/reservasi-pasien",
+              to: "/pendaftaran/reservasi",
             },
             {
               label: "Formulir Pendaftaran",
