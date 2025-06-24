@@ -1,5 +1,12 @@
-import jwt from 'jsonwebtoken';
+// src/utils/jwt.js
+import { SignJWT } from 'jose';
 
-export const generateToken = (payload) => {
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
+const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'defaultSecretKey');
+
+export const generateToken = async (payload) => {
+  return await new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS512' })
+    .setIssuedAt()
+    .setExpirationTime('1d') // expired dalam 1 hari
+    .sign(secret);
 };

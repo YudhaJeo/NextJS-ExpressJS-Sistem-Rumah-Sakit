@@ -7,12 +7,16 @@ import { Chart } from 'primereact/chart';
 import { Tag } from 'primereact/tag';
 import { LayoutContext } from '../../layout/context/layoutcontext';
 import { ChartData, ChartOptions } from 'chart.js';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 const Dashboard = () => {
     const { layoutConfig } = useContext(LayoutContext);
 
     const [lineOptions, setLineOptions] = useState<ChartOptions>({});
     const [barOptions, setBarOptions] = useState<ChartOptions>({});
+
+    const router = useRouter();
 
     const chartDataBar: ChartData = {
         labels: ["Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu", "Minggu"],
@@ -106,6 +110,11 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
+        const token = Cookies.get('token');
+        if (!token) {
+          router.push('/login');
+        }
+
         if (layoutConfig.colorScheme === 'light') {
             applyLightTheme();
         } else {
