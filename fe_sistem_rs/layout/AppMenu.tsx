@@ -68,12 +68,12 @@ const AppMenu = () => {
             {
               label: "File Dokumen",
               icon: "pi pi-fw pi-file",
-              to: "/rekam-medis/file-dokumen",
+              to: "/rekamMedis/dokumen",
             },
             {
               label: "Tracer Rekam Medis",
               icon: "pi pi-fw pi-book",
-              to: "/rekam-medis/tracer-rekam-medis",
+              to: "/rekamMedis/tracer-rekam-medis",
             },
           ],
         },
