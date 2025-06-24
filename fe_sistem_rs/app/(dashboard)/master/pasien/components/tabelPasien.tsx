@@ -40,7 +40,7 @@ const TabelPasien = ({ data, loading, onEdit, onDelete }: Props) => {
                 field="TANGGALDAFTAR"
                 header="Tgl Daftar"
                 body={(row: Pasien) => {
-                    const tanggal = new Date(row.TANGGALDAFTAR);
+                    const tanggal = new Date(row.TANGGALDAFTAR ?? '');
                     return tanggal.toLocaleDateString('id-ID', {
                         day: 'numeric',
                         month: 'long',
