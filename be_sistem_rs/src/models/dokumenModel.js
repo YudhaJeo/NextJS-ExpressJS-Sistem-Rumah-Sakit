@@ -3,7 +3,7 @@ import db from '../core/config/knex.js';
 const DokumenModel = {
   getAll: () => {
     return db('dokumen')
-      .join('pasien', 'dokumen.NIK', 'pasien.NIK')
+      .leftJoin('pasien', 'dokumen.NIK', 'pasien.NIK') // LEFT JOIN agar tetap muncul meski pasien tidak ditemukan
       .select(
         'dokumen.*',
         'pasien.NIK as NIKPASIEN',

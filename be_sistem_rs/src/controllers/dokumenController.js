@@ -1,32 +1,18 @@
 import DokumenModel from '../models/dokumenModel.js';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+
+// Pastikan folder upload tersedia
+const uploadDir = path.join('uploads/dokumen');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 export const getAllDokumen = async (req, res) => {
   try {
     const dokumen = await DokumenModel.getAll();
-    res.json(dokumen);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-export const getDokumenByNIK = async (req, res) => {
-  try {
-    const { nik } = req.params;
-    const dokumen = await DokumenModel.getByNIK(nik);
-    res.json(dokumen);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-export const getDokumenById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const dokumen = await DokumenModel.getById(id);
-    if (!dokumen) return res.status(404).json({ message: 'Dokumen tidak ditemukan' });
-    res.json(dokumen);
+    console.log('Data Dokumen:', dokumen); // Debug log
+    res.json({ data: dokumen });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -37,35 +23,24 @@ export const createDokumen = async (req, res) => {
     const { NIK, JENISDOKUMEN } = req.body;
     const file = req.file;
 
-    if (!file) return res.status(400).json({ message: 'File harus diunggah' });
+    if (!file) {
+      return res.status(400).json({ error: 'File harus diupload' });
+    }
+
+    const NAMAFILE = file.originalname;
+    const LOKASIFILE = file.path;
+    const TANGGALUPLOAD = new Date();
 
     const newDokumen = {
       NIK,
+      NAMAFILE,
       JENISDOKUMEN,
-      NAMAFILE: file.originalname,
-      LOKASIFILE: file.path,
+      LOKASIFILE,
+      TANGGALUPLOAD,
     };
 
-    await DokumenModel.create(newDokumen);
-    res.status(201).json({ message: 'Dokumen berhasil ditambahkan' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-export const deleteDokumen = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const dokumen = await DokumenModel.getById(id);
-    if (!dokumen) return res.status(404).json({ message: 'Dokumen tidak ditemukan' });
-
-    // Hapus file fisik
-    if (dokumen.LOKASIFILE && fs.existsSync(dokumen.LOKASIFILE)) {
-      fs.unlinkSync(dokumen.LOKASIFILE);
-    }
-
-    await DokumenModel.remove(id);
-    res.json({ message: 'Dokumen berhasil dihapus' });
+    const inserted = await DokumenModel.create(newDokumen);
+    res.status(201).json({ message: 'Dokumen berhasil disimpan', data: inserted });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
