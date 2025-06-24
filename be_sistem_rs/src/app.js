@@ -4,6 +4,7 @@ import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import pasienRoutes from './routes/pasienRoutes.js';
 import reservasiRoutes from './routes/reservasiRoutes.js';
+import pendaftaranRoutes from './routes/pendaftaranRoutes.js';
 import dokumenRoutes from './routes/dokumenRoutes.js';
 const app = express();
 
