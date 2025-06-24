@@ -41,8 +41,9 @@ const config = {
     migrations: {
       directory: './src/migrations',
       extension: 'js',
-    },
-  },
+    }
+  }
+
 };
 
 export default config;
