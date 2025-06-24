@@ -31,7 +31,7 @@ const AppMenu = () => {
             {
               label: "Database Pasien",
               icon: "pi pi-fw pi-user",
-              to: "/master/database-pasien",
+              to: "/master/pasien",
             },
           ],
         },
