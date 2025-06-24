@@ -9,13 +9,14 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 
 interface Reservasi {
-  id?: number;
-  waktu_konsul: string;
-  slot: string;
-  pasien: string;
-  poli: string;
-  dokter: string;
-  status: string;
+  IDRESERVASI?: number;
+  NIK: string;
+  POLI: string;
+  NAMADOKTER: string;
+  TANGGALRESERVASI: string;
+  JAMRESERVASI: string;
+  STATUS: "Menunggu" | "Dikonfirmasi" | "Dibatalkan";
+  KETERANGAN: string;
 }
 
 const ReservasiPasien = () => {
@@ -24,12 +25,13 @@ const ReservasiPasien = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
 
   const [formData, setFormData] = useState<Reservasi>({
-    waktu_konsul: "",
-    slot: "",
-    pasien: "",
-    poli: "",
-    dokter: "",
-    status: "Reservasi",
+    NIK: "",
+    POLI: "",
+    NAMADOKTER: "",
+    TANGGALRESERVASI: "",
+    JAMRESERVASI: "",
+    STATUS: "Menunggu",
+    KETERANGAN: "",
   });
 
   const fetchReservasi = async () => {
@@ -45,9 +47,9 @@ const ReservasiPasien = () => {
   };
 
   const handleSubmit = async () => {
-    const isEdit = !!formData.id;
+    const isEdit = !!formData.IDRESERVASI;
     const url = isEdit
-      ? `http://localhost:4000/api/reservasi/${formData.id}`
+      ? `http://localhost:4000/api/reservasi/${formData.IDRESERVASI}`
       : "http://localhost:4000/api/reservasi";
 
     try {
@@ -66,12 +68,13 @@ const ReservasiPasien = () => {
 
   const resetForm = () => {
     setFormData({
-      waktu_konsul: "",
-      slot: "",
-      pasien: "",
-      poli: "",
-      dokter: "",
-      status: "Reservasi",
+      NIK: "",
+      POLI: "",
+      NAMADOKTER: "",
+      TANGGALRESERVASI: "",
+      JAMRESERVASI: "",
+      STATUS: "Menunggu",
+      KETERANGAN: "",
     });
   };
 
@@ -82,7 +85,7 @@ const ReservasiPasien = () => {
 
   const handleDelete = async (row: Reservasi) => {
     try {
-      await axios.delete(`http://localhost:4000/api/reservasi/${row.id}`);
+      await axios.delete(`http://localhost:4000/api/reservasi/${row.IDRESERVASI}`);
       fetchReservasi();
     } catch (err) {
       console.error("Gagal menghapus data:", err);
@@ -113,12 +116,13 @@ const ReservasiPasien = () => {
         scrollable
         size="small"
       >
-        <Column field="waktu_konsul" header="Waktu Konsul" />
-        <Column field="slot" header="Slot" />
-        <Column field="pasien" header="Pasien" />
-        <Column field="poli" header="Poli" />
-        <Column field="dokter" header="Dokter" />
-        <Column field="status" header="Status" />
+        <Column field="NIK" header="NIK" />
+        <Column field="POLI" header="Poli" />
+        <Column field="NAMADOKTER" header="Nama Dokter" />
+        <Column field="TANGGALRESERVASI" header="Tanggal Reservasi" />
+        <Column field="JAMRESERVASI" header="Jam Reservasi" />
+        <Column field="STATUS" header="Status" />
+        <Column field="KETERANGAN" header="Keterangan" />
         <Column
           header="Aksi"
           body={(row: Reservasi) => (
@@ -141,7 +145,7 @@ const ReservasiPasien = () => {
       </DataTable>
 
       <Dialog
-        header={formData.id ? "Edit Reservasi" : "Tambah Reservasi"}
+        header={formData.IDRESERVASI ? "Edit Reservasi" : "Tambah Reservasi"}
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);
@@ -157,32 +161,12 @@ const ReservasiPasien = () => {
           }}
         >
           <div>
-            <label>Waktu Konsul</label>
+            <label>NIK</label>
             <InputText
               className="w-full mt-2"
-              value={formData.waktu_konsul}
+              value={formData.NIK}
               onChange={(e) =>
-                setFormData({ ...formData, waktu_konsul: e.target.value })
-              }
-            />
-          </div>
-          <div>
-            <label>Slot</label>
-            <InputText
-              className="w-full mt-2"
-              value={formData.slot}
-              onChange={(e) =>
-                setFormData({ ...formData, slot: e.target.value })
-              }
-            />
-          </div>
-          <div>
-            <label>Pasien</label>
-            <InputText
-              className="w-full mt-2"
-              value={formData.pasien}
-              onChange={(e) =>
-                setFormData({ ...formData, pasien: e.target.value })
+                setFormData({ ...formData, NIK: e.target.value })
               }
             />
           </div>
@@ -190,19 +174,41 @@ const ReservasiPasien = () => {
             <label>Poli</label>
             <InputText
               className="w-full mt-2"
-              value={formData.poli}
+              value={formData.POLI}
               onChange={(e) =>
-                setFormData({ ...formData, poli: e.target.value })
+                setFormData({ ...formData, POLI: e.target.value })
               }
             />
           </div>
           <div>
-            <label>Dokter</label>
+            <label>Nama Dokter</label>
             <InputText
               className="w-full mt-2"
-              value={formData.dokter}
+              value={formData.NAMADOKTER}
               onChange={(e) =>
-                setFormData({ ...formData, dokter: e.target.value })
+                setFormData({ ...formData, NAMADOKTER: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <label>Tanggal Reservasi</label>
+            <InputText
+              type="date"
+              className="w-full mt-2"
+              value={formData.TANGGALRESERVASI}
+              onChange={(e) =>
+                setFormData({ ...formData, TANGGALRESERVASI: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <label>Jam Reservasi</label>
+            <InputText
+              type="time"
+              className="w-full mt-2"
+              value={formData.JAMRESERVASI}
+              onChange={(e) =>
+                setFormData({ ...formData, JAMRESERVASI: e.target.value })
               }
             />
           </div>
@@ -210,9 +216,19 @@ const ReservasiPasien = () => {
             <label>Status</label>
             <InputText
               className="w-full mt-2"
-              value={formData.status}
+              value={formData.STATUS}
               onChange={(e) =>
-                setFormData({ ...formData, status: e.target.value })
+                setFormData({ ...formData, STATUS: e.target.value as "Menunggu" | "Dikonfirmasi" | "Dibatalkan" })
+              }
+            />
+          </div>
+          <div>
+            <label>Keterangan</label>
+            <InputText
+              className="w-full mt-2"
+              value={formData.KETERANGAN}
+              onChange={(e) =>
+                setFormData({ ...formData, KETERANGAN: e.target.value })
               }
             />
           </div>

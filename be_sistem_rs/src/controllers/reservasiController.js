@@ -11,8 +11,8 @@ export async function getAllReservasi(req, res) {
 
 export async function createReservasi(req, res) {
     try {
-        const { TGLKONSUL, SLOT, PASIEN, POLI, DOKTER, STATUS } = req.body;
-        await ReservasiModel.create({ TGLKONSUL, SLOT, PASIEN, POLI, DOKTER, STATUS });
+        const { NIK, POLI, NAMADOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN } = req.body;
+        await ReservasiModel.create({ NIK, POLI, NAMADOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN });
         res.json({ message: 'Reservasi berhasil ditambahkan' });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -23,8 +23,8 @@ export async function updateReservasi(req, res) {
     console.log("Update data:", req.body);
     try {
         const id = req.params.id;
-        const { TGLKONSUL, SLOT, PASIEN, POLI, DOKTER, STATUS } = req.body;
-        await ReservasiModel.update(id, { TGLKONSUL, SLOT, PASIEN, POLI, DOKTER, STATUS });
+        const { NIK, POLI, NAMADOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN } = req.body;
+        await ReservasiModel.update(id, { NIK, POLI, NAMADOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN });
         res.json({ message: 'Reservasi berhasil diperbarui' });
     } catch (err) {
         res.status(500).json({ error: err.message });
