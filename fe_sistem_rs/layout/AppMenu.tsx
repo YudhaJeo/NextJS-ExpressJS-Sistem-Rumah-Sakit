@@ -52,7 +52,7 @@ const AppMenu = () => {
             {
               label: "Formulir Pendaftaran",
               icon: "pi pi-fw pi-book",
-              to: "/pendaftaran/pendaftaran-pasien",
+              to: "/pendaftaran/formulir",
             },
           ],
         },

@@ -8,7 +8,7 @@ const config = {
     connection: {
       host: 'localhost',
       user: 'root',
-      password: '', // ganti jika ada password
+      password: '', 
       database: 'db_rumah_sakit'
     },
     pool: {
@@ -16,7 +16,8 @@ const config = {
       max: 10
     },
     migrations: {
-      tableName: 'knex_migrations'
+      directory: './src/migrations',
+      extension: 'js',
     }
   },
 
@@ -32,7 +33,8 @@ const config = {
       max: 10
     },
     migrations: {
-      tableName: 'knex_migrations'
+      directory: './src/migrations',
+      extension: 'js',
     }
   },
 
@@ -48,7 +50,8 @@ const config = {
       max: 10
     },
     migrations: {
-      tableName: 'knex_migrations'
+      directory: './src/migrations',
+      extension: 'js',
     }
   }
 
