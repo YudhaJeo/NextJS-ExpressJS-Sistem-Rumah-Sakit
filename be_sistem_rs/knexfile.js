@@ -1,44 +1,48 @@
+// ./knexfile.js
+import dotenv from 'dotenv';
+dotenv.config();
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
 const config = {
-
   development: {
-    client: 'mysql2',
+    client: process.env.DB_CLIENT,
     connection: {
-      host: 'localhost',
-      user: 'root',
-      password: '', // ganti jika ada password
-      database: 'db_rumah_sakit'
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      user: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
     },
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     migrations: {
-      directory: "./src/migrations",
-      extension: "js",
-      loadExtensions: [".js"],
+      directory: './src/migrations',
+      extension: 'js',
+      loadExtensions: ['.js'],
     },
   },
 
   production: {
-    client: 'postgresql',
+    client: process.env.DB_CLIENT,
     connection: {
-      database: 'db_rumah_sakit',
-      user:     'root',
-      password: ''
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      user: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
     },
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     migrations: {
-      directory: "./src/migrations",
-      extension: "js",
+      directory: './src/migrations',
+      extension: 'js',
     },
-  }
-
+  },
 };
 
 export default config;
