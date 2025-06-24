@@ -26,4 +26,4 @@ export const up = function (knex) {
 
 export const down = function (knex) {
   return knex.schema.dropTable('pasien');
-}
+};
