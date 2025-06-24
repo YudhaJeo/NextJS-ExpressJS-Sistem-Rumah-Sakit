@@ -11,7 +11,6 @@ if (!fs.existsSync(uploadDir)) {
 export const getAllDokumen = async (req, res) => {
   try {
     const dokumen = await DokumenModel.getAll();
-    console.log('Data Dokumen:', dokumen); // Debug log
     res.json({ data: dokumen });
   } catch (err) {
     res.status(500).json({ error: err.message });

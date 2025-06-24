@@ -211,18 +211,6 @@ const Page = () => {
             {errors.NIK && <small className="text-red-500">{errors.NIK}</small>}
           </div>
           <div>
-            <label>Nama File</label>
-            <InputText
-              className={inputClass('NAMAFILE')}
-              value={form.NAMAFILE}
-              onChange={(e) => setForm({ ...form, NAMAFILE: e.target.value })}
-              placeholder="Masukkan nama file"
-            />
-            {errors.NAMAFILE && (
-              <small className="text-red-500">{errors.NAMAFILE}</small>
-            )}
-          </div>
-          <div>
             <label>Jenis Dokumen</label>
             <Dropdown
               className={inputClass('JENISDOKUMEN')}
