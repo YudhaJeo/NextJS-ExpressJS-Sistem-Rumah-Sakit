@@ -4,6 +4,10 @@ import { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import React from "react";
+import "@/styles/gradient.css";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -29,119 +33,61 @@ export default function LoginPage() {
   };
 
   return (
-    <div
-      style={{
-        fontFamily: "'Poppins', sans-serif", // ✅ Tambahkan ini
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        background: "linear-gradient(to right, #1e3c72, #2a5298)", // Biru gradasi
-        padding: "1rem",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          backgroundColor: "#fff",
-          borderRadius: "16px",
-          overflow: "hidden",
-          width: "100%",
-          maxWidth: "960px",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-        }}
-      >
-        {/* Form Section */}
-        <div
-          style={{
-            flex: 1,
-            padding: "2.5rem",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "24px",
-              fontWeight: "bold",
-              marginBottom: "2rem",
-              textAlign: "center",
-            }}
-          >
-            Sistem Rumah Sakit
-          </h2>
+    <div className="min-h-screen flex justify-content-center align-items-center">
+      <div className="animated-gradient-bg w-full">
+        <div className="card w-11/12 max-w-4xl md:h-30rem h-full">
+          <div className="grid h-full">
+            <div className="col-12 md:col-6 flex flex-col justify-center h-full px-4">
+              <div>
+                <img
+                  src="/layout/images/logo.png"
+                  style={{ maxWidth: "100%" }}
+                  className="h-4rem md:h-5rem"
+                  alt="logo"
+                />
+                <h3 className="text-2xl text-left font-semibold font-sans mt-2 mb-10">
+                  RUMAH SAKIT
+                </h3>
 
-          <form onSubmit={handleLogin}>
-            <div style={{ marginBottom: "1.5rem" }}>
-              <label htmlFor="email" style={{ display: "block", marginBottom: "0.5rem" }}>
-                Email
-              </label>
-              <input
-                id="email"
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  borderRadius: "8px",
-                  border: "1px solid #ccc",
-                }}
-              />
+                <form onSubmit={handleLogin} className="grid">
+                  <div className="col-12">
+                    <label htmlFor="email">Email</label>
+                    <InputText
+                      id="email"
+                      type="text"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="w-full mt-3"
+                    />
+                  </div>
+                  <div className="col-12">
+                    <label htmlFor="password">Password</label>
+                    <InputText
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="w-full mt-3"
+                    />
+                  </div>
+
+                  <div className="col-12 mt-3">
+                    <Button label="login" className="w-full" />
+                  </div>
+                </form>
+              </div>
             </div>
 
-            <div style={{ marginBottom: "1.5rem" }}>
-              <label htmlFor="password" style={{ display: "block", marginBottom: "0.5rem" }}>
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  borderRadius: "8px",
-                  border: "1px solid #ccc",
-                }}
+            <div className="hidden md:block md:col-6 h-full">
+              <img
+                src="/layout/images/login.png"
+                className="w-full h-full object-cover"
+                alt="cover"
               />
             </div>
-
-            <button
-              type="submit"
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                backgroundColor: "#007BFF",
-                color: "white",
-                fontWeight: "bold",
-                border: "none",
-                borderRadius: "8px",
-                cursor: "pointer",
-              }}
-            >
-              LOGIN
-            </button>
-          </form>
-        </div>
-
-        {/* Image Section */}
-        <div style={{ flex: 1 }}>
-          <img
-            src="/layout/login.png"
-            alt="Login Banner"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-            }}
-          />
+          </div>
         </div>
       </div>
     </div>
