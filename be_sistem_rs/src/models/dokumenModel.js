@@ -3,12 +3,8 @@ import db from '../core/config/knex.js';
 const DokumenModel = {
   getAll: () => {
     return db('dokumen')
-      .leftJoin('pasien', 'dokumen.NIK', 'pasien.NIK') // LEFT JOIN agar tetap muncul meski pasien tidak ditemukan
-      .select(
-        'dokumen.*',
-        'pasien.NIK as NIKPASIEN',
-        'pasien.NAMA as NAMALENGKAP'
-      );
+      .join('pasien', 'dokumen.NIK', 'pasien.NIK') 
+      .select('dokumen.*', 'pasien.NAMALENGKAP');
   },
 
   getByNIK: (nik) => {
@@ -31,5 +27,6 @@ const DokumenModel = {
     return db('dokumen').where({ IDDOKUMEN: id }).del();
   },
 };
+
 
 export default DokumenModel;

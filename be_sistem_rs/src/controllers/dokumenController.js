@@ -45,3 +45,61 @@ export const createDokumen = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const updateDokumen = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { NIK, JENISDOKUMEN, NAMAFILE } = req.body;
+    const file = req.file;
+
+    // Ambil data lama dari database
+    const dokumenLama = await DokumenModel.getById(id);
+    if (!dokumenLama) {
+      return res.status(404).json({ error: 'Dokumen tidak ditemukan' });
+    }
+
+    let updatedData = {
+      NIK,
+      JENISDOKUMEN,
+      NAMAFILE: NAMAFILE || dokumenLama.NAMAFILE,
+      LOKASIFILE: dokumenLama.LOKASIFILE,
+      TANGGALUPLOAD: new Date(),
+    };
+
+    if (file) {
+      // Hapus file lama (optional, jika ingin bersih)
+      if (dokumenLama.LOKASIFILE && fs.existsSync(dokumenLama.LOKASIFILE)) {
+        fs.unlinkSync(dokumenLama.LOKASIFILE);
+      }
+
+      // Ganti data file
+      updatedData.LOKASIFILE = file.path;
+      updatedData.NAMAFILE = file.originalname;
+    }
+
+    const updated = await DokumenModel.update(id, updatedData);
+    res.json({ message: 'Dokumen berhasil diperbarui', data: updated });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const deleteDokumen = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dokumen = await DokumenModel.getById(id);
+    if (!dokumen) {
+      return res.status(404).json({ error: 'Dokumen tidak ditemukan' });
+    }
+
+    // Hapus file dari sistem (jika ada)
+    if (dokumen.LOKASIFILE && fs.existsSync(dokumen.LOKASIFILE)) {
+      fs.unlinkSync(dokumen.LOKASIFILE);
+    }
+
+    await DokumenModel.remove(id);
+    res.json({ message: 'Dokumen berhasil dihapus' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

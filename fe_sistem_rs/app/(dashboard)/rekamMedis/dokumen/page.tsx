@@ -7,16 +7,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import TabelDokumen from './components/tabelDokumen';
-
-interface Dokumen {
-  IDDOKUMEN?: number;
-  NIK: string;
-  JENISDOKUMEN: string;
-  NAMAFILE?: string;
-  LOKASIFILE?: string;
-  TANGGALUPLOAD?: string;
-  file?: File;
-}
+import { Dokumen } from '@/types/dokumen';
 
 const JenisDokumenOptions = [
   { label: 'Hasil Lab', value: 'Hasil Lab' },
@@ -24,43 +15,52 @@ const JenisDokumenOptions = [
   { label: 'Rekam Rawat Jalan', value: 'Rekam Rawat Jalan' },
 ];
 
-interface Pasien {
-  NIK: string;
-  NAMALENGKAP: string;
-}
-
-export default function MasterDokumen() {
+const Page = () => {
   const [data, setData] = useState<Dokumen[]>([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [form, setForm] = useState<Dokumen>({
-    NIK: '',
-    JENISDOKUMEN: '',
+    IDDOKUMEN: 0,
+    NAMALENGKAP: "",
+    NIK: "",
+    JENISDOKUMEN: "",
+    NAMAFILE: "",
+    LOKASIFILE: "",
+    TANGGALUPLOAD: new Date().toISOString(),
     file: undefined,
   });
+
+  const [pasienOptions, setPasienOptions] = useState<
+    { label: string; value: string; NAMALENGKAP: string }[]
+  >([]);
+
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const [pasienList, setPasienList] = useState<Pasien[]>([]);
+
+  const fetchPasien = async () => {
+    try {
+      const res = await axios.get("http://localhost:4000/api/pasien");
+      const options = res.data.data.map((pasien: any) => ({
+        label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
+        value: pasien.NIK,
+        NAMALENGKAP: pasien.NAMALENGKAP,
+      }));
+      setPasienOptions(options);
+    } catch (err) {
+      console.error("Gagal ambil data pasien:", err);
+    }
+  };
 
   const fetchData = async () => {
-  try {
-    const res = await axios.get('http://localhost:4000/api/dokumen');
-    console.log('Data dokumen yang diterima:', res.data.data);
-    setData(res.data.data);
-  } catch (err) {
-    console.error('Gagal mengambil data dokumen:', err);
-  }
+    try {
+      const res = await axios.get('http://localhost:4000/api/dokumen');
+      console.log('Data dari API:', res.data);
+      setData(res.data.data);
+    } catch (err) {
+      console.error('Gagal mengambil data dokumen:', err);
+    }
   };
 
   useEffect(() => {
     fetchData();
-    // Fetch pasien list
-    const fetchPasien = async () => {
-      try {
-        const res = await axios.get('http://localhost:4000/api/pasien');
-        setPasienList(res.data.data);
-      } catch (err) {
-        console.error('Gagal mengambil data pasien:', err);
-      }
-    };
     fetchPasien();
   }, []);
 
@@ -76,36 +76,43 @@ export default function MasterDokumen() {
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return;
+  if (!validateForm()) return;
 
-    try {
-      const formData = new FormData();
-      formData.append('NIK', form.NIK);
-      formData.append('JENISDOKUMEN', form.JENISDOKUMEN);
-      if (form.file) formData.append('file', form.file);
+  try {
+    const formData = new FormData();
+    formData.append('NIK', form.NIK);
+    formData.append('JENISDOKUMEN', form.JENISDOKUMEN || '');
+    formData.append('NAMAFILE', form.NAMAFILE); // penting kalau NAMAFILE digunakan
 
-      if (form.IDDOKUMEN) {
-        await axios.put(`http://localhost:4000/api/dokumen/${form.IDDOKUMEN}`, formData);
-      } else {
-        await axios.post('http://localhost:4000/api/dokumen', formData);
-      }
-
-      fetchData();
-      setDialogVisible(false);
-      resetForm();
-    } catch (err) {
-      console.error('Gagal menyimpan data:', err);
+    // Jika ada file baru, tambahkan ke FormData
+    if (form.file) {
+      formData.append('file', form.file);
     }
-  };
+
+    if (form.IDDOKUMEN) {
+      await axios.put(`http://localhost:4000/api/dokumen/${form.IDDOKUMEN}`, formData);
+    } else {
+      await axios.post('http://localhost:4000/api/dokumen', formData);
+    }
+
+    fetchData();
+    setDialogVisible(false);
+    resetForm();
+  } catch (err) {
+    console.error('Gagal menyimpan data:', err);
+  }
+};
 
   const handleEdit = (row: Dokumen) => {
     setForm({
       IDDOKUMEN: row.IDDOKUMEN,
+      NAMALENGKAP: row.NAMALENGKAP,
       NIK: row.NIK,
-      JENISDOKUMEN: row.JENISDOKUMEN,
-      NAMAFILE: row.NAMAFILE,
-      LOKASIFILE: row.LOKASIFILE,
+      JENISDOKUMEN: row.JENISDOKUMEN || "",
+      NAMAFILE: row.NAMAFILE || "",
+      LOKASIFILE: row.LOKASIFILE || "",
       TANGGALUPLOAD: row.TANGGALUPLOAD,
+      file: undefined,
     });
     setDialogVisible(true);
   };
@@ -121,8 +128,13 @@ export default function MasterDokumen() {
 
   const resetForm = () => {
     setForm({
-      NIK: '',
-      JENISDOKUMEN: '',
+      IDDOKUMEN: 0,
+      NAMALENGKAP: "",
+      NIK: "",
+      JENISDOKUMEN: "",
+      NAMAFILE: "",
+      LOKASIFILE: "",
+      TANGGALUPLOAD: new Date().toISOString(),
       file: undefined,
     });
     setErrors({});
@@ -146,7 +158,13 @@ export default function MasterDokumen() {
         />
       </div>
 
-      <TabelDokumen data={data} onEdit={handleEdit} onDelete={handleDelete} />
+      <TabelDokumen
+        data={data}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        loading={false}
+        onDownload={() => {}}
+      />
 
       <Dialog
         header={form.IDDOKUMEN ? 'Edit Dokumen' : 'Tambah Dokumen'}
@@ -165,22 +183,45 @@ export default function MasterDokumen() {
           }}
         >
           <div>
+            <label>Nama Pasien</label>
+            <InputText
+              className="w-full mt-2"
+              value={form.NAMALENGKAP}
+              disabled
+            />
+          </div>
+          <div>
             <label>NIK Pasien</label>
             <Dropdown
               className={inputClass('NIK')}
               value={form.NIK}
-              options={pasienList.map((p) => ({
-                label: `${p.NIK} - ${p.NAMALENGKAP}`,
-                value: p.NIK,
-              }))}
-              onChange={(e) => setForm({ ...form, NIK: e.value })}
+              options={pasienOptions}
+              onChange={(e) => {
+                const selected = pasienOptions.find((p) => p.value === e.value);
+                setForm({
+                  ...form,
+                  NIK: e.value,
+                  NAMALENGKAP: selected?.NAMALENGKAP || '',
+                });
+              }}
               placeholder="Pilih NIK"
               filter
               showClear
             />
             {errors.NIK && <small className="text-red-500">{errors.NIK}</small>}
           </div>
-
+          <div>
+            <label>Nama File</label>
+            <InputText
+              className={inputClass('NAMAFILE')}
+              value={form.NAMAFILE}
+              onChange={(e) => setForm({ ...form, NAMAFILE: e.target.value })}
+              placeholder="Masukkan nama file"
+            />
+            {errors.NAMAFILE && (
+              <small className="text-red-500">{errors.NAMAFILE}</small>
+            )}
+          </div>
           <div>
             <label>Jenis Dokumen</label>
             <Dropdown
@@ -194,10 +235,9 @@ export default function MasterDokumen() {
               <small className="text-red-500">{errors.JENISDOKUMEN}</small>
             )}
           </div>
-
           <div>
             <label>Unggah File</label>
-            <InputText
+            <input
               type="file"
               className={inputClass('file')}
               onChange={(e: any) => {
@@ -208,6 +248,7 @@ export default function MasterDokumen() {
             {errors.file && <small className="text-red-500">{errors.file}</small>}
           </div>
 
+
           <div className="text-right pt-3">
             <Button type="submit" label="Simpan" icon="pi pi-save" />
           </div>
@@ -215,4 +256,6 @@ export default function MasterDokumen() {
       </Dialog>
     </div>
   );
-}
+};
+
+export default Page;
