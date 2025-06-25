@@ -12,8 +12,10 @@ import { Pasien } from '@/types/pasien';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 
+
 const MasterPasien = () => {
   const [data, setData] = useState<Pasien[]>([]);
+  const [originalData, setOriginalData] = useState<Pasien[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [form, setForm] = useState<Pasien>({
@@ -29,16 +31,33 @@ const MasterPasien = () => {
     NOASURANSI: '',
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
+ const [pasienOptions, setPasienOptions] = useState<
+  { label: string; value: string; NAMALENGKAP: string }[]
+  >([]);
   const fetchData = async () => {
     setIsLoading(true);
     try {
       const res = await axios.get('http://localhost:4000/api/pasien');
       setData(res.data.data);
+      setOriginalData(res.data.data); 
     } catch (err) {
       console.error('Gagal ambil data:', err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchPasienOptions = async () => {
+    try {
+      const res = await axios.get('http://localhost:4000/api/pasien');
+      const options = res.data.data.map((pasien: any) => ({
+        label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
+        value: pasien.NIK,
+        NAMALENGKAP: pasien.NAMALENGKAP,
+      }));
+      setPasienOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil data pasien:', err);
     }
   };
 
@@ -67,6 +86,19 @@ const MasterPasien = () => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+    const handleSearch = (keyword: string) => {
+    if (!keyword) {
+      setData(originalData);
+    } else {
+      const filtered = originalData.filter(
+        (item) =>
+          item.NIK.toLowerCase().includes(keyword) ||
+          item.NAMALENGKAP.toLowerCase().includes(keyword)
+      );
+      setData(filtered);
+    }
   };
 
   const handleSubmit = async () => {
@@ -153,14 +185,20 @@ const MasterPasien = () => {
     <div className="card">
       <h3 className="text-xl font-semibold">Master Data Pasien</h3>
 
-      <div className="flex justify-content-end my-3">
+      <div className="flex justify-content-end items-center my-3 gap-3">
+        <span className="p-input-icon-left w-80">
+          <i className="pi pi-search" />
+          <InputText
+            placeholder="Cari nama atau NIK..."
+            className="w-full"
+            onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+          />
+        </span>
+
         <Button
-          label="Tambah Pasien"
+          label="Tambah"
           icon="pi pi-plus"
-          onClick={() => {
-            setDialogVisible(true);
-            resetForm();
-          }}
+          onClick={() => setDialogVisible(true)}
         />
       </div>
 
