@@ -2,10 +2,6 @@
 
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { Dropdown } from 'primereact/dropdown';
 import TabelDokumen from './components/tabelDokumen';
 import { Dokumen } from '@/types/dokumen';
 import Cookies from 'js-cookie';
@@ -16,6 +12,8 @@ import { Toast } from 'primereact/toast';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { ToastMessage } from 'primereact/toast';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const JenisDokumenOptions = [
   { label: 'Hasil Lab', value: 'Hasil Lab' },
@@ -57,7 +55,7 @@ const Page = () => {
 
   const fetchPasien = async () => {
     try {
-      const res = await axios.get('http://localhost:4000/api/pasien');
+      const res = await axios.get(`${API_URL}/api/pasien`);
       const options = res.data.data.map((pasien: any) => ({
         label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
         value: pasien.NIK,
@@ -71,7 +69,7 @@ const Page = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:4000/api/dokumen');
+      const res = await axios.get(`${API_URL}/dokumen`);
       setData(res.data.data);
       setOriginalData(res.data.data);
     } catch (err) {
@@ -105,10 +103,10 @@ const Page = () => {
       if (form.file) formData.append('file', form.file);
 
       if (form.IDDOKUMEN) {
-        await axios.put(`http://localhost:4000/api/dokumen/${form.IDDOKUMEN}`, formData);
+        await axios.put(`${API_URL}/dokumen/${form.IDDOKUMEN}`, formData);
         showToast('success', 'Berhasil', 'Data dokumen berhasil diperbarui');
       } else {
-        await axios.post('http://localhost:4000/api/dokumen', formData);
+        await axios.post(`${API_URL}/dokumen`, formData);
         showToast('success', 'Berhasil', 'Data dokumen berhasil ditambahkan');
       }
 
@@ -164,7 +162,7 @@ const Page = () => {
 
   const handleDelete = async (row: Dokumen) => {
     try {
-      await axios.delete(`http://localhost:4000/api/dokumen/${row.IDDOKUMEN}`);
+      await axios.delete(`${API_URL}/dokumen/${row.IDDOKUMEN}`);
       fetchData();
       showToast('success', 'Berhasil', 'Data dokumen berhasil dihapus');
     } catch (err) {

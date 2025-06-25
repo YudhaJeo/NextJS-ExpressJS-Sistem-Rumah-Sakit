@@ -11,6 +11,8 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { getCookie } from '@/utils/cookie';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 const ReservasiPasienPage = () => {
   const [data, setData] = useState<Reservasi[]>([]);
   const [originalData, setOriginalData] = useState<Reservasi[]>([]);
@@ -30,7 +32,7 @@ const ReservasiPasienPage = () => {
   const fetchReservasi = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get('http://localhost:4000/api/reservasi');
+      const res = await axios.get(`${API_URL}/reservasi`);
       setData(res.data);
       setOriginalData(res.data);
     } catch (err) {
@@ -47,7 +49,7 @@ const ReservasiPasienPage = () => {
       const filtered = originalData.filter(
         (item) =>
           item.NIK?.toLowerCase().includes(keyword) ||
-          item.NAMADOKTER?.toLowerCase().includes(keyword) // kamu bisa tambah kolom pencarian lain
+          item.NAMADOKTER?.toLowerCase().includes(keyword) 
       );
       setData(filtered);
     }
@@ -56,8 +58,8 @@ const ReservasiPasienPage = () => {
   const handleSubmit = async () => {
     const isEdit = !!formData.IDRESERVASI;
     const url = isEdit
-      ? `http://localhost:4000/api/reservasi/${formData.IDRESERVASI}`
-      : 'http://localhost:4000/api/reservasi';
+      ? `${API_URL}/reservasi/${formData.IDRESERVASI}`
+      : `${API_URL}/reservasi`;
 
     try {
       if (isEdit) {
@@ -92,7 +94,7 @@ const ReservasiPasienPage = () => {
 
   const handleDelete = async (row: Reservasi) => {
     try {
-      await axios.delete(`http://localhost:4000/api/reservasi/${row.IDRESERVASI}`);
+      await axios.delete(`${API_URL}/reservasi/${row.IDRESERVASI}`);
       fetchReservasi();
     } catch (err) {
       console.error('Gagal menghapus data:', err);

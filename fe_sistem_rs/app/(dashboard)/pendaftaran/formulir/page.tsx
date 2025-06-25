@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-
 import TabelPendaftaran from './components/tabelPasien';
 import FormDialogPendaftaran from './components/formDialogFormulir';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier, { ToastNotifierHandle } from '@/app/components/toastNotifier';
 import { Pendaftaran } from '@/types/formulir';
-
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
   const [data, setData] = useState<Pendaftaran[]>([]);
@@ -50,7 +50,7 @@ const Page = () => {
 
   const fetchPasien = async () => {
     try {
-      const res = await axios.get('http://localhost:4000/api/pasien');
+      const res = await axios.get(`${API_URL}/pasien`);
       const options = res.data.data.map((pasien: any) => ({
         label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
         value: pasien.NIK,
@@ -65,7 +65,7 @@ const Page = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:4000/api/pendaftaran');
+      const res = await axios.get(`${API_URL}/pendaftaran`);
       setData(res.data.data);
       setOriginalData(res.data.data);
     } catch (err) {
@@ -91,8 +91,8 @@ const Page = () => {
   const handleSubmit = async () => {
     const isEdit = !!form.IDPENDAFTARAN;
     const url = isEdit
-      ? `http://localhost:4000/api/pendaftaran/${form.IDPENDAFTARAN}`
-      : 'http://localhost:4000/api/pendaftaran';
+      ? `${API_URL}/pendaftaran/${form.IDPENDAFTARAN}`
+      : `${API_URL}/pendaftaran`;
 
     try {
       if (isEdit) {
@@ -129,7 +129,7 @@ const Page = () => {
     rejectLabel: 'Batal',
     accept: async () => {
       try {
-        await axios.delete(`http://localhost:4000/api/pendaftaran/${row.IDPENDAFTARAN}`);
+        await axios.delete(`${API_URL}/pendaftaran/${row.IDPENDAFTARAN}`);
         fetchData();
         toastRef.current?.showToast('00', 'Data berhasil dihapus');
       } catch (err) {

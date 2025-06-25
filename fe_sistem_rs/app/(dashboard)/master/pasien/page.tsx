@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-
 import HeaderBar from '@/app/components/headerbar';
 import TabelPasien from './components/tabelPasien';
 import FormDialogPasien from './components/formDialogPasien';
 import ToastNotifier, { ToastNotifierHandle } from '@/app/components/toastNotifier';
-
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Pasien } from '@/types/pasien';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
   const [data, setData] = useState<Pasien[]>([]);
@@ -50,7 +50,7 @@ const Page = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:4000/api/pasien');
+      const res = await axios.get(`${API_URL}/pasien`);
       setData(res.data.data);
       setOriginalData(res.data.data);
     } catch (err) {
@@ -105,8 +105,8 @@ const Page = () => {
 
     const isEdit = !!form.IDPASIEN;
     const url = isEdit
-      ? `http://localhost:4000/api/pasien/${form.IDPASIEN}`
-      : 'http://localhost:4000/api/pasien';
+      ? `${API_URL}/pasien/${form.IDPASIEN}`
+      : `${API_URL}/api/pasien`;
 
     try {
       const payload = {
@@ -153,7 +153,7 @@ const Page = () => {
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`http://localhost:4000/api/pasien/${row.IDPASIEN}`);
+          await axios.delete(`${API_URL}/pasien/${row.IDPASIEN}`);
           fetchData();
           toastRef.current?.showToast('00', 'Data pasien berhasil dihapus');
         } catch (err) {
