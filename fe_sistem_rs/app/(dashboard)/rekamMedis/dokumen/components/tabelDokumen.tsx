@@ -55,13 +55,14 @@ const TabelDokumen = ({
               icon="pi pi-download"
               size="small"
               severity="info"
-              onClick={() => onDownload(row)}
+              aria-label="Download"
+              onClick={() => onDownload(row)} // ✅ ini perubahan utama
             />
             <Button
               icon="pi pi-pencil"
               size="small"
               severity="warning"
-              onClick={() => onEdit(row)} // ← Tambahkan ini agar edit berfungsi
+              onClick={() => onEdit(row)}
             />
             <Button
               icon="pi pi-trash"

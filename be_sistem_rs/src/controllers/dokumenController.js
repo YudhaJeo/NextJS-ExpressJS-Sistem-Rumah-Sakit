@@ -102,3 +102,18 @@ export const deleteDokumen = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+export const downloadDokumen = async (req, res) => {
+  try {
+    const { filename } = req.params;
+    const filePath = path.join(uploadDir, filename);
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'File tidak ditemukan' });
+    }
+
+    res.download(filePath, filename); // ← Ini yang penting agar browser langsung download
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

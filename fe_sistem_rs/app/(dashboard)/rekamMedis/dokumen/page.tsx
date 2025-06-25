@@ -171,6 +171,25 @@ const Page = () => {
     }
   };
 
+  const handleDownload = async (row: Dokumen) => {
+  try {
+    const response = await axios.get(`${API_URL}/dokumen/download/${encodeURIComponent(row.NAMAFILE)}`, {
+      responseType: 'blob',
+    });
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', row.NAMAFILE); // Nama file saat disimpan
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch (error) {
+    console.error('Gagal mengunduh file:', error);
+    showToast('error', 'Gagal Download', 'Tidak dapat mengunduh file.');
+  }
+ };
+
   const resetForm = () => {
     setForm({
       IDDOKUMEN: 0,
@@ -207,7 +226,7 @@ const Page = () => {
         onEdit={handleEdit}
         onDelete={confirmDelete}
         loading={false}
-        onDownload={() => {}}
+        onDownload={handleDownload} // <- perbaikan disini
       />
 
       <FormDialogDokumen
