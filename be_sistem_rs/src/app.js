@@ -17,10 +17,16 @@ app.use(express.json());
 
 app.use('/uploads', express.static('uploads'));
 
+// app.use('/', authRoutes); 
+// app.use('/api/pasien', verifyToken, pasienRoutes);
+// app.use('/api/reservasi', verifyToken, reservasiRoutes);
+// app.use('/api/dokumen', verifyToken, dokumenRoutes);
+// app.use('/api/pendaftaran', verifyToken, pendaftaranRoutes);
+
 app.use('/', authRoutes); 
-app.use('/api/pasien', verifyToken, pasienRoutes);
-app.use('/api/reservasi', verifyToken, reservasiRoutes);
-app.use('/api/dokumen', verifyToken, dokumenRoutes);
-app.use('/api/pendaftaran', verifyToken, pendaftaranRoutes);
+app.use('/api/pasien', pasienRoutes);
+app.use('/api/reservasi', reservasiRoutes);
+app.use('/api/dokumen', dokumenRoutes);
+app.use('/api/pendaftaran', pendaftaranRoutes);
 
 export default app;

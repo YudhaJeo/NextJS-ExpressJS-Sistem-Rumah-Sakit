@@ -1,5 +1,6 @@
+// src/controllers/authController.js
 import { findUserByEmail } from '../models/authModel.js';
-import { generateToken } from '../utils/jwt.js'; // ⬅️ seharusnya utils, bukan middleware
+import { generateToken } from '../utils/jwt.js';
 import { loginSchema } from '../schemas/authSchema.js';
 
 export const login = async (req, res) => {

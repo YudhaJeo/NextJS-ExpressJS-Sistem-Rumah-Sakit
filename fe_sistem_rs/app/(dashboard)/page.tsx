@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useContext, useEffect, useState } from 'react';
-// import { Card } from 'primereact/card';
+import { Card } from 'primereact/card';
 import { Chart } from 'primereact/chart';
 import { Tag } from 'primereact/tag';
 import { LayoutContext } from '../../layout/context/layoutcontext';
