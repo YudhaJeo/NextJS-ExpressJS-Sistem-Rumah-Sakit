@@ -7,6 +7,9 @@ import { InputText } from 'primereact/inputtext';
 import { Reservasi } from './components/reservasi';
 import TabelReservasiPasien from './components/tabelReservasi';
 import FormReservasiPasien from './components/formReservasi';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import { getCookie } from '@/utils/cookie';
 
 const ReservasiPasienPage = () => {
   const [data, setData] = useState<Reservasi[]>([]);
@@ -96,8 +99,14 @@ const ReservasiPasienPage = () => {
     }
   };
 
+  const router = useRouter();
+
   useEffect(() => {
     fetchReservasi();
+    const token = Cookies.get('token');
+        if(!token){
+            router.push('/login');
+        };
   }, []);
 
   return (

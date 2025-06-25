@@ -8,6 +8,8 @@ import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import TabelDokumen from './components/tabelDokumen';
 import { Dokumen } from '@/types/dokumen';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 const JenisDokumenOptions = [
   { label: 'Hasil Lab', value: 'Hasil Lab' },
@@ -29,13 +31,13 @@ const Page = () => {
     TANGGALUPLOAD: new Date().toISOString(),
     file: undefined,
   });
-
+  
   const [pasienOptions, setPasienOptions] = useState<
-    { label: string; value: string; NAMALENGKAP: string }[]
+  { label: string; value: string; NAMALENGKAP: string }[]
   >([]);
-
+  
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
+  
   const fetchPasien = async () => {
     try {
       const res = await axios.get('http://localhost:4000/api/pasien');
@@ -49,7 +51,7 @@ const Page = () => {
       console.error('Gagal ambil data pasien:', err);
     }
   };
-
+  
   const fetchData = async () => {
     try {
       const res = await axios.get('http://localhost:4000/api/dokumen');
@@ -59,23 +61,28 @@ const Page = () => {
       console.error('Gagal mengambil data dokumen:', err);
     }
   };
-
+  
+  const router = useRouter();
   useEffect(() => {
     fetchData();
     fetchPasien();
+    const token = Cookies.get('token');
+    if (!token) {
+      router.push('/login');
+    }
   }, []);
-
+  
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
     if (!form.NIK.trim()) newErrors.NIK = 'NIK wajib diisi';
     else if (!/^\d{16}$/.test(form.NIK)) newErrors.NIK = 'NIK harus 16 digit angka';
     if (!form.JENISDOKUMEN) newErrors.JENISDOKUMEN = 'Jenis dokumen wajib dipilih';
     if (!form.file && !form.IDDOKUMEN) newErrors.file = 'File wajib diunggah';
-
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-
+  
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
@@ -133,14 +140,14 @@ const Page = () => {
     setDialogVisible(true);
   };
 
-  const handleDelete = async (row: Dokumen) => {
-    try {
-      await axios.delete(`http://localhost:4000/api/dokumen/${row.IDDOKUMEN}`);
-      fetchData();
-    } catch (err) {
-      console.error('Gagal menghapus dokumen:', err);
-    }
-  };
+const handleDelete = async (row: Dokumen) => {
+  try {
+    await axios.delete(`http://localhost:4000/api/dokumen/${row.IDDOKUMEN}`);
+    fetchData();
+  } catch (err) {
+    console.error('Gagal menghapus dokumen:', err);
+  }
+};
 
   const resetForm = () => {
     setForm({
@@ -156,11 +163,11 @@ const Page = () => {
     setErrors({});
   };
 
-  const inputClass = (field: string) =>
-    errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
+const inputClass = (field: string) =>
+  errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
-  return (
-    <div className="card">
+return (
+  <div className="card">
       <h3 className="text-xl font-semibold">Manajemen Dokumen Rekam Medis</h3>
 
       <div className="flex justify-content-end items-center my-3 gap-3">
