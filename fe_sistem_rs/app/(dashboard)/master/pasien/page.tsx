@@ -11,7 +11,7 @@ import TabelPasien from "./components/tabelPasien";
 import { Pasien } from "@/types/pasien";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import HeaderBar from "@/components/headerbar";
+import HeaderBar from "@/app/components/headerbar";
 import FormDialogPasien from "./components/formDialogPasien";
 
 const MasterPasien = () => {

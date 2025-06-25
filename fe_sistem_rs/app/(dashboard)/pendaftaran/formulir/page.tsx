@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import TabelPendaftaran from './components/tabelPasien';
 import FormDialogPendaftaran from './components/formDialogFormulir';
-import HeaderBar from '@/components/headerbar';
+import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier, { ToastNotifierHandle } from '@/app/components/toastNotifier';
 import { Pendaftaran } from '@/types/formulir';
 

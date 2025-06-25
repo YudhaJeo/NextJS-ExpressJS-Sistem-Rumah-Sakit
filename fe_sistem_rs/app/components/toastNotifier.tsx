@@ -1,5 +1,3 @@
-// fe_sistem_rs/app/components/toastNotifier.tsx
-
 'use client';
 
 import { forwardRef, useImperativeHandle, useRef } from 'react';
@@ -20,7 +18,7 @@ const ToastNotifier = forwardRef<ToastNotifierHandle>((_, ref) => {
       };
 
       switch (status) {
-        case '00': // success
+        case '00':
           config = {
             ...config,
             severity: 'success',
@@ -28,7 +26,7 @@ const ToastNotifier = forwardRef<ToastNotifierHandle>((_, ref) => {
             detail: message || 'Data berhasil disimpan!',
           };
           break;
-        case '01': // error
+        case '01':
           config = {
             ...config,
             severity: 'error',
@@ -36,7 +34,7 @@ const ToastNotifier = forwardRef<ToastNotifierHandle>((_, ref) => {
             detail: message || 'Terjadi kesalahan saat menyimpan!',
           };
           break;
-        case '03': // warning
+        case '03':
           config = {
             ...config,
             severity: 'warn',
@@ -44,7 +42,7 @@ const ToastNotifier = forwardRef<ToastNotifierHandle>((_, ref) => {
             detail: message || 'Data tidak ditemukan!',
           };
           break;
-        case '99': // bad request
+        case '99':
           config = {
             ...config,
             severity: 'error',
