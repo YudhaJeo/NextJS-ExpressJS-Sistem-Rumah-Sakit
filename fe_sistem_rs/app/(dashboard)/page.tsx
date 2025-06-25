@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useContext, useEffect, useState } from 'react';
-import { Card } from 'primereact/card';
+// import { Card } from 'primereact/card';
 import { Chart } from 'primereact/chart';
 import { Tag } from 'primereact/tag';
 import { LayoutContext } from '../../layout/context/layoutcontext';
@@ -15,8 +15,6 @@ const Dashboard = () => {
 
     const [lineOptions, setLineOptions] = useState<ChartOptions>({});
     const [barOptions, setBarOptions] = useState<ChartOptions>({});
-
-    const router = useRouter();
 
     const chartDataBar: ChartData = {
         labels: ["Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu", "Minggu"],
@@ -108,6 +106,8 @@ const Dashboard = () => {
             plugins: { legend: { display: false } }
         });
     };
+
+    const router = useRouter();
 
     useEffect(() => {
         const token = Cookies.get('token');

@@ -6,12 +6,15 @@ import { Button } from 'primereact/button';
 import { Reservasi } from './components/reservasi';
 import TabelReservasiPasien from './components/tabelReservasi';
 import FormReservasiPasien from './components/formReservasi';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import { getCookie } from '@/utils/cookie';
 
 const ReservasiPasienPage = () => {
     const [reservasiList, setReservasiList] = useState<Reservasi[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [dialogVisible, setDialogVisible] = useState(false);
-
+    
     const [formData, setFormData] = useState<Reservasi>({
         NIK: '',
         POLI: '',
@@ -21,7 +24,7 @@ const ReservasiPasienPage = () => {
         STATUS: 'Menunggu',
         KETERANGAN: '',
     });
-
+    
     const fetchReservasi = async () => {
         setIsLoading(true);
         try {
@@ -33,13 +36,13 @@ const ReservasiPasienPage = () => {
             setIsLoading(false);
         }
     };
-
+    
     const handleSubmit = async () => {
         const isEdit = !!formData.IDRESERVASI;
         const url = isEdit
-            ? `http://localhost:4000/api/reservasi/${formData.IDRESERVASI}`
-            : 'http://localhost:4000/api/reservasi';
-
+        ? `http://localhost:4000/api/reservasi/${formData.IDRESERVASI}`
+        : 'http://localhost:4000/api/reservasi';
+        
         try {
             if (isEdit) {
                 await axios.put(url, formData);
@@ -53,7 +56,7 @@ const ReservasiPasienPage = () => {
             console.error('Gagal menyimpan data:', err);
         }
     };
-
+    
     const resetForm = () => {
         setFormData({
             NIK: '',
@@ -65,12 +68,12 @@ const ReservasiPasienPage = () => {
             KETERANGAN: '',
         });
     };
-
+    
     const handleEdit = (row: Reservasi) => {
         setFormData(row);
         setDialogVisible(true);
     };
-
+    
     const handleDelete = async (row: Reservasi) => {
         try {
             await axios.delete(`http://localhost:4000/api/reservasi/${row.IDRESERVASI}`);
@@ -79,9 +82,16 @@ const ReservasiPasienPage = () => {
             console.error('Gagal menghapus data:', err);
         }
     };
-
+    
+    const router = useRouter();
+    
     useEffect(() => {
         fetchReservasi();
+
+        const token = Cookies.get('token');
+        if(!token){
+            router.push('/login');
+        };
     }, []);
 
     return (
