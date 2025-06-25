@@ -5,12 +5,13 @@
 export const up = function (knex) {
   return knex.schema.createTable('pendaftaran', (table) => {
     table.increments('IDPENDAFTARAN').primary();
-    table.integer('IDPASIEN').unsigned().notNullable();
-    table.date('TANGGALDAFTAR').defaultTo(knex.fn.now());
-    table.string('KETERANGAN', 255);
-
-    // Relasi ke tabel pasien
-    table.foreign('IDPASIEN').references('IDPASIEN').inTable('pasien').onDelete('CASCADE');
+    table.string('NIK', 20).notNullable()
+      .references('NIK').inTable('pasien').onDelete('CASCADE');
+    table.date('TANGGALKUNJUNGAN').notNullable();
+    table.enu('LAYANAN', ['Rawat Jalan', 'Rawat Inap', 'IGD']).notNullable();
+    table.string('POLI', 50);
+    table.string('NAMADOKTER', 100);
+    table.enu('STATUSKUNJUNGAN', ['Diperiksa', 'Batal', 'Selesai']).defaultTo('Diperiksa');
   });
 };
 
@@ -18,6 +19,7 @@ export const up = function (knex) {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
+
 export const down = function (knex) {
   return knex.schema.dropTable('pendaftaran');
 };
