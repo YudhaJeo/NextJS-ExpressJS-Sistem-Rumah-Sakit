@@ -10,6 +10,8 @@ import TabelDokumen from './components/tabelDokumen';
 import { Dokumen } from '@/types/dokumen';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import HeaderBar from "@/components/headerbar";
+import FormDialogDokumen from "./components/formDialogDokumen";
 
 const JenisDokumenOptions = [
   { label: 'Hasil Lab', value: 'Hasil Lab' },
@@ -169,23 +171,13 @@ const inputClass = (field: string) =>
 return (
   <div className="card">
       <h3 className="text-xl font-semibold">Manajemen Dokumen Rekam Medis</h3>
-
-      <div className="flex justify-content-end items-center my-3 gap-3">
-        <span className="p-input-icon-left w-80">
-          <i className="pi pi-search" />
-          <InputText
-            placeholder="Cari nama atau NIK..."
-            className="w-full"
-            onChange={(e) => handleSearch(e.target.value)}
-          />
-        </span>
-
-        <Button
-          label="Tambah"
-          icon="pi pi-plus"
-          onClick={() => setDialogVisible(true)}
-        />
-      </div>
+      
+      <HeaderBar
+        title=""
+        placeholder="Cari nama atau NIK..."
+        onSearch={handleSearch}
+        onAddClick={() => setDialogVisible(true)}
+      />
 
       <TabelDokumen
         data={data}
@@ -195,77 +187,20 @@ return (
         onDownload={() => {}}
       />
 
-      <Dialog
-        header={form.IDDOKUMEN ? 'Edit Dokumen' : 'Tambah Dokumen'}
+      <FormDialogDokumen
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);
           resetForm();
         }}
-        style={{ width: '30vw' }}
-      >
-        <form
-          className="space-y-3"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-        >
-          <div>
-            <label>Nama Pasien</label>
-            <InputText className="w-full mt-2" value={form.NAMALENGKAP} disabled />
-          </div>
-          <div>
-            <label>NIK Pasien</label>
-            <Dropdown
-              className={inputClass('NIK')}
-              value={form.NIK}
-              options={pasienOptions}
-              onChange={(e) => {
-                const selected = pasienOptions.find((p) => p.value === e.value);
-                setForm({
-                  ...form,
-                  NIK: e.value,
-                  NAMALENGKAP: selected?.NAMALENGKAP || '',
-                });
-              }}
-              placeholder="Pilih NIK"
-              filter
-              showClear
-            />
-            {errors.NIK && <small className="text-red-500">{errors.NIK}</small>}
-          </div>
-          <div>
-            <label>Jenis Dokumen</label>
-            <Dropdown
-              className={inputClass('JENISDOKUMEN')}
-              options={JenisDokumenOptions}
-              value={form.JENISDOKUMEN}
-              onChange={(e) => setForm({ ...form, JENISDOKUMEN: e.value })}
-              placeholder="Pilih"
-            />
-            {errors.JENISDOKUMEN && (
-              <small className="text-red-500">{errors.JENISDOKUMEN}</small>
-            )}
-          </div>
-          <div>
-            <label>Unggah File</label>
-            <input
-              type="file"
-              className={inputClass('file')}
-              onChange={(e: any) => {
-                const file = e.target.files[0];
-                setForm({ ...form, file });
-              }}
-            />
-            {errors.file && <small className="text-red-500">{errors.file}</small>}
-          </div>
-
-          <div className="text-right pt-3">
-            <Button type="submit" label="Simpan" icon="pi pi-save" />
-          </div>
-        </form>
-      </Dialog>
+        onSubmit={handleSubmit}
+        form={form}
+        setForm={setForm}
+        pasienOptions={pasienOptions}
+        errors={errors}
+        inputClass={inputClass}
+        JenisDokumenOptions={JenisDokumenOptions}
+      />
     </div>
   );
 };
