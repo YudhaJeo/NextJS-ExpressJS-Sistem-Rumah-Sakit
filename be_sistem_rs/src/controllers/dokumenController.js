@@ -1,4 +1,4 @@
-import DokumenModel from '../models/dokumenModel.js';
+import * as DokumenModel from '../models/dokumenModel.js';
 import fs from 'fs';
 import path from 'path';
 
