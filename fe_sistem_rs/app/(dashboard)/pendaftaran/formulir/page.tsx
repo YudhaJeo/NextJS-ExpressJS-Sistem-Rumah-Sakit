@@ -1,66 +1,76 @@
+// File: /pendaftaran/formulir/page.tsx
+
 "use client";
 
-import axios from "axios";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { Button } from "primereact/button";
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
+import TabelPendaftaran from "./components/tabelPasien";
+import { Pendaftaran } from "@/types/formulir";
 
-interface Pasien {
-  ID?: number;
-  NAMA: string;
-  NIK: string;
-  TGLLAHIR: string;
-  JK: "L" | "P";
-  ALAMAT: string;
-  NOHP: string;
-  EMAIL: string;
-}
-
-const FormulirPendaftaran = () => {
-  const [data, setData] = useState<Pasien[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
+const Page = () => {
+  const [data, setData] = useState<Pendaftaran[]>([]);
+  const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [form, setForm] = useState<Pasien>({
-    NAMA: "",
+  const [form, setForm] = useState<Pendaftaran>({
+    IDPENDAFTARAN: 0,
     NIK: "",
-    TGLLAHIR: "",
-    JK: "L",
-    ALAMAT: "",
-    NOHP: "",
-    EMAIL: "",
+    NAMALENGKAP: "",
+    TANGGALKUNJUNGAN: "",
+    LAYANAN: "Rawat Jalan",
+    POLI: "",
+    NAMADOKTER: "",
+    STATUSKUNJUNGAN: "Diperiksa",
   });
 
-  const fetchData = async () => {
-    setIsLoading(true);
+  const [pasienOptions, setPasienOptions] = useState<
+    { label: string; value: string; NAMALENGKAP: string }[]
+  >([]);
+
+  const fetchPasien = async () => {
     try {
       const res = await axios.get("http://localhost:4000/api/pasien");
+      const options = res.data.data.map((pasien: any) => ({
+        label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
+        value: pasien.NIK,
+        NAMALENGKAP: pasien.NAMALENGKAP,
+      }));
+      setPasienOptions(options);
+    } catch (err) {
+      console.error("Gagal ambil data pasien:", err);
+    }
+  };
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get("http://localhost:4000/api/pendaftaran");
       setData(res.data.data);
     } catch (err) {
       console.error("Gagal ambil data:", err);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   const handleSubmit = async () => {
-    const isEdit = !!form.ID;
+    const isEdit = !!form.IDPENDAFTARAN;
     const url = isEdit
-      ? `http://localhost:4000/api/pasien/${form.ID}`
-      : "http://localhost:4000/api/pasien";
+      ? `http://localhost:4000/api/pendaftaran/${form.IDPENDAFTARAN}`
+      : "http://localhost:4000/api/pendaftaran";
 
     try {
       if (isEdit) {
+        console.log("PUT to:", url);
+        console.log("Data:", form);
         await axios.put(url, form);
       } else {
         await axios.post(url, form);
       }
-
       fetchData();
       setDialogVisible(false);
       resetForm();
@@ -71,97 +81,63 @@ const FormulirPendaftaran = () => {
 
   const resetForm = () => {
     setForm({
-      NAMA: "",
+      IDPENDAFTARAN: 0,
+      NAMALENGKAP: "",
       NIK: "",
-      TGLLAHIR: "",
-      JK: "P",
-      ALAMAT: "",
-      NOHP: "",
-      EMAIL: "",
+      TANGGALKUNJUNGAN: "",
+      LAYANAN: "Rawat Jalan",
+      POLI: "",
+      NAMADOKTER: "",
+      STATUSKUNJUNGAN: "Diperiksa",
     });
   };
 
-  const handleEdit = (row: Pasien) => {
-    console.log("Edit row:", row);
-    setForm(row);
+  const handleEdit = (row: Pendaftaran) => {
+    setForm({
+      ...row,
+      TANGGALKUNJUNGAN: row.TANGGALKUNJUNGAN?.split("T")[0] || "",
+      NAMALENGKAP: row.NAMALENGKAP || "",
+    });
     setDialogVisible(true);
   };
 
-const handleDelete = async (row: Pasien) => {
-  try {
-    await axios.delete(`http://localhost:4000/api/pasien/${row.ID}`);
-    fetchData();
-  } catch (err) {
-    console.error("Gagal hapus data:", err);
-  }
-};
-
+  const handleDelete = async (row: Pendaftaran) => {
+    try {
+      await axios.delete(
+        `http://localhost:4000/api/pendaftaran/${row.IDPENDAFTARAN}`
+      );
+      fetchData();
+    } catch (err) {
+      console.error("Gagal hapus data:", err);
+    }
+  };
 
   useEffect(() => {
     fetchData();
+    fetchPasien();
   }, []);
 
   return (
     <div className="card">
-      <h3 className="text-xl font-semibold">Formulir Pendaftaran Pasien</h3>
+      <h3 className="text-xl font-semibold">Formulir Pendaftaran Kunjungan</h3>
 
       <div className="flex justify-content-end my-3">
         <Button
-          label="Tambah Pasien"
+          label="Tambah"
           icon="pi pi-plus"
           onClick={() => setDialogVisible(true)}
         />
       </div>
 
-      <DataTable
-        value={data}
-        paginator
-        rows={10}
-        loading={isLoading}
-        scrollable
-        size="small"
-      >
-        <Column field="NAMA" header="Nama" />
-        <Column field="NIK" header="NIK" />
-        <Column
-          field="TGLLAHIR"
-          header="Tgl Lahir"
-          body={(row: Pasien) => {
-            const tanggal = new Date(row.TGLLAHIR);
-            return tanggal.toLocaleDateString("id-ID", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            });
-          }}
-        />
-        <Column field="JK" header="JK" />
-        <Column field="ALAMAT" header="Alamat" />
-        <Column field="NOHP" header="No HP" />
-        <Column field="EMAIL" header="Email" />
-        <Column
-          header="Aksi"
-          body={(row: Pasien) => (
-            <div className="flex gap-2">
-              <Button
-                icon="pi pi-pencil"
-                size="small"
-                severity="warning"
-                onClick={() => handleEdit(row)}
-              />
-              <Button
-                icon="pi pi-trash"
-                size="small"
-                severity="danger"
-                onClick={() => handleDelete(row)}
-              />
-            </div>
-          )}
-        />
-      </DataTable>
+      <TabelPendaftaran
+        data={data}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
 
       <Dialog
-        header={form.ID ? "Edit Pasien" : "Tambah Pasien"}
+        header={form.IDPENDAFTARAN ? "Edit Pendaftaran" : "Tambah Pendaftaran"}
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);
@@ -177,71 +153,92 @@ const handleDelete = async (row: Pasien) => {
           }}
         >
           <div>
-            <label>Nama</label>
+            <label>Nama Pasien</label>
             <InputText
               className="w-full mt-2"
-              value={form.NAMA}
-              onChange={(e) => setForm({ ...form, NAMA: e.target.value })}
+              value={form.NAMALENGKAP}
+              disabled
             />
           </div>
           <div>
             <label>NIK</label>
-            <InputText
+            <Dropdown
               className="w-full mt-2"
+              options={pasienOptions}
               value={form.NIK}
-              onChange={(e) => setForm({ ...form, NIK: e.target.value })}
+              onChange={(e) => {
+                const selected = pasienOptions.find((p) => p.value === e.value);
+                setForm({
+                  ...form,
+                  NIK: e.value,
+                  NAMALENGKAP: selected?.NAMALENGKAP || "",
+                });
+              }}
+              placeholder="Pilih NIK"
+              filter
+              showClear
             />
           </div>
+
           <div>
-            <label>Tanggal Lahir</label>
+            <label>Tanggal Kunjungan</label>
             <Calendar
               className="w-full mt-2"
               dateFormat="yy-mm-dd"
-              value={form.TGLLAHIR ? new Date(form.TGLLAHIR) : undefined}
+              value={
+                form.TANGGALKUNJUNGAN
+                  ? new Date(form.TANGGALKUNJUNGAN)
+                  : undefined
+              }
               onChange={(e) =>
                 setForm({
                   ...form,
-                  TGLLAHIR: e.value?.toISOString().split("T")[0] || "",
+                  TANGGALKUNJUNGAN: e.value?.toISOString().split("T")[0] || "",
                 })
               }
               showIcon
             />
           </div>
           <div>
-            <label>Jenis Kelamin</label>
+            <label>Layanan</label>
             <Dropdown
               className="w-full mt-2"
-              options={[
-                { label: "Laki-laki", value: "L" },
-                { label: "Perempuan", value: "P" },
-              ]}
-              value={form.JK}
-              onChange={(e) => setForm({ ...form, JK: e.value })}
-              placeholder="Pilih"
+              options={["Rawat Jalan", "Rawat Inap", "IGD"].map((val) => ({
+                label: val,
+                value: val,
+              }))}
+              value={form.LAYANAN}
+              onChange={(e) => setForm({ ...form, LAYANAN: e.value })}
+              placeholder="Pilih Layanan"
             />
           </div>
           <div>
-            <label>Alamat</label>
+            <label>Poli</label>
             <InputText
               className="w-full mt-2"
-              value={form.ALAMAT}
-              onChange={(e) => setForm({ ...form, ALAMAT: e.target.value })}
+              value={form.POLI}
+              onChange={(e) => setForm({ ...form, POLI: e.target.value })}
             />
           </div>
           <div>
-            <label>No HP</label>
+            <label>Nama Dokter</label>
             <InputText
               className="w-full mt-2"
-              value={form.NOHP}
-              onChange={(e) => setForm({ ...form, NOHP: e.target.value })}
+              value={form.NAMADOKTER}
+              onChange={(e) => setForm({ ...form, NAMADOKTER: e.target.value })}
             />
           </div>
           <div>
-            <label>Email</label>
-            <InputText
+            <label>Status Kunjungan</label>
+            <Dropdown
               className="w-full mt-2"
-              value={form.EMAIL}
-              onChange={(e) => setForm({ ...form, EMAIL: e.target.value })}
+              options={["Diperiksa", "Batal", "Selesai"].map((val) => ({
+                label: val,
+                value: val,
+              }))}
+              value={form.STATUSKUNJUNGAN}
+              onChange={(e) => setForm({ ...form, STATUSKUNJUNGAN: e.value })}
+              placeholder="Pilih Status"
             />
           </div>
 
@@ -254,4 +251,4 @@ const handleDelete = async (row: Pasien) => {
   );
 };
 
-export default FormulirPendaftaran;
+export default Page;

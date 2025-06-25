@@ -31,7 +31,7 @@ const AppMenu = () => {
             {
               label: "Database Pasien",
               icon: "pi pi-fw pi-user",
-              to: "/master/database-pasien",
+              to: "/master/pasien",
             },
           ],
         },
@@ -47,7 +47,7 @@ const AppMenu = () => {
             {
               label: "Reservasi",
               icon: "pi pi-fw pi-calendar",
-              to: "/pendaftaran/reservasi-pasien",
+              to: "/pendaftaran/reservasi",
             },
             {
               label: "Formulir Pendaftaran",
@@ -68,12 +68,12 @@ const AppMenu = () => {
             {
               label: "File Dokumen",
               icon: "pi pi-fw pi-file",
-              to: "/rekam-medis/file-dokumen",
+              to: "/rekamMedis/dokumen",
             },
             {
               label: "Tracer Rekam Medis",
               icon: "pi pi-fw pi-book",
-              to: "/rekam-medis/tracer-rekam-medis",
+              to: "/rekamMedis/tracer-rekam-medis",
             },
           ],
         },

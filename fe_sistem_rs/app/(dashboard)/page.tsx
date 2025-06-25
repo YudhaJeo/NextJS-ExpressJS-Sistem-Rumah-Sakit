@@ -126,7 +126,7 @@ const Dashboard = () => {
         { title: "PENDAFTARAN PASIEN", value: 3882, icon: "pi pi-users", bgColor: "bg-blue-100", borderColor: "#B13BFF" },
         { title: "DATA MEDIS", value: 532, icon: "pi pi-map", bgColor: "bg-yellow-100", borderColor: "#FFCC00" },
         { title: "REKAP KUNJUNGAN", value: "12.6%", icon: "pi pi-directions", bgColor: "bg-green-100", borderColor: "#06923E" },
-        { title: "LAPORAN BULANAN", value: 440, icon: "pi pi-comment", bgColor: "bg-purple-100", borderColor: "border-purple-500" },
+        { title: "LAPORAN BULANAN", value: 440, icon: "pi pi-comment", bgColor: "bg-purple-100", borderColor: "#8A0000" },
     ];
 
     return (

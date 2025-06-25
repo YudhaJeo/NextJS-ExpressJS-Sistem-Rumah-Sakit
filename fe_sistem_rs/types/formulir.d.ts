@@ -1,10 +1,10 @@
-export interface Pasien {
-    ID?: number;
-    NAMA: string;
-    NIK: string;
-    TGLLAHIR: string;
-    JK: 'L' | 'P';
-    ALAMAT: string;
-    NOHP: string;
-    EMAIL: string;
+export interface Pendaftaran {
+  IDPENDAFTARAN?: number; 
+  NAMALENGKAP: string;
+  NIK: string;
+  TANGGALKUNJUNGAN: string; 
+  LAYANAN: 'Rawat Jalan' | 'Rawat Inap' | 'IGD';
+  POLI: string;
+  NAMADOKTER: string;
+  STATUSKUNJUNGAN: 'Diperiksa' | 'Batal' | 'Selesai';
 }
