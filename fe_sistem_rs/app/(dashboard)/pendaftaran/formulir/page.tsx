@@ -1,5 +1,3 @@
-// File: /pendaftaran/formulir/page.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -14,6 +12,7 @@ import { Pendaftaran } from "@/types/formulir";
 
 const Page = () => {
   const [data, setData] = useState<Pendaftaran[]>([]);
+  const [originalData, setOriginalData] = useState<Pendaftaran[]>([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [form, setForm] = useState<Pendaftaran>({
@@ -50,10 +49,24 @@ const Page = () => {
     try {
       const res = await axios.get("http://localhost:4000/api/pendaftaran");
       setData(res.data.data);
+      setOriginalData(res.data.data); 
     } catch (err) {
       console.error("Gagal ambil data:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSearch = (keyword: string) => {
+    if (!keyword) {
+      setData(originalData);
+    } else {
+      const filtered = originalData.filter(
+        (item) =>
+          item.NIK.toLowerCase().includes(keyword) ||
+          item.NAMALENGKAP.toLowerCase().includes(keyword)
+      );
+      setData(filtered);
     }
   };
 
@@ -65,8 +78,6 @@ const Page = () => {
 
     try {
       if (isEdit) {
-        console.log("PUT to:", url);
-        console.log("Data:", form);
         await axios.put(url, form);
       } else {
         await axios.post(url, form);
@@ -121,7 +132,16 @@ const Page = () => {
     <div className="card">
       <h3 className="text-xl font-semibold">Formulir Pendaftaran Kunjungan</h3>
 
-      <div className="flex justify-content-end my-3">
+      <div className="flex justify-content-end items-center my-3 gap-3">
+        <span className="p-input-icon-left w-80">
+          <i className="pi pi-search" />
+          <InputText
+            placeholder="Cari nama atau NIK..."
+            className="w-full"
+            onChange={(e) => handleSearch(e.target.value.toLowerCase())}
+          />
+        </span>
+
         <Button
           label="Tambah"
           icon="pi pi-plus"
