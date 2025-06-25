@@ -2,11 +2,13 @@
 'use client';
 
 import React, { useContext, useEffect, useState } from 'react';
-import { Card } from 'primereact/card';
+// import { Card } from 'primereact/card';
 import { Chart } from 'primereact/chart';
 import { Tag } from 'primereact/tag';
 import { LayoutContext } from '../../layout/context/layoutcontext';
 import { ChartData, ChartOptions } from 'chart.js';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 const Dashboard = () => {
     const { layoutConfig } = useContext(LayoutContext);
@@ -105,7 +107,14 @@ const Dashboard = () => {
         });
     };
 
+    const router = useRouter();
+
     useEffect(() => {
+        const token = Cookies.get('token');
+        if (!token) {
+          router.push('/login');
+        }
+
         if (layoutConfig.colorScheme === 'light') {
             applyLightTheme();
         } else {

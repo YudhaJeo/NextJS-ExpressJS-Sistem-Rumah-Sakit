@@ -25,7 +25,6 @@ function LoginPage() {
 
       Cookies.set("token", res.data.token);
       router.push("/");
-      alert("Login berhasil!");
     } catch (err) {
       alert("Login gagal. email atau password salah.");
       console.error("Login error:", err);

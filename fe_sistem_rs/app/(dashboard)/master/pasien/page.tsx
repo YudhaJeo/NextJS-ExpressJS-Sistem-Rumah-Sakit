@@ -9,6 +9,8 @@ import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import TabelPasien from './components/tabelPasien';
 import { Pasien } from '@/types/pasien';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 const MasterPasien = () => {
   const [data, setData] = useState<Pasien[]>([]);
@@ -133,7 +135,14 @@ const MasterPasien = () => {
     }
   };
 
+  const router = useRouter();
+
   useEffect(() => {
+    const token = Cookies.get('token');
+    if (!token) {
+      router.push('/login');
+    }
+
     fetchData();
   }, []);
 

@@ -11,6 +11,8 @@ import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import TabelPendaftaran from "./components/tabelPasien";
 import { Pendaftaran } from "@/types/formulir";
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
   const [data, setData] = useState<Pendaftaran[]>([]);
@@ -26,11 +28,11 @@ const Page = () => {
     NAMADOKTER: "",
     STATUSKUNJUNGAN: "Diperiksa",
   });
-
+  
   const [pasienOptions, setPasienOptions] = useState<
-    { label: string; value: string; NAMALENGKAP: string }[]
+  { label: string; value: string; NAMALENGKAP: string }[]
   >([]);
-
+  
   const fetchPasien = async () => {
     try {
       const res = await axios.get("http://localhost:4000/api/pasien");
@@ -44,7 +46,7 @@ const Page = () => {
       console.error("Gagal ambil data pasien:", err);
     }
   };
-
+  
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -56,13 +58,13 @@ const Page = () => {
       setLoading(false);
     }
   };
-
+  
   const handleSubmit = async () => {
     const isEdit = !!form.IDPENDAFTARAN;
     const url = isEdit
-      ? `http://localhost:4000/api/pendaftaran/${form.IDPENDAFTARAN}`
-      : "http://localhost:4000/api/pendaftaran";
-
+    ? `http://localhost:4000/api/pendaftaran/${form.IDPENDAFTARAN}`
+    : "http://localhost:4000/api/pendaftaran";
+    
     try {
       if (isEdit) {
         console.log("PUT to:", url);
@@ -78,7 +80,7 @@ const Page = () => {
       console.error("Gagal simpan data:", err);
     }
   };
-
+  
   const resetForm = () => {
     setForm({
       IDPENDAFTARAN: 0,
@@ -91,7 +93,7 @@ const Page = () => {
       STATUSKUNJUNGAN: "Diperiksa",
     });
   };
-
+  
   const handleEdit = (row: Pendaftaran) => {
     setForm({
       ...row,
@@ -100,7 +102,7 @@ const Page = () => {
     });
     setDialogVisible(true);
   };
-
+  
   const handleDelete = async (row: Pendaftaran) => {
     try {
       await axios.delete(
@@ -111,10 +113,17 @@ const Page = () => {
       console.error("Gagal hapus data:", err);
     }
   };
+  
+  const router = useRouter();
 
   useEffect(() => {
     fetchData();
     fetchPasien();
+
+    const token = Cookies.get('token');
+    if (!token) {
+      router.push('/login');
+    }
   }, []);
 
   return (

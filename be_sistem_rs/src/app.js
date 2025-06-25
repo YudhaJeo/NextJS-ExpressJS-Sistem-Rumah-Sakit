@@ -6,6 +6,7 @@ import pasienRoutes from './routes/pasienRoutes.js';
 import reservasiRoutes from './routes/reservasiRoutes.js';
 import pendaftaranRoutes from './routes/pendaftaranRoutes.js';
 import dokumenRoutes from './routes/dokumenRoutes.js';
+import { verifyToken } from './middlewares/jwt.js'
 const app = express();
 
 app.use(cors({ 
@@ -17,9 +18,9 @@ app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
 app.use('/', authRoutes); 
-app.use('/api/pasien', pasienRoutes);
-app.use('/api/reservasi', reservasiRoutes);
-app.use('/api/dokumen', dokumenRoutes);
-app.use('/api/pendaftaran', pendaftaranRoutes);
+app.use('/api/pasien', verifyToken, pasienRoutes);
+app.use('/api/reservasi', verifyToken, reservasiRoutes);
+app.use('/api/dokumen', verifyToken, dokumenRoutes);
+app.use('/api/pendaftaran', verifyToken, pendaftaranRoutes);
 
 export default app;
