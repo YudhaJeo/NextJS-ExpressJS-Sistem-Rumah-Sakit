@@ -35,7 +35,11 @@ const TabelPasien = ({ data, loading, onEdit, onDelete }: Props) => {
             <Column field="AGAMA" header="Agama" />
             <Column field="GOLDARAH" header="Gol. Darah" />
             <Column field="ASURANSI" header="Asuransi" />
-            <Column field="NOASURANSI" header="No Asuransi" />
+            <Column
+                field="NOASURANSI"
+                header="No Asuransi"
+                body={(row: Pasien) => row.NOASURANSI?.trim() || '-'}
+            />
             <Column
                 field="TANGGALDAFTAR"
                 header="Tgl Daftar"
