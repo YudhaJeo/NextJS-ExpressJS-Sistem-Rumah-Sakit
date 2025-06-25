@@ -55,7 +55,7 @@ const Page = () => {
 
   const fetchPasien = async () => {
     try {
-      const res = await axios.get(`${API_URL}/api/pasien`);
+      const res = await axios.get(`${API_URL}/pasien`);
       const options = res.data.data.map((pasien: any) => ({
         label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
         value: pasien.NIK,
