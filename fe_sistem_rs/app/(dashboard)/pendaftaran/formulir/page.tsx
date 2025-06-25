@@ -121,23 +121,23 @@ const Page = () => {
   };
 
   const handleDelete = (row: Pendaftaran) => {
-    confirmDialog({
-      message: 'Apakah Anda yakin ingin menghapus data ini?',
-      header: 'Konfirmasi Hapus',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Ya',
-      rejectLabel: 'Batal',
-      accept: async () => {
-        try {
-          await axios.delete(`http://localhost:4000/api/pendaftaran/${row.IDPENDAFTARAN}`);
-          fetchData();
-          toastRef.current?.showToast('00', 'Data berhasil dihapus');
-        } catch (err) {
-          console.error('Gagal hapus data:', err);
-          toastRef.current?.showToast('01', 'Gagal menghapus data');
-        }
-      },
-    });
+  confirmDialog({
+    message: `Apakah Anda yakin ingin menghapus data milik ${row.NAMALENGKAP}?`,
+    header: 'Konfirmasi Hapus',
+    icon: 'pi pi-exclamation-triangle',
+    acceptLabel: 'Ya',
+    rejectLabel: 'Batal',
+    accept: async () => {
+      try {
+        await axios.delete(`http://localhost:4000/api/pendaftaran/${row.IDPENDAFTARAN}`);
+        fetchData();
+        toastRef.current?.showToast('00', 'Data berhasil dihapus');
+      } catch (err) {
+        console.error('Gagal hapus data:', err);
+        toastRef.current?.showToast('01', 'Gagal menghapus data');
+      }
+    },
+  });
   };
 
   const resetForm = () => {

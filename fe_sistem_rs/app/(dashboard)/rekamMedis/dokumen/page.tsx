@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -10,8 +10,12 @@ import TabelDokumen from './components/tabelDokumen';
 import { Dokumen } from '@/types/dokumen';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import HeaderBar from "@/components/headerbar";
+import HeaderBar from "@/app/components/headerbar";
 import FormDialogDokumen from "./components/formDialogDokumen";
+import { Toast } from 'primereact/toast';
+import { ConfirmDialog } from 'primereact/confirmdialog';
+import { confirmDialog } from 'primereact/confirmdialog';
+import { ToastMessage } from 'primereact/toast';
 
 const JenisDokumenOptions = [
   { label: 'Hasil Lab', value: 'Hasil Lab' },
@@ -33,13 +37,24 @@ const Page = () => {
     TANGGALUPLOAD: new Date().toISOString(),
     file: undefined,
   });
-  
+
   const [pasienOptions, setPasienOptions] = useState<
-  { label: string; value: string; NAMALENGKAP: string }[]
+    { label: string; value: string; NAMALENGKAP: string }[]
   >([]);
-  
+
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  
+  const toastRef = useRef<Toast>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    fetchData();
+    fetchPasien();
+    const token = Cookies.get('token');
+    if (!token) {
+      router.push('/login');
+    }
+  }, []);
+
   const fetchPasien = async () => {
     try {
       const res = await axios.get('http://localhost:4000/api/pasien');
@@ -53,38 +68,32 @@ const Page = () => {
       console.error('Gagal ambil data pasien:', err);
     }
   };
-  
+
   const fetchData = async () => {
     try {
       const res = await axios.get('http://localhost:4000/api/dokumen');
       setData(res.data.data);
-      setOriginalData(res.data.data); // Wajib agar pencarian berfungsi
+      setOriginalData(res.data.data);
     } catch (err) {
       console.error('Gagal mengambil data dokumen:', err);
     }
   };
-  
-  const router = useRouter();
-  useEffect(() => {
-    fetchData();
-    fetchPasien();
-    const token = Cookies.get('token');
-    if (!token) {
-      router.push('/login');
-    }
-  }, []);
-  
+
+  const showToast = (severity: ToastMessage['severity'], summary: string, detail: string) => {
+    toastRef.current?.show({ severity, summary, detail, life: 3000 });
+  };
+
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
     if (!form.NIK.trim()) newErrors.NIK = 'NIK wajib diisi';
     else if (!/^\d{16}$/.test(form.NIK)) newErrors.NIK = 'NIK harus 16 digit angka';
     if (!form.JENISDOKUMEN) newErrors.JENISDOKUMEN = 'Jenis dokumen wajib dipilih';
     if (!form.file && !form.IDDOKUMEN) newErrors.file = 'File wajib diunggah';
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
@@ -93,15 +102,14 @@ const Page = () => {
       formData.append('NIK', form.NIK);
       formData.append('JENISDOKUMEN', form.JENISDOKUMEN || '');
       formData.append('NAMAFILE', form.NAMAFILE);
-
-      if (form.file) {
-        formData.append('file', form.file);
-      }
+      if (form.file) formData.append('file', form.file);
 
       if (form.IDDOKUMEN) {
         await axios.put(`http://localhost:4000/api/dokumen/${form.IDDOKUMEN}`, formData);
+        showToast('success', 'Berhasil', 'Data dokumen berhasil diperbarui');
       } else {
         await axios.post('http://localhost:4000/api/dokumen', formData);
+        showToast('success', 'Berhasil', 'Data dokumen berhasil ditambahkan');
       }
 
       fetchData();
@@ -109,6 +117,7 @@ const Page = () => {
       resetForm();
     } catch (err) {
       console.error('Gagal menyimpan data:', err);
+      showToast('error', 'Gagal', 'Terjadi kesalahan saat menyimpan data');
     }
   };
 
@@ -142,14 +151,27 @@ const Page = () => {
     setDialogVisible(true);
   };
 
-const handleDelete = async (row: Dokumen) => {
-  try {
-    await axios.delete(`http://localhost:4000/api/dokumen/${row.IDDOKUMEN}`);
-    fetchData();
-  } catch (err) {
-    console.error('Gagal menghapus dokumen:', err);
-  }
-};
+  const confirmDelete = (row: Dokumen) => {
+    confirmDialog({
+      message: `Apakah yakin ingin menghapus dokumen milik '${row.NAMALENGKAP}'?`,
+      header: 'Konfirmasi Hapus',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Ya',
+      rejectLabel: 'Batal',
+      accept: () => handleDelete(row),
+    });
+  };
+
+  const handleDelete = async (row: Dokumen) => {
+    try {
+      await axios.delete(`http://localhost:4000/api/dokumen/${row.IDDOKUMEN}`);
+      fetchData();
+      showToast('success', 'Berhasil', 'Data dokumen berhasil dihapus');
+    } catch (err) {
+      console.error('Gagal menghapus dokumen:', err);
+      showToast('error', 'Gagal', 'Gagal menghapus data dokumen');
+    }
+  };
 
   const resetForm = () => {
     setForm({
@@ -165,13 +187,16 @@ const handleDelete = async (row: Dokumen) => {
     setErrors({});
   };
 
-const inputClass = (field: string) =>
-  errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
+  const inputClass = (field: string) =>
+    errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
-return (
-  <div className="card">
+  return (
+    <div className="card">
+      <Toast ref={toastRef} />
+      <ConfirmDialog />
+
       <h3 className="text-xl font-semibold">Manajemen Dokumen Rekam Medis</h3>
-      
+
       <HeaderBar
         title=""
         placeholder="Cari nama atau NIK..."
@@ -182,7 +207,7 @@ return (
       <TabelDokumen
         data={data}
         onEdit={handleEdit}
-        onDelete={handleDelete}
+        onDelete={confirmDelete}
         loading={false}
         onDownload={() => {}}
       />
