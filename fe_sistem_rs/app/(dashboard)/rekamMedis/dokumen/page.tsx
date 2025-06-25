@@ -17,14 +17,15 @@ const JenisDokumenOptions = [
 
 const Page = () => {
   const [data, setData] = useState<Dokumen[]>([]);
+  const [originalData, setOriginalData] = useState<Dokumen[]>([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [form, setForm] = useState<Dokumen>({
     IDDOKUMEN: 0,
-    NAMALENGKAP: "",
-    NIK: "",
-    JENISDOKUMEN: "",
-    NAMAFILE: "",
-    LOKASIFILE: "",
+    NAMALENGKAP: '',
+    NIK: '',
+    JENISDOKUMEN: '',
+    NAMAFILE: '',
+    LOKASIFILE: '',
     TANGGALUPLOAD: new Date().toISOString(),
     file: undefined,
   });
@@ -37,7 +38,7 @@ const Page = () => {
 
   const fetchPasien = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/pasien");
+      const res = await axios.get('http://localhost:4000/api/pasien');
       const options = res.data.data.map((pasien: any) => ({
         label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
         value: pasien.NIK,
@@ -45,15 +46,15 @@ const Page = () => {
       }));
       setPasienOptions(options);
     } catch (err) {
-      console.error("Gagal ambil data pasien:", err);
+      console.error('Gagal ambil data pasien:', err);
     }
   };
 
   const fetchData = async () => {
     try {
       const res = await axios.get('http://localhost:4000/api/dokumen');
-      console.log('Data dari API:', res.data);
       setData(res.data.data);
+      setOriginalData(res.data.data); // Wajib agar pencarian berfungsi
     } catch (err) {
       console.error('Gagal mengambil data dokumen:', err);
     }
@@ -76,41 +77,56 @@ const Page = () => {
   };
 
   const handleSubmit = async () => {
-  if (!validateForm()) return;
+    if (!validateForm()) return;
 
-  try {
-    const formData = new FormData();
-    formData.append('NIK', form.NIK);
-    formData.append('JENISDOKUMEN', form.JENISDOKUMEN || '');
-    formData.append('NAMAFILE', form.NAMAFILE); // penting kalau NAMAFILE digunakan
+    try {
+      const formData = new FormData();
+      formData.append('NIK', form.NIK);
+      formData.append('JENISDOKUMEN', form.JENISDOKUMEN || '');
+      formData.append('NAMAFILE', form.NAMAFILE);
 
-    // Jika ada file baru, tambahkan ke FormData
-    if (form.file) {
-      formData.append('file', form.file);
+      if (form.file) {
+        formData.append('file', form.file);
+      }
+
+      if (form.IDDOKUMEN) {
+        await axios.put(`http://localhost:4000/api/dokumen/${form.IDDOKUMEN}`, formData);
+      } else {
+        await axios.post('http://localhost:4000/api/dokumen', formData);
+      }
+
+      fetchData();
+      setDialogVisible(false);
+      resetForm();
+    } catch (err) {
+      console.error('Gagal menyimpan data:', err);
+    }
+  };
+
+  const handleSearch = (keyword: string) => {
+    const query = keyword.toLowerCase();
+    if (!query.trim()) {
+      setData(originalData);
+      return;
     }
 
-    if (form.IDDOKUMEN) {
-      await axios.put(`http://localhost:4000/api/dokumen/${form.IDDOKUMEN}`, formData);
-    } else {
-      await axios.post('http://localhost:4000/api/dokumen', formData);
-    }
+    const filtered = originalData.filter((item) => {
+      const nik = item.NIK?.toLowerCase() || '';
+      const nama = item.NAMALENGKAP?.toLowerCase() || '';
+      return nik.includes(query) || nama.includes(query);
+    });
 
-    fetchData();
-    setDialogVisible(false);
-    resetForm();
-  } catch (err) {
-    console.error('Gagal menyimpan data:', err);
-  }
-};
+    setData(filtered);
+  };
 
   const handleEdit = (row: Dokumen) => {
     setForm({
       IDDOKUMEN: row.IDDOKUMEN,
       NAMALENGKAP: row.NAMALENGKAP,
       NIK: row.NIK,
-      JENISDOKUMEN: row.JENISDOKUMEN || "",
-      NAMAFILE: row.NAMAFILE || "",
-      LOKASIFILE: row.LOKASIFILE || "",
+      JENISDOKUMEN: row.JENISDOKUMEN || '',
+      NAMAFILE: row.NAMAFILE || '',
+      LOKASIFILE: row.LOKASIFILE || '',
       TANGGALUPLOAD: row.TANGGALUPLOAD,
       file: undefined,
     });
@@ -129,11 +145,11 @@ const Page = () => {
   const resetForm = () => {
     setForm({
       IDDOKUMEN: 0,
-      NAMALENGKAP: "",
-      NIK: "",
-      JENISDOKUMEN: "",
-      NAMAFILE: "",
-      LOKASIFILE: "",
+      NAMALENGKAP: '',
+      NIK: '',
+      JENISDOKUMEN: '',
+      NAMAFILE: '',
+      LOKASIFILE: '',
       TANGGALUPLOAD: new Date().toISOString(),
       file: undefined,
     });
@@ -147,14 +163,20 @@ const Page = () => {
     <div className="card">
       <h3 className="text-xl font-semibold">Manajemen Dokumen Rekam Medis</h3>
 
-      <div className="flex justify-end my-3">
+      <div className="flex justify-content-end items-center my-3 gap-3">
+        <span className="p-input-icon-left w-80">
+          <i className="pi pi-search" />
+          <InputText
+            placeholder="Cari nama atau NIK..."
+            className="w-full"
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+        </span>
+
         <Button
-          label="Tambah Dokumen"
+          label="Tambah"
           icon="pi pi-plus"
-          onClick={() => {
-            setDialogVisible(true);
-            resetForm();
-          }}
+          onClick={() => setDialogVisible(true)}
         />
       </div>
 
@@ -184,11 +206,7 @@ const Page = () => {
         >
           <div>
             <label>Nama Pasien</label>
-            <InputText
-              className="w-full mt-2"
-              value={form.NAMALENGKAP}
-              disabled
-            />
+            <InputText className="w-full mt-2" value={form.NAMALENGKAP} disabled />
           </div>
           <div>
             <label>NIK Pasien</label>
@@ -235,7 +253,6 @@ const Page = () => {
             />
             {errors.file && <small className="text-red-500">{errors.file}</small>}
           </div>
-
 
           <div className="text-right pt-3">
             <Button type="submit" label="Simpan" icon="pi pi-save" />
