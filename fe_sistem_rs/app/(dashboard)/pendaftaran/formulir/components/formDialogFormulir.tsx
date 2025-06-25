@@ -39,11 +39,6 @@ const FormDialogPendaftaran = ({
         }}
       >
         <div>
-          <label>Nama Pasien</label>
-          <InputText className="w-full mt-2" value={form.NAMALENGKAP} disabled />
-        </div>
-
-        <div>
           <label>NIK</label>
           <Dropdown
             className="w-full mt-2"
