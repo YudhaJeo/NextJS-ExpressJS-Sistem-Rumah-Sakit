@@ -26,8 +26,8 @@ export const createDokumen = async (req, res) => {
       return res.status(400).json({ error: 'File harus diupload' });
     }
 
-    const NAMAFILE = file.originalname;
-    const LOKASIFILE = file.path;
+    const NAMAFILE = file.filename;
+    const LOKASIFILE = file.path.replace(/\\/g, '/'); 
     const TANGGALUPLOAD = new Date();
 
     const newDokumen = {
@@ -72,8 +72,8 @@ export const updateDokumen = async (req, res) => {
       }
 
       // Ganti data file
-      updatedData.LOKASIFILE = file.path;
-      updatedData.NAMAFILE = file.originalname;
+      updatedData.LOKASIFILE = file.path.replace(/\\/g, '/'); 
+      updatedData.NAMAFILE = file.filename;
     }
 
     const updated = await DokumenModel.update(id, updatedData);
@@ -114,6 +114,30 @@ export const downloadDokumen = async (req, res) => {
 
     res.download(filePath, filename); // ← Ini yang penting agar browser langsung download
   } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const downloadById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const dokumen = await DokumenModel.getById(id);
+    console.log('Dokumen:', dokumen); // Debug
+
+    if (!dokumen || !dokumen.LOKASIFILE) {
+      return res.status(404).json({ error: 'Dokumen tidak ditemukan' });
+    }
+
+    const fullPath = path.join(process.cwd(), dokumen.LOKASIFILE.replace(/\\/g, '/'));
+    console.log('Full path file:', fullPath); // Debug
+
+    if (!fs.existsSync(fullPath)) {
+      return res.status(404).json({ error: 'File tidak ditemukan di server' });
+    }
+
+    res.download(fullPath, dokumen.NAMAFILE);
+  } catch (err) {
+    console.error('Download error:', err); // ← Lihat detail errornya
     res.status(500).json({ error: err.message });
   }
 };

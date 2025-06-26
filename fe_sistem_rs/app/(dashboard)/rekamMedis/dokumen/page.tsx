@@ -100,7 +100,9 @@ const Page = () => {
       formData.append('NIK', form.NIK);
       formData.append('JENISDOKUMEN', form.JENISDOKUMEN || '');
       formData.append('NAMAFILE', form.NAMAFILE);
-      if (form.file) formData.append('file', form.file);
+      if (form.file) {
+        formData.append('file', form.file);
+      }
 
       if (form.IDDOKUMEN) {
         await axios.put(`${API_URL}/dokumen/${form.IDDOKUMEN}`, formData);
@@ -171,16 +173,17 @@ const Page = () => {
     }
   };
 
-  const handleDownload = async (row: Dokumen) => {
+const handleDownload = async (row: Dokumen) => {
   try {
-    const response = await axios.get(`${API_URL}/dokumen/download/${encodeURIComponent(row.NAMAFILE)}`, {
-      responseType: 'blob',
-    });
+    const response = await axios.get(`${API_URL}/dokumen/download-by-id/${row.IDDOKUMEN}`, {
+  responseType: 'blob',
+});
+
 
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', row.NAMAFILE); // Nama file saat disimpan
+    link.setAttribute('download', row.NAMAFILE);
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -188,7 +191,7 @@ const Page = () => {
     console.error('Gagal mengunduh file:', error);
     showToast('error', 'Gagal Download', 'Tidak dapat mengunduh file.');
   }
- };
+};
 
   const resetForm = () => {
     setForm({
