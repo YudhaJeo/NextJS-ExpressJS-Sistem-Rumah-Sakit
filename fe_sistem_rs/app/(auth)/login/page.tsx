@@ -42,25 +42,26 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen flex justify-content-center align-items-center">
-
-      {/* TOAST  */}
+      {/* TOAST */}
       <ToastNotifier ref={toastRef} />
-
+    
       <div className="animated-gradient-bg w-full">
-        <div className="card w-11/12 max-w-4xl md:h-30rem h-full">
+        <div className="card md:w-1/2 w-4/5 md:h-30rem h-full">
           <div className="grid h-full">
-            <div className="col-12 md:col-6 flex flex-col justify-center h-full px-4">
-              <div>
+            <div className="col-12 md:col-6 gap-2 flex flex-col justify-between h-full w-full">
+
+              <div className="w-1/2">
                 <img
                   src="/layout/images/logo.png"
                   style={{ maxWidth: "100%" }}
                   className="h-4rem md:h-5rem"
                   alt="logo"
                 />
+    
                 <h3 className="text-2xl text-left font-semibold font-sans mt-2 mb-10">
                   RUMAH SAKIT
                 </h3>
-
+    
                 <form onSubmit={handleLogin} className="grid">
                   <div className="col-12">
                     <label htmlFor="email">Email</label>
@@ -84,25 +85,28 @@ function LoginPage() {
                       className="w-full mt-3"
                     />
                   </div>
-
+    
                   <div className="col-12 mt-3">
                     <Button label="login" className="w-full" />
                   </div>
                 </form>
               </div>
-            </div>
+    
+              <div className="hidden md:block h-full overflow-hidden w-1/2">
+                <div className="w-full h-full">
+                  <img
+                    src="/layout/images/hospital.jpg"
+                    className="w-full h-full object-cover scale-[1.2]"
+                    alt="cover"
+                  />
+                </div>
+              </div>
 
-            <div className="hidden md:block md:col-6 h-full">
-              <img
-                src="/layout/images/login.png"
-                className="w-full h-full object-cover"
-                alt="cover"
-              />
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div>  
   );
 }
 
