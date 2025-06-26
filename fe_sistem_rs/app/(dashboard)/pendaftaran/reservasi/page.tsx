@@ -12,6 +12,8 @@ import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier, { ToastNotifierHandle } from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 const ReservasiPasienPage = () => {
   const [data, setData] = useState<Reservasi[]>([]);
   const [originalData, setOriginalData] = useState<Reservasi[]>([]);
@@ -50,9 +52,9 @@ const ReservasiPasienPage = () => {
 const fetchReservasi = async () => {
   setLoading(true);
   try {
-    const res = await axios.get('http://localhost:4000/api/reservasi');
+    const res = await axios.get(`${API_URL}/reservasi`);
     console.log('Data reservasi API:', res.data);
-    setData(res.data); // res.data langsung array
+    setData(res.data); 
     setOriginalData(res.data);
   } catch (err) {
     console.error('Gagal mengambil data:', err);
@@ -63,7 +65,7 @@ const fetchReservasi = async () => {
 
   const fetchPasien = async () => {
     try {
-      const res = await axios.get('http://localhost:4000/api/pasien');
+      const res = await axios.get(`${API_URL}/pasien`);
       const options = res.data.data.map((pasien: any) => ({
         label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
         value: pasien.NIK,
@@ -96,8 +98,8 @@ const fetchReservasi = async () => {
 
     const isEdit = !!formData.IDRESERVASI;
     const url = isEdit
-      ? `http://localhost:4000/api/reservasi/${formData.IDRESERVASI}`
-      : 'http://localhost:4000/api/reservasi';
+      ? `${API_URL}/reservasi/${formData.IDRESERVASI}`
+      : `${API_URL}/reservasi`;
 
     try {
       if (isEdit) {
@@ -133,7 +135,7 @@ const fetchReservasi = async () => {
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`http://localhost:4000/api/reservasi/${row.IDRESERVASI}`);
+          await axios.delete(`${API_URL}/reservasi/${row.IDRESERVASI}`);
           fetchReservasi();
           toastRef.current?.showToast('00', 'Data berhasil dihapus');
         } catch (err) {
