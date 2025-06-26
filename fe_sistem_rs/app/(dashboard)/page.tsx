@@ -161,7 +161,7 @@ const Dashboard = () => {
 
             <div className="col-12">
                 <div className="card">
-                    <span className="text-900 font-medium text-lg mb-4 block mb-5">Laporan Bulanan</span>
+                    <span className="text-900 font-medium text-lg mb-4 block">Laporan Bulanan</span>
                     <div className="h-10rem">
                         <Chart type="line" data={chartDataLine} options={lineOptions} />
                     </div>
