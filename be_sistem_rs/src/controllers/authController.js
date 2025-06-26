@@ -28,7 +28,10 @@ export const login = async (req, res) => {
     });
 
     // Kirim token ke client
-    res.status(200).json({ token });
+    res.status(200).json({ 
+      token, 
+      username: user.USERNAME 
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Terjadi kesalahan server' });
