@@ -5,6 +5,7 @@ import { Reservasi } from '../../../../../types/reservasi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { formatTanggal, formatJam } from '@/types/dateformat';
 
 interface Props {
     data: Reservasi[];
@@ -12,6 +13,14 @@ interface Props {
     onEdit: (row: Reservasi) => void;
     onDelete: (row: Reservasi) => void;
 }
+const tanggalTemplate = (rowData: Reservasi) => {
+    return formatTanggal(rowData.TANGGALRESERVASI);
+  };
+
+  // Format Jam
+  const jamTemplate = (rowData: Reservasi) => {
+    return formatJam(rowData.JAMRESERVASI);
+  };
 
 const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }: Props) => {
     return (
@@ -19,8 +28,8 @@ const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }: Props) => {
             <Column field="NIK" header="NIK" />
             <Column field="POLI" header="Poli" />
             <Column field="NAMADOKTER" header="Nama Dokter" />
-            <Column field="TANGGALRESERVASI" header="Tanggal Reservasi" />
-            <Column field="JAMRESERVASI" header="Jam Reservasi" />
+            <Column field="TANGGALRESERVASI" header="Tanggal Reservasi " body={tanggalTemplate} />
+            <Column field="JAMRESERVASI" header="Jam Reservasi" body={jamTemplate} />
             <Column field="STATUS" header="Status" />
             <Column field="KETERANGAN" header="Keterangan" />
             <Column
