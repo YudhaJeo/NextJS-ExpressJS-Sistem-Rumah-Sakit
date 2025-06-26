@@ -1,17 +1,13 @@
+//routes
+// routes/reservasiRoutes.js
 import express from 'express';
-import {
-  getAllReservasi,
-  createReservasi,
-  updateReservasi,
-  deleteReservasi
-} from '../controllers/reservasiController.js';
-import { verifyToken } from '../middlewares/jwt.js';
+import * as ReservasiController from '../controllers/reservasiController.js';
 
 const router = express.Router();
 
-router.get('/', getAllReservasi);
-router.post('/', createReservasi);
-router.put('/:id', updateReservasi);
-router.delete('/:id', deleteReservasi);
+router.get('/', ReservasiController.getAllReservasi);
+router.post('/', ReservasiController.createReservasi);
+router.put('/:id', ReservasiController.updateReservasi);
+router.delete('/:id', ReservasiController.deleteReservasi);
 
 export default router;

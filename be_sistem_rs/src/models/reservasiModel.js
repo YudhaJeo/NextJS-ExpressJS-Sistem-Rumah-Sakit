@@ -1,17 +1,20 @@
+//modelsReservasi
 import db from '../core/config/knex.js';
 
-export async function getAll() {
-    return await db.Reservasi.findAll();
+export const getAll = () => {
+    return db('reservasi')
+      .join('pasien', 'reservasi.NIK', 'pasien.NIK') 
+      .select('reservasi.*', 'pasien.NAMALENGKAP');
+  }
+
+export const create = (data) => {
+  return db('reservasi').insert(data);
 }
 
-export async function create(data) {
-    return await db.Reservasi.create(data);
+export const update = (id, data) => {
+    return db('reservasi').where('IDRESERVASI', id).update(data);
 }
 
-export async function update(id, data) {
-    return await db.Reservasi.update(data, { where: { id } });
-}
-
-export async function remove(id) {
-    return await db.Reservasi.destroy({ where: { id } });
+export const remove = (id) => {
+    return db('reservasi').where('IDRESERVASI', id).del();
 }

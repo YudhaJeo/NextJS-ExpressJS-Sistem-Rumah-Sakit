@@ -1,10 +1,12 @@
+//reservasiCOntroller
 import * as ReservasiModel from '../models/reservasiModel.js';
 
 export async function getAllReservasi(req, res) {
     try {
         const reservasi = await ReservasiModel.getAll();
-        res.json({ data: reservasi });
+        res.json(reservasi);
     } catch (err) {
+        console.error('Error backend:', err);
         res.status(500).json({ error: err.message });
     }
 }
@@ -12,21 +14,28 @@ export async function getAllReservasi(req, res) {
 export async function createReservasi(req, res) {
     try {
         const { NIK, POLI, NAMADOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN } = req.body;
+
+        if (!NIK || !POLI || !NAMADOKTER || !TANGGALRESERVASI || !JAMRESERVASI || !STATUS) {
+            return res.status(400).json({ error: 'Semua field wajib diisi' });
+        }
+
         await ReservasiModel.create({ NIK, POLI, NAMADOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN });
         res.json({ message: 'Reservasi berhasil ditambahkan' });
     } catch (err) {
+        console.error('Error backend:', err);
         res.status(500).json({ error: err.message });
     }
 }
 
 export async function updateReservasi(req, res) {
-    console.log("Update data:", req.body);
     try {
         const id = req.params.id;
         const { NIK, POLI, NAMADOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN } = req.body;
+
         await ReservasiModel.update(id, { NIK, POLI, NAMADOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN });
         res.json({ message: 'Reservasi berhasil diperbarui' });
     } catch (err) {
+        console.error('Error backend:', err);
         res.status(500).json({ error: err.message });
     }
 }
@@ -37,6 +46,7 @@ export async function deleteReservasi(req, res) {
         await ReservasiModel.remove(id);
         res.json({ message: 'Reservasi berhasil dihapus' });
     } catch (err) {
+        console.error('Error backend:', err);
         res.status(500).json({ error: err.message });
     }
 }

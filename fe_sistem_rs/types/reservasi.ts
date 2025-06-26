@@ -1,3 +1,4 @@
+//reservasi.ts
 export interface Reservasi {
     IDRESERVASI?: number;
     NIK: string;

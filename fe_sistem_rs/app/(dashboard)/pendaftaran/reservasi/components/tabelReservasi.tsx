@@ -1,6 +1,7 @@
+//tabelReservasi
 'use client';
 
-import { Reservasi } from './reservasi';
+import { Reservasi } from '../../../../../types/reservasi';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
