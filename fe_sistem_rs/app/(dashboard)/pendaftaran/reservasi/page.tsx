@@ -47,18 +47,19 @@ const ReservasiPasienPage = () => {
     fetchPasien();
   }, []);
 
-  const fetchReservasi = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get('http://localhost:4000/api/reservasi');
-      setData(res.data.data);
-      setOriginalData(res.data.data);
-    } catch (err) {
-      console.error('Gagal mengambil data:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchReservasi = async () => {
+  setLoading(true);
+  try {
+    const res = await axios.get('http://localhost:4000/api/reservasi');
+    console.log('Data reservasi API:', res.data);
+    setData(res.data); // res.data langsung array
+    setOriginalData(res.data);
+  } catch (err) {
+    console.error('Gagal mengambil data:', err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const fetchPasien = async () => {
     try {
