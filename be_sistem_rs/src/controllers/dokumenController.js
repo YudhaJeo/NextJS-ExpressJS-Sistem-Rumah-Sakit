@@ -122,14 +122,12 @@ export const downloadById = async (req, res) => {
   try {
     const { id } = req.params;
     const dokumen = await DokumenModel.getById(id);
-    console.log('Dokumen:', dokumen); // Debug
 
     if (!dokumen || !dokumen.LOKASIFILE) {
       return res.status(404).json({ error: 'Dokumen tidak ditemukan' });
     }
 
     const fullPath = path.join(process.cwd(), dokumen.LOKASIFILE.replace(/\\/g, '/'));
-    console.log('Full path file:', fullPath); // Debug
 
     if (!fs.existsSync(fullPath)) {
       return res.status(404).json({ error: 'File tidak ditemukan di server' });
