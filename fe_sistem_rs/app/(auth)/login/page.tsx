@@ -1,3 +1,4 @@
+// app/(auth)/login/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -25,6 +26,11 @@ function LoginPage() {
 
       Cookies.set("token", res.data.token);
       router.push("/");
+
+      // untuk username top bar
+      Cookies.set('token', res.data.token, { expires: 1 });
+      Cookies.set('username', res.data.username, { expires: 1 });
+
     } catch (err) {
       alert("Login gagal. email atau password salah.");
       console.error("Login error:", err);

@@ -5,6 +5,9 @@ import { classNames } from 'primereact/utils';
 import React, { forwardRef, useContext, useImperativeHandle, useRef } from 'react';
 import { AppTopbarRef } from '@/types';
 import { LayoutContext } from './context/layoutcontext';
+import Cookies from 'js-cookie';
+import { useEffect, useState } from 'react';
+
 
 const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
     const { layoutConfig, layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
@@ -17,6 +20,13 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
         topbarmenu: topbarmenuRef.current,
         topbarmenubutton: topbarmenubuttonRef.current
     }));
+
+    const [username, setUsername] = useState('');
+
+    useEffect(() => {
+        const name = Cookies.get('username');
+        if (name) setUsername(name);
+    }, []);
 
     return (
         <div className="layout-topbar">
@@ -33,7 +43,11 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                 <i className="pi pi-ellipsis-v" />
             </button>
 
+
             <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
+                {/* Username on Top bar  */}
+                <p className="text-base md:text-xl my-2 font-medium ">{username}</p> 
+
                 <button type="button" className="p-link layout-topbar-button">
                     <i className="pi pi-calendar"></i>
                     <span>Calendar</span>
@@ -48,6 +62,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                         <span>Settings</span>
                     </button>
                 </Link>
+
             </div>
         </div>
     );
