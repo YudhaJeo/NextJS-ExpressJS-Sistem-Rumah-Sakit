@@ -106,7 +106,7 @@ const Page = () => {
     const isEdit = !!form.IDPASIEN;
     const url = isEdit
       ? `${API_URL}/pasien/${form.IDPASIEN}`
-      : `${API_URL}/api/pasien`;
+      : `${API_URL}/pasien`;
 
     try {
       const payload = {
