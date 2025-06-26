@@ -28,15 +28,8 @@ export default function ProfilePage() {
   };
 
   return (
-    
-    <>
-    <div className="flex justify-content-end items-center my-3 gap-3">
-      <h4 className="text-lg font-semibold">
-        Profil Pengguna
-      </h4>
-    </div>
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Profil Pengguna</h1>
+      <h1 className="text-2xl font-bold mb-4">Edit Pengguna</h1>
 
       <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
         <div className="mb-4">
@@ -62,22 +55,19 @@ export default function ProfilePage() {
 
         <div className="flex gap-3 mt-4">
           
-          <Link href="/profile/edit">
+          <Link href="/profile">
             <button className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">
-              Edit Profil
+              Batal
             </button>
           </Link>
-         
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 px-4 py-2 rounded hover:bg-red-600"
-          >
-            Logout
+
+          <button className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">
+              Simpan 
           </button>
+          
         </div>
 
       </div>
     </div>
-    </>
   );
 }
