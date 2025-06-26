@@ -1,7 +1,7 @@
 // app/(auth)/login/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -9,11 +9,13 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import React from "react";
 import "@/styles/gradient.css";
+import ToastNotifier, { ToastNotifierHandle } from '@/app/components/toastNotifier';
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const toastRef = useRef<ToastNotifierHandle>(null); 
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,20 +27,25 @@ function LoginPage() {
       });
 
       Cookies.set("token", res.data.token);
-      router.push("/");
+      Cookies.set("username", res.data.username);
 
-      // untuk username top bar
-      Cookies.set('token', res.data.token, { expires: 1 });
-      Cookies.set('username', res.data.username, { expires: 1 });
+      toastRef.current?.showToast("00", "Login berhasil!"); 
+      setTimeout(() => {
+        router.push("/");
+      }, 500); // durasi
 
     } catch (err) {
-      alert("Login gagal. email atau password salah.");
+      toastRef.current?.showToast("01", "Login gagal. Email atau password salah."); 
       console.error("Login error:", err);
     }
   };
 
   return (
     <div className="min-h-screen flex justify-content-center align-items-center">
+
+      {/* TOAST  */}
+      <ToastNotifier ref={toastRef} />
+
       <div className="animated-gradient-bg w-full">
         <div className="card w-11/12 max-w-4xl md:h-30rem h-full">
           <div className="grid h-full">
