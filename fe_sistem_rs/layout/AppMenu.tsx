@@ -26,7 +26,7 @@ const AppMenu = () => {
       items: [
         {
           label: "Pasien",
-          icon: "pi pi-fw pi-circle",
+          icon: "pi pi-fw pi-id-card",
           items: [
             {
               label: "Database Pasien",
@@ -42,7 +42,7 @@ const AppMenu = () => {
       items: [
         {
           label: "Pendaftaran Pasien",
-          icon: "pi pi-fw pi-circle",
+          icon: "pi pi-fw pi-user-plus",
           items: [
             {
               label: "Reservasi",
@@ -63,7 +63,7 @@ const AppMenu = () => {
       items: [
         {
           label: "Data Medis",
-          icon: "pi pi-fw pi-circle",
+          icon: "pi pi-fw pi-folder-open",
           items: [
             {
               label: "File Dokumen",
@@ -84,7 +84,7 @@ const AppMenu = () => {
       items: [
         {
           label: "Reporting",
-          icon: "pi pi-fw pi-circle",
+          icon: "pi pi-fw pi-chart-bar",
           items: [
             {
               label: "Pendaftaran Pasien",
