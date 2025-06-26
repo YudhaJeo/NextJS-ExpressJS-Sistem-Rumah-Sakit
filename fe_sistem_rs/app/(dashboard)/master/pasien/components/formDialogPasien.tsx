@@ -50,7 +50,12 @@ const FormDialogPasien = ({ visible, onHide, onSubmit, form, setForm, errors }: 
             className={inputClass('NIK')}
             maxLength={16}
             value={form.NIK}
-            onChange={(e) => setForm({ ...form, NIK: e.target.value })}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, ''); 
+              if (value.length <= 16) {
+                setForm({ ...form, NIK: value });
+              }
+            }}
           />
           {errors.NIK && <small className="text-red-500">{errors.NIK}</small>}
         </div>
@@ -102,7 +107,12 @@ const FormDialogPasien = ({ visible, onHide, onSubmit, form, setForm, errors }: 
           <InputText
             className={inputClass('NOHP')}
             value={form.NOHP}
-            onChange={(e) => setForm({ ...form, NOHP: e.target.value })}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, ''); 
+              if (value.length <= 15) {
+                setForm({ ...form, NOHP: value });
+              }
+            }}
           />
           {errors.NOHP && <small className="text-red-500">{errors.NOHP}</small>}
         </div>

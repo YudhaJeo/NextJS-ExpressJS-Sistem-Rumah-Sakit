@@ -43,10 +43,6 @@ const FormDialogDokumen = ({
           onSubmit();
         }}
       >
-        <div>
-          <label>Nama Pasien</label>
-          <InputText className="w-full mt-2" value={form.NAMALENGKAP} disabled />
-        </div>
 
         <div>
           <label>NIK Pasien</label>
