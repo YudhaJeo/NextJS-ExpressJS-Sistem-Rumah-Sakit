@@ -2,14 +2,11 @@
 
 import Link from 'next/link';
 import { classNames } from 'primereact/utils';
-import React, { forwardRef, useContext, useImperativeHandle, useRef } from 'react';
-import { AppTopbarRef } from '@/types';
+import React, { forwardRef, useContext, useImperativeHandle, useRef, useEffect, useState } from 'react';
 import { LayoutContext } from './context/layoutcontext';
 import Cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
 
-
-const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
+const AppTopbar = forwardRef((props, ref) => {
     const { layoutConfig, layoutState, onMenuToggle, showProfileSidebar } = useContext(LayoutContext);
     const menubuttonRef = useRef(null);
     const topbarmenuRef = useRef(null);
@@ -43,28 +40,15 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                 <i className="pi pi-ellipsis-v" />
             </button>
 
-
             <div ref={topbarmenuRef} className={classNames('layout-topbar-menu', { 'layout-topbar-menu-mobile-active': layoutState.profileSidebarVisible })}>
-                {/* Username on Top bar  */}
-                <p className="text-base md:text-xl my-2 font-medium ">{username}</p> 
+                <p className="text-base md:text-xl my-2 font-medium">{username}</p>
 
-                {/* <button type="button" className="p-link layout-topbar-button">
-                    <i className="pi pi-calendar"></i>
-                    <span>Calendar</span>
-                </button> */}
                 <Link href="/profile">
-                <button type="button" className="p-link layout-topbar-button">
-                    <i className="pi pi-user"></i>
-                    <span>Profile</span>
-                </button>
-                </Link>
-                {/* <Link href="/documentation">
                     <button type="button" className="p-link layout-topbar-button">
-                        <i className="pi pi-cog"></i>
-                        <span>Settings</span>
+                        <i className="pi pi-user"></i>
+                        <span>Profile</span>
                     </button>
-                </Link> */}
-
+                </Link>
             </div>
         </div>
     );

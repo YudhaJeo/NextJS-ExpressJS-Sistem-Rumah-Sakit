@@ -6,17 +6,16 @@ import { Card } from 'primereact/card';
 import { Chart } from 'primereact/chart';
 import { Tag } from 'primereact/tag';
 import { LayoutContext } from '../../layout/context/layoutcontext';
-import { ChartData, ChartOptions } from 'chart.js';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 
 const Dashboard = () => {
     const { layoutConfig } = useContext(LayoutContext);
+    const [lineOptions, setLineOptions] = useState({});
+    const [barOptions, setBarOptions] = useState({});
+    const router = useRouter();
 
-    const [lineOptions, setLineOptions] = useState<ChartOptions>({});
-    const [barOptions, setBarOptions] = useState<ChartOptions>({});
-
-    const chartDataBar: ChartData = {
+    const chartDataBar = {
         labels: ["Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu", "Minggu"],
         datasets: [
             {
@@ -27,7 +26,7 @@ const Dashboard = () => {
         ],
     };
 
-    const chartDataLine: ChartData = {
+    const chartDataLine = {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
         datasets: [
             {
@@ -48,7 +47,7 @@ const Dashboard = () => {
     };
 
     const applyLightTheme = () => {
-        const commonOptions: ChartOptions = {
+        const commonOptions = {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
@@ -78,7 +77,7 @@ const Dashboard = () => {
     };
 
     const applyDarkTheme = () => {
-        const commonOptions: ChartOptions = {
+        const commonOptions = {
             maintainAspectRatio: false,
             plugins: {
                 legend: {
@@ -107,12 +106,10 @@ const Dashboard = () => {
         });
     };
 
-    const router = useRouter();
-
     useEffect(() => {
         const token = Cookies.get('token');
         if (!token) {
-          router.push('/login');
+            router.push('/login');
         }
 
         if (layoutConfig.colorScheme === 'light') {

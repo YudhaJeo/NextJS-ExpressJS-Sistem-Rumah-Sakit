@@ -1,23 +1,22 @@
-// app/(auth)/login/page.tsx
+// app/(auth)/login/page.js
 "use client";
 
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
-import React from "react";
 import "@/styles/gradient.css";
-import ToastNotifier, { ToastNotifierHandle } from '@/app/components/toastNotifier';
+import ToastNotifier from "@/app/components/toastNotifier";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const toastRef = useRef<ToastNotifierHandle>(null); 
+  const toastRef = useRef(null);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
@@ -29,27 +28,29 @@ function LoginPage() {
       Cookies.set("token", res.data.token);
       Cookies.set("username", res.data.username);
 
-      toastRef.current?.showToast("00", "Login berhasil!"); 
+      if (toastRef.current) {
+        toastRef.current.showToast("00", "Login berhasil!");
+      }
+
       setTimeout(() => {
         router.push("/");
-      }, 500); // durasi
-
+      }, 500);
     } catch (err) {
-      toastRef.current?.showToast("01", "Login gagal. Email atau password salah."); 
+      if (toastRef.current) {
+        toastRef.current.showToast("01", "Login gagal. Email atau password salah.");
+      }
       console.error("Login error:", err);
     }
   };
 
   return (
     <div className="min-h-screen flex justify-content-center align-items-center">
-      {/* TOAST */}
       <ToastNotifier ref={toastRef} />
-    
+
       <div className="animated-gradient-bg w-full">
         <div className="card md:w-1/2 w-4/5 md:h-30rem h-full">
           <div className="grid h-full">
             <div className="col-12 md:col-6 gap-2 flex flex-col justify-between h-full w-full">
-
               <div className="w-1/2">
                 <img
                   src="/layout/images/logo.png"
@@ -57,11 +58,11 @@ function LoginPage() {
                   className="h-4rem md:h-5rem"
                   alt="logo"
                 />
-    
+
                 <h3 className="text-2xl text-left font-semibold font-sans mt-2 mb-10">
                   RUMAH SAKIT
                 </h3>
-    
+
                 <form onSubmit={handleLogin} className="grid">
                   <div className="col-12">
                     <label htmlFor="email">Email</label>
@@ -85,13 +86,13 @@ function LoginPage() {
                       className="w-full mt-3"
                     />
                   </div>
-    
+
                   <div className="col-12 mt-3">
                     <Button label="login" className="w-full" />
                   </div>
                 </form>
               </div>
-    
+
               <div className="hidden md:block h-full overflow-hidden w-1/2">
                 <div className="w-full h-full">
                   <img
@@ -101,12 +102,11 @@ function LoginPage() {
                   />
                 </div>
               </div>
-
             </div>
           </div>
         </div>
       </div>
-    </div>  
+    </div>
   );
 }
 

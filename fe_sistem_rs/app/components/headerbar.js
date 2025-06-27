@@ -3,14 +3,7 @@
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 
-interface Props {
-  title: string;
-  placeholder: string;
-  onSearch: (keyword: string) => void;
-  onAddClick: () => void;
-}
-
-const HeaderBar = ({ title, placeholder, onSearch, onAddClick }: Props) => {
+const HeaderBar = ({ title, placeholder, onSearch, onAddClick }) => {
   return (
     <div className="flex justify-content-end items-center my-3 gap-3">
       <h4 className="text-lg font-semibold">{title}</h4>

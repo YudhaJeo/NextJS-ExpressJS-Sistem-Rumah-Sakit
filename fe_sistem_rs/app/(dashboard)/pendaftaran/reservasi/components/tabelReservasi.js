@@ -1,29 +1,20 @@
-//tabelReservasi
 "use client";
 
-import { Reservasi } from "../../../../../types/reservasi";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { formatTanggal, formatJam } from "@/types/dateformat";
 import { Tag } from "primereact/tag";
+import { formatTanggal, formatJam } from "@/types/dateformat";
 
-interface Props {
-  data: Reservasi[];
-  loading: boolean;
-  onEdit: (row: Reservasi) => void;
-  onDelete: (row: Reservasi) => void;
-}
-const tanggalTemplate = (rowData: Reservasi) => {
+const tanggalTemplate = (rowData) => {
   return formatTanggal(rowData.TANGGALRESERVASI);
 };
 
-// Format Jam
-const jamTemplate = (rowData: Reservasi) => {
+const jamTemplate = (rowData) => {
   return formatJam(rowData.JAMRESERVASI);
 };
 
-const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }: Props) => {
+const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable
       value={data}
@@ -39,15 +30,18 @@ const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }: Props) => {
       <Column field="NAMADOKTER" header="Nama Dokter" />
       <Column
         field="TANGGALRESERVASI"
-        header="Tanggal Reservasi "
+        header="Tanggal Reservasi"
         body={tanggalTemplate}
       />
-      <Column field="JAMRESERVASI" header="Jam Reservasi" body={jamTemplate} />
+      <Column
+        field="JAMRESERVASI"
+        header="Jam Reservasi"
+        body={jamTemplate}
+      />
       <Column
         header="Status"
         body={(row) => {
           const status = row.STATUS;
-
           const severity = () => {
             switch (status) {
               case "Menunggu":
@@ -64,11 +58,10 @@ const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }: Props) => {
           return <Tag value={status} severity={severity()} />;
         }}
       />
-
       <Column field="KETERANGAN" header="Keterangan" />
       <Column
         header="Aksi"
-        body={(row: Reservasi) => (
+        body={(row) => (
           <div className="flex gap-2">
             <Button
               icon="pi pi-pencil"

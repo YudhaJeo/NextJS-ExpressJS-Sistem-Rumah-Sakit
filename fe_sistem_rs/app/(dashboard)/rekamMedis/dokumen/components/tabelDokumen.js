@@ -1,25 +1,10 @@
 "use client";
 
-import { Dokumen } from "@/types/dokumen";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 
-interface Props {
-  data: Dokumen[];
-  loading: boolean;
-  onDownload: (row: Dokumen) => void;
-  onEdit: (row: Dokumen) => void;
-  onDelete: (row: Dokumen) => void;
-}
-
-const TabelDokumen = ({
-  data,
-  loading,
-  onDownload,
-  onEdit,
-  onDelete,
-}: Props) => {
+const TabelDokumen = ({ data, loading, onDownload, onEdit, onDelete }) => {
   return (
     <DataTable
       value={data}
@@ -36,7 +21,7 @@ const TabelDokumen = ({
       <Column
         field="TANGGALUPLOAD"
         header="Tgl Upload"
-        body={(row: Dokumen) => {
+        body={(row) => {
           const tanggal = new Date(row.TANGGALUPLOAD);
           return tanggal.toLocaleDateString("id-ID", {
             day: "numeric",
@@ -49,14 +34,14 @@ const TabelDokumen = ({
       />
       <Column
         header="Aksi"
-        body={(row: Dokumen) => (
+        body={(row) => (
           <div className="flex gap-2">
             <Button
               icon="pi pi-download"
               size="small"
               severity="info"
               aria-label="Download"
-              onClick={() => onDownload(row)} // ✅ ini perubahan utama
+              onClick={() => onDownload(row)}
             />
             <Button
               icon="pi pi-pencil"

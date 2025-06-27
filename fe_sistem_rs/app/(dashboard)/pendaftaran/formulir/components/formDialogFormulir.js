@@ -1,20 +1,10 @@
-"use client";
+'use client';
 
-import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
-import { Calendar } from "primereact/calendar";
-import { Dropdown } from "primereact/dropdown";
-import { Button } from "primereact/button";
-import { Pendaftaran } from "@/types/formulir";
-
-interface Props {
-  visible: boolean;
-  onHide: () => void;
-  onSubmit: () => void;
-  form: Pendaftaran;
-  setForm: (form: Pendaftaran) => void;
-  pasienOptions: { label: string; value: string; NAMALENGKAP: string }[];
-}
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { Calendar } from 'primereact/calendar';
+import { Dropdown } from 'primereact/dropdown';
+import { Button } from 'primereact/button';
 
 const FormDialogPendaftaran = ({
   visible,
@@ -23,13 +13,13 @@ const FormDialogPendaftaran = ({
   form,
   setForm,
   pasienOptions,
-}: Props) => {
+}) => {
   return (
     <Dialog
-      header={form.IDPENDAFTARAN ? "Edit Pendaftaran" : "Tambah Pendaftaran"}
+      header={form.IDPENDAFTARAN ? 'Edit Pendaftaran' : 'Tambah Pendaftaran'}
       visible={visible}
       onHide={onHide}
-      style={{ width: "40vw" }}
+      style={{ width: '40vw' }}
     >
       <form
         className="space-y-3"
@@ -49,7 +39,7 @@ const FormDialogPendaftaran = ({
               setForm({
                 ...form,
                 NIK: e.value,
-                NAMALENGKAP: selected?.NAMALENGKAP || "",
+                NAMALENGKAP: selected?.NAMALENGKAP || '',
               });
             }}
             placeholder="Pilih NIK"
@@ -67,7 +57,7 @@ const FormDialogPendaftaran = ({
             onChange={(e) =>
               setForm({
                 ...form,
-                TANGGALKUNJUNGAN: e.value?.toISOString().split("T")[0] || "",
+                TANGGALKUNJUNGAN: e.value?.toISOString().split('T')[0] || '',
               })
             }
             showIcon
@@ -78,7 +68,7 @@ const FormDialogPendaftaran = ({
           <label>Layanan</label>
           <Dropdown
             className="w-full mt-2"
-            options={["Rawat Jalan", "Rawat Inap", "IGD"].map((val) => ({
+            options={['Rawat Jalan', 'Rawat Inap', 'IGD'].map((val) => ({
               label: val,
               value: val,
             }))}
@@ -110,7 +100,7 @@ const FormDialogPendaftaran = ({
           <label>Status Kunjungan</label>
           <Dropdown
             className="w-full mt-2"
-            options={["Diperiksa", "Batal", "Selesai"].map((val) => ({
+            options={['Diperiksa', 'Batal', 'Selesai'].map((val) => ({
               label: val,
               value: val,
             }))}

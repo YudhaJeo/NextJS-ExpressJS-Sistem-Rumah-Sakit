@@ -7,19 +7,18 @@ import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import TabelPasien from './components/tabelPasien';
 import FormDialogPasien from './components/formDialogPasien';
-import ToastNotifier, { ToastNotifierHandle } from '@/app/components/toastNotifier';
+import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { Pasien } from '@/types/pasien';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
-  const [data, setData] = useState<Pasien[]>([]);
-  const [originalData, setOriginalData] = useState<Pasien[]>([]);
+  const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
 
-  const [form, setForm] = useState<Pasien>({
+  const [form, setForm] = useState({
     NIK: '',
     NAMALENGKAP: '',
     TANGGALLAHIR: '',
@@ -32,9 +31,9 @@ const Page = () => {
     NOASURANSI: '',
   });
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [errors, setErrors] = useState({});
 
-  const toastRef = useRef<ToastNotifierHandle>(null);
+  const toastRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -61,7 +60,7 @@ const Page = () => {
   };
 
   const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
+    const newErrors = {};
 
     if (!form.NAMALENGKAP.trim()) newErrors.NAMALENGKAP = 'Nama wajib diisi';
     if (!form.NIK.trim()) {
@@ -87,7 +86,7 @@ const Page = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSearch = (keyword: string) => {
+  const handleSearch = (keyword) => {
     if (!keyword) {
       setData(originalData);
     } else {
@@ -131,7 +130,7 @@ const Page = () => {
     }
   };
 
-  const handleEdit = (row: Pasien) => {
+  const handleEdit = (row) => {
     const formattedTanggal = row.TANGGALLAHIR
       ? new Date(row.TANGGALLAHIR).toISOString().split('T')[0]
       : '';
@@ -144,7 +143,7 @@ const Page = () => {
     setDialogVisible(true);
   };
 
-  const handleDelete = (row: Pasien) => {
+  const handleDelete = (row) => {
     confirmDialog({
       message: `Apakah Anda yakin ingin menghapus pasien '${row.NAMALENGKAP}'?`,
       header: 'Konfirmasi Hapus',

@@ -1,4 +1,3 @@
-//formReseversi
 "use client";
 
 import { Dialog } from "primereact/dialog";
@@ -6,19 +5,16 @@ import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
-import { Reservasi } from "@/types/reservasi";
 
-interface Props {
-  visible: boolean;
-  formData: Reservasi;
-  onHide: () => void;
-  onChange: (data: Reservasi) => void;
-  onSubmit: () => void;
-  setFormData: (formData: Reservasi) => void;
-  pasienOptions: { label: string; value: string; NAMALENGKAP: string }[];
-}
-
-const FormReservasiPasien = ({ visible, formData, onHide, onChange, onSubmit, setFormData, pasienOptions}: Props) => {
+const FormReservasiPasien = ({
+  visible,
+  formData,
+  onHide,
+  onChange,
+  onSubmit,
+  setFormData,
+  pasienOptions
+}) => {
   return (
     <Dialog
       header={formData.IDRESERVASI ? "Edit Reservasi" : "Tambah Reservasi"}
@@ -33,7 +29,6 @@ const FormReservasiPasien = ({ visible, formData, onHide, onChange, onSubmit, se
           onSubmit();
         }}
       >
-
         <div>
           <label>NIK</label>
           <Dropdown
@@ -58,7 +53,9 @@ const FormReservasiPasien = ({ visible, formData, onHide, onChange, onSubmit, se
           <InputText
             className="w-full mt-2"
             value={formData.POLI}
-            onChange={(e) => onChange({ ...formData, POLI: e.target.value })}
+            onChange={(e) =>
+              onChange({ ...formData, POLI: e.target.value })
+            }
           />
         </div>
 
@@ -67,7 +64,9 @@ const FormReservasiPasien = ({ visible, formData, onHide, onChange, onSubmit, se
           <InputText
             className="w-full mt-2"
             value={formData.NAMADOKTER}
-            onChange={(e) => onChange({ ...formData, NAMADOKTER: e.target.value })}
+            onChange={(e) =>
+              onChange({ ...formData, NAMADOKTER: e.target.value })
+            }
           />
         </div>
 
@@ -76,11 +75,16 @@ const FormReservasiPasien = ({ visible, formData, onHide, onChange, onSubmit, se
           <Calendar
             className="w-full mt-2"
             dateFormat="yy-mm-dd"
-            value={formData.TANGGALRESERVASI ? new Date(formData.TANGGALRESERVASI) : undefined}
+            value={
+              formData.TANGGALRESERVASI
+                ? new Date(formData.TANGGALRESERVASI)
+                : undefined
+            }
             onChange={(e) =>
               onChange({
                 ...formData,
-                TANGGALRESERVASI: e.value?.toISOString().split("T")[0] || "",
+                TANGGALRESERVASI:
+                  e.value?.toISOString().split("T")[0] || "",
               })
             }
             showIcon
@@ -93,7 +97,9 @@ const FormReservasiPasien = ({ visible, formData, onHide, onChange, onSubmit, se
             type="time"
             className="w-full mt-2"
             value={formData.JAMRESERVASI}
-            onChange={(e) => onChange({ ...formData, JAMRESERVASI: e.target.value })}
+            onChange={(e) =>
+              onChange({ ...formData, JAMRESERVASI: e.target.value })
+            }
           />
         </div>
 
@@ -106,7 +112,9 @@ const FormReservasiPasien = ({ visible, formData, onHide, onChange, onSubmit, se
               value: val,
             }))}
             value={formData.STATUS}
-            onChange={(e) => onChange({ ...formData, STATUS: e.value })}
+            onChange={(e) =>
+              onChange({ ...formData, STATUS: e.value })
+            }
             placeholder="Pilih Status"
           />
         </div>
@@ -116,7 +124,9 @@ const FormReservasiPasien = ({ visible, formData, onHide, onChange, onSubmit, se
           <InputText
             className="w-full mt-2"
             value={formData.KETERANGAN}
-            onChange={(e) => onChange({ ...formData, KETERANGAN: e.target.value })}
+            onChange={(e) =>
+              onChange({ ...formData, KETERANGAN: e.target.value })
+            }
           />
         </div>
 

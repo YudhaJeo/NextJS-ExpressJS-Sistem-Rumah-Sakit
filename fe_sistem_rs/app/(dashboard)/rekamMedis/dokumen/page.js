@@ -1,9 +1,8 @@
-'use client';
+"use client";
 
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import TabelDokumen from './components/tabelDokumen';
-import { Dokumen } from '@/types/dokumen';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import HeaderBar from "@/app/components/headerbar";
@@ -11,7 +10,6 @@ import FormDialogDokumen from "./components/formDialogDokumen";
 import { Toast } from 'primereact/toast';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import { confirmDialog } from 'primereact/confirmdialog';
-import { ToastMessage } from 'primereact/toast';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -22,10 +20,10 @@ const JenisDokumenOptions = [
 ];
 
 const Page = () => {
-  const [data, setData] = useState<Dokumen[]>([]);
-  const [originalData, setOriginalData] = useState<Dokumen[]>([]);
+  const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [form, setForm] = useState<Dokumen>({
+  const [form, setForm] = useState({
     IDDOKUMEN: 0,
     NAMALENGKAP: '',
     NIK: '',
@@ -36,12 +34,9 @@ const Page = () => {
     file: undefined,
   });
 
-  const [pasienOptions, setPasienOptions] = useState<
-    { label: string; value: string; NAMALENGKAP: string }[]
-  >([]);
-
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const toastRef = useRef<Toast>(null);
+  const [pasienOptions, setPasienOptions] = useState([]);
+  const [errors, setErrors] = useState({});
+  const toastRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -56,7 +51,7 @@ const Page = () => {
   const fetchPasien = async () => {
     try {
       const res = await axios.get(`${API_URL}/pasien`);
-      const options = res.data.data.map((pasien: any) => ({
+      const options = res.data.data.map((pasien) => ({
         label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
         value: pasien.NIK,
         NAMALENGKAP: pasien.NAMALENGKAP,
@@ -77,12 +72,12 @@ const Page = () => {
     }
   };
 
-  const showToast = (severity: ToastMessage['severity'], summary: string, detail: string) => {
+  const showToast = (severity, summary, detail) => {
     toastRef.current?.show({ severity, summary, detail, life: 3000 });
   };
 
   const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
+    const newErrors = {};
     if (!form.NIK.trim()) newErrors.NIK = 'NIK wajib diisi';
     else if (!/^\d{16}$/.test(form.NIK)) newErrors.NIK = 'NIK harus 16 digit angka';
     if (!form.JENISDOKUMEN) newErrors.JENISDOKUMEN = 'Jenis dokumen wajib dipilih';
@@ -121,7 +116,7 @@ const Page = () => {
     }
   };
 
-  const handleSearch = (keyword: string) => {
+  const handleSearch = (keyword) => {
     const query = keyword.toLowerCase();
     if (!query.trim()) {
       setData(originalData);
@@ -137,7 +132,7 @@ const Page = () => {
     setData(filtered);
   };
 
-  const handleEdit = (row: Dokumen) => {
+  const handleEdit = (row) => {
     setForm({
       IDDOKUMEN: row.IDDOKUMEN,
       NAMALENGKAP: row.NAMALENGKAP,
@@ -151,7 +146,7 @@ const Page = () => {
     setDialogVisible(true);
   };
 
-  const confirmDelete = (row: Dokumen) => {
+  const confirmDelete = (row) => {
     confirmDialog({
       message: `Apakah yakin ingin menghapus dokumen milik '${row.NAMALENGKAP}'?`,
       header: 'Konfirmasi Hapus',
@@ -162,7 +157,7 @@ const Page = () => {
     });
   };
 
-  const handleDelete = async (row: Dokumen) => {
+  const handleDelete = async (row) => {
     try {
       await axios.delete(`${API_URL}/dokumen/${row.IDDOKUMEN}`);
       fetchData();
@@ -173,25 +168,24 @@ const Page = () => {
     }
   };
 
-const handleDownload = async (row: Dokumen) => {
-  try {
-    const response = await axios.get(`${API_URL}/dokumen/download-by-id/${row.IDDOKUMEN}`, {
-  responseType: 'blob',
-});
+  const handleDownload = async (row) => {
+    try {
+      const response = await axios.get(`${API_URL}/dokumen/download-by-id/${row.IDDOKUMEN}`, {
+        responseType: 'blob',
+      });
 
-
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', row.NAMAFILE);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  } catch (error) {
-    console.error('Gagal mengunduh file:', error);
-    showToast('error', 'Gagal Download', 'Tidak dapat mengunduh file.');
-  }
-};
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', row.NAMAFILE);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error('Gagal mengunduh file:', error);
+      showToast('error', 'Gagal Download', 'Tidak dapat mengunduh file.');
+    }
+  };
 
   const resetForm = () => {
     setForm({
@@ -207,7 +201,7 @@ const handleDownload = async (row: Dokumen) => {
     setErrors({});
   };
 
-  const inputClass = (field: string) =>
+  const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
   return (
@@ -229,7 +223,7 @@ const handleDownload = async (row: Dokumen) => {
         onEdit={handleEdit}
         onDelete={confirmDelete}
         loading={false}
-        onDownload={handleDownload} // <- perbaikan disini
+        onDownload={handleDownload}
       />
 
       <FormDialogDokumen

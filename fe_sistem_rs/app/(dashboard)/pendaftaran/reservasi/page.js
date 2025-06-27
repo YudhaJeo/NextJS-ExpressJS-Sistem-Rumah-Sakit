@@ -1,26 +1,24 @@
-//page
-'use client';
+"use client";
 
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import { Reservasi } from '@/types/reservasi';
 import TabelReservasiPasien from './components/tabelReservasi';
 import FormReservasiPasien from './components/formReservasi';
 import HeaderBar from '@/app/components/headerbar';
-import ToastNotifier, { ToastNotifierHandle } from '@/app/components/toastNotifier';
+import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const ReservasiPasienPage = () => {
-  const [data, setData] = useState<Reservasi[]>([]);
-  const [originalData, setOriginalData] = useState<Reservasi[]>([]);
+  const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
 
-  const [formData, setFormData] = useState<Reservasi>({
+  const [formData, setFormData] = useState({
     IDRESERVASI: 0,
     NIK: '',
     POLI: '',
@@ -31,11 +29,9 @@ const ReservasiPasienPage = () => {
     KETERANGAN: '',
   });
 
-  const [pasienOptions, setPasienOptions] = useState<
-    { label: string; value: string; NAMALENGKAP: string }[]
-  >([]);
+  const [pasienOptions, setPasienOptions] = useState([]);
 
-  const toastRef = useRef<ToastNotifierHandle>(null);
+  const toastRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -49,24 +45,24 @@ const ReservasiPasienPage = () => {
     fetchPasien();
   }, []);
 
-const fetchReservasi = async () => {
-  setLoading(true);
-  try {
-    const res = await axios.get(`${API_URL}/reservasi`);
-    console.log('Data reservasi API:', res.data);
-    setData(res.data); 
-    setOriginalData(res.data);
-  } catch (err) {
-    console.error('Gagal mengambil data:', err);
-  } finally {
-    setLoading(false);
-  }
-};
+  const fetchReservasi = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}/reservasi`);
+      console.log('Data reservasi API:', res.data);
+      setData(res.data);
+      setOriginalData(res.data);
+    } catch (err) {
+      console.error('Gagal mengambil data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchPasien = async () => {
     try {
       const res = await axios.get(`${API_URL}/pasien`);
-      const options = res.data.data.map((pasien: any) => ({
+      const options = res.data.data.map((pasien) => ({
         label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
         value: pasien.NIK,
         NAMALENGKAP: pasien.NAMALENGKAP,
@@ -77,7 +73,7 @@ const fetchReservasi = async () => {
     }
   };
 
-  const handleSearch = (keyword: string) => {
+  const handleSearch = (keyword) => {
     if (!keyword) {
       setData(originalData);
     } else {
@@ -91,7 +87,14 @@ const fetchReservasi = async () => {
   };
 
   const handleSubmit = async () => {
-    if (!formData.NIK || !formData.POLI || !formData.NAMADOKTER || !formData.TANGGALRESERVASI || !formData.JAMRESERVASI || !formData.STATUS) {
+    if (
+      !formData.NIK ||
+      !formData.POLI ||
+      !formData.NAMADOKTER ||
+      !formData.TANGGALRESERVASI ||
+      !formData.JAMRESERVASI ||
+      !formData.STATUS
+    ) {
       toastRef.current?.showToast('01', 'Semua field wajib diisi!');
       return;
     }
@@ -118,7 +121,7 @@ const fetchReservasi = async () => {
     }
   };
 
-  const handleEdit = (row: Reservasi) => {
+  const handleEdit = (row) => {
     setFormData({
       ...row,
       TANGGALRESERVASI: row.TANGGALRESERVASI?.split('T')[0] || '',
@@ -126,7 +129,7 @@ const fetchReservasi = async () => {
     setDialogVisible(true);
   };
 
-  const handleDelete = (row: Reservasi) => {
+  const handleDelete = (row) => {
     confirmDialog({
       message: `Apakah Anda yakin ingin menghapus data milik ${row.IDRESERVASI}?`,
       header: 'Konfirmasi Hapus',
@@ -170,7 +173,10 @@ const fetchReservasi = async () => {
         title=""
         placeholder="Cari NIK atau Nama Dokter..."
         onSearch={handleSearch}
-        onAddClick={() => setDialogVisible(true)}
+        onAddClick={() => {
+          resetForm();
+          setDialogVisible(true);
+        }}
       />
 
       <TabelReservasiPasien

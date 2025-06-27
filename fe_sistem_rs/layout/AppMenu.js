@@ -5,12 +5,11 @@ import AppMenuitem from "./AppMenuitem";
 import { LayoutContext } from "./context/layoutcontext";
 import { MenuProvider } from "./context/menucontext";
 import Link from "next/link";
-import { AppMenuItem } from "@/types";
 
 const AppMenu = () => {
   const { layoutConfig } = useContext(LayoutContext);
 
- const model: AppMenuItem[] = [
+  const model = [
     {
       label: "Home",
       items: [

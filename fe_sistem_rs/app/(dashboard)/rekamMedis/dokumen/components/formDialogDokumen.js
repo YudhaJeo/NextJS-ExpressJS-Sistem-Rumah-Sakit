@@ -4,19 +4,6 @@ import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
-import { Dokumen } from "@/types/dokumen";
-
-interface Props {
-  visible: boolean;
-  onHide: () => void;
-  onSubmit: () => void;
-  form: Dokumen;
-  setForm: (form: Dokumen) => void;
-  pasienOptions: { label: string; value: string; NAMALENGKAP: string }[];
-  errors: { [key: string]: string };
-  inputClass: (field: string) => string;
-  JenisDokumenOptions: { label: string; value: string }[];
-}
 
 const FormDialogDokumen = ({
   visible,
@@ -28,7 +15,7 @@ const FormDialogDokumen = ({
   errors,
   inputClass,
   JenisDokumenOptions,
-}: Props) => {
+}) => {
   return (
     <Dialog
       header={form.IDDOKUMEN ? "Edit Dokumen" : "Tambah Dokumen"}
@@ -43,7 +30,6 @@ const FormDialogDokumen = ({
           onSubmit();
         }}
       >
-
         <div>
           <label>NIK Pasien</label>
           <Dropdown
@@ -82,7 +68,7 @@ const FormDialogDokumen = ({
           <input
             type="file"
             className={inputClass("file")}
-            onChange={(e: any) => {
+            onChange={(e) => {
               const file = e.target.files[0];
               setForm({ ...form, file });
             }}

@@ -5,19 +5,10 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
-import { Pasien } from '@/types/pasien';
+import React from 'react';
 
-interface Props {
-  visible: boolean;
-  onHide: () => void;
-  onSubmit: () => void;
-  form: Pasien;
-  setForm: (form: Pasien) => void;
-  errors: { [key: string]: string };
-}
-
-const FormDialogPasien = ({ visible, onHide, onSubmit, form, setForm, errors }: Props) => {
-  const inputClass = (field: string) =>
+const FormDialogPasien = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
+  const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
   return (

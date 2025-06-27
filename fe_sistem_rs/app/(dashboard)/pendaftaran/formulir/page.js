@@ -7,19 +7,18 @@ import { useRouter } from 'next/navigation';
 import TabelPendaftaran from './components/tabelPasien';
 import FormDialogPendaftaran from './components/formDialogFormulir';
 import HeaderBar from '@/app/components/headerbar';
-import ToastNotifier, { ToastNotifierHandle } from '@/app/components/toastNotifier';
-import { Pendaftaran } from '@/types/formulir';
+import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
-  const [data, setData] = useState<Pendaftaran[]>([]);
-  const [originalData, setOriginalData] = useState<Pendaftaran[]>([]);
+  const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
 
-  const [form, setForm] = useState<Pendaftaran>({
+  const [form, setForm] = useState({
     IDPENDAFTARAN: 0,
     NIK: '',
     NAMALENGKAP: '',
@@ -30,11 +29,9 @@ const Page = () => {
     STATUSKUNJUNGAN: 'Diperiksa',
   });
 
-  const [pasienOptions, setPasienOptions] = useState<
-    { label: string; value: string; NAMALENGKAP: string }[]
-  >([]);
+  const [pasienOptions, setPasienOptions] = useState([]);
 
-  const toastRef = useRef<ToastNotifierHandle>(null);
+  const toastRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -51,7 +48,7 @@ const Page = () => {
   const fetchPasien = async () => {
     try {
       const res = await axios.get(`${API_URL}/pasien`);
-      const options = res.data.data.map((pasien: any) => ({
+      const options = res.data.data.map((pasien) => ({
         label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
         value: pasien.NIK,
         NAMALENGKAP: pasien.NAMALENGKAP,
@@ -75,7 +72,7 @@ const Page = () => {
     }
   };
 
-  const handleSearch = (keyword: string) => {
+  const handleSearch = (keyword) => {
     if (!keyword) {
       setData(originalData);
     } else {
@@ -111,7 +108,7 @@ const Page = () => {
     }
   };
 
-  const handleEdit = (row: Pendaftaran) => {
+  const handleEdit = (row) => {
     setForm({
       ...row,
       TANGGALKUNJUNGAN: row.TANGGALKUNJUNGAN?.split('T')[0] || '',
@@ -120,24 +117,24 @@ const Page = () => {
     setDialogVisible(true);
   };
 
-  const handleDelete = (row: Pendaftaran) => {
-  confirmDialog({
-    message: `Apakah Anda yakin ingin menghapus data milik ${row.NAMALENGKAP}?`,
-    header: 'Konfirmasi Hapus',
-    icon: 'pi pi-exclamation-triangle',
-    acceptLabel: 'Ya',
-    rejectLabel: 'Batal',
-    accept: async () => {
-      try {
-        await axios.delete(`${API_URL}/pendaftaran/${row.IDPENDAFTARAN}`);
-        fetchData();
-        toastRef.current?.showToast('00', 'Data berhasil dihapus');
-      } catch (err) {
-        console.error('Gagal hapus data:', err);
-        toastRef.current?.showToast('01', 'Gagal menghapus data');
-      }
-    },
-  });
+  const handleDelete = (row) => {
+    confirmDialog({
+      message: `Apakah Anda yakin ingin menghapus data milik ${row.NAMALENGKAP}?`,
+      header: 'Konfirmasi Hapus',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Ya',
+      rejectLabel: 'Batal',
+      accept: async () => {
+        try {
+          await axios.delete(`${API_URL}/pendaftaran/${row.IDPENDAFTARAN}`);
+          fetchData();
+          toastRef.current?.showToast('00', 'Data berhasil dihapus');
+        } catch (err) {
+          console.error('Gagal hapus data:', err);
+          toastRef.current?.showToast('01', 'Gagal menghapus data');
+        }
+      },
+    });
   };
 
   const resetForm = () => {
@@ -164,7 +161,10 @@ const Page = () => {
         title=""
         placeholder="Cari nama atau NIK..."
         onSearch={handleSearch}
-        onAddClick={() => setDialogVisible(true)}
+        onAddClick={() => {
+          resetForm();
+          setDialogVisible(true);
+        }}
       />
 
       <TabelPendaftaran

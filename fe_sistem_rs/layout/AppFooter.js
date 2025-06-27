@@ -12,7 +12,7 @@ const AppFooter = () => {
             <span>
                 Copyright © {new Date().getFullYear()} {process.env.NEXT_PUBLIC_COMPANY_NAME}. All rights reserved.
             </span>
-            {/*
+            {/* 
             <span className="font-medium ml-2">copyright&copy; {process.env.NEXT_PUBLIC_COMPANY_NAME}</span>
             */}
         </div>
