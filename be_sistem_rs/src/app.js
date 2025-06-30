@@ -7,6 +7,7 @@ import reservasiRoutes from './routes/reservasiRoutes.js';
 import pendaftaranRoutes from './routes/pendaftaranRoutes.js';
 import dokumenRoutes from './routes/dokumenRoutes.js';
 import asuransiRoutes from './routes/asuransiRoutes.js';
+import agamaRoutes from './routes/agamaRoutes.js';
 import loketRoutes from './routes/loketRoutes.js';
 import antrianRoutes from './routes/antrianRoutes.js';
 import printerRoutes from './routes/printerRoutes.js';
@@ -29,6 +30,7 @@ app.use('/api/reservasi', reservasiRoutes);
 app.use('/api/dokumen', dokumenRoutes);
 app.use('/api/pendaftaran', pendaftaranRoutes);
 app.use('/api/asuransi', asuransiRoutes)
+app.use('/api/agama', agamaRoutes);
 app.use('/api/loket', loketRoutes);
 app.use('/api/antrian', antrianRoutes);
 app.use('/api/printer', printerRoutes);
