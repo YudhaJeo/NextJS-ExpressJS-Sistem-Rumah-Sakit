@@ -39,24 +39,47 @@ function Page() {
     }
   };
 
-  const handlePanggil = async (id) => {
-    try {
-      await axios.post(`${API_URL}/antrian/panggil/${id}`);
-      toastRef.current.show({
-        severity: 'success',
-        summary: 'Berhasil',
-        detail: 'Antrian dipanggil',
-      });
-      fetchData();
-    } catch (err) {
-      console.error('Gagal memanggil:', err);
-      toastRef.current.show({
-        severity: 'error',
-        summary: 'Gagal',
-        detail: 'Gagal memanggil antrian',
-      });
-    }
-  };
+const handlePanggil = async (id) => {
+  try {
+    const panggilan = data.find((item) => item.ID === id);
+    if (!panggilan) return;
+
+    await axios.post(`${API_URL}/antrian/panggil/${id}`);
+
+    toastRef.current.show({
+      severity: 'success',
+      summary: 'Berhasil',
+      detail: `Antrian ${panggilan.NO_ANTRIAN} dipanggil`,
+    });
+
+    const ding = new Audio('/sounds/opening.mp3');
+    ding.play();
+
+    ding.onended = () => {
+      if ('speechSynthesis' in window) {
+        const suara = new SpeechSynthesisUtterance();
+        suara.lang = 'id-ID';
+        suara.text = `Nomor antrian ${panggilan.NO_ANTRIAN.split('').join(' ')}, silakan menuju loket ${panggilan.LOKET}`;
+        suara.rate = 0.9;
+
+        console.log('Memanggil suara:', suara.text);
+        window.speechSynthesis.cancel(); 
+        window.speechSynthesis.speak(suara);
+      } else {
+        console.warn('Speech Synthesis tidak didukung di browser ini');
+      }
+    };
+
+    fetchData();
+  } catch (err) {
+    console.error('Gagal memanggil:', err);
+    toastRef.current.show({
+      severity: 'error',
+      summary: 'Gagal',
+      detail: 'Gagal memanggil antrian',
+    });
+  }
+};
 
   return (
     <div className="card">
