@@ -13,21 +13,29 @@ export const getAllAntrian = async (req, res) => {
 export const createAntrian = async (req, res) => {
   try {
     const { LOKET } = req.body;
-
-    // Cari detail loket berdasarkan nama (misalnya: "Pasien Umum")
     const loket = await db('loket').where({ NAMALOKET: LOKET }).first();
 
     if (!loket) {
       return res.status(404).json({ success: false, message: 'Loket tidak ditemukan' });
     }
 
-    // Ambil jumlah antrian saat ini di loket tersebut
-    const count = await db('antrian').where({ LOKET_ID: loket.NO }).count('ID as total');
-    const total = count[0].total || 0;
+    const last = await db('antrian')
+      .where('LOKET_ID', loket.NO)
+      .andWhere('NO_ANTRIAN', 'like', `${loket.KODE}%`)
+      .orderBy('ID', 'desc')
+      .first();
 
-    // Generate nomor antrian: ex: P001, U002
-    const nextNumber = (total + 1).toString().padStart(3, '0');
-    const NO_ANTRIAN = `${loket.KODE}${nextNumber}`;
+    let lastNo = 0;
+    if (last && last.NO_ANTRIAN) {
+      const match = last.NO_ANTRIAN.match(/\d+$/);
+      if (match) {
+        lastNo = parseInt(match[0], 10);
+      }
+    }
+
+    const nextNo = lastNo + 1;
+    const nomor = nextNo.toString().padStart(3, '0');
+    const NO_ANTRIAN = `${loket.KODE}${nomor}`;
 
     const newAntrian = {
       NO_ANTRIAN,
