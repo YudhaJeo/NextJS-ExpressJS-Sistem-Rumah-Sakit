@@ -11,6 +11,7 @@ import loketRoutes from './routes/loketRoutes.js';
 import antrianRoutes from './routes/antrianRoutes.js';
 import printerRoutes from './routes/printerRoutes.js';
 import poliRoutes from './routes/poliRoutes.js'
+import dokterRoutes from './routes/dokterRoutes.js'
 import { verifyToken } from './middlewares/jwt.js'
 const app = express();
 
@@ -32,5 +33,6 @@ app.use('/api/loket', loketRoutes);
 app.use('/api/antrian', antrianRoutes);
 app.use('/api/printer', printerRoutes);
 app.use('/api/poli', poliRoutes)
+app.use('/api/dokter', dokterRoutes)
 
 export default app;
