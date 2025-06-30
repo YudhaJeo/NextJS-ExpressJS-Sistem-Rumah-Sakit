@@ -40,13 +40,23 @@ const AppMenu = () => {
       label: "Master Data",
       items: [
         {
-          label: "Pasien",
-          icon: "pi pi-fw pi-id-card",
+          label: "Master",
+          icon: "pi pi-fw pi-database",
           items: [
             {
-              label: "Database Pasien",
+              label: "Pasien",
               icon: "pi pi-fw pi-user",
               to: "/master/pasien",
+            },
+            {
+              label: "Asuransi",
+              icon: "pi pi-fw pi-id-card",
+              to: "/master/asuransi",
+            },
+            {
+              label: "Agama",
+              icon: "pi pi-fw pi-building-columns",
+              to: "/master/agama",
             },
           ],
         },
