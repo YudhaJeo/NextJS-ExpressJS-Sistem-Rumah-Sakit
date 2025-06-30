@@ -18,6 +18,22 @@ const AppMenu = () => {
           icon: "pi pi-fw pi-home",
           to: "/",
         },
+        {
+          label: "Antrian",
+          icon: "pi pi-fw pi-list",
+          items: [
+            {
+              label: "Data Antrian",
+              icon: "pi pi-fw pi-users",
+              to: "/antrian/data",
+            },
+            {
+              label: "Data Printer",
+              icon: "pi pi-fw pi-print",
+              to: "/antrian/print",
+            },
+          ],
+        },
       ],
     },
     {
