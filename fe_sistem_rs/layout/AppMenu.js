@@ -30,7 +30,7 @@ const AppMenu = () => {
             {
               label: "Data Printer",
               icon: "pi pi-fw pi-print",
-              to: "/antrian/print",
+              to: "/antrian/printer",
             },
           ],
         },
@@ -43,6 +43,11 @@ const AppMenu = () => {
           label: "Master",
           icon: "pi pi-fw pi-database",
           items: [
+            {
+              label: "Loket",
+              icon: "pi pi-fw pi-ticket",
+              to: "/master/loket",
+            },
             {
               label: "Pasien",
               icon: "pi pi-fw pi-user",
@@ -58,16 +63,15 @@ const AppMenu = () => {
               icon: "pi pi-fw pi-building-columns",
               to: "/master/agama",
             },
-          ],
-        },
-        {
-          label: "Loket",
-          icon: "pi pi-fw pi-id-card",
-          items: [
             {
-              label: "Database Loket",
-              icon: "pi pi-fw pi-user",
-              to: "/master/loket",
+              label: "Poli",
+              icon: "pi pi-fw pi-warehouse",
+              to: "/master/poli",
+            },
+            {
+              label: "Dokter",
+              icon: "pi pi-fw pi-graduation-cap",
+              to: "/master/dokter",
             },
           ],
         },

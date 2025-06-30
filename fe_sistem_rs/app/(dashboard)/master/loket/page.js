@@ -40,25 +40,17 @@ const Page = () => {
   }, []);
 
   const fetchData = async () => {
-  setLoading(true);
-  const token = Cookies.get('token');
-
-  try {
-    const res = await axios.get(`${API_URL}/loket`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    setData(res.data.data);
-    setOriginalData(res.data.data);
-  } catch (err) {
-    console.error('Gagal ambil data:', err);
-    toastRef.current?.showToast('01', 'Gagal mengambil data loket');
-  } finally {
-    setLoading(false);
-  }
+    setLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}/loket`);
+      setData(res.data.data);
+      setOriginalData(res.data.data);
+    } catch (err) {
+      console.error('Gagal ambil data:', err);
+    } finally {
+      setLoading(false);
+    }
   };
-
 
   const validateForm = () => {
     const newErrors = {};
@@ -85,39 +77,29 @@ const Page = () => {
   };
 
   const handleSubmit = async () => {
-  if (!validateForm()) return;
+    if (!validateForm()) return;
 
-  const isEdit = !!form.NO;
-  const url = isEdit
-    ? `${API_URL}/loket/${form.NO}`
-    : `${API_URL}/loket`;
+    const isEdit = !!form.NO;
+    const url = isEdit
+      ? `${API_URL}/loket/${form.NO}`
+      : `${API_URL}/loket`;
 
-  const token = Cookies.get('token');
+    try {
+      if (isEdit) {
+        await axios.put(url, form);
+        toastRef.current?.showToast('00', 'Data loket berhasil diperbarui');
+      } else {
+        await axios.post(url, form);
+        toastRef.current?.showToast('00', 'Loket baru berhasil ditambahkan');
+      }
 
-  try {
-    if (isEdit) {
-      await axios.put(url, form, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      toastRef.current?.showToast('00', 'Data loket berhasil diperbarui');
-    } else {
-      await axios.post(url, form, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      toastRef.current?.showToast('00', 'Loket baru berhasil ditambahkan');
+      fetchData();
+      setDialogVisible(false);
+      resetForm();
+    } catch (err) {
+      console.error('Gagal simpan data:', err);
+      toastRef.current?.showToast('01', 'Gagal menyimpan data loket');
     }
-
-    fetchData();
-    setDialogVisible(false);
-    resetForm();
-  } catch (err) {
-    console.error('Gagal simpan data:', err);
-    toastRef.current?.showToast('01', 'Gagal menyimpan data loket');
-  }
   };
 
   const handleEdit = (row) => {
@@ -126,31 +108,24 @@ const Page = () => {
   };
 
   const handleDelete = (row) => {
-  const token = Cookies.get('token');
-
-  confirmDialog({
-    message: `Yakin ingin menghapus loket '${row.NAMALOKET}'?`,
-    header: 'Konfirmasi Hapus',
-    icon: 'pi pi-exclamation-triangle',
-    acceptLabel: 'Ya',
-    rejectLabel: 'Batal',
-    accept: async () => {
-      try {
-        await axios.delete(`${API_URL}/loket/${row.NO}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        fetchData();
-        toastRef.current?.showToast('00', 'Data loket berhasil dihapus');
-      } catch (err) {
-        console.error('Gagal hapus data:', err);
-        toastRef.current?.showToast('01', 'Gagal menghapus data loket');
-      }
-    },
-  });
+    confirmDialog({
+      message: `Yakin ingin menghapus loket '${row.NAMALOKET}'?`,
+      header: 'Konfirmasi Hapus',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Ya',
+      rejectLabel: 'Batal',
+      accept: async () => {
+        try {
+          await axios.delete(`${API_URL}/loket/${row.NO}`);
+          fetchData();
+          toastRef.current?.showToast('00', 'Data loket berhasil dihapus');
+        } catch (err) {
+          console.error('Gagal hapus data:', err);
+          toastRef.current?.showToast('01', 'Gagal menghapus data loket');
+        }
+      },
+    });
   };
-
 
   const resetForm = () => {
     setForm({
