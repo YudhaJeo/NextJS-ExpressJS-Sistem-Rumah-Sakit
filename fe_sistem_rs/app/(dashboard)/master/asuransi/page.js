@@ -1,3 +1,4 @@
+// app/(dashboard)/master/asuransi/page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -5,25 +6,19 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
+import TabelAsuransi from './components/tabelAsuransi';
+import FormDialogAsuransi from './components/formDialogAsuransi';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import TabelPrinter from './components/tabelPrinter';
-import FormDialogPrinter from './components/formDialogPrinter';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
   const [data, setData] = useState([]);
-  const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
 
-  const [form, setForm] = useState({
-    NAMAPRINTER: '',
-    KODEPRINTER: '',
-    KETERANGAN: '',
-  });
-
+  const [form, setForm] = useState({ ASURANSI: '' });
   const [errors, setErrors] = useState({});
 
   const toastRef = useRef(null);
@@ -35,16 +30,14 @@ const Page = () => {
       router.push('/login');
       return;
     }
-
     fetchData();
   }, []);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/printer`);
+      const res = await axios.get(`${API_URL}/asuransi`);
       setData(res.data.data);
-      setOriginalData(res.data.data);
     } catch (err) {
       console.error('Gagal ambil data:', err);
     } finally {
@@ -54,51 +47,34 @@ const Page = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!form.NAMAPRINTER?.trim()) newErrors.NAMAPRINTER = 'Nama Printer wajib diisi';
-    if (!form.KODEPRINTER?.trim()) newErrors.KODEPRINTER = 'Kode Printer wajib diisi';
-    if (!form.KETERANGAN?.trim()) newErrors.KETERANGAN = 'Status wajib dipilih';
-
+    if (!form.ASURANSI.trim()) newErrors.ASURANSI = 'Nama asuransi wajib diisi';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSearch = (keyword) => {
-    if (!keyword) {
-      setData(originalData);
-    } else {
-      const filtered = originalData.filter(
-        (item) =>
-          item.NAMAPRINTER.toLowerCase().includes(keyword.toLowerCase()) ||
-          item.KODEPRINTER.toLowerCase().includes(keyword.toLowerCase())
-      );
-      setData(filtered);
-    }
   };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    const isEdit = !!form.NOPRINTER;
+    const isEdit = !!form.IDASURANSI;
     const url = isEdit
-      ? `${API_URL}/printer/${form.NOPRINTER}`
-      : `${API_URL}/printer`;
+      ? `${API_URL}/asuransi/${form.IDASURANSI}`
+      : `${API_URL}/asuransi`;
 
     try {
       if (isEdit) {
         await axios.put(url, form);
-        toastRef.current?.showToast('00', 'Data printer berhasil diperbarui');
+        toastRef.current?.showToast('00', 'Data berhasil diperbarui');
       } else {
         await axios.post(url, form);
-        toastRef.current?.showToast('00', 'Printer baru berhasil ditambahkan');
+        toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
       }
 
       fetchData();
       setDialogVisible(false);
-      resetForm();
+      setForm({ ASURANSI: '' });
     } catch (err) {
       console.error('Gagal simpan data:', err);
-      toastRef.current?.showToast('01', 'Gagal menyimpan data printer');
+      toastRef.current?.showToast('01', 'Gagal menyimpan data');
     }
   };
 
@@ -109,31 +85,22 @@ const Page = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Yakin ingin menghapus printer '${row.NAMAPRINTER}'?`,
+      message: `Yakin hapus '${row.ASURANSI}'?`,
       header: 'Konfirmasi Hapus',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Ya',
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/printer/${row.NOPRINTER}`);
+          await axios.delete(`${API_URL}/asuransi/${row.IDASURANSI}`);
           fetchData();
-          toastRef.current?.showToast('00', 'Data printer berhasil dihapus');
+          toastRef.current?.showToast('00', 'Data berhasil dihapus');
         } catch (err) {
           console.error('Gagal hapus data:', err);
-          toastRef.current?.showToast('01', 'Gagal menghapus data printer');
+          toastRef.current?.showToast('01', 'Gagal menghapus data');
         }
       },
     });
-  };
-
-  const resetForm = () => {
-    setForm({
-      NAMAPRINTER: '',
-      KODEPRINTER: '',
-      KETERANGAN: '',
-    });
-    setErrors({});
   };
 
   return (
@@ -141,25 +108,31 @@ const Page = () => {
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
 
-      <h3 className="text-xl font-semibold mb-3">Data Printer</h3>
+      <h3 className="text-xl font-semibold mb-3">Master Asuransi</h3>
 
       <HeaderBar
         title=""
-        placeholder="Cari berdasarkan Nama Printer atau Kode"
-        onSearch={handleSearch}
+        placeholder="Cari nama asuransi"
+        onSearch={(keyword) => {
+          if (!keyword) return fetchData();
+          const filtered = data.filter((item) =>
+            item.ASURANSI.toLowerCase().includes(keyword.toLowerCase())
+          );
+          setData(filtered);
+        }}
         onAddClick={() => {
-          resetForm();
+          setForm({ ASURANSI: '' });
           setDialogVisible(true);
         }}
       />
 
-      <TabelPrinter data={data} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
+      <TabelAsuransi data={data} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
 
-      <FormDialogPrinter
+      <FormDialogAsuransi
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);
-          resetForm();
+          setForm({ ASURANSI: '' });
         }}
         onSubmit={handleSubmit}
         form={form}
