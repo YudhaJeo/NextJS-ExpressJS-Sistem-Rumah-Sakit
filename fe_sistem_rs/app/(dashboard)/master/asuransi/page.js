@@ -18,7 +18,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
 
-  const [form, setForm] = useState({ ASURANSI: '' });
+  const [form, setForm] = useState({ ASURANSI: '', KETERANGAN:'' });
   const [errors, setErrors] = useState({});
 
   const toastRef = useRef(null);
