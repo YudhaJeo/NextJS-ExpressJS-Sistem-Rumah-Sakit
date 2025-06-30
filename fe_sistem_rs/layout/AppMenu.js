@@ -30,7 +30,7 @@ const AppMenu = () => {
             {
               label: "Data Printer",
               icon: "pi pi-fw pi-print",
-              to: "/antrian/print",
+              to: "/antrian/printer",
             },
           ],
         },

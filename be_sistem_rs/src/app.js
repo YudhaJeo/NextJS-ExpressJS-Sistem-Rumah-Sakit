@@ -7,6 +7,7 @@ import reservasiRoutes from './routes/reservasiRoutes.js';
 import pendaftaranRoutes from './routes/pendaftaranRoutes.js';
 import dokumenRoutes from './routes/dokumenRoutes.js';
 import loketRoutes from './routes/loketRoutes.js';
+import printerRoutes from './routes/printerRoutes.js';
 import { verifyToken } from './middlewares/jwt.js'
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/api/pasien', pasienRoutes);
 app.use('/api/reservasi', reservasiRoutes);
 app.use('/api/dokumen', dokumenRoutes);
 app.use('/api/pendaftaran', pendaftaranRoutes);
-app.use('/api/loket', verifyToken, loketRoutes);
+app.use('/api/loket', loketRoutes);
+app.use('/api/printer', printerRoutes);
 
 export default app;
