@@ -8,6 +8,7 @@ import pendaftaranRoutes from './routes/pendaftaranRoutes.js';
 import dokumenRoutes from './routes/dokumenRoutes.js';
 import asuransiRoutes from './routes/asuransiRoutes.js';
 import agamaRoutes from './routes/agamaRoutes.js';
+import loketRoutes from './routes/loketRoutes.js';
 import { verifyToken } from './middlewares/jwt.js'
 const app = express();
 
@@ -26,5 +27,6 @@ app.use('/api/dokumen', dokumenRoutes);
 app.use('/api/pendaftaran', pendaftaranRoutes);
 app.use('/api/asuransi', asuransiRoutes);
 app.use('/api/agama', agamaRoutes);
+app.use('/api/loket', verifyToken, loketRoutes);
 
 export default app;
