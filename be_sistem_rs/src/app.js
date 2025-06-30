@@ -10,6 +10,7 @@ import asuransiRoutes from './routes/asuransiRoutes.js';
 import loketRoutes from './routes/loketRoutes.js';
 import antrianRoutes from './routes/antrianRoutes.js';
 import printerRoutes from './routes/printerRoutes.js';
+import poliRoutes from './routes/poliRoutes.js'
 import { verifyToken } from './middlewares/jwt.js'
 const app = express();
 
@@ -30,5 +31,6 @@ app.use('/api/asuransi', asuransiRoutes)
 app.use('/api/loket', loketRoutes);
 app.use('/api/antrian', antrianRoutes);
 app.use('/api/printer', printerRoutes);
+app.use('/api/poli', poliRoutes)
 
 export default app;
