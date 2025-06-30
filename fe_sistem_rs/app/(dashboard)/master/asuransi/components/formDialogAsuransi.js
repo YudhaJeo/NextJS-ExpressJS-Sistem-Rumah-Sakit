@@ -34,6 +34,16 @@ const FormDialogAsuransi = ({ visible, onHide, onSubmit, form, setForm, errors }
           {errors.ASURANSI && <small className="text-red-500">{errors.ASURANSI}</small>}
         </div>
 
+        <div>
+          <label>Keterangan (Opsional)</label>
+          <InputText
+            className={inputClass('KETERANGAN')}
+            value={form.KETERANGAN}
+            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
+          />
+          {errors.KETERANGAN && <small className="text-red-500">{errors.KETERANGAN}</small>}
+        </div>
+
         <div className="text-right pt-3">
           <Button type="submit" label="Simpan" icon="pi pi-save" />
         </div>
