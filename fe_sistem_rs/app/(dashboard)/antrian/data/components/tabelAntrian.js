@@ -60,10 +60,10 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil }) => {
   return (
     <>
       <div className="flex justify-content-end gap-2 mb-4">
-        <Link href="/antrian">
+        <Link href="/antrian" target="_blank" rel="noopener noreferrer">
           <Button label="Display Antrian" icon="pi pi-table" />
         </Link>
-        <Link href="/monitor">
+        <Link href="/monitor" target="_blank" rel="noopener noreferrer">
           <Button label="Display Monitor" icon="pi pi-desktop" />
         </Link>
       </div>

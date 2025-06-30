@@ -7,7 +7,7 @@ import { Toast } from 'primereact/toast';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default function Page() {
+function Page() {
   const [data, setData] = useState([]);
   const [loketList, setLoketList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -71,3 +71,5 @@ export default function Page() {
     </div>
   );
 }
+
+export default Page;
