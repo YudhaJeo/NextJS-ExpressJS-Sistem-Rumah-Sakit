@@ -62,25 +62,25 @@ const Page = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!form.NAMALENGKAP.trim()) newErrors.NAMALENGKAP = 'Nama wajib diisi';
+    if (!form.NAMALENGKAP.trim()) newErrors.NAMALENGKAP = <span style={{color: 'red'}}>Nama wajib diisi</span>;
     if (!form.NIK.trim()) {
-      newErrors.NIK = 'NIK wajib diisi';
+      newErrors.NIK = <span style={{color: 'red'}}>NIK wajib diisi</span>;
     } else if (!/^\d{16}$/.test(form.NIK)) {
-      newErrors.NIK = 'NIK harus 16 digit angka';
+      newErrors.NIK = <span style={{color: 'red'}}>NIK harus 16 digit angka</span>;
     }
 
-    if (!form.TANGGALLAHIR) newErrors.TANGGALLAHIR = 'Tanggal lahir wajib diisi';
-    if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = 'Jenis kelamin wajib dipilih';
-    if (!form.ALAMAT?.trim()) newErrors.ALAMAT = 'Alamat wajib diisi';
+    if (!form.TANGGALLAHIR) newErrors.TANGGALLAHIR = <span style={{color: 'red'}}>Tanggal Lahir wajib diisi</span>;
+    if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = <span style={{color: 'red'}}>Jenis kelamin wajib dipilih</span>;
+    if (!form.ALAMAT?.trim()) newErrors.ALAMAT = <span style={{color: 'red'}}>Alamat wajib diisi</span>;
     if (!form.NOHP?.trim()) {
-      newErrors.NOHP = 'No HP wajib diisi';
+      newErrors.NOHP = <span style={{color: 'red'}}>No HP wajib diisi</span>;
     } else if (!/^\d+$/.test(form.NOHP)) {
-      newErrors.NOHP = 'No HP hanya boleh berisi angka';
+      newErrors.NOHP = <span style={{color: 'red'}}>No HP hanya boleh berisi angka</span>;
     }
 
-    if (!form.AGAMA?.trim()) newErrors.AGAMA = 'Agama wajib diisi';
-    if (!form.GOLDARAH) newErrors.GOLDARAH = 'Golongan darah wajib dipilih';
-    if (!form.ASURANSI) newErrors.ASURANSI = 'Asuransi wajib dipilih';
+    if (!form.AGAMA?.trim()) newErrors.AGAMA = <span style={{color: 'red'}}>Agama wajib diisi</span>;
+    if (!form.GOLDARAH) newErrors.GOLDARAH = <span style={{color: 'red'}}>Golongan darah wajib dipilih</span>;
+    if (!form.ASURANSI) newErrors.ASURANSI = <span style={{color: 'red'}}>Asuransi wajib dipilih</span>;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
