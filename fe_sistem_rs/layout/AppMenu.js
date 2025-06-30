@@ -50,6 +50,17 @@ const AppMenu = () => {
             },
           ],
         },
+        {
+          label: "Loket",
+          icon: "pi pi-fw pi-id-card",
+          items: [
+            {
+              label: "Database Loket",
+              icon: "pi pi-fw pi-user",
+              to: "/master/loket",
+            },
+          ],
+        },
       ],
     },
     {
