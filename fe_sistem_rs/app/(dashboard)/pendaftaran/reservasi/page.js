@@ -30,6 +30,9 @@ const ReservasiPasienPage = () => {
   });
 
   const [pasienOptions, setPasienOptions] = useState([]);
+  const [poliOptions, setPoliOptions] = useState([]);
+  const [dokterOptions, setDokterOptions] = useState([]);
+
 
   const toastRef = useRef(null);
   const router = useRouter();
@@ -43,6 +46,8 @@ const ReservasiPasienPage = () => {
 
     fetchReservasi();
     fetchPasien();
+    fetchPoli();
+    fetchDokter();
   }, []);
 
   const fetchReservasi = async () => {
@@ -72,6 +77,41 @@ const ReservasiPasienPage = () => {
       console.error('Gagal ambil data pasien:', err);
     }
   };
+
+const fetchPoli = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/poli`);
+    console.log('Data poli API:', res.data);
+
+    // Jika response berupa array langsung
+    const options = res.data.map((poli) => ({
+      label: `${poli.IDPOLI} - ${poli.NAMAPOLI}`,
+      value: poli.IDPOLI,
+      }));
+
+    setPoliOptions(options);
+      } catch (err) {
+    console.error('Gagal ambil data poli:', err);
+      }
+    };
+
+const fetchDokter = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/dokter`);
+    console.log('Data poli API:', res.data);
+
+    // Jika response berupa array langsung
+    const options = res.data.map((nama_dokter) => ({
+      label: `${nama_dokter.IDDOKTER} - ${nama_dokter.NAMADOKTER}`,
+      value: nama_dokter.NAMADOKTER,
+    }));
+
+    setDokterOptions(options);
+  } catch (err) {
+    console.error('Gagal ambil data poli:', err);
+  }
+};
+
 
   const handleSearch = (keyword) => {
     if (!keyword) {
@@ -197,6 +237,8 @@ const ReservasiPasienPage = () => {
         formData={formData}
         setFormData={setFormData}
         pasienOptions={pasienOptions}
+        poliOptions={poliOptions}
+        dokterOptions={dokterOptions}
       />
     </div>
   );

@@ -13,7 +13,9 @@ const FormReservasiPasien = ({
   onChange,
   onSubmit,
   setFormData,
-  pasienOptions
+  pasienOptions,
+  poliOptions,
+  dokterOptions
 }) => {
   return (
     <Dialog
@@ -50,23 +52,39 @@ const FormReservasiPasien = ({
 
         <div>
           <label>Poli</label>
-          <InputText
+          <Dropdown
             className="w-full mt-2"
-            value={formData.POLI}
-            onChange={(e) =>
-              onChange({ ...formData, POLI: e.target.value })
-            }
+            options={poliOptions}
+            value={formData.IDPOLI}
+            onChange={(e) => {
+              const selected = poliOptions.find((p) => p.value === e.value);
+              setFormData({
+                ...formData,
+                IDPOLI: e.value,
+              });
+            }}
+            placeholder="Pilih Poli"
+            filter
+            showClear
           />
         </div>
 
         <div>
           <label>Nama Dokter</label>
-          <InputText
+          <Dropdown
             className="w-full mt-2"
-            value={formData.NAMADOKTER}
-            onChange={(e) =>
-              onChange({ ...formData, NAMADOKTER: e.target.value })
-            }
+            options={dokterOptions}
+            value={formData.IDDOKTER}
+            onChange={(e) => {
+              const selected = dokterOptions.find((p) => p.value === e.value);
+              setFormData({
+                ...formData,
+                IDDOKTER: e.value,
+              });
+            }}
+            placeholder="Pilih Dokter"
+            filter
+            showClear
           />
         </div>
 
