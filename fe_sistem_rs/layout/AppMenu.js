@@ -44,6 +44,11 @@ const AppMenu = () => {
           icon: "pi pi-fw pi-database",
           items: [
             {
+              label: "Loket",
+              icon: "pi pi-fw pi-ticket",
+              to: "/master/loket",
+            },
+            {
               label: "Pasien",
               icon: "pi pi-fw pi-user",
               to: "/master/pasien",
@@ -67,17 +72,6 @@ const AppMenu = () => {
               label: "Dokter",
               icon: "pi pi-fw pi-graduation-cap",
               to: "/master/dokter",
-            },
-          ],
-        },
-        {
-          label: "Loket",
-          icon: "pi pi-fw pi-id-card",
-          items: [
-            {
-              label: "Database Loket",
-              icon: "pi pi-fw pi-user",
-              to: "/master/loket",
             },
           ],
         },
