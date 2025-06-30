@@ -1,7 +1,4 @@
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
+// src/migrations/20250624030425_create_pasien_table.js
 export const up = function (knex) {
   return knex.schema.createTable('pasien', (table) => {
     table.increments('IDPASIEN').primary();
@@ -11,18 +8,16 @@ export const up = function (knex) {
     table.enu('JENISKELAMIN', ['L', 'P']).notNullable();
     table.text('ALAMAT');
     table.string('NOHP', 15);
-    table.string('AGAMA', 15);
+
+    table.integer('IDAGAMA').unsigned().references('IDAGAMA').inTable('agama').onDelete('SET NULL');
     table.string('GOLDARAH', 3);
-    table.enu('ASURANSI', ['BPJS', 'Umum', 'Lainnya']);
+
+    table.integer('IDASURANSI').unsigned().references('IDASURANSI').inTable('asuransi').onDelete('SET NULL');
     table.string('NOASURANSI', 30);
+
     table.timestamp('TANGGALDAFTAR').defaultTo(knex.fn.now());
   });
 };
-
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
 
 export const down = function (knex) {
   return knex.schema.dropTable('pasien');
