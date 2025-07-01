@@ -6,13 +6,31 @@ import { Button } from 'primereact/button';
 import React from 'react';
 import Link from 'next/link';
 
-const TabelAntrian = ({ data, loketList, loading, onPanggil }) => {
+const TabelAntrian = ({ data, loketList, loading, onPanggil, currentId }) => {
   const renderTable = (loketName) => {
     const filtered = data.filter((item) => item.LOKET === loketName);
 
+    const handleNext = (row) => {
+      const index = filtered.findIndex((item) => item.ID === row.ID);
+      const next = filtered[index + 1];
+      if (next) onPanggil(next.ID);
+    };
+
+    const handlePrev = (row) => {
+      const index = filtered.findIndex((item) => item.ID === row.ID);
+      const prev = filtered[index - 1];
+      if (prev) onPanggil(prev.ID);
+    };
+
     const actionBodyTemplate = (row) => (
       <div className="flex gap-1 justify-center">
-        <Button icon="pi pi-step-backward" severity="danger" size="small" />
+        <Button
+          icon="pi pi-step-backward"
+          severity="secondary"
+          size="small"
+          onClick={() => handlePrev(row)}
+          disabled={filtered[0]?.ID === row.ID}
+        />
         <Button
           label="Panggil"
           icon="pi pi-volume-up"
@@ -20,7 +38,13 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil }) => {
           severity="success"
           onClick={() => onPanggil(row.ID)}
         />
-        <Button icon="pi pi-step-forward" severity="danger" size="small" />
+        <Button
+          icon="pi pi-step-forward"
+          severity="secondary"
+          size="small"
+          onClick={() => handleNext(row)}
+          disabled={filtered[filtered.length - 1]?.ID === row.ID}
+        />
       </div>
     );
 
@@ -30,9 +54,11 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil }) => {
       </span>
     );
 
-    const rowClassName = (row) => ({
-      'bg-red-100': row.STATUS === 'Sudah',
-    });
+    const rowClassName = (row) => {
+      if (row.ID === currentId) return 'custom-current-row';
+      if (row.STATUS === 'Sudah') return 'custom-finished-row';
+      return '';
+    };
 
     return (
       <div key={loketName} className="mb-6">
@@ -51,7 +77,7 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil }) => {
           <Column field="NO_ANTRIAN" header="No Antrian" />
           <Column field="LOKET" header="Loket" />
           <Column field="STATUS" header="Status" body={statusBodyTemplate} />
-          <Column header="Action" body={actionBodyTemplate} />
+          <Column header="Aksi" body={actionBodyTemplate} />
         </DataTable>
       </div>
     );
@@ -59,7 +85,7 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil }) => {
 
   return (
     <>
-      <div className="flex justify-content-end gap-2 mb-4">
+      <div className="flex justify-end gap-2 mb-4">
         <Link href="/antrian" target="_blank" rel="noopener noreferrer">
           <Button label="Display Antrian" icon="pi pi-table" />
         </Link>
@@ -68,7 +94,6 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil }) => {
         </Link>
       </div>
 
-      {/* 🔥 Auto-render berdasarkan semua data loket dari DB */}
       {loketList.map((loket) => renderTable(loket.NAMALOKET))}
     </>
   );

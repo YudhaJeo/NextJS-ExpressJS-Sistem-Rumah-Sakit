@@ -1,0 +1,10 @@
+.p-datatable .custom-current-row {
+  background-color: #c8f7c5 !important; 
+  font-weight: bold;
+}
+
+.p-datatable .custom-finished-row {
+  background-color: #fddcdc !important; 
+  text-decoration: line-through;
+  color: #a94442;
+}
