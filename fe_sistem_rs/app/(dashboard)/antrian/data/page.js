@@ -7,23 +7,45 @@ import { Toast } from 'primereact/toast';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default function Page() {
+function DataAntrian() {
   const [data, setData] = useState([]);
   const [loketList, setLoketList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentId, setCurrentId] = useState(null);
+
   const toastRef = useRef(null);
 
   useEffect(() => {
     fetchData();
     fetchLoket();
+
+    const savedId = localStorage.getItem('currentAntrianId');
+    if (savedId) setCurrentId(parseInt(savedId));
+
+    const interval = setInterval(checkUpdate, 3000); 
+
+    return () => clearInterval(interval);
   }, []);
+
+  const checkUpdate = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/antrian/data`);
+      const newData = res.data.data || [];
+
+      if (newData.length !== data.length || JSON.stringify(newData) !== JSON.stringify(data)) {
+        setData(newData);
+      }
+    } catch (err) {
+      console.error('Gagal polling data antrian:', err);
+    }
+  };
 
   const fetchData = async () => {
     setLoading(true);
     try {
       const res = await axios.get(`${API_URL}/antrian/data`);
-      setData(res.data.data || []);
+      const list = res.data.data || [];
+      setData(list);
     } catch (err) {
       console.error('Gagal fetch antrian:', err);
     } finally {
@@ -45,7 +67,6 @@ export default function Page() {
       const panggilan = data.find((item) => item.ID === id);
       if (!panggilan) return;
 
-      setCurrentId(id);
       await axios.post(`${API_URL}/antrian/panggil/${id}`);
 
       toastRef.current.show({
@@ -53,6 +74,9 @@ export default function Page() {
         summary: 'Berhasil',
         detail: `Antrian ${panggilan.NO_ANTRIAN} dipanggil`,
       });
+
+      setCurrentId(panggilan.ID);
+      localStorage.setItem('currentAntrianId', panggilan.ID);
 
       const ding = new Audio('/sounds/opening.mp3');
       ding.play();
@@ -62,22 +86,41 @@ export default function Page() {
           const suara = new SpeechSynthesisUtterance();
           suara.lang = 'id-ID';
           suara.text = `Nomor antrian ${panggilan.NO_ANTRIAN.split('').join(' ')}, silakan menuju loket ${panggilan.LOKET}`;
-          suara.rate = 0.8;
+          suara.rate = 0.9;
 
           window.speechSynthesis.cancel();
           window.speechSynthesis.speak(suara);
-        } else {
-          console.warn('Speech Synthesis tidak didukung');
         }
       };
 
-      fetchData();
+      fetchData(); 
     } catch (err) {
       console.error('Gagal memanggil:', err);
       toastRef.current.show({
         severity: 'error',
         summary: 'Gagal',
         detail: 'Gagal memanggil antrian',
+      });
+    }
+  };
+
+  const handleReset = async (loketName) => {
+    try {
+      await axios.post(`${API_URL}/antrian/reset`, { loket: loketName });
+
+      toastRef.current.show({
+        severity: 'info',
+        summary: 'Reset berhasil',
+        detail: `Antrian di loket ${loketName} telah direset.`,
+      });
+
+      fetchData();
+    } catch (err) {
+      console.error('Gagal reset antrian:', err);
+      toastRef.current.show({
+        severity: 'error',
+        summary: 'Gagal',
+        detail: 'Reset antrian gagal',
       });
     }
   };
@@ -91,8 +134,11 @@ export default function Page() {
         loketList={loketList}
         loading={loading}
         onPanggil={handlePanggil}
+        onReset={handleReset} 
         currentId={currentId}
       />
     </div>
   );
 }
+
+export default DataAntrian;

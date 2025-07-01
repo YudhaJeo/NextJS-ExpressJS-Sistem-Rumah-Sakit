@@ -61,3 +61,30 @@ export const panggilAntrian = async (req, res) => {
     res.status(500).json({ success: false, message: 'Gagal memanggil antrian', error: err.message });
   }
 };
+
+export const resetByLoket = async (req, res) => {
+  const { loket } = req.body;
+
+  if (!loket) {
+    return res.status(400).json({ message: 'Loket harus diisi' });
+  }
+
+  try {
+    // Ambil data loket berdasarkan nama
+    const loketData = await db('loket').where({ NAMALOKET: loket }).first();
+
+    if (!loketData) {
+      return res.status(404).json({ message: 'Loket tidak ditemukan' });
+    }
+
+    // Hapus semua antrian pada loket tersebut
+    await db('antrian')
+      .where('LOKET_ID', loketData.NO)
+      .del();
+
+    return res.json({ message: `Antrian di Loket ${loket} berhasil direset dan akan mulai dari awal saat ditambah lagi.` });
+  } catch (error) {
+    console.error('Gagal reset antrian:', error);
+    return res.status(500).json({ message: 'Gagal reset antrian' });
+  }
+};
