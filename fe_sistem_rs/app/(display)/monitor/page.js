@@ -18,32 +18,31 @@ function MonitorAntrian() {
   const [loading, setLoading] = useState(true);
   const [screenSize, setScreenSize] = useState({ width: 0, height: 0 });
   const [lastNoDipanggil, setLastNoDipanggil] = useState('');
+  const [userHasInteracted, setUserHasInteracted] = useState(false);
   const toast = useRef(null);
 
   useEffect(() => {
     fetchData(true);
-
     const interval = setInterval(() => {
       fetchData(false);
     }, 2000);
-
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    const handleStorageChange = (event) => {
-      if (event.key === 'lastPanggilan') {
-        try {
-          const panggilan = JSON.parse(event.newValue);
-          if (!panggilan) return;
+    const interval = setInterval(() => {
+      try {
+        const stored = localStorage.getItem('lastPanggilan');
+        if (!stored) return;
 
-          // Hindari pengulangan suara untuk panggilan yang sama
-          if (panggilan.no === lastNoDipanggil) return;
+        const panggilan = JSON.parse(stored);
+        if (!panggilan || panggilan.no === lastNoDipanggil) return;
 
-          setLastNoDipanggil(panggilan.no);
+        setLastNoDipanggil(panggilan.no);
 
+        if (userHasInteracted) {
           const ding = new Audio('/sounds/opening.mp3');
-          ding.play();
+          ding.play().catch((e) => console.warn('Gagal play audio:', e));
 
           ding.onended = () => {
             if ('speechSynthesis' in window) {
@@ -51,20 +50,18 @@ function MonitorAntrian() {
               suara.lang = 'id-ID';
               suara.text = `Nomor antrian ${panggilan.no.split('').join(' ')}, silakan menuju loket ${panggilan.loket}`;
               suara.rate = 0.9;
-
               window.speechSynthesis.cancel();
               window.speechSynthesis.speak(suara);
             }
           };
-        } catch (err) {
-          console.error('Gagal memutar suara:', err);
         }
+      } catch (err) {
+        console.error('Gagal memutar suara:', err);
       }
-    };
+    }, 1000);
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, [lastNoDipanggil]);
+    return () => clearInterval(interval);
+  }, [lastNoDipanggil, userHasInteracted]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -184,9 +181,24 @@ function MonitorAntrian() {
     else if (el.msRequestFullscreen) el.msRequestFullscreen();
   };
 
+  const handleStart = () => {
+    setUserHasInteracted(true);
+  };
+
   return (
     <div className="h-screen flex flex-column overflow-hidden bg-blue-50">
       <Toast ref={toast} position="top-right" />
+
+      {!userHasInteracted && (
+        <div className="absolute top-0 left-0 right-0 bottom-0 z-50 flex flex-column align-items-center justify-content-center bg-black-alpha-70">
+          <Button
+            label="Mulai Tampilkan Antrian"
+            icon="pi pi-play"
+            className="p-button-lg p-button-warning"
+            onClick={handleStart}
+          />
+        </div>
+      )}
 
       <div className={`text-center ${config.containerPadding} pb-2 flex-shrink-0`}>
         <div className="flex justify-end mb-2">

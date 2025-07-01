@@ -22,8 +22,7 @@ function DataAntrian() {
     const savedId = localStorage.getItem('currentAntrianId');
     if (savedId) setCurrentId(parseInt(savedId));
 
-    const interval = setInterval(checkUpdate, 3000); 
-
+    const interval = setInterval(checkUpdate, 3000);
     return () => clearInterval(interval);
   }, []);
 
@@ -78,22 +77,10 @@ function DataAntrian() {
       setCurrentId(panggilan.ID);
       localStorage.setItem('currentAntrianId', panggilan.ID);
 
-      localStorage.setItem('lastUpdate', Date.now());
-
-      const ding = new Audio('/sounds/opening.mp3');
-      ding.play();
-
-      ding.onended = () => {
-        if ('speechSynthesis' in window) {
-          const suara = new SpeechSynthesisUtterance();
-          suara.lang = 'id-ID';
-          suara.text = `Nomor antrian ${panggilan.NO_ANTRIAN.split('').join(' ')}, silakan menuju loket ${panggilan.LOKET}`;
-          suara.rate = 0.9;
-
-          window.speechSynthesis.cancel();
-          window.speechSynthesis.speak(suara);
-        }
-      };
+      localStorage.setItem('lastPanggilan', JSON.stringify({
+        no: panggilan.NO_ANTRIAN,
+        loket: panggilan.LOKET,
+      }));
 
       fetchData();
     } catch (err) {
@@ -136,7 +123,7 @@ function DataAntrian() {
         loketList={loketList}
         loading={loading}
         onPanggil={handlePanggil}
-        onReset={handleReset} 
+        onReset={handleReset}
         currentId={currentId}
       />
     </div>
