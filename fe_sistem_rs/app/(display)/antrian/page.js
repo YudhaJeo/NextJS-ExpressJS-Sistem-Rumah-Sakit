@@ -37,8 +37,9 @@ function DisplayAntrian() {
       setIsFullScreen(!!document.fullscreenElement);
     };
     document.addEventListener('fullscreenchange', handleFullScreenChange);
-    return () =>
+    return () => {
       document.removeEventListener('fullscreenchange', handleFullScreenChange);
+    };
   }, []);
 
   const toggleFullScreen = () => {
@@ -190,17 +191,19 @@ function DisplayAntrian() {
   return (
     <div className="h-screen flex flex-column overflow-hidden relative">
       {/* Fullscreen Button (pojok kanan atas) */}
-      <div className="fixed top-3 right-3 z-50">
-        <Button
-          icon={isFullScreen ? 'pi pi-window-minimize' : 'pi pi-window-maximize'}
-          onClick={toggleFullScreen}
-          rounded
-          text
-          severity="secondary"
-          tooltip={isFullScreen ? 'Keluar Fullscreen (Esc)' : 'Fullscreen'}
-          tooltipOptions={{ position: 'left' }}
-        />
-      </div>
+      {!isFullScreen && (
+        <div className="fixed top-3 right-3 z-50">
+          <Button
+            icon="pi pi-window-maximize"
+            onClick={toggleFullScreen}
+            rounded
+            text
+            severity="secondary"
+            tooltip="Tampilkan Fullscreen"
+            tooltipOptions={{ position: 'left' }}
+          />
+        </div>
+      )}
 
       <Toast ref={toast} position="top-right" />
 
