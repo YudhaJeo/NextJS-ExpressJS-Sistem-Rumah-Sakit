@@ -21,8 +21,8 @@ const ReservasiPasienPage = () => {
   const [formData, setFormData] = useState({
     IDRESERVASI: 0,
     NIK: '',
-    POLI: '',
-    NAMADOKTER: '',
+    IDPOLI: '',
+    IDDOKTER: '',
     TANGGALRESERVASI: '',
     JAMRESERVASI: '',
     STATUS: 'Menunggu',
@@ -103,7 +103,7 @@ const fetchDokter = async () => {
     // Jika response berupa array langsung
     const options = res.data.map((nama_dokter) => ({
       label: `${nama_dokter.IDDOKTER} - ${nama_dokter.NAMADOKTER}`,
-      value: nama_dokter.NAMADOKTER,
+      value: nama_dokter.IDDOKTER,
     }));
 
     setDokterOptions(options);
@@ -129,8 +129,8 @@ const fetchDokter = async () => {
   const handleSubmit = async () => {
     if (
       !formData.NIK ||
-      !formData.POLI ||
-      !formData.NAMADOKTER ||
+      !formData.IDPOLI ||
+      !formData.IDDOKTER ||
       !formData.TANGGALRESERVASI ||
       !formData.JAMRESERVASI ||
       !formData.STATUS
@@ -193,8 +193,8 @@ const fetchDokter = async () => {
     setFormData({
       IDRESERVASI: 0,
       NIK: '',
-      POLI: '',
-      NAMADOKTER: '',
+      IDPOLI: '',
+      IDDOKTER: '',
       TANGGALRESERVASI: '',
       JAMRESERVASI: '',
       STATUS: 'Menunggu',

@@ -22,7 +22,7 @@ export const updateStatusAntrian = async (id) => {
   }
 
   await db('antrian')
-    .where('LOKET_ID', panggil.LOKET_ID)
+    .where({ LOKET_ID: panggil.LOKET_ID, STATUS: 'Dipanggil' })
     .update({ STATUS: 'Sudah' });
 
   await db('antrian')
@@ -30,8 +30,4 @@ export const updateStatusAntrian = async (id) => {
     .update({ STATUS: 'Dipanggil' });
 
   return true;
-};
-
-export const deleteAntrian = (id) => {
-  return db('antrian').where({ ID: id }).del();
 };

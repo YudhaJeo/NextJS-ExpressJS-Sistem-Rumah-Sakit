@@ -26,7 +26,7 @@ const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }) => {
     >
       <Column field="NAMALENGKAP" header="Nama Pasien" />
       <Column field="NIK" header="NIK" />
-      <Column field="POLI" header="Poli" />
+      <Column field="NAMAPOLI" header="Poli" />
       <Column field="NAMADOKTER" header="Nama Dokter" />
       <Column
         field="TANGGALRESERVASI"
