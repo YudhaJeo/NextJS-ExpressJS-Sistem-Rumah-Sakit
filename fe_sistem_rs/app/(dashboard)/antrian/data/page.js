@@ -78,6 +78,8 @@ function DataAntrian() {
       setCurrentId(panggilan.ID);
       localStorage.setItem('currentAntrianId', panggilan.ID);
 
+      localStorage.setItem('lastUpdate', Date.now());
+
       const ding = new Audio('/sounds/opening.mp3');
       ding.play();
 
@@ -93,7 +95,7 @@ function DataAntrian() {
         }
       };
 
-      fetchData(); 
+      fetchData();
     } catch (err) {
       console.error('Gagal memanggil:', err);
       toastRef.current.show({
