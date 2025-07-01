@@ -103,6 +103,7 @@ const FormDialogPasien = ({
           <InputText
             className={inputClass('NOHP')}
             value={form.NOHP}
+            maxLength={13}
             onChange={(e) => setForm({ ...form, NOHP: e.target.value })}
           />
           {errors.NOHP && <small className="text-red-500">{errors.NOHP}</small>}

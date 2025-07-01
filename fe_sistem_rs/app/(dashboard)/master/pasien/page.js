@@ -109,9 +109,9 @@ const Page = () => {
     if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = <span style={{color: 'red'}}>Jenis kelamin wajib dipilih</span>;
     if (!form.ALAMAT?.trim()) newErrors.ALAMAT = <span style={{color: 'red'}}>Alamat wajib diisi</span>;
     if (!form.NOHP?.trim()) {
-      newErrors.NOHP = <span style={{color: 'red'}}>No HP wajib diisi</span>;
-    } else if (!/^\d+$/.test(form.NOHP)) {
-      newErrors.NOHP = <span style={{color: 'red'}}>No HP hanya boleh berisi angka</span>;
+      newErrors.NOHP = <span style={{ color: 'red' }}>No HP wajib diisi</span>;
+    } else if (!/^\d{9,13}$/.test(form.NOHP)) {
+      newErrors.NOHP = <span style={{ color: 'red' }}>No HP harus 9-13 digit angka</span>;    
     }
 
     if (!form.IDAGAMA) newErrors.IDAGAMA = <span style={{color: 'red'}}>Agama wajib diisi</span>;
@@ -259,9 +259,3 @@ const Page = () => {
 };
 
 export default Page;
-
-
-// NOOOTTEEE
-// - PUSH INI(CRUD NORMAL)(tapi catatan debugging hapus hapusin dulu)
-// - Revisi edit nomor telfon supaya gak error kalau angkanya kepanjangan(terus push)
-// - 
