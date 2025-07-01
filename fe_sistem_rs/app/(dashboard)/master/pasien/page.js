@@ -97,30 +97,65 @@ const Page = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
+  
     if (!form.NAMALENGKAP.trim()) newErrors.NAMALENGKAP = <span style={{color: 'red'}}>Nama wajib diisi</span>;
     if (!form.NIK.trim()) {
       newErrors.NIK = <span style={{color: 'red'}}>NIK wajib diisi</span>;
     } else if (!/^\d{16}$/.test(form.NIK)) {
       newErrors.NIK = <span style={{color: 'red'}}>NIK harus 16 digit angka</span>;
     }
-
-    if (!form.TANGGALLAHIR) newErrors.TANGGALLAHIR = <span style={{color: 'red'}}>Tanggal Lahir wajib diisi</span>;
-    if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = <span style={{color: 'red'}}>Jenis kelamin wajib dipilih</span>;
-    if (!form.ALAMAT?.trim()) newErrors.ALAMAT = <span style={{color: 'red'}}>Alamat wajib diisi</span>;
+  
+    if (!form.TANGGALLAHIR) newErrors.TANGGALLAHIR = 
+      <span style={{color: 'red'}}>
+        Tanggal Lahir wajib diisi
+      </span>;
+    if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = 
+      <span style={{color: 'red'}}>
+        Jenis kelamin wajib dipilih
+      </span>;
+    if (!form.ALAMAT?.trim()) newErrors.ALAMAT = 
+      <span style={{color: 'red'}}>
+        Alamat wajib diisi
+      </span>;
     if (!form.NOHP?.trim()) {
-      newErrors.NOHP = <span style={{color: 'red'}}>No HP wajib diisi</span>;
-    } else if (!/^\d+$/.test(form.NOHP)) {
-      newErrors.NOHP = <span style={{color: 'red'}}>No HP hanya boleh berisi angka</span>;
+      newErrors.NOHP = 
+      <span style={{color: 'red'}}>
+        No HP wajib diisi
+      </span>;
+    } else if (!/^\d{9,13}$/.test(form.NOHP)) {
+      newErrors.NOHP = 
+      <span style={{color: 'red'}}>
+        No HP harus 9–13 digit angka
+      </span>;
     }
-
-    if (!form.IDAGAMA) newErrors.IDAGAMA = <span style={{color: 'red'}}>Agama wajib diisi</span>;
-    if (!form.GOLDARAH) newErrors.GOLDARAH = <span style={{color: 'red'}}>Golongan darah wajib dipilih</span>;
-    if (!form.IDASURANSI) newErrors.IDASURANSI = <span style={{color: 'red'}}>Asuransi wajib dipilih</span>;
-
+  
+    if (!form.IDAGAMA) newErrors.IDAGAMA = 
+      <span style={{color: 'red'}}>
+        Agama wajib diisi
+      </span>;
+    if (!form.GOLDARAH) newErrors.GOLDARAH = 
+      <span style={{color: 'red'}}>
+        Golongan darah wajib dipilih
+      </span>;
+    if (!form.IDASURANSI) {
+      newErrors.IDASURANSI = 
+        <span style={{color: 'red'}}>
+          Asuransi wajib dipilih
+        </span>;
+    } else {
+      const selected = asuransiOptions.find(opt => opt.value === form.IDASURANSI);
+      if (selected?.label !== 'Umum' && !form.NOASURANSI.trim()) {
+        newErrors.NOASURANSI = 
+          <span style={{color: 'red'}}>
+            No Asuransi wajib diisi
+          </span>;
+      }
+    }
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  
 
   const handleSearch = (keyword) => {
     if (!keyword) {
@@ -259,9 +294,3 @@ const Page = () => {
 };
 
 export default Page;
-
-
-// NOOOTTEEE
-// - PUSH INI(CRUD NORMAL)(tapi catatan debugging hapus hapusin dulu)
-// - Revisi edit nomor telfon supaya gak error kalau angkanya kepanjangan(terus push)
-// - 

@@ -103,6 +103,7 @@ const FormDialogPasien = ({
           <InputText
             className={inputClass('NOHP')}
             value={form.NOHP}
+            maxLength={13}
             onChange={(e) => setForm({ ...form, NOHP: e.target.value })}
           />
           {errors.NOHP && <small className="text-red-500">{errors.NOHP}</small>}
@@ -151,12 +152,13 @@ const FormDialogPasien = ({
         </div>
 
         <div>
-          <label>No Asuransi (Opsional)</label>
+          <label>No Asuransi</label>
           <InputText
             className="w-full mt-2"
             value={form.NOASURANSI}
             onChange={(e) => setForm({ ...form, NOASURANSI: e.target.value })}
           />
+          {errors.NOASURANSI && <small className="text-red-500">{errors.NOASURANSI}</small>}
         </div>
 
         <div className="text-right pt-3">
