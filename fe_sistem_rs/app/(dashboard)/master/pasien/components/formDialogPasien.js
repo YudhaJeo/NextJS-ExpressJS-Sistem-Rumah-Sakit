@@ -1,3 +1,4 @@
+// app/(dashboard)/master/pasien/components/formDialogPasien.js
 'use client';
 
 import { Button } from 'primereact/button';
@@ -7,7 +8,16 @@ import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import React from 'react';
 
-const FormDialogPasien = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
+const FormDialogPasien = ({ 
+  visible, 
+  onHide, 
+  onSubmit, 
+  form, 
+  setForm,
+  errors,
+  agamaOptions,
+  asuransiOptions
+}) => {
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
@@ -93,6 +103,7 @@ const FormDialogPasien = ({ visible, onHide, onSubmit, form, setForm, errors }) 
           <InputText
             className={inputClass('NOHP')}
             value={form.NOHP}
+            maxLength={13}
             onChange={(e) => setForm({ ...form, NOHP: e.target.value })}
           />
           {errors.NOHP && <small className="text-red-500">{errors.NOHP}</small>}
@@ -100,12 +111,15 @@ const FormDialogPasien = ({ visible, onHide, onSubmit, form, setForm, errors }) 
 
         <div>
           <label>Agama</label>
-          <InputText
-            className={inputClass('AGAMA')}
-            value={form.AGAMA}
-            onChange={(e) => setForm({ ...form, AGAMA: e.target.value })}
-          />
-          {errors.AGAMA && <small className="text-red-500">{errors.AGAMA}</small>}
+          <Dropdown
+            className={inputClass('IDAGAMA')}
+            options={agamaOptions}
+            value={form.IDAGAMA}
+            onChange={(e) => setForm({ ...form, IDAGAMA: e.value })}
+            placeholder="Pilih"
+          >
+          </Dropdown>
+          {errors.IDAGAMA && <small className="text-red-500">{errors.IDAGAMA}</small>}
         </div>
 
         <div>
@@ -128,26 +142,23 @@ const FormDialogPasien = ({ visible, onHide, onSubmit, form, setForm, errors }) 
         <div>
           <label>Asuransi</label>
           <Dropdown
-            className={inputClass('ASURANSI')}
-            options={[
-              { label: 'BPJS', value: 'BPJS' },
-              { label: 'Umum', value: 'Umum' },
-              { label: 'Lainnya', value: 'Lainnya' },
-            ]}
-            value={form.ASURANSI}
-            onChange={(e) => setForm({ ...form, ASURANSI: e.value })}
-            placeholder="Pilih"
-          />
-          {errors.ASURANSI && <small className="text-red-500">{errors.ASURANSI}</small>}
+              className={inputClass('IDASURANSI')}
+              options={asuransiOptions}
+              value={form.IDASURANSI}
+              onChange={(e) => setForm({ ...form, IDASURANSI: e.value })}
+              placeholder="Pilih"
+            />
+            {errors.IDASURANSI && <small className="text-red-500">{errors.IDASURANSI}</small>}
         </div>
 
         <div>
-          <label>No Asuransi (Opsional)</label>
+          <label>No Asuransi</label>
           <InputText
             className="w-full mt-2"
             value={form.NOASURANSI}
             onChange={(e) => setForm({ ...form, NOASURANSI: e.target.value })}
           />
+          {errors.NOASURANSI && <small className="text-red-500">{errors.NOASURANSI}</small>}
         </div>
 
         <div className="text-right pt-3">

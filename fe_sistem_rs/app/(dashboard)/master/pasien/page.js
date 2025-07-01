@@ -1,3 +1,5 @@
+// app/(dashboard)/master/pasien/page.js
+
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -18,15 +20,45 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
 
+  // DROP OPTION
+  const [agamaOptions, setAgamaOptions] = useState([]);
+  const [asuransiOptions, setAsuransiOptions] = useState([]);
+
+  const fetchAgama = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/agama`);
+      const options = res.data.data.map((item) => ({
+        label: item.NAMAAGAMA,
+        value: item.IDAGAMA,
+      }));
+      setAgamaOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil data pasien:', err);
+    }
+  };
+
+  const fetchAsuransi = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/asuransi`);
+      const options = res.data.data.map((item) => ({
+        label: item.NAMAASURANSI,
+        value: item.IDASURANSI,
+      }));
+      setAsuransiOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil data asuransi:', err);
+    }
+  };  
+
   const [form, setForm] = useState({
     NIK: '',
     NAMALENGKAP: '',
     TANGGALLAHIR: '',
     JENISKELAMIN: 'L',
-    ASURANSI: 'Umum',
+    IDASURANSI: '',
     ALAMAT: '',
     NOHP: '',
-    AGAMA: '',
+    IDAGAMA: '',
     GOLDARAH: '',
     NOASURANSI: '',
   });
@@ -44,6 +76,10 @@ const Page = () => {
     }
 
     fetchData();
+
+    // LISTEN DROP OPTION
+    fetchAgama();
+    fetchAsuransi();
   }, []);
 
   const fetchData = async () => {
@@ -61,30 +97,65 @@ const Page = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
+  
     if (!form.NAMALENGKAP.trim()) newErrors.NAMALENGKAP = <span style={{color: 'red'}}>Nama wajib diisi</span>;
     if (!form.NIK.trim()) {
       newErrors.NIK = <span style={{color: 'red'}}>NIK wajib diisi</span>;
     } else if (!/^\d{16}$/.test(form.NIK)) {
       newErrors.NIK = <span style={{color: 'red'}}>NIK harus 16 digit angka</span>;
     }
-
-    if (!form.TANGGALLAHIR) newErrors.TANGGALLAHIR = <span style={{color: 'red'}}>Tanggal Lahir wajib diisi</span>;
-    if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = <span style={{color: 'red'}}>Jenis kelamin wajib dipilih</span>;
-    if (!form.ALAMAT?.trim()) newErrors.ALAMAT = <span style={{color: 'red'}}>Alamat wajib diisi</span>;
+  
+    if (!form.TANGGALLAHIR) newErrors.TANGGALLAHIR = 
+      <span style={{color: 'red'}}>
+        Tanggal Lahir wajib diisi
+      </span>;
+    if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = 
+      <span style={{color: 'red'}}>
+        Jenis kelamin wajib dipilih
+      </span>;
+    if (!form.ALAMAT?.trim()) newErrors.ALAMAT = 
+      <span style={{color: 'red'}}>
+        Alamat wajib diisi
+      </span>;
     if (!form.NOHP?.trim()) {
-      newErrors.NOHP = <span style={{color: 'red'}}>No HP wajib diisi</span>;
-    } else if (!/^\d+$/.test(form.NOHP)) {
-      newErrors.NOHP = <span style={{color: 'red'}}>No HP hanya boleh berisi angka</span>;
+      newErrors.NOHP = 
+      <span style={{color: 'red'}}>
+        No HP wajib diisi
+      </span>;
+    } else if (!/^\d{9,13}$/.test(form.NOHP)) {
+      newErrors.NOHP = 
+      <span style={{color: 'red'}}>
+        No HP harus 9–13 digit angka
+      </span>;
     }
-
-    if (!form.AGAMA?.trim()) newErrors.AGAMA = <span style={{color: 'red'}}>Agama wajib diisi</span>;
-    if (!form.GOLDARAH) newErrors.GOLDARAH = <span style={{color: 'red'}}>Golongan darah wajib dipilih</span>;
-    if (!form.ASURANSI) newErrors.ASURANSI = <span style={{color: 'red'}}>Asuransi wajib dipilih</span>;
-
+  
+    if (!form.IDAGAMA) newErrors.IDAGAMA = 
+      <span style={{color: 'red'}}>
+        Agama wajib diisi
+      </span>;
+    if (!form.GOLDARAH) newErrors.GOLDARAH = 
+      <span style={{color: 'red'}}>
+        Golongan darah wajib dipilih
+      </span>;
+    if (!form.IDASURANSI) {
+      newErrors.IDASURANSI = 
+        <span style={{color: 'red'}}>
+          Asuransi wajib dipilih
+        </span>;
+    } else {
+      const selected = asuransiOptions.find(opt => opt.value === form.IDASURANSI);
+      if (selected?.label !== 'Umum' && !form.NOASURANSI.trim()) {
+        newErrors.NOASURANSI = 
+          <span style={{color: 'red'}}>
+            No Asuransi wajib diisi
+          </span>;
+      }
+    }
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  
 
   const handleSearch = (keyword) => {
     if (!keyword) {
@@ -93,13 +164,14 @@ const Page = () => {
       const filtered = originalData.filter(
         (item) =>
           item.NIK.toLowerCase().includes(keyword.toLowerCase()) ||
-          item.NAMALENGKAP.toLowerCase().includes(keyword.toLowerCase())
+          item.NAMALENGKAP.toLowerCase().includes(keyword.toLowerCase()) 
       );
       setData(filtered);
     }
   };
 
   const handleSubmit = async () => {
+  
     if (!validateForm()) return;
 
     const isEdit = !!form.IDPASIEN;
@@ -169,10 +241,10 @@ const Page = () => {
       NAMALENGKAP: '',
       TANGGALLAHIR: '',
       JENISKELAMIN: 'L',
-      ASURANSI: 'Umum',
+      IDASURANSI: '',
       ALAMAT: '',
       NOHP: '',
-      AGAMA: '',
+      IDAGAMA: '',
       GOLDARAH: '',
       NOASURANSI: '',
     });
@@ -196,7 +268,12 @@ const Page = () => {
         }}
       />
 
-      <TabelPasien data={data} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
+      <TabelPasien 
+        data={data} 
+        loading={loading} 
+        onEdit={handleEdit} 
+        onDelete={handleDelete} 
+      />
 
       <FormDialogPasien
         visible={dialogVisible}
@@ -208,6 +285,9 @@ const Page = () => {
         form={form}
         setForm={setForm}
         errors={errors}
+        // DROP DOWN OPTION
+        agamaOptions={agamaOptions}
+        asuransiOptions={asuransiOptions}
       />
     </div>
   );

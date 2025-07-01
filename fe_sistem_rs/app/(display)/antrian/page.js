@@ -19,6 +19,14 @@ function DisplayAntrian() {
   const [screenSize, setScreenSize] = useState({ width: 0, height: 0 });
   const [isFullScreen, setIsFullScreen] = useState(false);
   const toast = useRef(null);
+  const [time, setTime] = useState(null);
+
+  useEffect(() => {
+    const updateTime = () => setTime(new Date());
+    updateTime(); 
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const updateSize = () =>
@@ -40,6 +48,11 @@ function DisplayAntrian() {
     return () => {
       document.removeEventListener('fullscreenchange', handleFullScreenChange);
     };
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(interval);
   }, []);
 
   const toggleFullScreen = () => {
@@ -86,9 +99,7 @@ function DisplayAntrian() {
       const loket = loketList.find((l) => l.NAMALOKET === loketName);
       if (loket) {
         setAntrianList((prev) => [
-          ...prev.filter(
-            (a) => a.LOKET !== loketName || a.STATUS !== 'Belum'
-          ),
+          ...prev.filter((a) => a.LOKET !== loketName || a.STATUS !== 'Belum'),
           {
             ID: Date.now(),
             NO_ANTRIAN: nomorBaru,
@@ -98,10 +109,7 @@ function DisplayAntrian() {
             CREATED_AT: new Date().toISOString(),
           },
         ]);
-        showToast(
-          'success',
-          `Tiket ${loketName} berhasil diambil. Nomor: ${nomorBaru}`
-        );
+        showToast('success', `Tiket ${loketName} berhasil diambil. Nomor: ${nomorBaru}`);
       }
     } catch {
       showToast('error', 'Gagal mengambil tiket.');
@@ -109,15 +117,12 @@ function DisplayAntrian() {
   };
 
   const getAntrianByLoket = (namaLoket) => {
-    const item = antrianList.find(
-      (a) => a.LOKET === namaLoket && a.STATUS === 'Belum'
-    );
+    const item = antrianList.find((a) => a.LOKET === namaLoket && a.STATUS === 'Belum');
     return typeof item?.NO_ANTRIAN === 'string' ? item.NO_ANTRIAN : '-';
   };
 
   const config = getResponsiveConfig(screenSize, loketList.length);
   const colClass = `col-${12 / config.cols}`;
-  const needsCentering = loketList.length < config.cols;
 
   const getCardStyle = (index) => {
     const colors = ['#e8f5e9', '#e3f2fd', '#fffde7', '#fce4ec', '#ede7f6', '#fbe9e7'];
@@ -140,14 +145,10 @@ function DisplayAntrian() {
       <div key={index} className={colClass}>
         <Card
           header={
-            <div className="flex justify-between items-center mb-2">
-              <div className="flex items-center gap-2">
-                <i
-                  className={`pi pi-circle-fill text-sm ${
-                    isActive ? 'text-green-500' : 'text-red-500'
-                  }`}
-                />
-                <span className="font-bold text-lg">{loket.NAMALOKET}</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <i className={`pi pi-circle-fill text-sm ${isActive ? 'text-green-500' : 'text-red-500'}`} />
+                <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{loket.NAMALOKET}</span>
               </div>
               <Tag
                 value={hasQueue ? 'Tersedia' : 'Kosong'}
@@ -157,31 +158,28 @@ function DisplayAntrian() {
             </div>
           }
           footer={
-            <div className="flex justify-center mt-2">
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.5rem' }}>
               <Button
                 label="Ambil Tiket"
                 icon="pi pi-ticket"
                 onClick={() => handleAmbilTiket(loket.NAMALOKET)}
                 disabled={loading || !isActive}
                 loading={loading}
-                className="w-full"
+                style={{ width: '100%' }}
                 size="small"
                 severity={hasQueue ? 'success' : 'info'}
               />
             </div>
           }
           style={getCardStyle(index)}
-          className={`h-full hover:shadow-2 ${isActive ? '' : 'opacity-60'} ${config.cardPadding}`}
         >
-          <div className="text-center">
-            <small className="text-600 font-medium">Loket #{loket.NO}</small>
-            <div className="text-xs text-600 font-medium my-2">Nomor Antrian Saat Ini</div>
-            <div className={`${config.numberSize} font-bold p-2 border-2 border-dashed border-round-lg`}>
+          <div style={{ textAlign: 'center' }}>
+            <small style={{ color: '#757575', fontWeight: '500' }}>Loket #{loket.NO}</small>
+            <div style={{ fontSize: '0.75rem', color: '#757575', margin: '0.5rem 0' }}>Nomor Antrian Saat Ini</div>
+            <div style={{ fontSize: config.numberSize, fontWeight: 'bold', padding: '0.5rem', border: '2px dashed #ccc', borderRadius: '6px' }}>
               {currentNumber}
             </div>
-            {hasQueue && (
-              <Badge value="Siap Dilayani" severity="success" className="animate-pulse text-xs" />
-            )}
+            {hasQueue && <Badge value="Siap Dilayani" severity="success" className="animate-pulse text-xs" />}
           </div>
         </Card>
       </div>
@@ -189,10 +187,9 @@ function DisplayAntrian() {
   };
 
   return (
-    <div className="h-screen flex flex-column overflow-hidden relative">
-      {/* Fullscreen Button (pojok kanan atas) */}
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
       {!isFullScreen && (
-        <div className="fixed top-3 right-3 z-50">
+        <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: 999 }}>
           <Button
             icon="pi pi-window-maximize"
             onClick={toggleFullScreen}
@@ -207,37 +204,71 @@ function DisplayAntrian() {
 
       <Toast ref={toast} position="top-right" />
 
-      <div className={`text-center ${config.containerPadding} pb-2 flex-shrink-0`}>
-        <h1 className={`${config.headerSize} font-bold text-800 mb-2`}>
-          <i className="pi pi-desktop mr-2 text-blue-600" /> Sistem Antrian Digital
-        </h1>
-        <p className={`${config.subtitleSize} text-600 mb-2`}>
-          Ambil nomor antrian Anda dengan mudah dan cepat
-        </p>
-        <Divider className="my-2" />
+      <div
+        style={{
+          background: '#1976d2',
+          color: '#fff',
+          padding: '1rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <img src="/layout/images/logo.png" alt="Logo" style={{ height: '50px' }} />
+          <h2 style={{ margin: 0, color: 'white' }}>RUMAH SAKIT</h2>
+        </div>
+          <div style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
+            {time
+              ? time.toLocaleString('id-ID', {
+                  weekday: 'long',
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit'
+                })
+              : null}
+          </div>
       </div>
 
-      <div className={`flex-1 overflow-hidden ${config.containerPadding} pt-0`}>
+      <div style={{ padding: config.containerPadding, paddingBottom: '0.5rem', flexShrink: 0 }} />
+
+      <div style={{ flex: 1, overflow: 'auto', padding: config.containerPadding, paddingTop: 0 }}>
         {loading ? (
           <LoadingState />
         ) : loketList.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className={`h-full ${needsCentering ? 'flex align-items-center justify-content-center' : ''}`}>
-            <div className={`grid ${needsCentering ? 'justify-content-center' : ''}`}>
+          <div style={{ height: '100%' }}>
+            <div className="grid">
               {loketList.map(renderCard)}
             </div>
           </div>
         )}
       </div>
 
+      {/* FOOTER STATISTIK */}
       {!loading && loketList.length > 0 && (
-        <div className={`flex-shrink-0 ${config.containerPadding} pt-2`}>
-          <Divider className="my-2" />
-          <div className="flex justify-content-center gap-6 text-center">
-            <Stats count={loketList.filter((l) => l.AKTIF !== false).length} label="Loket Aktif" color="success" />
-            <Stats count={antrianList.filter((a) => a.STATUS === 'Belum').length} label="Antrian Aktif" color="info" />
-            <Stats count={loketList.length} label="Total Loket" color="warning" />
+        <div style={{ padding: config.containerPadding, paddingTop: '0.5rem', flexShrink: 0 }}>
+          <Divider />
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', textAlign: 'center' }}>
+            <Stats
+              count={loketList.filter((l) => l.AKTIF !== false).length}
+              label="Loket Aktif"
+              color="success"
+            />
+            <Stats
+              count={antrianList.filter((a) => a.STATUS === 'Belum').length}
+              label="Antrian Aktif"
+              color="info"
+            />
+            <Stats
+              count={loketList.length}
+              label="Total Loket"
+              color="warning"
+            />
           </div>
         </div>
       )}
@@ -245,78 +276,48 @@ function DisplayAntrian() {
   );
 }
 
+// Komponen & helper tambahan
 function getResponsiveConfig(screen, count) {
   const { width } = screen;
   const config = {
-    headerSize: '',
-    subtitleSize: '',
-    numberSize: '',
-    cardPadding: '',
-    containerPadding: '',
+    numberSize: '2rem',
+    cardPadding: '1rem',
+    containerPadding: '1rem',
     cols: 1,
   };
 
   if (width < 768)
-    Object.assign(config, {
-      cols: Math.min(count, 1),
-      headerSize: 'text-2xl',
-      subtitleSize: 'text-sm',
-      numberSize: 'text-3xl',
-      cardPadding: 'p-2',
-      containerPadding: 'p-2',
-    });
+    Object.assign(config, { cols: 1, numberSize: '2rem' });
   else if (width < 1024)
-    Object.assign(config, {
-      cols: Math.min(count, 2),
-      headerSize: 'text-3xl',
-      subtitleSize: 'text-base',
-      numberSize: 'text-4xl',
-      cardPadding: 'p-3',
-      containerPadding: 'p-3',
-    });
+    Object.assign(config, { cols: 2, numberSize: '2.5rem' });
   else if (width < 1440)
-    Object.assign(config, {
-      cols: Math.min(count, count <= 3 ? 3 : 4),
-      headerSize: 'text-4xl',
-      subtitleSize: 'text-lg',
-      numberSize: 'text-5xl',
-      cardPadding: 'p-4',
-      containerPadding: 'p-4',
-    });
-  else
-    Object.assign(config, {
-      cols: Math.min(count, count <= 4 ? 4 : 6),
-      headerSize: 'text-5xl',
-      subtitleSize: 'text-xl',
-      numberSize: 'text-6xl',
-      cardPadding: 'p-4',
-      containerPadding: 'p-6',
-    });
+    Object.assign(config, { cols: Math.min(count, 3), numberSize: '3rem' });
+  else Object.assign(config, { cols: Math.min(count, 4), numberSize: '3.5rem' });
 
   return config;
 }
 
 const LoadingState = () => (
-  <div className="flex flex-column align-items-center justify-content-center h-full">
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
     <ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="4" />
-    <p className="text-lg text-600 font-medium mt-3">
+    <p style={{ fontSize: '1rem', color: '#666', fontWeight: '500', marginTop: '1rem' }}>
       <i className="pi pi-spin pi-spinner mr-2" /> Memuat data...
     </p>
   </div>
 );
 
 const EmptyState = () => (
-  <div className="text-center h-full flex flex-column align-items-center justify-content-center">
-    <i className="pi pi-inbox text-4xl text-400 mb-3" />
-    <h3 className="text-xl font-semibold text-700 mb-2">Tidak Ada Loket Tersedia</h3>
-    <p className="text-600">Silakan hubungi administrator untuk informasi lebih lanjut</p>
+  <div style={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+    <i className="pi pi-inbox" style={{ fontSize: '2rem', color: '#999', marginBottom: '1rem' }} />
+    <h3 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#444', marginBottom: '0.5rem' }}>Tidak Ada Loket Tersedia</h3>
+    <p style={{ color: '#777' }}>Silakan hubungi administrator untuk informasi lebih lanjut</p>
   </div>
 );
 
 const Stats = ({ count, label, color }) => (
-  <div className="flex flex-column align-items-center">
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
     <Tag value={count} severity={color} className="text-base font-bold mb-1 px-3 py-2" />
-    <span className="text-xs text-600">{label}</span>
+    <span style={{ fontSize: '0.75rem', color: '#666' }}>{label}</span>
   </div>
 );
 
