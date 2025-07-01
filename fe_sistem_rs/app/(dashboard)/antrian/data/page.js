@@ -125,6 +125,7 @@ function DataAntrian() {
         onPanggil={handlePanggil}
         onReset={handleReset}
         currentId={currentId}
+        fetchData={fetchData}
       />
     </div>
   );
