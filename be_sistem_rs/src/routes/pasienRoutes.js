@@ -1,3 +1,4 @@
+// src/routes/pasienRoutes.js
 import express from 'express';
 import {
   getAllPasien,

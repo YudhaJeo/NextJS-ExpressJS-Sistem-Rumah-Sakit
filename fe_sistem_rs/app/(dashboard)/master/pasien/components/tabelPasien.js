@@ -1,3 +1,4 @@
+// app/(dashboard)/master/pasien/components/tabelPasien.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
@@ -25,9 +26,9 @@ const TabelPasien = ({ data, loading, onEdit, onDelete }) => {
       <Column field="JENISKELAMIN" header="JK" />
       <Column field="ALAMAT" header="Alamat" />
       <Column field="NOHP" header="No HP" />
-      <Column field="AGAMA" header="Agama" />
+      <Column field="NAMAAGAMA" header="Agama" />
       <Column field="GOLDARAH" header="Gol. Darah" />
-      <Column field="ASURANSI" header="Asuransi" />
+      <Column field="NAMAASURANSI" header="Asuransi" />
       <Column
         field="NOASURANSI"
         header="No Asuransi"

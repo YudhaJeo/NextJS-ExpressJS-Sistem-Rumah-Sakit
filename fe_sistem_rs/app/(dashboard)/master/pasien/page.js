@@ -1,3 +1,5 @@
+// app/(dashboard)/master/pasien/page.js
+
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -18,15 +20,45 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
 
+  // DROP OPTION
+  const [agamaOptions, setAgamaOptions] = useState([]);
+  const [asuransiOptions, setAsuransiOptions] = useState([]);
+
+  const fetchAgama = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/agama`);
+      const options = res.data.data.map((item) => ({
+        label: item.NAMAAGAMA,
+        value: item.IDAGAMA,
+      }));
+      setAgamaOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil data pasien:', err);
+    }
+  };
+
+  const fetchAsuransi = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/asuransi`);
+      const options = res.data.data.map((item) => ({
+        label: item.NAMAASURANSI,
+        value: item.IDASURANSI,
+      }));
+      setAsuransiOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil data asuransi:', err);
+    }
+  };  
+
   const [form, setForm] = useState({
     NIK: '',
     NAMALENGKAP: '',
     TANGGALLAHIR: '',
     JENISKELAMIN: 'L',
-    ASURANSI: 'Umum',
+    IDASURANSI: '',
     ALAMAT: '',
     NOHP: '',
-    AGAMA: '',
+    IDAGAMA: '',
     GOLDARAH: '',
     NOASURANSI: '',
   });
@@ -44,6 +76,10 @@ const Page = () => {
     }
 
     fetchData();
+
+    // LISTEN DROP OPTION
+    fetchAgama();
+    fetchAsuransi();
   }, []);
 
   const fetchData = async () => {
@@ -78,9 +114,9 @@ const Page = () => {
       newErrors.NOHP = <span style={{color: 'red'}}>No HP hanya boleh berisi angka</span>;
     }
 
-    if (!form.AGAMA?.trim()) newErrors.AGAMA = <span style={{color: 'red'}}>Agama wajib diisi</span>;
+    if (!form.IDAGAMA) newErrors.IDAGAMA = <span style={{color: 'red'}}>Agama wajib diisi</span>;
     if (!form.GOLDARAH) newErrors.GOLDARAH = <span style={{color: 'red'}}>Golongan darah wajib dipilih</span>;
-    if (!form.ASURANSI) newErrors.ASURANSI = <span style={{color: 'red'}}>Asuransi wajib dipilih</span>;
+    if (!form.IDASURANSI) newErrors.IDASURANSI = <span style={{color: 'red'}}>Asuransi wajib dipilih</span>;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -93,13 +129,14 @@ const Page = () => {
       const filtered = originalData.filter(
         (item) =>
           item.NIK.toLowerCase().includes(keyword.toLowerCase()) ||
-          item.NAMALENGKAP.toLowerCase().includes(keyword.toLowerCase())
+          item.NAMALENGKAP.toLowerCase().includes(keyword.toLowerCase()) 
       );
       setData(filtered);
     }
   };
 
   const handleSubmit = async () => {
+  
     if (!validateForm()) return;
 
     const isEdit = !!form.IDPASIEN;
@@ -169,10 +206,10 @@ const Page = () => {
       NAMALENGKAP: '',
       TANGGALLAHIR: '',
       JENISKELAMIN: 'L',
-      ASURANSI: 'Umum',
+      IDASURANSI: '',
       ALAMAT: '',
       NOHP: '',
-      AGAMA: '',
+      IDAGAMA: '',
       GOLDARAH: '',
       NOASURANSI: '',
     });
@@ -196,7 +233,12 @@ const Page = () => {
         }}
       />
 
-      <TabelPasien data={data} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
+      <TabelPasien 
+        data={data} 
+        loading={loading} 
+        onEdit={handleEdit} 
+        onDelete={handleDelete} 
+      />
 
       <FormDialogPasien
         visible={dialogVisible}
@@ -208,9 +250,18 @@ const Page = () => {
         form={form}
         setForm={setForm}
         errors={errors}
+        // DROP DOWN OPTION
+        agamaOptions={agamaOptions}
+        asuransiOptions={asuransiOptions}
       />
     </div>
   );
 };
 
 export default Page;
+
+
+// NOOOTTEEE
+// - PUSH INI(CRUD NORMAL)(tapi catatan debugging hapus hapusin dulu)
+// - Revisi edit nomor telfon supaya gak error kalau angkanya kepanjangan(terus push)
+// - 

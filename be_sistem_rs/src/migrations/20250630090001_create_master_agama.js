@@ -2,7 +2,7 @@
 export const up = function (knex) {
     return knex.schema.createTable('agama', (table) => {
       table.increments('IDAGAMA').primary();
-      table.string('AGAMA', 50).notNullable().unique();
+      table.string('NAMAAGAMA', 50).notNullable().unique();
     });
   };
   
