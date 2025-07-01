@@ -1,3 +1,4 @@
+// src/controllers/pasienController.js
 import * as PasienModel from '../models/pasienModel.js';
 
 export async function getAllPasien(req, res) {
@@ -11,16 +12,16 @@ export async function getAllPasien(req, res) {
 
 export async function createPasien(req, res) {
   try {
-    const {
+    const { 
       NIK,
       NAMALENGKAP,
       TANGGALLAHIR,
       JENISKELAMIN,
       ALAMAT,
       NOHP,
-      AGAMA,
+      IDAGAMA,
       GOLDARAH,
-      ASURANSI,
+      IDASURANSI,
       NOASURANSI
     } = req.body;
 
@@ -31,9 +32,9 @@ export async function createPasien(req, res) {
       JENISKELAMIN,
       ALAMAT,
       NOHP,
-      AGAMA,
+      IDAGAMA,
       GOLDARAH,
-      ASURANSI,
+      IDASURANSI,
       NOASURANSI
     });
 
@@ -59,9 +60,9 @@ export async function updatePasien(req, res) {
       JENISKELAMIN,
       ALAMAT,
       NOHP,
-      AGAMA,
+      IDAGAMA,
       GOLDARAH,
-      ASURANSI,
+      IDASURANSI,
       NOASURANSI
     } = req.body;
 
@@ -72,9 +73,9 @@ export async function updatePasien(req, res) {
       JENISKELAMIN,
       ALAMAT,
       NOHP,
-      AGAMA,
+      IDAGAMA,
       GOLDARAH,
-      ASURANSI,
+      IDASURANSI,
       NOASURANSI
     });
 

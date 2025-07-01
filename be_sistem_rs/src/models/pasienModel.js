@@ -1,7 +1,15 @@
+// src/models/pasienModel.js
 import db from '../core/config/knex.js';
 
 export const getAll = () => {
-  return db('pasien').select();
+  return db('pasien')
+      .join('agama', 'pasien.IDAGAMA', 'agama.IDAGAMA')
+      .join('asuransi', 'pasien.IDASURANSI', 'asuransi.IDASURANSI')
+      .select(
+        'pasien.*',
+        'agama.NAMAAGAMA',
+        'asuransi.NAMAASURANSI'
+      );
 };
 
 export const getById = (id) => {
