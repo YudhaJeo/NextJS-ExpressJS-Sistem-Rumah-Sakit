@@ -70,14 +70,12 @@ export const resetByLoket = async (req, res) => {
   }
 
   try {
-    // Ambil data loket berdasarkan nama
     const loketData = await db('loket').where({ NAMALOKET: loket }).first();
 
     if (!loketData) {
       return res.status(404).json({ message: 'Loket tidak ditemukan' });
     }
 
-    // Hapus semua antrian pada loket tersebut
     await db('antrian')
       .where('LOKET_ID', loketData.NO)
       .del();

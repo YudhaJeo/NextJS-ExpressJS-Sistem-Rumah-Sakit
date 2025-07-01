@@ -276,7 +276,6 @@ function DisplayAntrian() {
   );
 }
 
-// Komponen & helper tambahan
 function getResponsiveConfig(screen, count) {
   const { width } = screen;
   const config = {

@@ -8,11 +8,10 @@ import Link from "next/link";
 import "@/styles/customTable.css";
 
 const TabelAntrian = ({ data, loketList, loading, onPanggil, onReset, currentId, fetchData }) => {
-  // ✅ Refresh data saat pindah tab
   useEffect(() => {
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
-        fetchData(); // pastikan fetchData adalah props atau fungsi valid
+        fetchData(); 
       }
     };
     document.addEventListener("visibilitychange", handleVisibility);
