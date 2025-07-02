@@ -197,23 +197,34 @@ function DisplayAntrian() {
   
       const config = window.qz.configs.create("POS-58-Work");
 
-      // Formatting tanggal
+      // Formatting waktu
       const now = new Date();
-      const jam = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-      const tanggal = now.toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
-      
+
+      const jam = now
+        .toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false })
+        .replace(/\./g, ':');
+
+      const tanggal = now.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      });
+
+      // Data print
       const data = [
-        '\x1B\x40', // init
-        '\x1B\x21\x30', 
-        '\x1B\x61\x01',
+        '\x1B\x40',         // init
+        '\x1B\x21\x30',     // bold, double
+        '\x1B\x61\x01',     // center
         ' NOMOR ANTRIAN\n\n',
         `${nomorBaru.toString().toUpperCase()}\n\n`,
-        '\x1B\x21\x00', 
+        '\x1B\x21\x00',     // normal
         `LOKET: ${loketName}\n`,
         `${tanggal} ${jam}\n\n`,
         'Silakan tunggu...\n\n\n',
-        '\x1D\x56\x01' // cut
-      ];      
+        '\x1D\x56\x01'      // cut
+      ];
+
   
       await window.qz.print(config, data);
       await window.qz.websocket.disconnect();
