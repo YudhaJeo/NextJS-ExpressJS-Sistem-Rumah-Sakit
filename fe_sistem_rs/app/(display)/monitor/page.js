@@ -11,6 +11,7 @@ import { Divider } from 'primereact/divider';
 import { Button } from 'primereact/button';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || API_URL.replace('http', 'ws');
 
 function MonitorAntrian() {
   const [loketList, setLoketList] = useState([]);
@@ -20,14 +21,62 @@ function MonitorAntrian() {
   const [lastNoDipanggil, setLastNoDipanggil] = useState('');
   const [userHasInteracted, setUserHasInteracted] = useState(false);
   const toast = useRef(null);
+  const ws = useRef(null);
+  const audioRef = useRef(null); // Tambahkan ref untuk audio
 
   useEffect(() => {
     fetchData(true);
-    const interval = setInterval(() => {
-      fetchData(false);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, []);
+
+    const connectWebSocket = () => {
+      const wsUrl = `${WS_URL}`;
+      console.log('Mencoba menyambung ke WebSocket:', wsUrl);
+      ws.current = new WebSocket(wsUrl);
+
+      ws.current.onopen = () => {
+        console.log('WebSocket tersambung');
+        showToast('success', 'Koneksi WebSocket berhasil');
+      };
+
+      ws.current.onmessage = (event) => {
+        try {
+          const message = JSON.parse(event.data);
+          console.log('Pesan WebSocket diterima:', message);
+          if (message.type === 'update') {
+            fetchData(false);
+          }
+        } catch (err) {
+          console.error('Gagal memproses pesan WebSocket:', err);
+        }
+      };
+
+      ws.current.onclose = () => {
+        console.log('WebSocket terputus. Mencoba rekoneksi dalam 5 detik...');
+        setTimeout(connectWebSocket, 5000);
+      };
+
+      ws.current.onerror = (error) => {
+        console.error('Kesalahan WebSocket:', error);
+        showToast('error', 'Koneksi WebSocket gagal. Menggunakan polling sebagai cadangan.');
+        startPolling();
+      };
+    };
+
+    let pollingInterval = null;
+    const startPolling = () => {
+      if (!pollingInterval) {
+        pollingInterval = setInterval(() => {
+          fetchData(false);
+        }, 2000);
+      }
+    };
+
+    connectWebSocket();
+
+    return () => {
+      ws.current?.close();
+      if (pollingInterval) clearInterval(pollingInterval);
+    };
+    }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -122,7 +171,7 @@ function MonitorAntrian() {
 
   const getCardStyle = (index) => {
     const colors = ['#e3f2fd', '#fffde7', '#e8f5e9', '#fce4ec', '#ede7f6', '#fbe9e7'];
-    const borders = ['#42a5f5', '#fbc02d', '#66bb6a', '#ec407a', '#7e57c2', '#ff7043'];
+    const borders = ['#42a5f5', '#fbc02d', '#66bb6a', '#ec407a', '#7e57c2e', '#ff7043'];
     const idx = index % colors.length;
     return {
       backgroundColor: colors[idx],
@@ -182,7 +231,7 @@ function MonitorAntrian() {
   };
 
   const handleStart = () => {
-    setUserHasInteracted(true);
+  setUserHasInteracted(true);
   };
 
   return (

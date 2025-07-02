@@ -1,3 +1,4 @@
+// be_sistem_rs\src\controllers\antrianController.js
 import * as Antrian from '../models/antrianModel.js';
 import db from '../core/config/knex.js';
 
@@ -56,6 +57,10 @@ export const panggilAntrian = async (req, res) => {
   const { id } = req.params;
   try {
     await Antrian.updateStatusAntrian(id);
+    const broadcastUpdate = req.app.get('broadcastUpdate');
+    if (broadcastUpdate) {
+      broadcastUpdate();
+    }
     res.json({ success: true, message: 'Antrian berhasil dipanggil' });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Gagal memanggil antrian', error: err.message });
@@ -79,6 +84,11 @@ export const resetByLoket = async (req, res) => {
     await db('antrian')
       .where('LOKET_ID', loketData.NO)
       .del();
+
+    const broadcastUpdate = req.app.get('broadcastUpdate');
+    if (broadcastUpdate) {
+      broadcastUpdate();
+    }
 
     return res.json({ message: `Antrian di Loket ${loket} berhasil direset dan akan mulai dari awal saat ditambah lagi.` });
   } catch (error) {
