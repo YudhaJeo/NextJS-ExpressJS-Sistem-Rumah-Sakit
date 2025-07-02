@@ -19,6 +19,7 @@
     "primeicons": "^7.0.0",
     "primereact": "^10.9.6",
     "qrcode": "^1.5.4",
+    "qz-tray": "^2.2.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "sas": "^3.0.4",
