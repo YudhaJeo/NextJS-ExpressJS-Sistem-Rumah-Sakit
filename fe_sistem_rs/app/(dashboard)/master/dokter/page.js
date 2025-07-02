@@ -21,7 +21,8 @@ const DokterPage = () => {
     const [formData, setFormData] = useState({
         IDDOKTER: 0,
         NAMADOKTER: "",
-        SPESIALIS: "",
+        NAMAPOLI: "",
+        JADWALPRAKTEK: ""
     });
 
     const toastRef = useRef(null);
@@ -62,32 +63,37 @@ const DokterPage = () => {
     };
 
     const handleSubmit = async () => {
-        if (!formData.NAMADOKTER) {
-            toastRef.current?.showToast('01', 'Nama Dokter wajib diisi!');
-            return;
-        }
+    if (!formData.NAMADOKTER) {
+        toastRef.current?.showToast('01', 'Nama Dokter wajib diisi!');
+        return;
+    }
+    if (!formData.JADWALPRAKTEK) {
+        toastRef.current?.showToast('01', 'Jadwal Praktek wajib diisi!');
+        return;
+    }
 
-        const isEdit = !!formData.IDDOKTER;
-        const url = isEdit
-            ? `${API_URL}/dokter/${formData.IDDOKTER}`
-            : `${API_URL}/dokter`;
+    const isEdit = !!formData.IDDOKTER;
+    const url = isEdit
+        ? `${API_URL}/dokter/${formData.IDDOKTER}`
+        : `${API_URL}/dokter`;
 
-        try {
-            if (isEdit) {
-                await axios.put(url, formData);
-                toastRef.current?.showToast('00', 'Data berhasil diperbarui');
-            } else {
-                await axios.post(url, formData);
-                toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
-            }
-            fetchDokter();
-            setDialogVisible(false);
-            resetForm();
-        } catch (err) {
-            console.error('Gagal menyimpan data:', err);
-            toastRef.current?.showToast('01', 'Gagal menyimpan data');
+    try {
+        if (isEdit) {
+            await axios.put(url, formData);
+            toastRef.current?.showToast('00', 'Data berhasil diperbarui');
+        } else {
+            await axios.post(url, formData);
+            toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
         }
-    };
+        fetchDokter();
+        setDialogVisible(false);
+        resetForm();
+    } catch (err) {
+        console.error('Gagal menyimpan data:', err);
+        toastRef.current?.showToast('01', 'Gagal menyimpan data');
+    }
+};
+
 
     const handleEdit = (row) => {
         setFormData({ ...row });
@@ -118,7 +124,8 @@ const DokterPage = () => {
         setFormData({
             IDDOKTER: 0,
             NAMADOKTER: "",
-            SPESIALIS: "",
+            NAMAPOLI: "",
+            JADWALPRAKTEK: ""
         });
     };
 
