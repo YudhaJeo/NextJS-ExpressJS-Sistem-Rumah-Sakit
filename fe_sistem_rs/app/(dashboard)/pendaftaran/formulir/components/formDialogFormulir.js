@@ -95,6 +95,15 @@ const FormDialogPendaftaran = ({
             onChange={(e) => setForm({ ...form, NAMADOKTER: e.target.value })}
           />
         </div>
+        <div>
+          <label>Keluhan</label>
+          <InputText
+            className="w-full mt-2"
+            value={form.KELUHAN || ''}
+            onChange={(e) => setForm({ ...form, KELUHAN: e.target.value })}
+            placeholder="Masukkan Keluhan pasien"
+          />
+        </div>
 
         <div>
           <label>Status Kunjungan</label>

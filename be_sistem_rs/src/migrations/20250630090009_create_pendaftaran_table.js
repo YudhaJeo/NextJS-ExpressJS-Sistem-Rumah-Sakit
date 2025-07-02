@@ -11,6 +11,7 @@ export const up = function (knex) {
     table.enu('LAYANAN', ['Rawat Jalan', 'Rawat Inap', 'IGD']).notNullable();
     table.string('POLI', 50);
     table.string('NAMADOKTER', 100);
+    table.string('KELUHAN', 255).nullable();
     table.enu('STATUSKUNJUNGAN', ['Diperiksa', 'Batal', 'Selesai']).defaultTo('Diperiksa');
   });
 };

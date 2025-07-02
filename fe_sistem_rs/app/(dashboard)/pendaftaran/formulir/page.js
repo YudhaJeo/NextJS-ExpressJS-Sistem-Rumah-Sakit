@@ -9,6 +9,8 @@ import FormDialogPendaftaran from './components/formDialogFormulir';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Calendar } from 'primereact/calendar';
+import { Button } from 'primereact/button';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -17,6 +19,8 @@ const Page = () => {
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [filterDate, setFilterDate] = useState(null);
+  const [filterDateTime, setFilterDateTime] = useState(null);
 
   const [form, setForm] = useState({
     IDPENDAFTARAN: 0,
@@ -26,6 +30,7 @@ const Page = () => {
     LAYANAN: 'Rawat Jalan',
     POLI: '',
     NAMADOKTER: '',
+    KELUHAN: '',
     STATUSKUNJUNGAN: 'Diperiksa',
   });
 
@@ -146,9 +151,40 @@ const Page = () => {
       LAYANAN: 'Rawat Jalan',
       POLI: '',
       NAMADOKTER: '',
+      KELUHAN: '',
       STATUSKUNJUNGAN: 'Diperiksa',
     });
   };
+
+  const handleDateFilter = () => {
+  if (!filterDate && !filterDateTime) {
+    setData(originalData);
+    return;
+  }
+
+  const filtered = originalData.filter((item) => {
+    const visitDate = new Date(item.TANGGALKUNJUNGAN);
+
+    const matchDate =
+      filterDate &&
+      visitDate.toISOString().split('T')[0] ===
+        filterDate.toISOString().split('T')[0];
+
+    const matchDateTime =
+      filterDateTime &&
+      visitDate.toISOString() === filterDateTime.toISOString();
+
+    return matchDate || matchDateTime;
+  });
+
+  setData(filtered);
+};
+
+const resetFilter = () => {
+  setFilterDate(null);
+  setFilterDateTime(null);
+  setData(originalData);
+};
 
   return (
     <div className="card">
@@ -156,16 +192,50 @@ const Page = () => {
       <ConfirmDialog />
 
       <h3 className="text-xl font-semibold mb-3">Formulir Pendaftaran Kunjungan</h3>
-
-      <HeaderBar
-        title=""
-        placeholder="Cari nama atau NIK..."
-        onSearch={handleSearch}
-        onAddClick={() => {
-          resetForm();
-          setDialogVisible(true);
-        }}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
+  {/* Filter Tanggal Kiri */}
+  <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-col">
+      <label className="text-sm font-medium text-gray-700">Tanggal Kunjungan</label>
+      <Calendar
+        value={filterDate}
+        onChange={(e) => setFilterDate(e.value)}
+        dateFormat="yy-mm-dd"
+        showIcon
+        className="w-[160px]"
+        placeholder="Pilih tanggal"
       />
+    </div>
+
+    <div className="flex gap-2 items-end pt-[1.4rem]">
+      <Button
+        icon="pi pi-filter"
+        label="Terapkan"
+        severity="info"
+        size="small"
+        onClick={handleDateFilter}
+      />
+      <Button
+        icon="pi pi-times"
+        severity="secondary"
+        size="small"
+        onClick={resetFilter}
+        tooltip="Reset Filter"
+      />
+    </div>
+  </div>
+
+  {/* HeaderBar kanan */}
+  <HeaderBar
+    title=""
+    placeholder="Cari nama atau NIK..."
+    onSearch={handleSearch}
+    onAddClick={() => {
+      resetForm();
+      setDialogVisible(true);
+    }}
+  />
+</div>
 
       <TabelPendaftaran
         data={data}
