@@ -27,11 +27,11 @@ const FormDialogAgama = ({ visible, onHide, onSubmit, form, setForm, errors }) =
         <div>
           <label>Nama Agama</label>
           <InputText
-            className={inputClass('AGAMA')}
-            value={form.AGAMA}
-            onChange={(e) => setForm({ ...form, AGAMA: e.target.value })}
+            className={inputClass('NAMAAGAMA')}
+            value={form.NAMAAGAMA}
+            onChange={(e) => setForm({ ...form, NAMAAGAMA: e.target.value })}
           />
-          {errors.AGAMA && <small className="text-red-500">{errors.AGAMA}</small>}
+          {errors.NAMAAGAMA && <small className="text-red-500">{errors.NAMAAGAMA}</small>}
         </div>
 
         <div className="text-right pt-3">

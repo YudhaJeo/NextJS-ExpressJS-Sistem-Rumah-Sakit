@@ -18,7 +18,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
 
-  const [form, setForm] = useState({ AGAMA: '' });
+  const [form, setForm] = useState({ NAMAAGAMA: '' });
   const [errors, setErrors] = useState({});
 
   const toastRef = useRef(null);
@@ -48,7 +48,7 @@ const Page = () => {
   
   const validateForm = () => {
     const newErrors = {};
-    if (!form.AGAMA.trim()) newErrors.AGAMA = 
+    if (!form.NAMAAGAMA.trim()) newErrors.NAMAAGAMA = 
     <span  style={{color: 'red'}}>
       Nama agama wajib diisi
     </span>;
@@ -75,7 +75,7 @@ const Page = () => {
 
       fetchData();
       setDialogVisible(false);
-      setForm({ AGAMA: '' });
+      setForm({ NAMAAGAMA: '' });
     } catch (err) {
       console.error('Gagal simpan data:', err);
       toastRef.current?.showToast('01', 'Gagal menyimpan data');
@@ -89,7 +89,7 @@ const Page = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Yakin hapus '${row.AGAMA}'?`,
+      message: `Yakin hapus '${row.NAMAAGAMA}'?`,
       header: 'Konfirmasi Hapus',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Ya',
@@ -120,12 +120,12 @@ const Page = () => {
         onSearch={(keyword) => {
           if (!keyword) return fetchData();
           const filtered = data.filter((item) =>
-            item.AGAMA.toLowerCase().includes(keyword.toLowerCase())
+            item.NAMAAGAMA.toLowerCase().includes(keyword.toLowerCase())
           );
           setData(filtered);
         }}
         onAddClick={() => {
-          setForm({ AGAMA: '' });
+          setForm({ NAMAAGAMA: '' });
           setDialogVisible(true);
         }}
       />
@@ -141,7 +141,7 @@ const Page = () => {
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);
-          setForm({ AGAMA: '' });
+          setForm({ NAMAAGAMA: '' });
         }}
         onSubmit={handleSubmit}
         form={form}
