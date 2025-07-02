@@ -3,7 +3,6 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { formatTanggal } from "@/types/dateformat"; // pastikan path-nya sesuai
 
 const TableDokter = ({ data, loading, onEdit, onDelete }) => {
   return (
@@ -18,12 +17,9 @@ const TableDokter = ({ data, loading, onEdit, onDelete }) => {
       <Column field="IDDOKTER" header="ID Dokter" />
       <Column field="NAMADOKTER" header="Nama Dokter" />
       <Column field="NAMAPOLI" header="Nama Poli" />
-       <Column
-        field="JADWALPRAKTEK"
-        header="Jadwal Praktek"
-        body={(rowData) => formatTanggal(rowData.JADWALPRAKTEK)}
-    />
-    <Column
+      <Column field="HARI_PRAKTEK" header="Hari Praktek" />
+      <Column field="JAM_PRAKTEK" header="Jam Praktek" />
+      <Column
         header="Aksi"
         body={(row) => (
           <div className="flex gap-2">

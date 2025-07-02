@@ -6,6 +6,7 @@ export async function getAllDokter(req, res) {
     try {
         const dokters = await DokterModel.getAllDokter();
         res.json(dokters);
+        console.log(dokters);
     } catch (err) {
         console.error('Error backend:', err);
         res.status(500).json({ error: err.message });
@@ -28,13 +29,13 @@ export async function getDokterById(req, res) {
 // POST tambah dokter
 export async function createDokter(req, res) {
     try {
-        const { NAMADOKTER, NAMAPOLI, JADWALPRAKTEK } = req.body;
+        const { NAMADOKTER, IDPOLI, HARI_PRAKTEK, JAM_PRAKTEK } = req.body;
 
         if (!NAMADOKTER) {
             return res.status(400).json({ error: 'Nama Dokter wajib diisi' });
         }
 
-        await DokterModel.createDokter({ NAMADOKTER, NAMAPOLI, JADWALPRAKTEK });
+        await DokterModel.createDokter({ NAMADOKTER, IDPOLI, HARI_PRAKTEK, JAM_PRAKTEK });
         res.json({ message: 'Dokter berhasil ditambahkan' });
     } catch (err) {
         console.error('Error backend:', err);
@@ -46,13 +47,13 @@ export async function createDokter(req, res) {
 export async function updateDokter(req, res) {
     try {
         const id = req.params.id;
-        const { NAMADOKTER, NAMAPOLI, JADWALPRAKTEK } = req.body;
+        const { NAMADOKTER, IDPOLI, HARI_PRAKTEK, JAM_PRAKTEK } = req.body;
 
         if (!NAMADOKTER) {
             return res.status(400).json({ error: 'Nama Dokter wajib diisi' });
         }
 
-        await DokterModel.updateDokter(id, { NAMADOKTER, NAMAPOLI, JADWALPRAKTEK });
+        await DokterModel.updateDokter(id, { NAMADOKTER, IDPOLI, HARI_PRAKTEK, JAM_PRAKTEK });
         res.json({ message: 'Dokter berhasil diperbarui' });
     } catch (err) {
         console.error('Error backend:', err);

@@ -21,9 +21,12 @@ const DokterPage = () => {
     const [formData, setFormData] = useState({
         IDDOKTER: 0,
         NAMADOKTER: "",
-        NAMAPOLI: "",
-        JADWALPRAKTEK: ""
+        IDPOLI: "",
+        HARI_PRAKTEK: "",
+        JAM_PRAKTEK: ""
     });
+
+    const [poliOptions, setPoliOptions] = useState([]);
 
     const toastRef = useRef(null);
     const router = useRouter();
@@ -36,6 +39,7 @@ const DokterPage = () => {
         }
 
         fetchDokter();
+        fetchPoli();
     }, []);
 
     const fetchDokter = async () => {
@@ -49,6 +53,22 @@ const DokterPage = () => {
         } finally {
             setLoading(false);
         }
+    };
+    const fetchPoli = async () => {
+         try {
+    const res = await axios.get(`${API_URL}/poli`);
+    console.log('Data poli API:', res.data);
+
+    // Jika response berupa array langsung
+    const options = res.data.map((poli) => ({
+      label: `${poli.IDPOLI} - ${poli.NAMAPOLI}`,
+      value: poli.IDPOLI,
+      }));
+
+    setPoliOptions(options);
+      } catch (err) {
+    console.error('Gagal ambil data poli:', err);
+      }
     };
 
     const handleSearch = (keyword) => {
@@ -65,10 +85,6 @@ const DokterPage = () => {
     const handleSubmit = async () => {
     if (!formData.NAMADOKTER) {
         toastRef.current?.showToast('01', 'Nama Dokter wajib diisi!');
-        return;
-    }
-    if (!formData.JADWALPRAKTEK) {
-        toastRef.current?.showToast('01', 'Jadwal Praktek wajib diisi!');
         return;
     }
 
@@ -124,8 +140,9 @@ const DokterPage = () => {
         setFormData({
             IDDOKTER: 0,
             NAMADOKTER: "",
-            NAMAPOLI: "",
-            JADWALPRAKTEK: ""
+            IDPOLI: "",
+            HARI_PRAKTEK: "",
+            JAM_PRAKTEK: ""
         });
     };
 
@@ -162,6 +179,7 @@ const DokterPage = () => {
                 onChange={setFormData}
                 onSubmit={handleSubmit}
                 formData={formData}
+                poliOptions={poliOptions}
             />
         </div>
     );

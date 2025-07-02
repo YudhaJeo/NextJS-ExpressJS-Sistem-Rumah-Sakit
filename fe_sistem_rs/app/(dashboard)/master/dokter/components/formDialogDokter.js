@@ -3,8 +3,22 @@
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
 
-const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit }) => {
+const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit, poliOptions }) => {
+    const hariOptions = [
+        { label: "Senin - Kamis", value: "Senin - Kamis" },
+        { label: "Jumat - Minggu", value: "Jumat - Minggu" },
+        { label: "Setiap Hari", value: "Setiap Hari" }
+    ];
+
+    const jamOptions = [
+        { label: "01:00 - 05:00", value: "01:00 - 05:00" },
+        { label: "07:00 - 12:00", value: "07:00 - 12:00" },
+        { label: "13:00 - 17:00", value: "13:00 - 17:00" },
+        { label: "19:00 - 22:00", value: "19:00 - 22:00" }
+    ];
+
     return (
         <Dialog
             header={formData.IDDOKTER ? "Edit Dokter" : "Tambah Dokter"}
@@ -30,20 +44,40 @@ const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit }) => 
 
                 <div>
                     <label>Nama Poli</label>
-                    <InputText
+                    <Dropdown
                         className="w-full mt-2"
-                        value={formData.NAMAPOLI}
-                        onChange={(e) => onChange({ ...formData, NAMAPOLI: e.target.value })}
+                        options={poliOptions}
+                        value={formData.IDPOLI}
+                        onChange={(e) => onChange({ ...formData, IDPOLI: e.value })}
+                        placeholder="Pilih Poli"
+                        filter
+                        showClear
                     />
                 </div>
 
                 <div>
-                    <label>Jadwal Praktek</label>
-                    <InputText
-                        type="date"
+                    <label>Hari Praktek</label>
+                    <Dropdown
                         className="w-full mt-2"
-                        value={formData.JADWALPRAKTEK}
-                        onChange={(e) => onChange({ ...formData, JADWALPRAKTEK: e.target.value })}
+                        options={hariOptions}
+                        value={formData.HARI_PRAKTEK}
+                        onChange={(e) => onChange({ ...formData, HARI_PRAKTEK: e.value })}
+                        placeholder="Pilih Hari Praktek"
+                        filter
+                        showClear
+                    />
+                </div>
+
+                <div>
+                    <label>Jam Praktek</label>
+                    <Dropdown
+                        className="w-full mt-2"
+                        options={jamOptions}
+                        value={formData.JAM_PRAKTEK}
+                        onChange={(e) => onChange({ ...formData, JAM_PRAKTEK: e.value })}
+                        placeholder="Pilih Jam Praktek"
+                        filter
+                        showClear
                     />
                 </div>
 

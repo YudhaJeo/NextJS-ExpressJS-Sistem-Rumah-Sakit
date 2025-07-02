@@ -3,8 +3,12 @@ export const up = function (knex) {
     return knex.schema.createTable('nama_dokter', (table) => {
       table.increments('IDDOKTER').primary();
       table.string('NAMADOKTER', 100).notNullable().unique();
-      table.string('NAMAPOLI', 100).nullable();
-      table.date('JADWALPRAKTEK').notNullable();
+      table.integer('IDPOLI').unsigned().notNullable()
+             .references('IDPOLI').inTable('poli')
+             .onDelete('CASCADE')
+             .onUpdate('CASCADE');
+      table.string('HARI_PRAKTEK', 50).notNullable();
+      table.string('JAM_PRAKTEK', 50).notNullable();
     });
 };
 
