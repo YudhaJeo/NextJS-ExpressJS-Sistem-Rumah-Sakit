@@ -15,7 +15,7 @@ const TabelAgama = ({ data, loading, onEdit, onDelete  }) => {
       size="small">
       <Column field="IDAGAMA" header="ID" />
       
-      <Column field="AGAMA" header="Nama Agama" />
+      <Column field="NAMAAGAMA" header="Nama Agama" />
       
       <Column
         header="Aksi"

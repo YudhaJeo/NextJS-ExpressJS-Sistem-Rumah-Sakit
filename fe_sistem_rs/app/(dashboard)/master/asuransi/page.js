@@ -18,7 +18,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
 
-  const [form, setForm] = useState({ ASURANSI: '', KETERANGAN:'' });
+  const [form, setForm] = useState({ NAMAASURANSI: '', KETERANGAN:'' });
   const [errors, setErrors] = useState({});
 
   const toastRef = useRef(null);
@@ -47,7 +47,7 @@ const Page = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!form.ASURANSI.trim()) newErrors.ASURANSI = 'Nama asuransi wajib diisi';
+    if (!form.NAMAASURANSI.trim()) newErrors.NAMAASURANSI = 'Nama asuransi wajib diisi';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -71,7 +71,7 @@ const Page = () => {
 
       fetchData();
       setDialogVisible(false);
-      setForm({ ASURANSI: '' });
+      setForm({ NAMAASURANSI: '' });
     } catch (err) {
       console.error('Gagal simpan data:', err);
       toastRef.current?.showToast('01', 'Gagal menyimpan data');
@@ -85,7 +85,7 @@ const Page = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Yakin hapus '${row.ASURANSI}'?`,
+      message: `Yakin hapus '${row.NAMAASURANSI}'?`,
       header: 'Konfirmasi Hapus',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Ya',
@@ -116,12 +116,12 @@ const Page = () => {
         onSearch={(keyword) => {
           if (!keyword) return fetchData();
           const filtered = data.filter((item) =>
-            item.ASURANSI.toLowerCase().includes(keyword.toLowerCase())
+            item.NAMAASURANSI.toLowerCase().includes(keyword.toLowerCase())
           );
           setData(filtered);
         }}
         onAddClick={() => {
-          setForm({ ASURANSI: '' });
+          setForm({ NAMAASURANSI: '' });
           setDialogVisible(true);
         }}
       />
@@ -132,7 +132,7 @@ const Page = () => {
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);
-          setForm({ ASURANSI: '' });
+          setForm({ NAMAASURANSI: '' });
         }}
         onSubmit={handleSubmit}
         form={form}

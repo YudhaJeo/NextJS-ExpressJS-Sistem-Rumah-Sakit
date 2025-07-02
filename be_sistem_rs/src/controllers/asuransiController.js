@@ -14,13 +14,13 @@ export async function getAllAsuransi(req, res) {
   
 export async function createAsuransi(req, res) {
   try {
-    const { ASURANSI, KETERANGAN } = req.body;
+    const { NAMAASURANSI, KETERANGAN } = req.body;
 
-    if (!ASURANSI) {
+    if (!NAMAASURANSI) {
       return res.status(400).json({ error: 'Nama asuransi wajib diisi' });
     }
 
-    await Asuransi.create({ ASURANSI, KETERANGAN });
+    await Asuransi.create({ NAMAASURANSI, KETERANGAN });
 
     res.json({ message: 'Asuransi berhasil ditambahkan' });
   } catch (err) {
@@ -31,14 +31,14 @@ export async function createAsuransi(req, res) {
 export async function updateAsuransi(req, res) {
   try {
     const id = req.params.id;
-    const { ASURANSI, KETERANGAN } = req.body;
+    const { NAMAASURANSI, KETERANGAN } = req.body;
 
     const existing = await Asuransi.getById(id);
     if (!existing) {
       return res.status(404).json({ error: 'Data asuransi tidak ditemukan' });
     }
 
-    await Asuransi.update(id, { ASURANSI, KETERANGAN });
+    await Asuransi.update(id, { NAMAASURANSI, KETERANGAN });
     res.json({ message: 'Asuransi berhasil diperbarui' });
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -14,12 +14,12 @@ export async function getAllAgama(req, res) {
 
 export async function createAgama(req, res) {
 try {
-  const { AGAMA } = req.body;
-  if (!AGAMA) {
+  const { NAMAAGAMA } = req.body;
+  if (!NAMAAGAMA) {
     return res.status(400).json({ error: 'Nama agama wajib diisi' });
   }
 
-  await Agama.create({ AGAMA });
+  await Agama.create({ NAMAAGAMA });
   res.json({ message: 'Agama berhasil ditambahkan' });
 } catch (err) {
   res.status(500).json({ error: err.message });
@@ -29,14 +29,14 @@ try {
 export async function updateAgama(req, res) {
 try {
   const id = req.params.id;
-  const { AGAMA } = req.body;
+  const { NAMAAGAMA } = req.body;
 
   const existing = await Agama.getById(id);
   if (!existing) {
     return res.status(404).json({ error: 'Data agama tidak ditemukan' });
   }
 
-  await Agama.update(id, { AGAMA });
+  await Agama.update(id, { NAMAAGAMA });
   res.json({ message: 'Agama berhasil diperbarui' });
 } catch (err) {
   res.status(500).json({ error: err.message });
