@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import TabelReservasiPasien from './components/tabelReservasi';
 import FormReservasiPasien from './components/formReservasi';
 import HeaderBar from '@/app/components/headerbar';
+import FilterTanggal from '@/app/components/filterTanggal';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
@@ -17,6 +18,8 @@ const ReservasiPasienPage = () => {
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const [formData, setFormData] = useState({
     IDRESERVASI: 0,
@@ -83,7 +86,6 @@ const fetchPoli = async () => {
     const res = await axios.get(`${API_URL}/poli`);
     console.log('Data poli API:', res.data);
 
-    // Jika response berupa array langsung
     const options = res.data.map((poli) => ({
       label: `${poli.IDPOLI} - ${poli.NAMAPOLI}`,
       value: poli.IDPOLI,
@@ -100,7 +102,6 @@ const fetchDokter = async () => {
     const res = await axios.get(`${API_URL}/dokter`);
     console.log('Data poli API:', res.data);
 
-    // Jika response berupa array langsung
     const options = res.data.map((nama_dokter) => ({
       label: `${nama_dokter.IDDOKTER} - ${nama_dokter.NAMADOKTER}`,
       value: nama_dokter.IDDOKTER,
@@ -189,6 +190,23 @@ const fetchDokter = async () => {
     });
   };
 
+   const handleDateFilter = () => {
+    if (!startDate && !endDate) return setData(originalData);
+    const filtered = originalData.filter((item) => {
+      const visitDate = new Date(item.TANGGALKUNJUNGAN);
+      const from = startDate ? new Date(startDate.setHours(0, 0, 0, 0)) : null;
+      const to = endDate ? new Date(endDate.setHours(23, 59, 59, 999)) : null;
+      return (!from || visitDate >= from) && (!to || visitDate <= to);
+    });
+    setData(filtered);
+  };
+
+  const resetFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setData(originalData);
+  };
+
   const resetForm = () => {
     setFormData({
       IDRESERVASI: 0,
@@ -208,16 +226,25 @@ const fetchDokter = async () => {
       <ConfirmDialog />
 
       <h3 className="text-xl font-semibold mb-3">Reservasi Pasien</h3>
-
-      <HeaderBar
-        title=""
-        placeholder="Cari NIK atau Nama Dokter..."
-        onSearch={handleSearch}
-        onAddClick={() => {
-          resetForm();
-          setDialogVisible(true);
-        }}
-      />
+      <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
+        <FilterTanggal
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          handleDateFilter={handleDateFilter}
+          resetFilter={resetFilter}
+        />
+        <HeaderBar
+          title=""
+          placeholder="Cari nama atau NIK..."
+          onSearch={handleSearch}
+          onAddClick={() => {
+            resetForm();
+            setDialogVisible(true);
+          }}
+        />
+      </div>
 
       <TabelReservasiPasien
         data={data}
