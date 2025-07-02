@@ -197,15 +197,20 @@ function DisplayAntrian() {
   
       const config = window.qz.configs.create("POS-58-Work");
 
+      // Formatting tanggal
+      const now = new Date();
+      const jam = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+      const tanggal = now.toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+      
       const data = [
         '\x1B\x40', // init
-        '\x1B\x21\x30', // bold + double width + double height
-        '\x1B\x61\x01', // align center
+        '\x1B\x21\x30', 
+        '\x1B\x61\x01',
         ' NOMOR ANTRIAN\n\n',
         `${nomorBaru.toString().toUpperCase()}\n\n`,
-        '\x1B\x21\x00', // normal font
+        '\x1B\x21\x00', 
         `LOKET: ${loketName}\n`,
-        `${new Date().toLocaleString('id-ID')}\n\n`,
+        `${tanggal} ${jam}\n\n`,
         'Silakan tunggu...\n\n\n',
         '\x1D\x56\x01' // cut
       ];      
