@@ -1,3 +1,4 @@
+// app\(dashboard)\antrian\printer\page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';

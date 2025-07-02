@@ -1,3 +1,4 @@
+// app\(dashboard)\antrian\printer\components\tabelPrinter.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
