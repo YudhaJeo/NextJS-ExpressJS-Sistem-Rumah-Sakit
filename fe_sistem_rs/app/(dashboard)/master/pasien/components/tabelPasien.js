@@ -1,4 +1,3 @@
-// app/(dashboard)/master/pasien/components/tabelPasien.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';

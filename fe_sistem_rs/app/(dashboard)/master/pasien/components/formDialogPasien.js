@@ -1,4 +1,3 @@
-// app/(dashboard)/master/pasien/components/formDialogPasien.js
 'use client';
 
 import { Button } from 'primereact/button';

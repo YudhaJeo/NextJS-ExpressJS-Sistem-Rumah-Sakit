@@ -1,4 +1,3 @@
-// src/migrations/20250624030425_create_pasien_table.js
 export const up = function (knex) {
   return knex.schema.createTable('pasien', (table) => {
     table.increments('IDPASIEN').primary();

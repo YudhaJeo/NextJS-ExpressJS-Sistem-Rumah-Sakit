@@ -1,4 +1,3 @@
-// src/controllers/pasienController.js
 import * as PasienModel from '../models/pasienModel.js';
 
 export async function getAllPasien(req, res) {
@@ -12,31 +11,12 @@ export async function getAllPasien(req, res) {
 
 export async function createPasien(req, res) {
   try {
-    const { 
-      NIK,
-      NAMALENGKAP,
-      TANGGALLAHIR,
-      JENISKELAMIN,
-      ALAMAT,
-      NOHP,
-      IDAGAMA,
-      GOLDARAH,
-      IDASURANSI,
-      NOASURANSI
-    } = req.body;
-
-    await PasienModel.create({
-      NIK,
-      NAMALENGKAP,
-      TANGGALLAHIR,
-      JENISKELAMIN,
-      ALAMAT,
-      NOHP,
-      IDAGAMA,
-      GOLDARAH,
-      IDASURANSI,
-      NOASURANSI
-    });
+    const { NIK, NAMALENGKAP, TANGGALLAHIR, JENISKELAMIN, ALAMAT, NOHP, IDAGAMA, GOLDARAH, IDASURANSI, NOASURANSI } = req.body;
+     const existing = await PasienModel.getByNIK(NIK);
+    if (existing) {
+      return res.status(400).json({ error: 'NIK sudah terdaftar' });
+    }
+    await PasienModel.create({ NIK, NAMALENGKAP, TANGGALLAHIR, JENISKELAMIN, ALAMAT, NOHP, IDAGAMA, GOLDARAH, IDASURANSI, NOASURANSI });
 
     res.json({ message: 'Pasien berhasil ditambahkan' });
   } catch (err) {
@@ -52,32 +32,8 @@ export async function updatePasien(req, res) {
 
     const existing = await PasienModel.getById(id);
     if (!existing) return res.status(404).json({ error: 'Pasien tidak ditemukan' });
-
-    const {
-      NIK,
-      NAMALENGKAP,
-      TANGGALLAHIR,
-      JENISKELAMIN,
-      ALAMAT,
-      NOHP,
-      IDAGAMA,
-      GOLDARAH,
-      IDASURANSI,
-      NOASURANSI
-    } = req.body;
-
-    await PasienModel.update(id, {
-      NIK,
-      NAMALENGKAP,
-      TANGGALLAHIR,
-      JENISKELAMIN,
-      ALAMAT,
-      NOHP,
-      IDAGAMA,
-      GOLDARAH,
-      IDASURANSI,
-      NOASURANSI
-    });
+    const { NIK, NAMALENGKAP, TANGGALLAHIR, JENISKELAMIN, ALAMAT, NOHP, IDAGAMA, GOLDARAH, IDASURANSI, NOASURANSI } = req.body;
+    await PasienModel.update(id, { NIK, NAMALENGKAP, TANGGALLAHIR, JENISKELAMIN, ALAMAT, NOHP, IDAGAMA, GOLDARAH, IDASURANSI, NOASURANSI });
 
     res.json({ message: 'Pasien berhasil diperbarui' });
   } catch (err) {

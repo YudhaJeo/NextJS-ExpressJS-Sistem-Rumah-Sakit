@@ -1,5 +1,3 @@
-// app/(dashboard)/master/pasien/page.js
-
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -19,8 +17,6 @@ const Page = () => {
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-
-  // DROP OPTION
   const [agamaOptions, setAgamaOptions] = useState([]);
   const [asuransiOptions, setAsuransiOptions] = useState([]);
 
@@ -76,8 +72,6 @@ const Page = () => {
     }
 
     fetchData();
-
-    // LISTEN DROP OPTION
     fetchAgama();
     fetchAsuransi();
   }, []);

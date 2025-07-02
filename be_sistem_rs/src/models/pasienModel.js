@@ -1,4 +1,3 @@
-// src/models/pasienModel.js
 import db from '../core/config/knex.js';
 
 export const getAll = () => {
@@ -15,6 +14,10 @@ export const getAll = () => {
 export const getById = (id) => {
   return db('pasien').where({ IDPASIEN: id }).first();
 };
+
+export async function getByNIK(nik) {
+  return db('pasien').where({ NIK: nik }).first();
+}
 
 export const create = (data) => {
   return db('pasien').insert(data);
