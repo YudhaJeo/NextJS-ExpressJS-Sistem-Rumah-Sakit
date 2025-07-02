@@ -4,7 +4,6 @@ import * as Agama from '../models/agamaModel.js';
 export async function getAllAgama(req, res) {
   try {
     const data = await Agama.getAll();
-  //   console.log('Data agama:', data);
     res.json({ data });
   } catch (err) {
     console.error('Gagal get agama:', err);
