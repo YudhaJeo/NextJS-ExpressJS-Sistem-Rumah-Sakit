@@ -55,6 +55,23 @@ function DisplayAntrian() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.qz) {
+      window.qz.websocket.connect().catch(err => {
+        console.error("QZ Tray belum siap:", err);
+      });
+    }
+
+    console.log("qz:", window.qz);
+    if (!window.qz) {
+      console.error("QZ belum tersedia saat ini");
+      return;
+    }
+
+  }, []);
+
+  
+  
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch((err) => {
@@ -64,6 +81,17 @@ function DisplayAntrian() {
       document.exitFullscreen();
     }
   };
+
+  useEffect(() => {
+    const script = document.createElement('script');
+    // script.src = '/qz-tray.js'; 
+    script.src = '/qz-tray.js';
+    script.async = true;
+    script.onload = () => console.log("QZ Tray script loaded");
+    document.body.appendChild(script);
+  }, []);
+  
+  
 
   const fetchData = async () => {
     setLoading(true);
@@ -88,32 +116,6 @@ function DisplayAntrian() {
       detail,
       life: 3000,
     });
-  };
-
-  const handleAmbilTiket = async (loketName) => {
-    try {
-      const res = await axios.post(`${API_URL}/antrian/store`, {
-        LOKET: loketName,
-      });
-      const nomorBaru = res.data.data.NO_ANTRIAN || res.data.data;
-      const loket = loketList.find((l) => l.NAMALOKET === loketName);
-      if (loket) {
-        setAntrianList((prev) => [
-          ...prev.filter((a) => a.LOKET !== loketName || a.STATUS !== 'Belum'),
-          {
-            ID: Date.now(),
-            NO_ANTRIAN: nomorBaru,
-            LOKET: loketName,
-            STATUS: 'Belum',
-            LOKET_ID: loket.NO,
-            CREATED_AT: new Date().toISOString(),
-          },
-        ]);
-        showToast('success', `Tiket ${loketName} berhasil diambil. Nomor: ${nomorBaru}`);
-      }
-    } catch {
-      showToast('error', 'Gagal mengambil tiket.');
-    }
   };
 
   const getAntrianByLoket = (namaLoket) => {
@@ -185,6 +187,69 @@ function DisplayAntrian() {
       </div>
     );
   };
+
+  const printStruk = async (nomorBaru, loketName) => {
+    try {
+      if (!window.qz) throw new Error("QZ Tray belum tersedia");
+  
+      // tunggu sampai QZ siap
+      await window.qz.websocket.connect();
+  
+      const config = window.qz.configs.create("POS-58-Work");
+
+      const data = [
+        '\x1B\x40', // init
+        '\x1B\x21\x30', // bold + double width + double height
+        '\x1B\x61\x01', // align center
+        ' NOMOR ANTRIAN\n\n',
+        `${nomorBaru.toString().toUpperCase()}\n\n`,
+        '\x1B\x21\x00', // normal font
+        `LOKET: ${loketName}\n`,
+        `${new Date().toLocaleString('id-ID')}\n\n`,
+        'Silakan tunggu...\n\n\n',
+        '\x1D\x56\x01' // cut
+      ];      
+  
+      await window.qz.print(config, data);
+      await window.qz.websocket.disconnect();
+    } catch (err) {
+      console.error("Gagal print:", err);
+    }
+  };  
+
+  const handleAmbilTiket = async (loketName) => {
+    try {
+      const res = await axios.post(`${API_URL}/antrian/store`, {
+        LOKET: loketName,
+      });
+  
+      const nomorBaru = res.data.data.NO_ANTRIAN || res.data.data;
+      const loket = loketList.find((l) => l.NAMALOKET === loketName);
+  
+      if (loket) {
+        setAntrianList((prev) => [
+          ...prev.filter((a) => a.LOKET !== loketName || a.STATUS !== 'Belum'),
+          {
+            ID: Date.now(),
+            NO_ANTRIAN: nomorBaru,
+            LOKET: loketName,
+            STATUS: 'Belum',
+            LOKET_ID: loket.NO,
+            CREATED_AT: new Date().toISOString(),
+          },
+        ]);
+  
+        showToast('success', `Tiket ${loketName} berhasil diambil. Nomor: ${nomorBaru}`);
+  
+        // print struk
+        await printStruk(nomorBaru, loketName);
+      }
+    } catch (err) {
+      showToast('error', 'Gagal mengambil tiket.');
+    }
+  };
+  
+  
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
