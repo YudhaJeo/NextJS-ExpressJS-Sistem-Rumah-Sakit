@@ -12,49 +12,84 @@ import { Divider } from 'primereact/divider';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+// Helper functions
+const getResponsiveConfig = (screen, count) => {
+  const { width } = screen;
+  const config = {
+    numberSize: '2rem',
+    cardPadding: '1rem',
+    containerPadding: '1rem',
+    cols: 1,
+  };
+
+  if (width < 768) {
+    Object.assign(config, { cols: 1, numberSize: '2rem' });
+  } else if (width < 1024) {
+    Object.assign(config, { cols: 2, numberSize: '2.5rem' });
+  } else if (width < 1440) {
+    Object.assign(config, { cols: Math.min(count, 3), numberSize: '3rem' });
+  } else {
+    Object.assign(config, { cols: Math.min(count, 4), numberSize: '3.5rem' });
+  }
+
+  return config;
+};
+
+// Component for loading state
+const LoadingState = () => (
+  <div className="flex flex-col items-center justify-center h-full">
+    <ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="4" />
+    <p className="text-black font-medium mt-4 text-base">
+      <i className="pi pi-spin pi-spinner mr-2" />
+      Memuat data...
+    </p>
+  </div>
+);
+
+// Component for empty state
+const EmptyState = () => (
+  <div className="text-center h-full flex flex-col items-center justify-center">
+    <i className="pi pi-inbox text-[2rem] text-black mb-4" />
+    <h3 className="text-lg font-semibold text-black mb-2">Tidak Ada Loket Tersedia</h3>
+    <p className="text-black">Silakan hubungi administrator untuk informasi lebih lanjut</p>
+  </div>
+);
+
+// Component for statistics display
+const Stats = ({ count, label, color }) => (
+  <div className="flex flex-col items-center">
+    <Tag value={count} severity={color} className="text-base font-bold mb-1 px-3 py-2" />
+    <span className="text-sm text-black">{label}</span>
+  </div>
+);
+
 function DisplayAntrian() {
+  // State management
   const [loketList, setLoketList] = useState([]);
   const [antrianList, setAntrianList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [screenSize, setScreenSize] = useState({ width: 0, height: 0 });
   const [isFullScreen, setIsFullScreen] = useState(false);
-  const toast = useRef(null);
   const [time, setTime] = useState(null);
+  
+  const toast = useRef(null);
 
+  // Initialize QZ Tray script
   useEffect(() => {
-    const updateTime = () => setTime(new Date());
-    updateTime(); 
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
+    const script = document.createElement('script');
+    script.src = '/qz-tray.js';
+    script.async = true;
+    script.onload = () => console.log("QZ Tray script loaded");
+    document.body.appendChild(script);
 
-  useEffect(() => {
-    const updateSize = () =>
-      setScreenSize({ width: window.innerWidth, height: window.innerHeight });
-    updateSize();
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const handleFullScreenChange = () => {
-      setIsFullScreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullScreenChange);
     return () => {
-      document.removeEventListener('fullscreenchange', handleFullScreenChange);
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
     };
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(interval);
-  }, []);
-
+  // Initialize QZ Tray connection
   useEffect(() => {
     if (typeof window !== 'undefined' && window.qz) {
       window.qz.websocket.connect().catch(err => {
@@ -62,37 +97,47 @@ function DisplayAntrian() {
       });
     }
 
-    console.log("qz:", window.qz);
     if (!window.qz) {
       console.error("QZ belum tersedia saat ini");
-      return;
     }
-
   }, []);
 
-  
-  
-  const toggleFullScreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch((err) => {
-        console.error("Failed to enter full screen:", err);
-      });
-    } else {
-      document.exitFullscreen();
-    }
-  };
-
+  // Time update effect
   useEffect(() => {
-    const script = document.createElement('script');
-    // script.src = '/qz-tray.js'; 
-    script.src = '/qz-tray.js';
-    script.async = true;
-    script.onload = () => console.log("QZ Tray script loaded");
-    document.body.appendChild(script);
+    const updateTime = () => setTime(new Date());
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
   }, []);
-  
-  
 
+  // Screen size tracking
+  useEffect(() => {
+    const updateSize = () =>
+      setScreenSize({ width: window.innerWidth, height: window.innerHeight });
+    
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
+  // Fullscreen change tracking
+  useEffect(() => {
+    const handleFullScreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+    
+    document.addEventListener('fullscreenchange', handleFullScreenChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullScreenChange);
+    };
+  }, []);
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // API functions
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -104,11 +149,13 @@ function DisplayAntrian() {
       setAntrianList(antrianRes.data.data || []);
     } catch (err) {
       showToast('error', 'Gagal memuat data.');
+      console.error('Error fetching data:', err);
     } finally {
       setLoading(false);
     }
   };
 
+  // Utility functions
   const showToast = (severity, detail) => {
     toast.current?.show({
       severity,
@@ -123,13 +170,11 @@ function DisplayAntrian() {
     return typeof item?.NO_ANTRIAN === 'string' ? item.NO_ANTRIAN : '-';
   };
 
-  const config = getResponsiveConfig(screenSize, loketList.length);
-  const colClass = `col-${12 / config.cols}`;
-
   const getCardStyle = (index) => {
     const colors = ['#e8f5e9', '#e3f2fd', '#fffde7', '#fce4ec', '#ede7f6', '#fbe9e7'];
     const borderColors = ['#66bb6a', '#42a5f5', '#fbc02d', '#ec407a', '#7e57c2', '#ff7043'];
     const colorIndex = index % colors.length;
+    
     return {
       backgroundColor: colors[colorIndex],
       borderLeft: `6px solid ${borderColors[colorIndex]}`,
@@ -138,13 +183,94 @@ function DisplayAntrian() {
     };
   };
 
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error("Failed to enter full screen:", err);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  // Print functionality
+  const printStruk = async (nomorBaru, loketName) => {
+    try {
+      if (!window.qz) throw new Error("QZ Tray belum tersedia");
+
+      await window.qz.websocket.connect();
+      const config = window.qz.configs.create("POS-58-Work");
+
+      const now = new Date();
+      const jam = now
+        .toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false })
+        .replace(/\./g, ':');
+      const tanggal = now.toLocaleDateString('id-ID', {
+        weekday: 'long',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      });
+
+      const data = [
+        '\x1B\x40',         // init
+        '\x1B\x21\x30',     // bold, double
+        '\x1B\x61\x01',     // center
+        ' NOMOR ANTRIAN\n\n',
+        `${nomorBaru.toString().toUpperCase()}\n\n`,
+        '\x1B\x21\x00',     // normal
+        `LOKET: ${loketName}\n`,
+        `${tanggal} ${jam}\n\n`,
+        'Silakan tunggu...\n\n\n',
+        '\x1D\x56\x01'      // cut
+      ];
+
+      await window.qz.print(config, data);
+      await window.qz.websocket.disconnect();
+    } catch (err) {
+      console.error("Gagal print:", err);
+    }
+  };
+
+  const handleAmbilTiket = async (loketName) => {
+    try {
+      const res = await axios.post(`${API_URL}/antrian/store`, {
+        LOKET: loketName,
+      });
+
+      const nomorBaru = res.data.data.NO_ANTRIAN || res.data.data;
+      const loket = loketList.find((l) => l.NAMALOKET === loketName);
+
+      if (loket) {
+        setAntrianList((prev) => [
+          ...prev.filter((a) => a.LOKET !== loketName || a.STATUS !== 'Belum'),
+          {
+            ID: Date.now(),
+            NO_ANTRIAN: nomorBaru,
+            LOKET: loketName,
+            STATUS: 'Belum',
+            LOKET_ID: loket.NO,
+            CREATED_AT: new Date().toISOString(),
+          },
+        ]);
+
+        showToast('success', `Tiket ${loketName} berhasil diambil. Nomor: ${nomorBaru}`);
+        await printStruk(nomorBaru, loketName);
+      }
+    } catch (err) {
+      showToast('error', 'Gagal mengambil tiket.');
+      console.error('Error taking ticket:', err);
+    }
+  };
+
+  // Render functions
   const renderCard = (loket, index) => {
     const currentNumber = getAntrianByLoket(loket.NAMALOKET);
     const hasQueue = currentNumber !== '-';
     const isActive = loket.AKTIF !== false;
 
     return (
-      <div key={index} className={colClass}>
+      <div key={index} className={`col-${12 / config.cols}`}>
         <Card
           header={
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
@@ -177,100 +303,34 @@ function DisplayAntrian() {
         >
           <div style={{ textAlign: 'center' }}>
             <small style={{ color: '#757575', fontWeight: '500' }}>Loket #{loket.NO}</small>
-            <div style={{ fontSize: '0.75rem', color: '#757575', margin: '0.5rem 0' }}>Nomor Antrian Saat Ini</div>
-            <div style={{ fontSize: config.numberSize, fontWeight: 'bold', padding: '0.5rem', border: '2px dashed #ccc', borderRadius: '6px' }}>
+            <div style={{ fontSize: '0.75rem', color: '#757575', margin: '0.5rem 0' }}>
+              Nomor Antrian Saat Ini
+            </div>
+            <div style={{
+              fontSize: config.numberSize,
+              fontWeight: 'bold',
+              padding: '0.5rem',
+              border: '2px dashed #ccc',
+              borderRadius: '6px'
+            }}>
               {currentNumber}
             </div>
-            {hasQueue && <Badge value="Siap Dilayani" severity="success" className="animate-pulse text-xs" />}
+            {hasQueue && (
+              <Badge value="Siap Dilayani" severity="success" className="animate-pulse text-xs" />
+            )}
           </div>
         </Card>
       </div>
     );
   };
 
-  const printStruk = async (nomorBaru, loketName) => {
-    try {
-      if (!window.qz) throw new Error("QZ Tray belum tersedia");
-  
-      // tunggu sampai QZ siap
-      await window.qz.websocket.connect();
-  
-      const config = window.qz.configs.create("POS-58-Work");
-
-      // Formatting waktu
-      const now = new Date();
-
-      const jam = now
-        .toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false })
-        .replace(/\./g, ':');
-
-      const tanggal = now.toLocaleDateString('id-ID', {
-        weekday: 'long',
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      });
-
-      // Data print
-      const data = [
-        '\x1B\x40',         // init
-        '\x1B\x21\x30',     // bold, double
-        '\x1B\x61\x01',     // center
-        ' NOMOR ANTRIAN\n\n',
-        `${nomorBaru.toString().toUpperCase()}\n\n`,
-        '\x1B\x21\x00',     // normal
-        `LOKET: ${loketName}\n`,
-        `${tanggal} ${jam}\n\n`,
-        'Silakan tunggu...\n\n\n',
-        '\x1D\x56\x01'      // cut
-      ];
-
-  
-      await window.qz.print(config, data);
-      await window.qz.websocket.disconnect();
-    } catch (err) {
-      console.error("Gagal print:", err);
-    }
-  };  
-
-  const handleAmbilTiket = async (loketName) => {
-    try {
-      const res = await axios.post(`${API_URL}/antrian/store`, {
-        LOKET: loketName,
-      });
-  
-      const nomorBaru = res.data.data.NO_ANTRIAN || res.data.data;
-      const loket = loketList.find((l) => l.NAMALOKET === loketName);
-  
-      if (loket) {
-        setAntrianList((prev) => [
-          ...prev.filter((a) => a.LOKET !== loketName || a.STATUS !== 'Belum'),
-          {
-            ID: Date.now(),
-            NO_ANTRIAN: nomorBaru,
-            LOKET: loketName,
-            STATUS: 'Belum',
-            LOKET_ID: loket.NO,
-            CREATED_AT: new Date().toISOString(),
-          },
-        ]);
-  
-        showToast('success', `Tiket ${loketName} berhasil diambil. Nomor: ${nomorBaru}`);
-  
-        // print struk
-        await printStruk(nomorBaru, loketName);
-      }
-    } catch (err) {
-      showToast('error', 'Gagal mengambil tiket.');
-    }
-  };
-  
-  
+  const config = getResponsiveConfig(screenSize, loketList.length);
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
+    <div className="h-screen flex flex-col overflow-hidden relative">
+      {/* Fullscreen Toggle Button */}
       {!isFullScreen && (
-        <div style={{ position: 'fixed', bottom: '1rem', right: '1rem', zIndex: 999 }}>
+        <div className="fixed bottom-4 right-4 z-[999]">
           <Button
             icon="pi pi-window-maximize"
             onClick={toggleFullScreen}
@@ -285,56 +345,45 @@ function DisplayAntrian() {
 
       <Toast ref={toast} position="top-right" />
 
-      <div
-        style={{
-          background: '#1976d2',
-          color: '#fff',
-          padding: '1rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <img src="/layout/images/logo.png" alt="Logo" style={{ height: '50px' }} />
-          <h2 style={{ margin: 0, color: 'white' }}>RUMAH SAKIT</h2>
+      {/* Header */}
+      <div className="text-black px-6 py-4 flex justify-between items-center">
+        <div className="flex items-center gap-4">
+          <img src="/layout/images/logo.png" alt="Logo" className="h-[50px]" />
+          <h2 className="text-lg font-semibold text-black m-0">RUMAH SAKIT</h2>
         </div>
-          <div style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
-            {time
-              ? time.toLocaleString('id-ID', {
-                  weekday: 'long',
-                  day: '2-digit',
-                  month: 'long',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit'
-                })
-              : null}
-          </div>
+        <div className="font-bold text-sm">
+          {time?.toLocaleString('id-ID', {
+            weekday: 'long',
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          })}
+        </div>
       </div>
 
-      <div style={{ padding: config.containerPadding, paddingBottom: '0.5rem', flexShrink: 0 }} />
+      <div className={`px-[${config.containerPadding}] pb-2 shrink-0`} />
 
-      <div style={{ flex: 1, overflow: 'auto', padding: config.containerPadding, paddingTop: 0 }}>
+      {/* Main Content */}
+      <div className={`flex-1 overflow-auto px-[${config.containerPadding}] pt-0`}>
         {loading ? (
           <LoadingState />
         ) : loketList.length === 0 ? (
           <EmptyState />
         ) : (
-          <div style={{ height: '100%' }}>
-            <div className="grid">
-              {loketList.map(renderCard)}
-            </div>
+          <div className="h-full">
+            <div className="grid">{loketList.map(renderCard)}</div>
           </div>
         )}
       </div>
 
-      {/* FOOTER STATISTIK */}
+      {/* Footer Statistics */}
       {!loading && loketList.length > 0 && (
-        <div style={{ padding: config.containerPadding, paddingTop: '0.5rem', flexShrink: 0 }}>
+        <div className={`px-[${config.containerPadding}] pt-2 shrink-0`}>
           <Divider />
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', textAlign: 'center' }}>
+          <div className="flex justify-center gap-8 text-center">
             <Stats
               count={loketList.filter((l) => l.AKTIF !== false).length}
               label="Loket Aktif"
@@ -356,49 +405,5 @@ function DisplayAntrian() {
     </div>
   );
 }
-
-function getResponsiveConfig(screen, count) {
-  const { width } = screen;
-  const config = {
-    numberSize: '2rem',
-    cardPadding: '1rem',
-    containerPadding: '1rem',
-    cols: 1,
-  };
-
-  if (width < 768)
-    Object.assign(config, { cols: 1, numberSize: '2rem' });
-  else if (width < 1024)
-    Object.assign(config, { cols: 2, numberSize: '2.5rem' });
-  else if (width < 1440)
-    Object.assign(config, { cols: Math.min(count, 3), numberSize: '3rem' });
-  else Object.assign(config, { cols: Math.min(count, 4), numberSize: '3.5rem' });
-
-  return config;
-}
-
-const LoadingState = () => (
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-    <ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="4" />
-    <p style={{ fontSize: '1rem', color: '#666', fontWeight: '500', marginTop: '1rem' }}>
-      <i className="pi pi-spin pi-spinner mr-2" /> Memuat data...
-    </p>
-  </div>
-);
-
-const EmptyState = () => (
-  <div style={{ textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-    <i className="pi pi-inbox" style={{ fontSize: '2rem', color: '#999', marginBottom: '1rem' }} />
-    <h3 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#444', marginBottom: '0.5rem' }}>Tidak Ada Loket Tersedia</h3>
-    <p style={{ color: '#777' }}>Silakan hubungi administrator untuk informasi lebih lanjut</p>
-  </div>
-);
-
-const Stats = ({ count, label, color }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-    <Tag value={count} severity={color} className="text-base font-bold mb-1 px-3 py-2" />
-    <span style={{ fontSize: '0.75rem', color: '#666' }}>{label}</span>
-  </div>
-);
 
 export default DisplayAntrian;
