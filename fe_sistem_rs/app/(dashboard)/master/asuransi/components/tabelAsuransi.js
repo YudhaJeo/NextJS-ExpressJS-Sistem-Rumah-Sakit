@@ -10,7 +10,7 @@ const TabelAsuransi = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable value={data} paginator rows={5} loading={loading} size="small">
       <Column field="IDASURANSI" header="ID" />
-      <Column field="ASURANSI" header="Nama Asuransi" />
+      <Column field="NAMAASURANSI" header="Nama Asuransi" />
       <Column field="KETERANGAN" header="Keterangan" />
       <Column
         header="Aksi"
