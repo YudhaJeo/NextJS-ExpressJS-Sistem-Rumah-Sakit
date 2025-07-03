@@ -22,7 +22,7 @@ function MonitorAntrian() {
   const [userHasInteracted, setUserHasInteracted] = useState(false);
   const toast = useRef(null);
   const ws = useRef(null);
-  const audioRef = useRef(null); // Tambahkan ref untuk audio
+  const audioRef = useRef(null); 
 
   useEffect(() => {
     fetchData(true);
@@ -181,41 +181,53 @@ function MonitorAntrian() {
   };
 
   const renderCard = (loket, index) => {
-    const nomor = getNomorAntrianDipanggil(loket.NAMALOKET);
-    const aktif = !!loket.AKTIF;
-    const adaAntrian = nomor !== '-';
+    const currentNumber = getNomorAntrianDipanggil(loket.NAMALOKET);
+    const hasQueue = currentNumber !== '-';
+    const isActive = loket.AKTIF !== false;
 
     return (
-      <div key={loket.NO} className={`${colClass} p-2`}>
+      <div key={index} className={`col-${12 / config.cols} p-2`}>
         <Card
           header={
-            <div className="flex justify-between items-center mb-2">
-              <div className="flex items-center gap-2">
-                <i className={`pi pi-circle-fill text-sm ${aktif ? 'text-green-500' : 'text-red-500'}`} />
-                <span className="font-bold text-lg">{loket.NAMALOKET}</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <i className={`pi pi-circle-fill text-sm ${isActive ? 'text-green-500' : 'text-red-500'}`} />
+                <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{loket.NAMALOKET}</span>
               </div>
-              <Tag
-                value={aktif ? 'Aktif' : 'Nonaktif'}
-                severity={aktif ? 'success' : 'danger'}
-                icon="pi pi-bolt"
-              />
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'end', gap: '0.3rem' }}>
+                <Tag
+                  value={isActive ? 'Aktif' : 'Nonaktif'}
+                  severity={isActive ? 'success' : 'danger'}
+                  icon="pi pi-bolt"
+                  className="text-xs"
+                />
+              </div>
             </div>
           }
-          style={getCardStyle(index)}
-          className={`h-full hover:shadow-2xl ${aktif ? '' : 'opacity-60'} ${config.cardPadding}`}
+          style={{
+            ...getCardStyle(index),
+            opacity: isActive ? 1 : 0.6,
+            pointerEvents: isActive ? 'auto' : 'none',
+          }}
         >
-          <div className="text-center">
-            <small className="text-600 font-medium">Loket #{loket.NO}</small>
-            <div className="text-xs text-600 font-medium my-2">Sedang Dipanggil</div>
-            <div className={`${config.numberSize} font-bold p-2 border-2 border-dashed border-round-lg`}>
-              {nomor}
+          <div style={{ textAlign: 'center' }}>
+            <small style={{ color: '#757575', fontWeight: '500' }}>Loket #{loket.NO}</small>
+            <div style={{ fontSize: '0.75rem', color: '#757575', margin: '0.5rem 0' }}>
+              Nomor Antrian Saat Ini
             </div>
-            {adaAntrian && (
-              <Badge
-                value="Silakan ke loket"
-                severity="success"
-                className="animate-pulse text-xs mt-2"
-              />
+            <div
+              style={{
+                fontSize: config.numberSize,
+                fontWeight: 'bold',
+                padding: '0.5rem',
+                border: '2px dashed #ccc',
+                borderRadius: '6px',
+              }}
+            >
+              {currentNumber}
+            </div>
+            {hasQueue && (
+              <Badge value="Sedang Dipanggil" severity="info" className="animate-pulse text-xs mt-2" />
             )}
           </div>
         </Card>
