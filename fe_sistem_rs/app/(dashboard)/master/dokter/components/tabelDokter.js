@@ -1,10 +1,20 @@
-"use client";
+'use client';
 
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import { Button } from "primereact/button";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
 
 const TableDokter = ({ data, loading, onEdit, onDelete }) => {
+  const jadwalTemplate = (row) => {
+    return (
+      <div className="text-sm whitespace-pre-line">
+        {row.JADWAL?.filter(j => j.JAM_MULAI && j.JAM_SELESAI).map((j) => (
+          <div key={j.HARI}>{`${j.HARI} ${j.JAM_MULAI} - ${j.JAM_SELESAI}`}</div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <DataTable
       value={data}
@@ -17,8 +27,7 @@ const TableDokter = ({ data, loading, onEdit, onDelete }) => {
       <Column field="IDDOKTER" header="ID Dokter" />
       <Column field="NAMADOKTER" header="Nama Dokter" />
       <Column field="NAMAPOLI" header="Nama Poli" />
-      <Column field="HARI_PRAKTEK" header="Hari Praktek" />
-      <Column field="JAM_PRAKTEK" header="Jam Praktek" />
+      <Column header="Jadwal Praktek" body={jadwalTemplate} />
       <Column
         header="Aksi"
         body={(row) => (

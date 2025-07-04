@@ -8,11 +8,10 @@ export const up = function (knex) {
 
     table.string('NIK', 20).notNullable()
       .references('NIK').inTable('pasien').onDelete('CASCADE');
-
-    table.integer('IDPOLI').unsigned().references('IDPOLI').inTable('poli').onDelete('SET NULL');
-
-    table.integer('IDDOKTER').unsigned().references('IDDOKTER').inTable('nama_dokter').onDelete('SET NULL');
-
+    table.integer('IDPOLI').unsigned()
+      .references('IDPOLI').inTable('poli').onDelete('SET NULL');
+    table.integer('IDDOKTER').unsigned()
+      .references('IDDOKTER').inTable('dokter').onDelete('SET NULL');
     table.date('TANGGALRESERVASI').notNullable();
     table.time('JAMRESERVASI');
     table.enu('STATUS', ['Menunggu', 'Dikonfirmasi', 'Dibatalkan']).defaultTo('Menunggu');
