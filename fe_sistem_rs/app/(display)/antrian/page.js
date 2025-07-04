@@ -96,10 +96,6 @@ function DisplayAntrian() {
         console.error("QZ Tray belum siap:", err);
       });
     }
-
-    if (!window.qz) {
-      console.error("QZ belum tersedia saat ini");
-    }
   }, []);
 
   // Time update effect
@@ -199,8 +195,9 @@ function DisplayAntrian() {
       if (!window.qz) throw new Error("QZ Tray belum tersedia");
 
       await window.qz.websocket.connect();
-      const config = window.qz.configs.create("POS-58-Work");
+      const config = window.qz.configs.create("POS-58");
 
+      // Formatting
       const now = new Date();
       const jam = now
         .toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false })
