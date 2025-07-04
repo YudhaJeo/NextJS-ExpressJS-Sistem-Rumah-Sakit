@@ -20,6 +20,8 @@ const ReservasiPasienPage = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [allDokterOptions, setAllDokterOptions] = useState([]);
+
 
   const [formData, setFormData] = useState({
     IDRESERVASI: 0,
@@ -27,7 +29,7 @@ const ReservasiPasienPage = () => {
     IDPOLI: '',
     IDDOKTER: '',
     TANGGALRESERVASI: '',
-    JAMRESERVASI: '',
+    JADWALPRAKTEK: '',
     STATUS: 'Menunggu',
     KETERANGAN: '',
   });
@@ -105,9 +107,11 @@ const fetchDokter = async () => {
     const options = res.data.map((dokter) => ({
       label: `${dokter.IDDOKTER} - ${dokter.NAMADOKTER}`,
       value: dokter.IDDOKTER,
+      IDPOLI: dokter.IDPOLI,
     }));
 
     setDokterOptions(options);
+    setAllDokterOptions(options);
   } catch (err) {
     console.error('Gagal ambil data poli:', err);
   }
@@ -133,7 +137,7 @@ const fetchDokter = async () => {
       !formData.IDPOLI ||
       !formData.IDDOKTER ||
       !formData.TANGGALRESERVASI ||
-      !formData.JAMRESERVASI ||
+      !formData.JADWALPRAKTEK ||
       !formData.STATUS
     ) {
       toastRef.current?.showToast('01', 'Semua field wajib diisi!');
@@ -214,7 +218,7 @@ const fetchDokter = async () => {
       IDPOLI: '',
       IDDOKTER: '',
       TANGGALRESERVASI: '',
-      JAMRESERVASI: '',
+      JADWALPRAKTEK : '',
       STATUS: 'Menunggu',
       KETERANGAN: '',
     });
@@ -266,6 +270,8 @@ const fetchDokter = async () => {
         pasienOptions={pasienOptions}
         poliOptions={poliOptions}
         dokterOptions={dokterOptions}
+        setDokterOptions={setDokterOptions}
+        allDokterOptions={allDokterOptions}
       />
     </div>
   );

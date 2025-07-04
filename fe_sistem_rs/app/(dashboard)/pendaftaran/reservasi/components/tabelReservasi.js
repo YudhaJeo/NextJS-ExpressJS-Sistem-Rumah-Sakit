@@ -10,10 +10,6 @@ const tanggalTemplate = (rowData) => {
   return formatTanggal(rowData.TANGGALRESERVASI);
 };
 
-const jamTemplate = (rowData) => {
-  return formatJam(rowData.JAMRESERVASI);
-};
-
 const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable
@@ -34,9 +30,8 @@ const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }) => {
         body={tanggalTemplate}
       />
       <Column
-        field="JAMRESERVASI"
-        header="Jam Reservasi"
-        body={jamTemplate}
+        field="JADWALPRAKTEK"
+        header="Jadwal Praktek"
       />
       <Column
         header="Status"

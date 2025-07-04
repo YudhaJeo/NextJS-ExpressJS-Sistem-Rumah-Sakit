@@ -15,7 +15,9 @@ const FormReservasiPasien = ({
   setFormData,
   pasienOptions,
   poliOptions,
-  dokterOptions
+  dokterOptions,
+  setDokterOptions,
+  allDokterOptions
 }) => {
   return (
     <Dialog
@@ -53,20 +55,34 @@ const FormReservasiPasien = ({
         <div>
           <label>Poli</label>
           <Dropdown
-            className="w-full mt-2"
-            options={poliOptions}
-            value={formData.IDPOLI}
-            onChange={(e) => {
-              const selected = poliOptions.find((p) => p.value === e.value);
-              setFormData({
-                ...formData,
-                IDPOLI: e.value,
-              });
-            }}
-            placeholder="Pilih Poli"
-            filter
-            showClear
-          />
+  className="w-full mt-2"
+  options={poliOptions}
+  value={formData.IDPOLI}
+  onChange={(e) => {
+    const selectedPoli = e.value;
+
+    // Update form dan reset dokter yang terpilih
+    setFormData({
+      ...formData,
+      IDPOLI: selectedPoli,
+      IDDOKTER: '', // reset dokter saat poli berubah
+    });
+
+    // Filter dokter sesuai poli yang dipilih
+    const filteredDokter = allDokterOptions.filter(
+      (dokter) => dokter.IDPOLI === selectedPoli
+    );
+
+    console.log('Dokter yang cocok dengan poli:', filteredDokter);
+
+    // Update opsi dokter
+    setDokterOptions(filteredDokter);
+  }}
+  placeholder="Pilih Poli"
+  filter
+  showClear
+/>
+
         </div>
 
         <div>
@@ -110,13 +126,13 @@ const FormReservasiPasien = ({
         </div>
 
         <div>
-          <label>Jam Reservasi</label>
+          <label>Jadwal Praktek</label>
           <InputText
-            type="time"
+            type="text"
             className="w-full mt-2"
-            value={formData.JAMRESERVASI}
+            value={formData.JADWALPRAKTEK}
             onChange={(e) =>
-              onChange({ ...formData, JAMRESERVASI: e.target.value })
+              onChange({ ...formData, JADWALPRAKTEK: e.target.value })
             }
           />
         </div>
