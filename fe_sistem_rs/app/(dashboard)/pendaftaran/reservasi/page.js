@@ -102,9 +102,9 @@ const fetchDokter = async () => {
     const res = await axios.get(`${API_URL}/dokter`);
     console.log('Data poli API:', res.data);
 
-    const options = res.data.map((nama_dokter) => ({
-      label: `${nama_dokter.IDDOKTER} - ${nama_dokter.NAMADOKTER}`,
-      value: nama_dokter.IDDOKTER,
+    const options = res.data.map((dokter) => ({
+      label: `${dokter.IDDOKTER} - ${dokter.NAMADOKTER}`,
+      value: dokter.IDDOKTER,
     }));
 
     setDokterOptions(options);

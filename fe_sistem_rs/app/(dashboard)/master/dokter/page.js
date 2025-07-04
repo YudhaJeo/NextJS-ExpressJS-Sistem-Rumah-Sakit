@@ -19,11 +19,16 @@ const DokterPage = () => {
     const [dialogVisible, setDialogVisible] = useState(false);
 
     const [formData, setFormData] = useState({
-        IDDOKTER: 0,
-        NAMADOKTER: "",
-        IDPOLI: "",
-        HARI_PRAKTEK: "",
-        JAM_PRAKTEK: ""
+    IDDOKTER: 0,
+    NAMADOKTER: "",
+    IDPOLI: "",
+    JADWAL: [
+        { HARI: "Senin", JAM_MULAI: "", JAM_SELESAI: "" },
+        { HARI: "Selasa", JAM_MULAI: "", JAM_SELESAI: "" },
+        { HARI: "Rabu", JAM_MULAI: "", JAM_SELESAI: "" },
+        { HARI: "Kamis", JAM_MULAI: "", JAM_SELESAI: "" },
+        { HARI: "Jum'at", JAM_MULAI: "", JAM_SELESAI: "" }
+    ]
     });
 
     const [poliOptions, setPoliOptions] = useState([]);
@@ -58,8 +63,6 @@ const DokterPage = () => {
          try {
     const res = await axios.get(`${API_URL}/poli`);
     console.log('Data poli API:', res.data);
-
-    // Jika response berupa array langsung
     const options = res.data.map((poli) => ({
       label: `${poli.IDPOLI} - ${poli.NAMAPOLI}`,
       value: poli.IDPOLI,
@@ -112,8 +115,14 @@ const DokterPage = () => {
 
 
     const handleEdit = (row) => {
-        setFormData({ ...row });
-        setDialogVisible(true);
+    const hariList = ["Senin", "Selasa", "Rabu", "Kamis", "Jum'at"];
+    const fullJadwal = hariList.map((hari) => {
+        const found = row.JADWAL.find(j => j.HARI === hari);
+        return found || { HARI: hari, JAM_MULAI: "", JAM_SELESAI: "" };
+    });
+
+    setFormData({ ...row, JADWAL: fullJadwal });
+    setDialogVisible(true);
     };
 
     const handleDelete = (row) => {
@@ -137,13 +146,18 @@ const DokterPage = () => {
     };
 
     const resetForm = () => {
-        setFormData({
-            IDDOKTER: 0,
-            NAMADOKTER: "",
-            IDPOLI: "",
-            HARI_PRAKTEK: "",
-            JAM_PRAKTEK: ""
-        });
+    setFormData({
+        IDDOKTER: 0,
+        NAMADOKTER: "",
+        IDPOLI: "",
+        JADWAL: [
+        { HARI: "Senin", JAM_MULAI: "", JAM_SELESAI: "" },
+        { HARI: "Selasa", JAM_MULAI: "", JAM_SELESAI: "" },
+        { HARI: "Rabu", JAM_MULAI: "", JAM_SELESAI: "" },
+        { HARI: "Kamis", JAM_MULAI: "", JAM_SELESAI: "" },
+        { HARI: "Jum'at", JAM_MULAI: "", JAM_SELESAI: "" }
+        ]
+    });
     };
 
     return (

@@ -5,12 +5,12 @@ export const getAll = () => {
     return db('reservasi')
         .join('pasien', 'reservasi.NIK', 'pasien.NIK') 
         .join('poli', 'reservasi.IDPOLI', 'poli.IDPOLI')
-        .join('nama_dokter', 'reservasi.IDDOKTER', 'nama_dokter.IDDOKTER')
+        .join('dokter', 'reservasi.IDDOKTER', 'dokter.IDDOKTER')
         .select(
             'reservasi.*',
             'pasien.NAMALENGKAP',
             'poli.NAMAPOLI',
-            'nama_dokter.NAMADOKTER'
+            'dokter.NAMADOKTER'
         );
 }
 
