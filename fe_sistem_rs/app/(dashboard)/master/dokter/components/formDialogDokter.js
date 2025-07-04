@@ -5,11 +5,24 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 
+const hariList = ['Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at"];
+
 const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit, poliOptions }) => {
   const handleJadwalChange = (index, field, value) => {
-    const updatedJadwal = [...formData.JADWAL];
-    updatedJadwal[index][field] = value;
-    onChange({ ...formData, JADWAL: updatedJadwal });
+    const updated = [...formData.JADWAL];
+    updated[index][field] = value;
+    onChange({ ...formData, JADWAL: updated });
+  };
+
+  const handleAddShift = (hari) => {
+    const newJadwal = [...formData.JADWAL, { HARI: hari, JAM_MULAI: '', JAM_SELESAI: '' }];
+    onChange({ ...formData, JADWAL: newJadwal });
+  };
+
+  const handleRemoveShift = (index) => {
+    const updated = [...formData.JADWAL];
+    updated.splice(index, 1);
+    onChange({ ...formData, JADWAL: updated });
   };
 
   return (
@@ -17,7 +30,7 @@ const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit, poliO
       header={formData.IDDOKTER ? 'Edit Dokter' : 'Tambah Dokter'}
       visible={visible}
       onHide={onHide}
-      style={{ width: '40vw' }}
+      style={{ width: '45vw' }}
     >
       <form
         className="space-y-4"
@@ -49,25 +62,53 @@ const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit, poliO
         </div>
 
         <div>
-        <label className="block mb-2 font-semibold">Jadwal Praktek</label>
-        {formData.JADWAL.map((item, index) => (
-            <div key={item.HARI} className="flex items-center gap-2 mb-2">
-            <span className="w-20">{item.HARI}</span>
-            <input
-                type="time"
-                className="w-28 p-2 border rounded"
-                value={item.JAM_MULAI}
-                onChange={(e) => handleJadwalChange(index, 'JAM_MULAI', e.target.value)}
-            />
-            <span>-</span>
-            <input
-                type="time"
-                className="w-28 p-2 border rounded"
-                value={item.JAM_SELESAI}
-                onChange={(e) => handleJadwalChange(index, 'JAM_SELESAI', e.target.value)}
-            />
-            </div>
-        ))}
+          <label className="block mb-2 font-semibold">Jadwal Praktek</label>
+          {hariList.map((hari) => {
+            const shifts = formData.JADWAL.filter(j => j.HARI === hari);
+            return (
+              <div key={hari} className="mb-3">
+                <div className="font-semibold">{hari}</div>
+                {shifts.map((shift, i) => {
+                  const globalIndex = formData.JADWAL.findIndex((j, idx) =>
+                    j.HARI === hari && formData.JADWAL.indexOf(j) === idx
+                  );
+
+                  return (
+                    <div key={i} className="flex items-center gap-2 mt-2">
+                      <input
+                        type="time"
+                        className="w-28 p-2 border rounded"
+                        value={shift.JAM_MULAI}
+                        onChange={(e) => handleJadwalChange(globalIndex + i, 'JAM_MULAI', e.target.value)}
+                      />
+                      <span>-</span>
+                      <input
+                        type="time"
+                        className="w-28 p-2 border rounded"
+                        value={shift.JAM_SELESAI}
+                        onChange={(e) => handleJadwalChange(globalIndex + i, 'JAM_SELESAI', e.target.value)}
+                      />
+                      <Button
+                        type="button"
+                        icon="pi pi-trash"
+                        text
+                        severity="danger"
+                        onClick={() => handleRemoveShift(globalIndex + i)}
+                      />
+                    </div>
+                  );
+                })}
+                <Button
+                  type="button"
+                  label={`+ Shift ${hari}`}
+                  text
+                  size="small"
+                  onClick={() => handleAddShift(hari)}
+                  className="mt-1"
+                />
+              </div>
+            );
+          })}
         </div>
 
         <div className="text-right pt-3">

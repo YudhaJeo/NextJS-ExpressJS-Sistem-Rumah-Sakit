@@ -8,8 +8,10 @@ const TableDokter = ({ data, loading, onEdit, onDelete }) => {
   const jadwalTemplate = (row) => {
     return (
       <div className="text-sm whitespace-pre-line">
-        {row.JADWAL?.filter(j => j.JAM_MULAI && j.JAM_SELESAI).map((j) => (
-          <div key={j.HARI}>{`${j.HARI} ${j.JAM_MULAI} - ${j.JAM_SELESAI}`}</div>
+        {row.JADWAL?.filter(j => j.JAM_MULAI && j.JAM_SELESAI).map((j, idx) => (
+          <div key={idx}>
+            {`${j.HARI} ${j.JAM_MULAI} - ${j.JAM_SELESAI}`}
+          </div>
         ))}
       </div>
     );

@@ -115,13 +115,7 @@ const DokterPage = () => {
 
 
     const handleEdit = (row) => {
-    const hariList = ["Senin", "Selasa", "Rabu", "Kamis", "Jum'at"];
-    const fullJadwal = hariList.map((hari) => {
-        const found = row.JADWAL.find(j => j.HARI === hari);
-        return found || { HARI: hari, JAM_MULAI: "", JAM_SELESAI: "" };
-    });
-
-    setFormData({ ...row, JADWAL: fullJadwal });
+    setFormData({ ...row });
     setDialogVisible(true);
     };
 
@@ -150,13 +144,7 @@ const DokterPage = () => {
         IDDOKTER: 0,
         NAMADOKTER: "",
         IDPOLI: "",
-        JADWAL: [
-        { HARI: "Senin", JAM_MULAI: "", JAM_SELESAI: "" },
-        { HARI: "Selasa", JAM_MULAI: "", JAM_SELESAI: "" },
-        { HARI: "Rabu", JAM_MULAI: "", JAM_SELESAI: "" },
-        { HARI: "Kamis", JAM_MULAI: "", JAM_SELESAI: "" },
-        { HARI: "Jum'at", JAM_MULAI: "", JAM_SELESAI: "" }
-        ]
+        JADWAL: []
     });
     };
 
