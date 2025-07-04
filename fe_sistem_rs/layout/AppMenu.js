@@ -73,6 +73,11 @@ const AppMenu = () => {
               icon: "pi pi-fw pi-graduation-cap",
               to: "/master/dokter",
             },
+            {
+              label: "Jenis Kamar",
+              icon: "pi pi-fw pi-tag",
+              to: "/master/jeniskamar",
+            },
           ],
         },
       ],
