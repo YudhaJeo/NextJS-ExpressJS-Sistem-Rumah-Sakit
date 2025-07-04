@@ -199,7 +199,7 @@ function DisplayAntrian() {
       if (!window.qz) throw new Error("QZ Tray belum tersedia");
 
       await window.qz.websocket.connect();
-      const config = window.qz.configs.create("POS-58-Work");
+      const config = window.qz.configs.create("POS-58");
 
       const now = new Date();
       const jam = now
