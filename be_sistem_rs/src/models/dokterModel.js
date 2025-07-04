@@ -34,5 +34,5 @@ export const updateDokter = async (id, { NAMADOKTER, IDPOLI, JADWAL }) => {
 };
 
 export const deleteDokter = async (id) => {
-    await db('dokter').where('IDDOKTER', id).del(); // Jadwal otomatis terhapus jika pakai ON DELETE CASCADE
+    await db('dokter').where('IDDOKTER', id).del(); 
 };
