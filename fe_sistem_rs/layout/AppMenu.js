@@ -110,42 +110,6 @@ const AppMenu = () => {
               icon: "pi pi-fw pi-file",
               to: "/rekamMedis/dokumen",
             },
-            {
-              label: "Tracer Rekam Medis",
-              icon: "pi pi-fw pi-book",
-              to: "/rekamMedis/tracer-rekam-medis",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: "Laporan",
-      items: [
-        {
-          label: "Reporting",
-          icon: "pi pi-fw pi-chart-bar",
-          items: [
-            {
-              label: "Pendaftaran Pasien",
-              icon: "pi pi-fw pi-file-arrow-up",
-              to: "/laporan/report-pendaftaran-pasien",
-            },
-            {
-              label: "Statistik Kunjungan",
-              icon: "pi pi-fw pi-chart-line",
-              to: "/laporan/statistik-kunjungan",
-            },
-            {
-              label: "Rekap Kunjungan",
-              icon: "pi pi-fw pi-file-check",
-              to: "/laporan/rekap-kunjungan",
-            },
-            {
-              label: "Histori Transaksi",
-              icon: "pi pi-fw pi-history",
-              to: "/laporan/histori-transaksi",
-            },
           ],
         },
       ],
