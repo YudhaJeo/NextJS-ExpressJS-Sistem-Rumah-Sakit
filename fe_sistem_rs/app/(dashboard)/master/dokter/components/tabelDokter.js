@@ -6,14 +6,23 @@ import { Button } from 'primereact/button';
 
 const TableDokter = ({ data, loading, onEdit, onDelete }) => {
   const jadwalTemplate = (row) => {
-    return (
-      <div className="text-sm whitespace-pre-line">
-        {row.JADWAL?.filter(j => j.JAM_MULAI && j.JAM_SELESAI).map((j) => (
-          <div key={j.HARI}>{`${j.HARI} ${j.JAM_MULAI} - ${j.JAM_SELESAI}`}</div>
-        ))}
-      </div>
-    );
+  const formatTime = (timeString) => {
+    if (!timeString) return '';
+    const date = new Date(`1970-01-01T${timeString}Z`); // Pakai tanggal fiktif
+    return date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false });
   };
+
+  return (
+    <div className="text-sm whitespace-pre-line">
+      {row.JADWAL?.filter(j => j.JAM_MULAI && j.JAM_SELESAI).map((j, idx) => (
+        <div key={idx}>
+          {`${j.HARI} ${formatTime(j.JAM_MULAI)} - ${formatTime(j.JAM_SELESAI)}`}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 
   return (
     <DataTable

@@ -22,8 +22,29 @@ function DataAntrian() {
     const savedId = localStorage.getItem('currentAntrianId');
     if (savedId) setCurrentId(parseInt(savedId));
 
-    const interval = setInterval(checkUpdate, 3000);
-    return () => clearInterval(interval);
+    const socket = new WebSocket(`${API_URL}/api/ws`);
+
+    socket.onopen = () => {
+      console.log("WebSocket tersambung");
+    };
+
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.type === 'update') {
+        console.log("Menerima update dari server");
+        fetchData();
+      }
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    socket.onclose = () => {
+      console.warn("WebSocket terputus");
+    };
+
+    return () => socket.close();
   }, []);
 
   const checkUpdate = async () => {

@@ -13,7 +13,7 @@ export const up = function (knex) {
     table.integer('IDDOKTER').unsigned()
       .references('IDDOKTER').inTable('dokter').onDelete('SET NULL');
     table.date('TANGGALRESERVASI').notNullable();
-    table.time('JAMRESERVASI');
+    table.string('JADWALPRAKTEK', 100).notNullable;
     table.enu('STATUS', ['Menunggu', 'Dikonfirmasi', 'Dibatalkan']).defaultTo('Menunggu');
     table.text('KETERANGAN');
   });
