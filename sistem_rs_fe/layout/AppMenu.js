@@ -9,389 +9,182 @@ const AppMenu = () => {
 
   const model = [
     {
-      label: "Home",
+      label: "Antrian",
+      icon: "pi pi-fw pi-list",
       items: [
-        {
-          label: "Dashboard",
-          icon: "pi pi-fw pi-home",
-          to: "/",
-        },
-        {
-          label: "Antrian",
-          icon: "pi pi-fw pi-list",
-          items: [
-            {
-              label: "Data Antrian",
-              icon: "pi pi-fw pi-users",
-              to: "/antrian/data",
-            },
-            {
-              label: "Data Printer",
-              icon: "pi pi-fw pi-print",
-              to: "/antrian/printer",
-            },
-          ],
-        },
+        { label: "Data Antrian", icon: "pi pi-fw pi-users", to: "/antrian/data" },
+        { label: "Data Printer", icon: "pi pi-fw pi-print", to: "/antrian/printer" },
       ],
     },
     {
       label: "Master Data",
       items: [
         {
-          label: "Master Umum",
-          icon: "pi pi-fw pi-bookmark",
+          label: "Master",
           items: [
             { label: "Loket", icon: "pi pi-fw pi-ticket", to: "/master/loket" },
-            { label: "Pasien", icon: "pi pi-fw pi-user", to: "/master/pasien" },
             { label: "Asuransi", icon: "pi pi-fw pi-id-card", to: "/master/asuransi" },
             { label: "Agama", icon: "pi pi-fw pi-building-columns", to: "/master/agama" },
             { label: "Poli", icon: "pi pi-fw pi-warehouse", to: "/master/poli" },
             { label: "Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/dokter" },
-            { label: "Spesialisasi", icon: "pi pi-fw pi-stethoscope", to: "/master/spesialisasi" },
-            { label: "Jabatan", icon: "pi pi-fw pi-briefcase", to: "/master/jabatan" },
-            { label: "Departemen", icon: "pi pi-fw pi-building", to: "/master/departemen" }
-          ]
+          ],
         },
-        {
-          label: "Master Pasien",
-          icon: "pi pi-fw pi-bookmark",
-          items: [
-            { label: "Jenis Kunjungan", icon: "pi pi-fw pi-calendar", to: "/master/jenisKunjungan" },
-            { label: "Tipe Pasien", icon: "pi pi-fw pi-users", to: "/master/tipePasien" },
-            { label: "Jenis Identitas", icon: "pi pi-fw pi-id-card", to: "/master/jenisIdentitas" },
-            { label: "Status Pembayaran", icon: "pi pi-fw pi-credit-card", to: "/master/statusPembayaran" }
-          ]
-        },
-        {
-          label: "Master Medis",
-          icon: "pi pi-fw pi-bookmark",
-          items: [
-            { label: "ICD 10", icon: "pi pi-fw pi-graduation-cap", to: "/master/icd10" },
-            { label: "ICD 9", icon: "pi pi-fw pi-graduation-cap", to: "/master/icd9" },
-            { label: "Jenis Tindakan", icon: "pi pi-fw pi-briefcase-medical", to: "/master/jenisTindakan" }
-          ]
-        },
-        {
-          label: "Master Farmasi",
-          icon: "pi pi-fw pi-bookmark",
-          items: [
-            { label: "Obat", icon: "pi pi-fw pi-medkit", to: "/master/Obat" },
-            { label: "Suplier", icon: "pi pi-fw pi-truck", to: "/master/suplier" },
-            { label: "Gudang", icon: "pi pi-fw pi-warehouse", to: "/master/gudang" },
-            { label: "Satuan Obat", icon: "pi pi-fw pi-medkit", to: "/master/satuanObat" },
-            { label: "Jenis Obat", icon: "pi pi-fw pi-medkit", to: "/master/jenisObat" }
-          ]
-        },
-        {
-          label: "Master Rawat Inap",
-          icon: "pi pi-fw pi-bookmark",
-          items: [
-            { label: "Jenis Kamar", icon: "pi pi-fw pi-bed", to: "/master/jeniskamar" }
-          ]
-        },
-        {
-          label: "Master Keuangan",
-          icon: "pi pi-fw pi-bookmark",
-          items: [
-            { label: "Kategori Pengeluaran", icon: "pi pi-fw pi-tags", to: "/master/kategoriPengeluaran" },
-            { label: "Satuan Barang", icon: "pi pi-fw pi-box", to: "/master/satuanBarang" },
-            { label: "Metode Pembayaran", icon: "pi pi-fw pi-credit-card", to: "/master/metodePembayaran" },
-            { label: "Akun Bank", icon: "pi pi-fw pi-bank", to: "/master/bank" }
-          ]
-        }
-      ]
+      ],
     },
     {
-      label: "Pendaftaran",
+      label: "Fitur Pasien",
       items: [
+        {
+          label: "Menu",
+          items: [
+        {
+          label: "Dashboard",
+          icon: "pi pi-fw pi-home",
+          to: "/",
+        },
+        { label: "Pasien", 
+          icon: "pi pi-fw pi-user", 
+          to: "/pasien", 
+        },
         {
           label: "Pendaftaran Pasien",
           icon: "pi pi-fw pi-user-plus",
           items: [
-            {
-              label: "Reservasi",
-              icon: "pi pi-fw pi-calendar",
-              to: "/pendaftaran/reservasi",
-            },
-            {
-              label: "Formulir Pendaftaran",
-              icon: "pi pi-fw pi-book",
-              to: "/pendaftaran/formulir",
-            },
-            {
-              label: "Riwayat Kunjungan",
-              icon: "pi pi-fw pi-history",
-              to: "/pendaftaran/riwayatKunjungan",
-            },
+            { label: "Reservasi", icon: "pi pi-fw pi-calendar", to: "/pendaftaran/reservasi" },
+            { label: "Formulir Pendaftaran", icon: "pi pi-fw pi-book", to: "/pendaftaran/formulir" },
+            { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/pendaftaran/riwayatKunjungan" },
           ],
         },
-      ],
-    },
-    {
-      label: "Rekam Medis",
-      items: [
         {
-          label: "Data Medis",
+          label: "Rekam Medis",
           icon: "pi pi-fw pi-folder-open",
           items: [
-            {
-              label: "File Dokumen",
-              icon: "pi pi-fw pi-file",
-              to: "/dataMedis/dokumen",
-            },
-            {
-              label: "Entri SOAP",
-              icon: "pi pi-fw pi-notes",
-              to: "/dataMedis/soap",
-            },
-            {
-              label: "Drawing Rekam Medis",
-              icon: "pi pi-fw pi-pencil",
-              to: "/dataMedis/tindakan",
-            },
-            {
-              label: "Diagnosa Tindakan",
-              icon: "pi pi-fw pi-stethoscope",
-              to: "/dataMedis/diagnosaTindakan",
-            },
-            {
-              label: "Riwayat Pengobatan",
-              icon: "pi pi-fw pi-history",
-              to: "/dataMedis/riwayatPengobatan",
-            },
+            { label: "File Dokumen", icon: "pi pi-fw pi-file", to: "/dataMedis/dokumen" },
+            { label: "Tracer Rekam Medis", icon: "pi pi-fw pi-notes", to: "/dataMedis/tracer" },
           ],
         },
-      ],
-    },
-    {
-      label: "Jadwal & Kalender",
-      items: [
-        {
-          label: "Jadwal",
-          icon: "pi pi-fw pi-calendar",
-          items: [
-            {
-              label: "Jadwal Dokter",
-              icon: "pi pi-fw pi-calendar",
-              to: "/jadwal/jadwalDokter",
-            },
-            {
-              label: "Kalender Libur",
-              icon: "pi pi-fw pi-calendar-times",
-              to: "/jadwal/kalenderLibur",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: "Komisi",
-      items: [
-        {
-          label: "Komisi Dokter",
-          icon: "pi pi-fw pi-money-bill",
-        },
-      ],
-    },
-    {
-      label: "Farmasi",
-      items: [
-        {
-          label: "Farmasi",
-          icon: "pi pi-fw pi-folder-open",
-          items: [
-            {
-              label: "POS Kasir",
-              icon: "pi pi-fw pi-credit-card",
-              to: "/farmasi/kasir",
-            },
-            {
-              label: "Kalender Libur",
-              icon: "pi pi-fw pi-calendar-times",
-              to: "/farmasi/kalenderLibur",
-            },
-            {
-              label: "Permintaan Obat",
-              icon: "pi pi-fw pi-credit-card",
-              to: "/farmasi/permintaanObat",
-            },
-            {
-              label: "Stock Obat",
-              icon: "pi pi-fw pi-calendar-times",
-              to: "/farmasi/stockObat",
-            },
-            {
-              label: "Laporan Farmasi",
-              icon: "pi pi-fw pi-credit-card",
-              to: "/farmasi/laporanFarmasi",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: "Rawat Inap",
-      items: [
-        {
-          label: "Rawat Inap",
-          icon: "pi pi-fw pi-folder-open",
-          items: [
-            {
-              label: "Manajemen Kamar",
-              icon: "pi pi-fw pi-calendar",
-              to: "/rawatInap/manajemenKamar",
-            },
-            {
-              label: "Tagihan & Pembayaran",
-              icon: "pi pi-fw pi-calendar-times",
-              to: "/rawatInap/tagihan",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: "Pemeriksaan Penunjang",
-      items: [
-        {
-          label: "Pemeriksaan",
-          icon: "pi pi-fw pi-folder-open",
-          items: [
-            {
-              label: "Lab",
-              icon: "pi pi-fw pi-flask",
-              to: "/pemeriksaan/lab",
-            },
-            {
-              label: "Radiologi",
-              icon: "pi pi-fw pi-camera",
-              to: "/pemeriksaan/radiologi",
-            },
-            {
-              label: "Entri Hasil",
-              icon: "pi pi-fw pi-file-edit",
-              to: "/pemeriksaan/entriHasil",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: "Inventori",
-      items: [
-        {
-          label: "Inventori",
-          icon: "pi pi-fw pi-folder-open",
-          items: [
-            {
-              label: "Inventori Barang",
-              icon: "pi pi-fw pi-box",
-              to: "/inventori/inventoriBarang",
-            },
-            {
-              label: "Pengadaan Barang",
-              icon: "pi pi-fw pi-truck",
-              to: "/inventori/pengadaanBarang",
-            },
-            {
-              label: "Stok Barang",
-              icon: "pi pi-fw pi-archive",
-              to: "/inventori/stokBarang",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: "SDM & Gaji",
-      items: [
-        {
-          label: "SDM & GAJI",
-          icon: "pi pi-fw pi-users",
-          items: [
-            {
-              label: "Data Pegawai",
-              icon: "pi pi-fw pi-user",
-              to: "/pemeriksaan/dataPegawai",
-            },
-            {
-              label: "Penggajian",
-              icon: "pi pi-fw pi-money-bill",
-              to: "/pemeriksaan/radiologi",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: "Keuangan",
-      items: [
-        {
-          label: "Keuangan",
-          icon: "pi pi-fw pi-wallet",
-          items: [
-            {
-              label: "Transaksi",
-              icon: "pi pi-fw pi-dollar",
-              to: "/keuangan/transaksi",
-            },
-            {
-              label: "Tagihan",
-              icon: "pi pi-fw pi-file",
-              to: "/keuangan/tagihan",
-            },
-            {
-              label: "Pembayaran",
-              icon: "pi pi-fw pi-credit-card",
-              to: "/keuangan/pembayaran",
-            },
-            {
-              label: "Invoice",
-              icon: "pi pi-fw pi-file-invoice",
-              to: "/keuangan/invoice",
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: "Laporan",
-      items: [
         {
           label: "Laporan",
           icon: "pi pi-fw pi-chart-bar",
           items: [
-            {
-              label: "Statistik Kunjungan",
-              icon: "pi pi-fw pi-chart-line",
-              to: "/laporan/statistikKunjungan",
-            },
-            {
-              label: "Laporan RME",
-              icon: "pi pi-fw pi-book",
-              to: "/laporan/laporan",
-            },
-            {
-              label: "Dashboard Eksekutif",
-              icon: "pi pi-fw pi-chart-pie",
-              to: "/laporan/dashboardEksekutif",
-            },
+            { label: "Pendaftaran Pasien", icon: "pi pi-fw pi-file-arrow-up", to: "/laporan/report-pendaftaran-pasien" },
+            { label: "Statistik Kunjungan", icon: "pi pi-fw pi-chart-line", to: "/laporan/statistik-kunjungan" },
+            { label: "Rekap Kunjungan", icon: "pi pi-fw pi-file-check", to: "/laporan/rekap-kunjungan" },
+            { label: "Histori Transaksi", icon: "pi pi-fw pi-history", to: "/laporan/histori-transaksi" },
           ],
         },
       ],
     },
+  ],
+},
+{
+  label: "Fitur Dokter",
+  items: [
+    {
+      label: "Menu",
+      items: [
+        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/dokter/dashboard" },
+        { label: "Data Dokter", icon: "pi pi-fw pi-user", to: "/dokter/data" },
+        {
+          label: "Jadwal",
+          icon: "pi pi-fw pi-calendar",
+          items: [
+            { label: "Jadwal Praktek", icon: "pi pi-fw pi-calendar", to: "/dokter/jadwal-praktek" },
+            { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/dokter/kalender-dokter" },
+            { label: "Kalender Libur", icon: "pi pi-fw pi-ban", to: "/dokter/kalender-libur" },
+            { label: "Kalender Perjanjian", icon: "pi pi-fw pi-clock", to: "/dokter/kalender-perjanjian" },
+          ],
+        },
+        { label: "Riwayat Pengobatan", icon: "pi pi-fw pi-folder-open", to: "/dokter/riwayat-pengobatan" },
+        { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/dokter/manajemen-komisi" },
+        {
+          label: "Laporan",
+          icon: "pi pi-fw pi-chart-bar",
+          items: [
+            { label: "Laporan Komisi", icon: "pi pi-fw pi-file", to: "/dokter/laporan-komisi" },
+            { label: "Entri Rekam Medis", icon: "pi pi-fw pi-pencil", to: "/dokter/entri-rm" },
+            { label: "Drawing Rekam Medis", icon: "pi pi-fw pi-image", to: "/dokter/drawing-rm" },
+            { label: "Histori Transaksi", icon: "pi pi-fw pi-history", to: "/dokter/histori-transaksi" },
+          ],
+        },
+      ],
+    },
+  ],
+},
+    {
+  label: "Fitur Rawat Jalan",
+  items: [
+    {
+      label: "Menu",
+      items: [
+        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/rawatjalan/dashboard" },
+        { label: "Tindakan & Layanan Medis", icon: "pi pi-fw pi-heart", to: "/rawatjalan/tindakan-layanan" },
+        { label: "Resep Obat", icon: "pi pi-fw pi-briefcase", to: "/rawatjalan/resep" },
+        { label: "Perjanjian", icon: "pi pi-fw pi-calendar-plus", to: "/rawatjalan/perjanjian" },
+        { label: "Kalender Perjanjian", icon: "pi pi-fw pi-calendar", to: "/rawatjalan/kalender-perjanjian" },
+        { label: "Riwayat Perjanjian", icon: "pi pi-fw pi-history", to: "/rawatjalan/riwayat-perjanjian" },
+        { label: "Kalender Ruangan", icon: "pi pi-fw pi-building", to: "/rawatjalan/kalender-ruangan" },
+        { label: "Riwayat Pasien", icon: "pi pi-fw pi-users", to: "/rawatjalan/riwayat-pasien" },
+        { label: "Laporan Tindakan Medis", icon: "pi pi-fw pi-file", to: "/rawatjalan/laporan-tindakan" },
+        { label: "Cetak Rekam Medis", icon: "pi pi-fw pi-print", to: "/rawatjalan/cetak-rm" },
+        { label: "Resep Obat Pasien", icon: "pi pi-fw pi-book-medical", to: "/rawatjalan/resep-pasien" },
+        { label: "Report Resep Pasien", icon: "pi pi-fw pi-chart-bar", to: "/rawatjalan/report-resep" },
+      ],
+    },
+  ],
+},
+{
+  label: "Fitur Rawat Inap",
+  items: [
+    {
+      label: "Menu",
+      items: [
+        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/rawatinap/dashboard" },
+        { label: "Manajemen Bangsal (Bed)", icon: "pi pi-fw pi-th-large", to: "/rawatinap/manajemen-bangsal" },
+        { label: "Monitoring Bangsal (Bed)", icon: "pi pi-fw pi-eye", to: "/rawatinap/monitoring-bangsal" },
+        { label: "Charge Kamar", icon: "pi pi-fw pi-wallet", to: "/rawatinap/charge-kamar" },
+        { label: "Resep Obat", icon: "pi pi-fw pi-briefcase", to: "/rawatinap/resep" },
+        { label: "Tindakan Medis", icon: "pi pi-fw pi-heart", to: "/rawatinap/tindakan" },
+        { label: "Cetak Tindakan Medis", icon: "pi pi-fw pi-print", to: "/rawatinap/cetak-tindakan" },
+        { label: "Tagihan Sementara", icon: "pi pi-fw pi-file-invoice", to: "/rawatinap/tagihan-sementara" },
+        { label: "Riwayat Sementara", icon: "pi pi-fw pi-history", to: "/rawatinap/riwayat-sementara" },
+        { label: "Riwayat Pasien", icon: "pi pi-fw pi-users", to: "/rawatinap/riwayat-pasien" },
+      ],
+    },
+  ],
+},
+{
+  label: "Fitur Kasir & Sales",
+  items: [
+    {
+      label: "Menu",
+      items: [
+        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/kasir/dashboard" },
+        { label: "Invoice & Pembayaran", icon: "pi pi-fw pi-file-invoice", to: "/kasir/invoice" },
+        { label: "Pembayaran Angsuran", icon: "pi pi-fw pi-credit-card", to: "/kasir/pembayaran-angsuran" },
+        { label: "Deposit Pembayaran", icon: "pi pi-fw pi-wallet", to: "/kasir/deposit" },
+        { label: "Cetak Invoice & Kwitansi", icon: "pi pi-fw pi-print", to: "/kasir/cetak-invoice" },
+        { label: "Produk & Layanan", icon: "pi pi-fw pi-tags", to: "/kasir/produk-layanan" },
+        { label: "Jenis Produk & Layanan", icon: "pi pi-fw pi-th-large", to: "/kasir/jenis-produk" },
+        { label: "Metode Pembayaran", icon: "pi pi-fw pi-credit-card", to: "/kasir/metode-pembayaran" },
+        { label: "Bank Account", icon: "pi pi-fw pi-building", to: "/kasir/bank-account" },
+        { label: "Laporan Pembayaran", icon: "pi pi-fw pi-chart-bar", to: "/kasir/laporan-pembayaran" },
+      ],
+    },
+  ],
+},
   ];
 
   return (
     <MenuProvider>
       <ul className="layout-menu">
-        {model.map((item, i) => (
+        {model.map((item, i) =>
           !item.seperator ? (
             <AppMenuitem item={item} root={true} index={i} key={item.label} />
           ) : (
             <li className="menu-separator" key={`separator-${i}`}></li>
           )
-        ))}
+        )}
       </ul>
     </MenuProvider>
   );
