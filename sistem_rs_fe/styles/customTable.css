@@ -1,0 +1,20 @@
+.p-datatable .custom-current-row {
+  background-color: #c8f7c5 !important; 
+  font-weight: bold;
+}
+
+.p-datatable .custom-finished-row {
+  background-color: #ffe3e3 !important; 
+}
+
+.custom-current-row {
+  background-color: #fff3cd !important;
+}
+
+.custom-finished-row {
+  background-color: #e2e3e5 !important; 
+}
+
+.custom-called-row {
+  background-color: #d1ecf1 !important;
+}
