@@ -62,18 +62,42 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="card p-6">
+  <div>
+    <ToastNotifier ref={toastRef} />
 
-      <ToastNotifier ref={toastRef} />
-      
-      <h3 className="text-xl font-semibold mb-4">Profil Pengguna</h3>
-      <div className="space-y-2">
-        <div><span className="font-medium">Nama Pengguna:</span> {user.username}</div>
-        <div><span className="font-medium">Email:</span>          {user.email}</div>
-        <div><span className="font-medium">Role:</span>           {user.role}</div>
+    {/* HEADER  */}
+    <div className="card">
+      <h3 className="text-xl font-semibold">Profil Pengguna</h3>
+    </div>
+
+    {/* USER INFO CARDS */}
+    <div className="card w-full justify-center items-stretch">
+        <div className="">
+          <div className="">
+            <span className=" text-gray-600 font-medium">Nama Pengguna:</span>
+            <div className="card text-lg font-semibold mt-1">{user.username}</div>
+          </div>
+        </div>
+
+        <div className="my-4">
+          <div className="">
+            <span className=" text-gray-600 font-medium">Email:</span>
+            <div className="card text-lg font-semibold mt-1">{user.email}</div>
+          </div>
+        </div>
+
+        <div className="">
+          <div className="">
+            <span className=" text-gray-600 font-medium">Role:</span>
+            <div className="card text-lg font-semibold mt-1 uppercase">{user.role} -</div>
+          </div>
+        </div>
       </div>
 
-      <div className="flex gap-3 mt-6 justify-end">
+
+    {/* BUTTON  */}
+    <div className="card">
+      <div className="flex gap-3 justify-end">
         <Button
           label="Edit Profil"
           icon="pi pi-pencil"
@@ -86,16 +110,21 @@ export default function ProfilePage() {
           onClick={handleLogout}
         />
       </div>
-
-      <FormDialogProfile
-        visible={dialogVisible}
-        onHide={() => setDialogVisible(false)}
-        onSubmit={handleSave}
-        form={form}
-        setForm={setForm}
-        errors={errors}
-        setErrors={setErrors}
-      />
     </div>
+    
+
+    {/* FORM  */}
+    <FormDialogProfile
+      visible={dialogVisible}
+      onHide={() => setDialogVisible(false)}
+      onSubmit={handleSave}
+      form={form}
+      setForm={setForm}
+      errors={errors}
+      setErrors={setErrors}
+    />
+    
+  </div>
+    
   );
 }
