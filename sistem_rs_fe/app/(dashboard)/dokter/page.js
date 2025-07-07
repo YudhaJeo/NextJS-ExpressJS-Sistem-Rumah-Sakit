@@ -80,9 +80,9 @@ const Dokter = () => {
 
 
     const infodokter = [
-        { nama_dokter: 'Dr. Syamsudin', poli: 'Gigi' },
-        { nama_dokter: 'Dr. Ali', poli: 'Mata' },
-        { nama_dokter: 'Dr. Agus', poli: 'Kaki' }
+        { nama_dokter: 'Dr. Syamsudin', poli: 'Gigi', jadwal_praktek: '18:00 - 20:00'},
+        { nama_dokter: 'Dr. Ali', poli: 'Mata', jadwal_praktek: '18:00 - 20:00' },
+        { nama_dokter: 'Dr. Agus', poli: 'Kaki', jadwal_praktek: '18:00 - 20:00' }
     ];
 
     return (
@@ -129,6 +129,7 @@ const Dokter = () => {
                     <DataTable value={infodokter} className="mt-4">
                         <Column field="nama_dokter" header="Nama Dokter" />
                         <Column field="poli" header="Poli" />
+                        <Column field="jadwal_praktek" header="Jadwal Praktek" />
                     </DataTable>
                 </div>
             </div>
