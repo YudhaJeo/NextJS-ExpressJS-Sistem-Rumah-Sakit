@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import FormDialogProfile from './components/FormDialogProfile';
+import ToastNotifier from '@/app/components/toastNotifier';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -16,6 +17,7 @@ export default function ProfilePage() {
   const [form, setForm] = useState({ username:'', email:'', role:'' });
   const [errors, setErrors] = useState({});
   const router = useRouter();
+  const toastRef = useRef(null);
 
   useEffect(() => {
     const token = Cookies.get('token');
@@ -51,16 +53,19 @@ export default function ProfilePage() {
       });
       setUser(newData);
       setDialogVisible(false);
-      
-      
+
+      toastRef.current?.showToast('00', 'Data berhasil diperbarui');      
     } catch (err) {
       console.error(err);
-      alert('Gagal memperbarui profil');
+      toastRef.current?.showToast('01', 'Gagal memperbarui profile');
     }
   };
 
   return (
     <div className="card p-6">
+
+      <ToastNotifier ref={toastRef} />
+      
       <h3 className="text-xl font-semibold mb-4">Profil Pengguna</h3>
       <div className="space-y-2">
         <div><span className="font-medium">Nama Pengguna:</span> {user.username}</div>
