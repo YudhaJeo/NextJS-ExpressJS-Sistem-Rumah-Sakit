@@ -11,8 +11,11 @@ import agamaRoutes from './routes/agamaRoutes.js';
 import loketRoutes from './routes/loketRoutes.js';
 import antrianRoutes from './routes/antrianRoutes.js';
 import printerRoutes from './routes/printerRoutes.js';
-import poliRoutes from './routes/poliRoutes.js'
-import dokterRoutes from './routes/dokterRoutes.js'
+import poliRoutes from './routes/poliRoutes.js';
+import dokterRoutes from './routes/dokterRoutes.js';
+import dashboardPasienRoutes from './routes/dashboardPasienRoutes.js';
+import invoiceRoutes from './routes/invoiceRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import jenisKamarRoutes from './routes/jenisKamarRoutes.js';
 import { verifyToken } from './middlewares/jwt.js'
 const app = express();
@@ -38,5 +41,10 @@ app.use('/api/printer', printerRoutes);
 app.use('/api/poli', poliRoutes)
 app.use('/api/dokter', dokterRoutes)
 app.use('/api/jeniskamar', jenisKamarRoutes);
+app.use('/api', userRoutes);
+app.use('/api/poli', poliRoutes);
+app.use('/api/dokter', dokterRoutes);
+app.use('/api', dashboardPasienRoutes);
+app.use('/api/invoice', invoiceRoutes);
 
 export default app;
