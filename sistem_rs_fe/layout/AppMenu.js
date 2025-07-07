@@ -40,7 +40,7 @@ const AppMenu = () => {
         {
           label: "Dashboard",
           icon: "pi pi-fw pi-home",
-          to: "/",
+          to: "/dashboard",
         },
         { label: "Pasien", 
           icon: "pi pi-fw pi-user", 
