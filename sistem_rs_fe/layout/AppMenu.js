@@ -160,7 +160,13 @@ const AppMenu = () => {
       label: "Menu",
       items: [
         { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/kasir/dashboard" },
-        { label: "Invoice & Pembayaran", icon: "pi pi-fw pi-file-invoice", to: "/kasir/invoice" },
+        { label: "Invoice & Pembayaran", 
+          icon: "pi pi-fw pi-file-invoice",
+          items: [
+            { label: "Invoice", icon: "pi pi-fw pi-receipt", to: "/kasir/invoice" },
+            { label: "Pembayaran", icon: "pi pi-fw pi-money-bill", to: "/kasir/pembayaran" },
+          ],
+        },
         { label: "Pembayaran Angsuran", icon: "pi pi-fw pi-credit-card", to: "/kasir/pembayaran-angsuran" },
         { label: "Deposit Pembayaran", icon: "pi pi-fw pi-wallet", to: "/kasir/deposit" },
         { label: "Cetak Invoice & Kwitansi", icon: "pi pi-fw pi-print", to: "/kasir/cetak-invoice" },
