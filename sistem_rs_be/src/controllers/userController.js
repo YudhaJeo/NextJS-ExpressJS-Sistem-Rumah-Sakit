@@ -3,20 +3,25 @@ import * as UserModel from '../models/userModel.js';
 
 export async function getUser(req, res) {
   try {
-    const id = req.user?.id || Number(req.params.id);
+    const id = req.user.id;
     const user = await UserModel.getById(id);
     if (!user) return res.status(404).json({ error: 'User tidak ditemukan' });
     delete user.PASSWORD;
-    res.json({ data: user });
+    // kirim hanya field yang frontend butuh
+    res.json({ data: {
+      username: user.USERNAME,
+      email:    user.EMAIL,
+      role:     user.ROLE
+    }});
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Gagal mengambil user' });
+    res.status(500).json({ error: 'Gagal mengambil profil' });
   }
 }
 
 export async function updateUser(req, res) {
   try {
-    const id = req.user?.id || Number(req.params.id);
+    const id = req.user.id;
     const { username, email, role } = req.body;
     if (!username || !email || !role) {
       return res.status(400).json({ error: 'Semua field wajib diisi' });
