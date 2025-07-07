@@ -331,15 +331,15 @@ function MonitorAntrian() {
         </div>
       </div>
 
-      <div className="bg-blue-100 py-2 overflow-hidden">
+      <div className="bg-blue-100 py-3 overflow-hidden">
         <marquee
           behavior="scroll"
           direction="left"
-          scrollamount="4"
-          className="text-blue-900 font-medium text-sm"
+          scrollamount="2"
+          className="text-blue-900 font-semibold text-2xl"
         >
-          Harap antri dengan tertib • Gunakan masker • Jaga jarak • Cuci tangan
-          sebelum masuk ruangan • Terima kasih 🙏
+          Selamat datang di RSUD Bayza Medika • Harap menunggu dengan tertib • Gunakan masker • Jaga jarak • 
+          Cuci tangan sebelum masuk ruangan • Antrian akan dipanggil sesuai urutan • Terima kasih atas kesabaran Anda 🙏
         </marquee>
       </div>
 
