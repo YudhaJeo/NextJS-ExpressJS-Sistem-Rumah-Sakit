@@ -38,142 +38,68 @@ const AppMenu = () => {
       label: "Master Data",
       items: [
         {
-          label: "Master",
-          icon: "pi pi-fw pi-database",
+          label: "Master Umum",
+          icon: "pi pi-fw pi-bookmark",
           items: [
-            {
-              label: "Loket",
-              icon: "pi pi-fw pi-ticket",
-              to: "/master/loket",
-            },
-            {
-              label: "Pasien",
-              icon: "pi pi-fw pi-user",
-              to: "/master/pasien",
-            },
-            {
-              label: "Asuransi",
-              icon: "pi pi-fw pi-id-card",
-              to: "/master/asuransi",
-            },
-            {
-              label: "Agama",
-              icon: "pi pi-fw pi-building-columns",
-              to: "/master/agama",
-            },
-            {
-              label: "Poli",
-              icon: "pi pi-fw pi-warehouse",
-              to: "/master/poli",
-            },
-            {
-              label: "Dokter",
-              icon: "pi pi-fw pi-graduation-cap",
-              to: "/master/dokter",
-            },
-            {
-              label: "Spesialisasi",
-              icon: "pi pi-fw pi-stethoscope",
-              to: "/master/spesialisasi",
-            },
-            {
-              label: "Jenis Kunjungan",
-              icon: "pi pi-fw pi-calendar",
-              to: "/master/jenisKunjungan",
-            },
-            {
-              label: "Tipe Pasien",
-              icon: "pi pi-fw pi-users",
-              to: "/master/tipePasien",
-            },
-            {
-              label: "Jenis Identitas",
-              icon: "pi pi-fw pi-id-card",
-              to: "/master/jenisIdentitas",
-            },
-            {
-              label: "Status Pembayaran",
-              icon: "pi pi-fw pi-credit-card",
-              to: "/master/statusPembayaran",
-            },
-            {
-              label: "ICD 10",
-              icon: "pi pi-fw pi-graduation-cap",
-              to: "/master/icd10",
-            },
-            {
-              label: "ICD 9",
-              icon: "pi pi-fw pi-graduation-cap",
-              to: "/master/icd9",
-            },
-            {
-              label: "Jenis Tindakan",
-              icon: "pi pi-fw pi-briefcase-medical",
-              to: "/master/jenisTindakan",
-            },
-            {
-              label: "Obat",
-              icon: "pi pi-fw pi-medkit",
-              to: "/master/Obat",
-            },
-            {
-              label: "Suplier",
-              icon: "pi pi-fw pi-truck",
-              to: "/master/suplier",
-            },
-            {
-              label: "Gudang",
-              icon: "pi pi-fw pi-warehouse",
-              to: "/master/gudang",
-            },
-            {
-              label: "Satuan Obat",
-              icon: "pi pi-fw pi-medkit",
-              to: "/master/satuanObat",
-            },
-            {
-              label: "Jenis Obat",
-              icon: "pi pi-fw pi-medkit",
-              to: "/master/jenisObat",
-            },
-            {
-              label: "Jenis Kamar",
-              icon: "pi pi-fw pi-bed",
-              to: "/master/jeniskamar",
-            },
-            {
-              label: "Jabatan",
-              icon: "pi pi-fw pi-briefcase",
-              to: "/master/jabatan",
-            },
-            {
-              label: "Departemen",
-              icon: "pi pi-fw pi-building",
-              to: "/master/departemen",
-            },
-            {
-              label: "Kategori Pengeluaran",
-              icon: "pi pi-fw pi-tags",
-              to: "/master/kategoriPengeluaran",
-            },
-            {
-              label: "Satuan Barang",
-              icon: "pi pi-fw pi-box",
-              to: "/master/satuanBarang",
-            },
-            {
-              label: "Metode Pembayaran",
-              icon: "pi pi-fw pi-credit-card",
-              to: "/master/metodePembayaran",
-            },
-            {
-              label: "Bank Akun",
-              icon: "pi pi-fw pi-bank",
-              to: "/master/bank",
-            },
-          ],
+            { label: "Loket", icon: "pi pi-fw pi-ticket", to: "/master/loket" },
+            { label: "Pasien", icon: "pi pi-fw pi-user", to: "/master/pasien" },
+            { label: "Asuransi", icon: "pi pi-fw pi-id-card", to: "/master/asuransi" },
+            { label: "Agama", icon: "pi pi-fw pi-building-columns", to: "/master/agama" },
+            { label: "Poli", icon: "pi pi-fw pi-warehouse", to: "/master/poli" },
+            { label: "Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/dokter" },
+            { label: "Spesialisasi", icon: "pi pi-fw pi-stethoscope", to: "/master/spesialisasi" },
+            { label: "Jabatan", icon: "pi pi-fw pi-briefcase", to: "/master/jabatan" },
+            { label: "Departemen", icon: "pi pi-fw pi-building", to: "/master/departemen" }
+          ]
         },
-      ],
+        {
+          label: "Master Pasien",
+          icon: "pi pi-fw pi-bookmark",
+          items: [
+            { label: "Jenis Kunjungan", icon: "pi pi-fw pi-calendar", to: "/master/jenisKunjungan" },
+            { label: "Tipe Pasien", icon: "pi pi-fw pi-users", to: "/master/tipePasien" },
+            { label: "Jenis Identitas", icon: "pi pi-fw pi-id-card", to: "/master/jenisIdentitas" },
+            { label: "Status Pembayaran", icon: "pi pi-fw pi-credit-card", to: "/master/statusPembayaran" }
+          ]
+        },
+        {
+          label: "Master Medis",
+          icon: "pi pi-fw pi-bookmark",
+          items: [
+            { label: "ICD 10", icon: "pi pi-fw pi-graduation-cap", to: "/master/icd10" },
+            { label: "ICD 9", icon: "pi pi-fw pi-graduation-cap", to: "/master/icd9" },
+            { label: "Jenis Tindakan", icon: "pi pi-fw pi-briefcase-medical", to: "/master/jenisTindakan" }
+          ]
+        },
+        {
+          label: "Master Farmasi",
+          icon: "pi pi-fw pi-bookmark",
+          items: [
+            { label: "Obat", icon: "pi pi-fw pi-medkit", to: "/master/Obat" },
+            { label: "Suplier", icon: "pi pi-fw pi-truck", to: "/master/suplier" },
+            { label: "Gudang", icon: "pi pi-fw pi-warehouse", to: "/master/gudang" },
+            { label: "Satuan Obat", icon: "pi pi-fw pi-medkit", to: "/master/satuanObat" },
+            { label: "Jenis Obat", icon: "pi pi-fw pi-medkit", to: "/master/jenisObat" }
+          ]
+        },
+        {
+          label: "Master Rawat Inap",
+          icon: "pi pi-fw pi-bookmark",
+          items: [
+            { label: "Jenis Kamar", icon: "pi pi-fw pi-bed", to: "/master/jeniskamar" }
+          ]
+        },
+        {
+          label: "Master Keuangan",
+          icon: "pi pi-fw pi-bookmark",
+          items: [
+            { label: "Kategori Pengeluaran", icon: "pi pi-fw pi-tags", to: "/master/kategoriPengeluaran" },
+            { label: "Satuan Barang", icon: "pi pi-fw pi-box", to: "/master/satuanBarang" },
+            { label: "Metode Pembayaran", icon: "pi pi-fw pi-credit-card", to: "/master/metodePembayaran" },
+            { label: "Akun Bank", icon: "pi pi-fw pi-bank", to: "/master/bank" }
+          ]
+        }
+      ]
     },
     {
       label: "Pendaftaran",
