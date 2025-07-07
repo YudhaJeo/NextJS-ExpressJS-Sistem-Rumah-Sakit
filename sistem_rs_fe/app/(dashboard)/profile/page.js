@@ -1,101 +1,130 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { Button } from 'primereact/button';
+import FormDialogProfile from './components/FormDialogProfile';
+import ToastNotifier from '@/app/components/toastNotifier';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function ProfilePage() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
+  const [user, setUser] = useState({ username:'', email:'', role:'' });
+  const [loading, setLoading] = useState(true);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [form, setForm] = useState({ username:'', email:'', role:'' });
+  const [errors, setErrors] = useState({});
   const router = useRouter();
+  const toastRef = useRef(null);
 
   useEffect(() => {
-    const name = Cookies.get('username');
-    const mail = Cookies.get('email');
-    const userRole = Cookies.get('role');
-
-    if (name) setUsername(name);
-    if (mail) setEmail(mail);
-    if (userRole) setRole(userRole);
+    const token = Cookies.get('token');
+    if (!token) return router.push('/login');
+    fetchData(token);
   }, []);
+
+  const fetchData = async (token) => {
+    try {
+      const res = await axios.get(`${API_URL}/profile`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUser(res.data.data);
+      setForm(res.data.data);
+    } catch (err) {
+      console.error('Gagal ambil data:', err);
+      router.push('/login');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleLogout = () => {
     Cookies.remove('token');
-    Cookies.remove('username');
-    Cookies.remove('email');
-    Cookies.remove('role');
     router.push('/login');
   };
 
-  const handleSave = () => {
-    // Simpan ke cookies sebagai contoh
-    Cookies.set('username', username);
-    Cookies.set('email', email);
-    Cookies.set('role', role);
-    alert('Profil berhasil disimpan!');
+  const handleSave = async (newData) => {
+    const token = Cookies.get('token');
+    try {
+      await axios.put(`${API_URL}/profile`, newData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUser(newData);
+      setDialogVisible(false);
+
+      toastRef.current?.showToast('00', 'Data berhasil diperbarui');      
+    } catch (err) {
+      console.error(err);
+      toastRef.current?.showToast('01', 'Gagal memperbarui profile');
+    }
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Edit Profil Pengguna</h1>
+  <div>
+    <ToastNotifier ref={toastRef} />
 
-      <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Nama Pengguna</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="mt-1 block w-full border rounded px-3 py-2 text-gray-900"
-          />
+    {/* HEADER  */}
+    <div className="card">
+      <h3 className="text-xl font-semibold">Profil Pengguna</h3>
+    </div>
+
+    {/* USER INFO CARDS */}
+    <div className="card w-full justify-center items-stretch">
+        <div className="">
+          <div className="">
+            <span className=" text-gray-600 font-medium">Nama Pengguna:</span>
+            <div className="card text-lg font-semibold mt-1">{user.username}</div>
+          </div>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 block w-full border rounded px-3 py-2 text-gray-900"
-          />
+        <div className="my-4">
+          <div className="">
+            <span className=" text-gray-600 font-medium">Email:</span>
+            <div className="card text-lg font-semibold mt-1">{user.email}</div>
+          </div>
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Role</label>
-          <input
-            type="text"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="mt-1 block w-full border rounded px-3 py-2 text-gray-900"
-          />
+        <div className="">
+          <div className="">
+            <span className=" text-gray-600 font-medium">Role:</span>
+            <div className="card text-lg font-semibold mt-1 uppercase">{user.role} -</div>
+          </div>
         </div>
+      </div>
 
 
-<div className="flex gap-3 mt-4 justify-end">
-  <button
-    onClick={() => router.back()}
-    className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
-  >
-    Batal
-  </button>
-
-  <button
-    onClick={handleSave}
-    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-  >
-    Simpan
-  </button>
-
-  <button
-    onClick={handleLogout}
-    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-  >
-    Logout
-  </button>
-</div>
-
+    {/* BUTTON  */}
+    <div className="card">
+      <div className="flex gap-3 justify-end">
+        <Button
+          label="Edit Profil"
+          icon="pi pi-pencil"
+          onClick={() => setDialogVisible(true)}
+        />
+        <Button
+          label="Logout"
+          icon="pi pi-sign-out"
+          severity="danger"
+          onClick={handleLogout}
+        />
       </div>
     </div>
+    
+
+    {/* FORM  */}
+    <FormDialogProfile
+      visible={dialogVisible}
+      onHide={() => setDialogVisible(false)}
+      onSubmit={handleSave}
+      form={form}
+      setForm={setForm}
+      errors={errors}
+      setErrors={setErrors}
+    />
+    
+  </div>
+    
   );
 }

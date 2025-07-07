@@ -16,6 +16,8 @@ import dokterRoutes from './routes/dokterRoutes.js';
 import dashboardPasienRoutes from './routes/dashboardPasienRoutes.js';
 import invoiceRoutes from './routes/invoiceRoutes.js';
 import { verifyToken } from './middlewares/jwt.js';
+import userRoutes from './routes/userRoutes.js';
+
 const app = express();
 
 app.use(cors({ 
@@ -36,6 +38,9 @@ app.use('/api/agama', agamaRoutes);
 app.use('/api/loket', loketRoutes);
 app.use('/api/antrian', antrianRoutes);
 app.use('/api/printer', printerRoutes);
+app.use('/api/poli', poliRoutes)
+app.use('/api/dokter', dokterRoutes)
+app.use('/api', userRoutes);
 app.use('/api/poli', poliRoutes);
 app.use('/api/dokter', dokterRoutes);
 app.use('/api', dashboardPasienRoutes);
