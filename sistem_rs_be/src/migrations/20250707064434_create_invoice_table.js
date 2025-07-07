@@ -11,7 +11,7 @@ export const up = function (knex) {
     table.integer('IDASURANSI').unsigned()
       .references('IDASURANSI').inTable('asuransi').onDelete('SET NULL');
     table.datetime('TANGGALINVOICE').notNullable().defaultTo(knex.fn.now());
-    table.decimal('TOTALTAGIHAN', 15, 2).notNullable();
+    table.double('TOTALTAGIHAN', 15, 2).notNullable();
     table.enu('STATUS', ['BELUM_LUNAS', 'LUNAS']).defaultTo('BELUM_LUNAS');
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
     table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());

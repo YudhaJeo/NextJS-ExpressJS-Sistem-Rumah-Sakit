@@ -13,7 +13,7 @@ export const up = function (knex) {
       .references('IDASURANSI').inTable('asuransi').onDelete('SET NULL');
     table.datetime('TANGGALBAYAR').notNullable().defaultTo(knex.fn.now());
     table.string('METODEPEMBAYARAN', 50).notNullable();
-    table.decimal('JUMLAHBAYAR', 15, 2).notNullable();
+    table.double('JUMLAHBAYAR', 15, 2).notNullable();
     table.text('KETERANGAN');
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
     table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());

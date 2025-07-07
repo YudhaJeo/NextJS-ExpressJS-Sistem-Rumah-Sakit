@@ -8,8 +8,8 @@ export const up = function (knex) {
     table.string('NIK', 20).notNullable()
       .references('NIK').inTable('pasien').onDelete('CASCADE');
     table.datetime('TANGGALDEPOSIT').notNullable().defaultTo(knex.fn.now());
-    table.decimal('JUMLAH', 15, 2).notNullable();
-    table.decimal('SISA_SALDO', 15, 2).notNullable();
+    table.double('JUMLAH', 15, 2).notNullable();
+    table.double('SISA_SALDO', 15, 2).notNullable();
     table.text('KETERANGAN');
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
     table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());
