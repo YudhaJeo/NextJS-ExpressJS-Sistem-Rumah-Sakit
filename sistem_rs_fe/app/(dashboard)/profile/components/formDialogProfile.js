@@ -14,7 +14,7 @@ export default function FormDialogProfile({
     const newErrors = {};
     if (!form.username.trim()) newErrors.username = 'Nama wajib diisi';
     if (!form.email.trim()) newErrors.email = 'Email wajib diisi';
-    if (!form.role.trim()) newErrors.role = 'Role wajib dipilih';
+    // if (!form.role.trim()) newErrors.role = 'Role wajib dipilih';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -62,7 +62,8 @@ export default function FormDialogProfile({
               { label: 'apoteker', value: 'apoteker' }
             ]}
             placeholder="Pilih Role"
-            onChange={e => setForm({ ...form, role: e.value })}
+            // onChange={e => setForm({ ...form, role: e.value })}
+            disabled
           />
           {errors.role && <small className="text-red-500">{errors.role}</small>}
         </div>

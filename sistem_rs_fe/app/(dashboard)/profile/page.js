@@ -51,7 +51,8 @@ export default function ProfilePage() {
       });
       setUser(newData);
       setDialogVisible(false);
-      alert('Profil berhasil diperbarui!');
+      
+      
     } catch (err) {
       console.error(err);
       alert('Gagal memperbarui profil');

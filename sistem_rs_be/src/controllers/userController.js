@@ -22,11 +22,11 @@ export async function getUser(req, res) {
 export async function updateUser(req, res) {
   try {
     const id = req.user.id;
-    const { username, email, role } = req.body;
-    if (!username || !email || !role) {
+    const { username, email} = req.body;
+    if (!username || !email) {
       return res.status(400).json({ error: 'Semua field wajib diisi' });
     }
-    await UserModel.updateProfile(id, { username, email, role });
+    await UserModel.updateProfile(id, { username, email});
     res.json({ message: 'Profil berhasil diperbarui' });
   } catch (err) {
     console.error(err);

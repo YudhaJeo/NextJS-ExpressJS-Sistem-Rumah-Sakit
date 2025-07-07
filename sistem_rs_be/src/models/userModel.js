@@ -12,5 +12,4 @@ export const updateProfile = (id, data) =>
     .update({
       USERNAME: data.username,
       EMAIL: data.email,
-      ROLE: data.role,
     });
