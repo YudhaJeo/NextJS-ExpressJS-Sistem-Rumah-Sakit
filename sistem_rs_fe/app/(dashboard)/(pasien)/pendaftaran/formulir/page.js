@@ -22,6 +22,7 @@ const Page = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [poliOptions, setPoliOptions] = useState([]);
   const [pasienOptions, setPasienOptions] = useState([]);
 
   const [form, setForm] = useState({
@@ -30,7 +31,6 @@ const Page = () => {
     NAMALENGKAP: '',
     TANGGALKUNJUNGAN: '',
     POLI: '',
-    NAMADOKTER: '',
     KELUHAN: '',
     STATUSKUNJUNGAN: 'Diperiksa',
   });
@@ -46,6 +46,7 @@ const Page = () => {
     }
     fetchData();
     fetchPasien();
+    fetchPoli();
   }, []);
 
   const fetchData = async () => {
@@ -60,6 +61,23 @@ const Page = () => {
       setLoading(false);
     }
   };
+
+  const fetchPoli = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/poli`);
+    console.log('Data poli API:', res.data);
+
+    const options = res.data.map((poli) => ({
+      label: `${poli.NAMAPOLI}`,
+      value: poli.IDPOLI,
+      }));
+
+    setPoliOptions(options);
+      } catch (err) {
+    console.error('Gagal ambil data poli:', err);
+      }
+    };
+
 
   const fetchPasien = async () => {
     try {
@@ -211,6 +229,7 @@ const Page = () => {
         form={form}
         setForm={setForm}
         pasienOptions={pasienOptions}
+        poliOptions={poliOptions}
       />
     </div>
   );

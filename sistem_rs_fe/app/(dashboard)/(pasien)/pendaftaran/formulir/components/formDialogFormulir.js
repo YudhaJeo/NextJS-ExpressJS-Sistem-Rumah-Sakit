@@ -14,6 +14,7 @@ const FormDialogPendaftaran = ({
   onSubmit,
   form,
   setForm,
+  poliOptions,
   pasienOptions,
 }) => {
   const [errors, setErrors] = useState({});
@@ -100,23 +101,30 @@ const FormDialogPendaftaran = ({
 
           <div>
             <label className="font-medium">Poli</label>
-            <InputText
-              className={classNames('w-full mt-2', { 'p-invalid': errors.POLI })}
-              value={form.POLI}
-              onChange={(e) => setForm({ ...form, POLI: e.target.value })}
-            />
+          <Dropdown
+            className="w-full mt-2"
+            options={poliOptions}
+            value={form.IDPOLI}
+            onChange={(e) => {
+              const selectedPoli = e.value;
+
+              setFormData({
+                ...formData,
+                IDPOLI: selectedPoli,
+                IDDOKTER: "",
+              });
+
+              const filteredDokter = allDokterOptions.filter(
+                (dokter) => dokter.IDPOLI === selectedPoli
+              );
+              setDokterOptions(filteredDokter);
+            }}
+            placeholder="Pilih Poli"
+            filter
+            showClear
+          />
             {errors.POLI && <small className="p-error">{errors.POLI}</small>}
           </div>
-
-        <div>
-          <label className="font-medium">Nama Dokter</label>
-          <InputText
-            className={classNames('w-full mt-2', { 'p-invalid': errors.NAMADOKTER })}
-            value={form.NAMADOKTER}
-            onChange={(e) => setForm({ ...form, NAMADOKTER: e.target.value })}
-          />
-          {errors.NAMADOKTER && <small className="p-error">{errors.NAMADOKTER}</small>}
-        </div>
 
         <div>
           <label className="font-medium">Status Kunjungan</label>
