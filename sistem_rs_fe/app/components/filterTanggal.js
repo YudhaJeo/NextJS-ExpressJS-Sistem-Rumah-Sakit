@@ -14,6 +14,7 @@ const FilterTanggal = ({ startDate, endDate, setStartDate, setEndDate, handleDat
           dateFormat="yy-mm-dd"
           showIcon
           placeholder="Mulai"
+          style={{ width: '170px', fontSize: '0.875rem' }}
           className="w-[160px]"
         />
       </div>
@@ -25,6 +26,7 @@ const FilterTanggal = ({ startDate, endDate, setStartDate, setEndDate, handleDat
           dateFormat="yy-mm-dd"
           showIcon
           placeholder="Selesai"
+          style={{ width: '170px', fontSize: '0.875rem' }}
           className="w-[160px]"
         />
       </div>
@@ -32,16 +34,17 @@ const FilterTanggal = ({ startDate, endDate, setStartDate, setEndDate, handleDat
         <Button
           icon="pi pi-filter"
           label="Terapkan"
-          size="small"
+          tooltip="Reset"
+          className="p-1 text-xs h-7"
           severity="info"
           onClick={handleDateFilter}
         />
         <Button
           icon="pi pi-times"
-          size="small"
+          tooltip="Reset"
+          className="p-1 text-xs h-7"
           severity="secondary"
           onClick={resetFilter}
-          tooltip="Reset"
         />
       </div>
     </div>

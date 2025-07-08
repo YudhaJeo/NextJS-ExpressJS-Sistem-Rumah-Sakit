@@ -17,7 +17,7 @@ const FormReservasiPasien = ({
   poliOptions,
   dokterOptions,
   setDokterOptions,
-  allDokterOptions
+  allDokterOptions,
 }) => {
   return (
     <Dialog
@@ -40,65 +40,12 @@ const FormReservasiPasien = ({
             options={pasienOptions}
             value={formData.NIK}
             onChange={(e) => {
-              const selected = pasienOptions.find((p) => p.value === e.value);
               setFormData({
                 ...formData,
                 NIK: e.value,
               });
             }}
             placeholder="Pilih NIK"
-            filter
-            showClear
-          />
-        </div>
-
-        <div>
-          <label>Poli</label>
-          <Dropdown
-  className="w-full mt-2"
-  options={poliOptions}
-  value={formData.IDPOLI}
-  onChange={(e) => {
-    const selectedPoli = e.value;
-
-    // Update form dan reset dokter yang terpilih
-    setFormData({
-      ...formData,
-      IDPOLI: selectedPoli,
-      IDDOKTER: '', // reset dokter saat poli berubah
-    });
-
-    // Filter dokter sesuai poli yang dipilih
-    const filteredDokter = allDokterOptions.filter(
-      (dokter) => dokter.IDPOLI === selectedPoli
-    );
-
-    console.log('Dokter yang cocok dengan poli:', filteredDokter);
-
-    // Update opsi dokter
-    setDokterOptions(filteredDokter);
-  }}
-  placeholder="Pilih Poli"
-  filter
-  showClear
-/>
-
-        </div>
-
-        <div>
-          <label>Nama Dokter</label>
-          <Dropdown
-            className="w-full mt-2"
-            options={dokterOptions}
-            value={formData.IDDOKTER}
-            onChange={(e) => {
-              const selected = dokterOptions.find((p) => p.value === e.value);
-              setFormData({
-                ...formData,
-                IDDOKTER: e.value,
-              });
-            }}
-            placeholder="Pilih Dokter"
             filter
             showClear
           />
@@ -117,8 +64,7 @@ const FormReservasiPasien = ({
             onChange={(e) =>
               onChange({
                 ...formData,
-                TANGGALRESERVASI:
-                  e.value?.toISOString().split("T")[0] || "",
+                TANGGALRESERVASI: e.value?.toISOString().split("T")[0] || "",
               })
             }
             showIcon
@@ -126,14 +72,46 @@ const FormReservasiPasien = ({
         </div>
 
         <div>
-          <label>Jadwal Praktek</label>
-          <InputText
-            type="text"
+          <label>Poli</label>
+          <Dropdown
             className="w-full mt-2"
-            value={formData.JADWALPRAKTEK}
-            onChange={(e) =>
-              onChange({ ...formData, JADWALPRAKTEK: e.target.value })
-            }
+            options={poliOptions}
+            value={formData.IDPOLI}
+            onChange={(e) => {
+              const selectedPoli = e.value;
+
+              setFormData({
+                ...formData,
+                IDPOLI: selectedPoli,
+                IDDOKTER: "",
+              });
+
+              const filteredDokter = allDokterOptions.filter(
+                (dokter) => dokter.IDPOLI === selectedPoli
+              );
+              setDokterOptions(filteredDokter);
+            }}
+            placeholder="Pilih Poli"
+            filter
+            showClear
+          />
+        </div>
+
+        <div>
+          <label>Nama Dokter & Jadwal Praktek</label>
+          <Dropdown
+            className="w-full mt-2"
+            options={dokterOptions}
+            value={formData.IDDOKTER}
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                IDDOKTER: e.value,
+              });
+            }}
+            placeholder="Pilih Dokter"
+            filter
+            showClear
           />
         </div>
 
@@ -146,15 +124,13 @@ const FormReservasiPasien = ({
               value: val,
             }))}
             value={formData.STATUS}
-            onChange={(e) =>
-              onChange({ ...formData, STATUS: e.value })
-            }
+            onChange={(e) => onChange({ ...formData, STATUS: e.value })}
             placeholder="Pilih Status"
           />
         </div>
 
         <div>
-          <label>Keterangan</label>
+          <label>Keluhan</label>
           <InputText
             className="w-full mt-2"
             value={formData.KETERANGAN}

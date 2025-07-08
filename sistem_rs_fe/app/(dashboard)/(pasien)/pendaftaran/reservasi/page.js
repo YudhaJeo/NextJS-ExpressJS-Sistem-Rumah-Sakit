@@ -29,7 +29,6 @@ const ReservasiPasienPage = () => {
     IDPOLI: '',
     IDDOKTER: '',
     TANGGALRESERVASI: '',
-    JADWALPRAKTEK: '',
     STATUS: 'Menunggu',
     KETERANGAN: '',
   });
@@ -105,7 +104,7 @@ const fetchDokter = async () => {
     console.log('Data poli API:', res.data);
 
     const options = res.data.map((dokter) => ({
-      label: `${dokter.IDDOKTER} - ${dokter.NAMADOKTER}`,
+      label: `${dokter.NAMADOKTER} (${dokter.JADWALPRAKTEK || 'Jadwal tidak tersedia' })`,
       value: dokter.IDDOKTER,
       IDPOLI: dokter.IDPOLI,
     }));
@@ -134,10 +133,9 @@ const fetchDokter = async () => {
   const handleSubmit = async () => {
     if (
       !formData.NIK ||
+      !formData.TANGGALRESERVASI ||
       !formData.IDPOLI ||
       !formData.IDDOKTER ||
-      !formData.TANGGALRESERVASI ||
-      !formData.JADWALPRAKTEK ||
       !formData.STATUS
     ) {
       toastRef.current?.showToast('01', 'Semua field wajib diisi!');
@@ -215,10 +213,9 @@ const fetchDokter = async () => {
     setFormData({
       IDRESERVASI: 0,
       NIK: '',
+      TANGGALRESERVASI: '',
       IDPOLI: '',
       IDDOKTER: '',
-      TANGGALRESERVASI: '',
-      JADWALPRAKTEK : '',
       STATUS: 'Menunggu',
       KETERANGAN: '',
     });
