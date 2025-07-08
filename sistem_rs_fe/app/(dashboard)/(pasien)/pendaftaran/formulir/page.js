@@ -29,7 +29,6 @@ const Page = () => {
     NIK: '',
     NAMALENGKAP: '',
     TANGGALKUNJUNGAN: '',
-    LAYANAN: 'Rawat Jalan',
     POLI: '',
     NAMADOKTER: '',
     KELUHAN: '',
@@ -155,12 +154,12 @@ const Page = () => {
   };
 
   const resetForm = () => {
+    const today = new Date().toISOString().split('T')[0];
     setForm({
       IDPENDAFTARAN: 0,
       NIK: '',
       NAMALENGKAP: '',
-      TANGGALKUNJUNGAN: '',
-      LAYANAN: 'Rawat Jalan',
+      TANGGALKUNJUNGAN: today,
       POLI: '',
       NAMADOKTER: '',
       KELUHAN: '',

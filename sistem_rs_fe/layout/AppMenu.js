@@ -9,6 +9,12 @@ const AppMenu = () => {
 
   const model = [
     {
+      label: "dashboard",
+      items: [
+        { label: "Dashboard utama", icon: "pi pi-fw pi-chart-bar", to: "/antrian/data"},
+      ],
+    },
+    {
       label: "Antrian",
       icon: "pi pi-fw pi-list",
       items: [
@@ -42,17 +48,9 @@ const AppMenu = () => {
         {
           label: "Menu",
           items: [
-        {
-          label: "Dashboard",
-          icon: "pi pi-fw pi-home",
-          to: "/dashboard",
-        },
-        { label: "Pasien", 
-          icon: "pi pi-fw pi-user", 
-          to: "/pasien", 
-        },
-        {
-          label: "Pendaftaran Pasien",
+        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/dashboard" },
+        { label: "Pasien", icon: "pi pi-fw pi-user", to: "/pasien" },
+        { label: "Pendaftaran Pasien", 
           icon: "pi pi-fw pi-user-plus",
           items: [
             { label: "Reservasi", icon: "pi pi-fw pi-calendar", to: "/pendaftaran/reservasi" },
@@ -88,7 +86,7 @@ const AppMenu = () => {
     {
       label: "Menu",
       items: [
-        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/dokter/dashboard" },
+        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/dokter" },
         { label: "Data Dokter", icon: "pi pi-fw pi-user", to: "/dokter/data" },
         {
           label: "Jadwal",
@@ -168,7 +166,7 @@ const AppMenu = () => {
         { label: "Invoice & Pembayaran", 
           icon: "pi pi-fw pi-file-invoice",
           items: [
-            { label: "Invoice", icon: "pi pi-fw pi-receipt", to: "/kasir/invoice" },
+            { label: "Invoice", icon: "pi pi-fw pi-receipt", to: "/invoice" },
             { label: "Pembayaran", icon: "pi pi-fw pi-money-bill", to: "/kasir/pembayaran" },
           ],
         },
