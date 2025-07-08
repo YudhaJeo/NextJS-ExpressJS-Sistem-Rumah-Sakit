@@ -99,22 +99,16 @@ const FormDialogPendaftaran = ({
         </div>
 
         <div>
-          <label className="font-medium">Layanan</label>
-          <Dropdown
-            className={classNames('w-full mt-2', { 'p-invalid': errors.LAYANAN })}
-            options={['Rawat Jalan', 'Rawat Inap', 'IGD'].map((val) => ({
-              label: val,
-              value: val,
-            }))}
-            value={form.LAYANAN}
-            onChange={(e) => handleLayananChange(e.value)}
-            placeholder="Pilih Layanan"
+          <label className="font-medium">Keluhan</label>
+          <InputText
+            className={classNames('w-full mt-2', { 'p-invalid': errors.KELUHAN })}
+            value={form.KELUHAN || ''}
+            onChange={(e) => setForm({ ...form, KELUHAN: e.target.value })}
+            placeholder="Masukkan Keluhan pasien"
           />
-          {errors.LAYANAN && <small className="p-error">{errors.LAYANAN}</small>}
-        </div>
+          {errors.KELUHAN && <small className="p-error">{errors.KELUHAN}</small>}
+        </div>        
 
-        {/* ✅ Tampilkan field POLI hanya jika layanan = Rawat Jalan */}
-        {form.LAYANAN === 'Rawat Jalan' && (
           <div>
             <label className="font-medium">Poli</label>
             <InputText
@@ -124,7 +118,6 @@ const FormDialogPendaftaran = ({
             />
             {errors.POLI && <small className="p-error">{errors.POLI}</small>}
           </div>
-        )}
 
         <div>
           <label className="font-medium">Nama Dokter</label>
@@ -134,17 +127,6 @@ const FormDialogPendaftaran = ({
             onChange={(e) => setForm({ ...form, NAMADOKTER: e.target.value })}
           />
           {errors.NAMADOKTER && <small className="p-error">{errors.NAMADOKTER}</small>}
-        </div>
-
-        <div>
-          <label className="font-medium">Keluhan</label>
-          <InputText
-            className={classNames('w-full mt-2', { 'p-invalid': errors.KELUHAN })}
-            value={form.KELUHAN || ''}
-            onChange={(e) => setForm({ ...form, KELUHAN: e.target.value })}
-            placeholder="Masukkan Keluhan pasien"
-          />
-          {errors.KELUHAN && <small className="p-error">{errors.KELUHAN}</small>}
         </div>
 
         <div>
