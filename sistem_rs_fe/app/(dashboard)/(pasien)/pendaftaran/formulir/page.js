@@ -155,11 +155,12 @@ const Page = () => {
   };
 
   const resetForm = () => {
+    const today = new Date().toISOString().split('T')[0];
     setForm({
       IDPENDAFTARAN: 0,
       NIK: '',
       NAMALENGKAP: '',
-      TANGGALKUNJUNGAN: '',
+      TANGGALKUNJUNGAN: today,
       LAYANAN: 'Rawat Jalan',
       POLI: '',
       NAMADOKTER: '',
