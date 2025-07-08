@@ -149,7 +149,7 @@ const Page = () => {
         onSearch={(keyword) => {
           if (!keyword) return fetchData();
           const filtered = data.filter((item) =>
-            item.NAMAAGAMA.toLowerCase().includes(keyword.toLowerCase())
+            item.NAMAJENIS.toLowerCase().includes(keyword.toLowerCase())
           );
           setData(filtered);
         }}
