@@ -12,10 +12,22 @@ const TabelJenis = ({ data, loading, onEdit, onDelete  }) => {
       value={data} 
       paginator rows={5} 
       loading={loading} 
-      size="small">
+      size="small"
+    >
       <Column field="IDJENISKAMAR" header="ID" />
       <Column field="NAMAJENIS" header="Jenis Kamar" />
-      <Column field="HARGA_PER_HARI" header="Harga" />
+      
+      {/* Format rupiah */}
+      <Column
+        header="Harga/hari"
+        body={(rowData) =>
+          new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+          }).format(rowData.HARGA_PER_HARI || 0)
+        }
+      />
+
       <Column field="FASILITAS" header="Fasilitas" />
       
       <Column
@@ -39,6 +51,7 @@ const TabelJenis = ({ data, loading, onEdit, onDelete  }) => {
         style={{ width: '150px' }}
       />
     </DataTable>
+
   );
 };
 
