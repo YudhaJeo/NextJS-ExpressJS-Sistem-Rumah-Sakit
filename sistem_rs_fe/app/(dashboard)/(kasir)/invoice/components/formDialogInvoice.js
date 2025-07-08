@@ -99,6 +99,7 @@ const FormDialogInvoice = ({
           <Calendar
             className={classNames('w-full mt-2', { 'p-invalid': errors.TANGGALINVOICE })}
             dateFormat="yy-mm-dd"
+            value={form.TANGGALINVOICE ? new Date(form.TANGGALINVOICE) : null}
             onChange={(e) =>
               setForm({
                 ...form,
@@ -106,6 +107,8 @@ const FormDialogInvoice = ({
               })
             }
             showIcon
+            showButtonBar
+            placeholder="Pilih Tanggal"
           />
           {errors.TANGGALINVOICE && <small className="p-error">{errors.TANGGALINVOICE}</small>}
         </div>

@@ -40,7 +40,7 @@ export async function createInvoice(req, res) {
     }
 
     const invoiceDate = TANGGALINVOICE || new Date().toISOString().split('T')[0];
-    const NOINVOICE = await generateNoInvoice(invoiceDate);
+    const NOINVOICE = await generateNoInvoice(invoiceDate, trx); // Pass trx here
 
     await trx('invoice').insert({
       NOINVOICE,
