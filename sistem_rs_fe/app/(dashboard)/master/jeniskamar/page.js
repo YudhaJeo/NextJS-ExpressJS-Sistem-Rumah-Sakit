@@ -18,7 +18,12 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
 
-  const [form, setForm] = useState({ NAMAAGAMA: '' });
+  const [form, setForm] = useState({
+    NAMAJENIS: '',
+    HARGA_PER_HARI: null,
+    FASILITAS: '',
+  });
+  
   const [errors, setErrors] = useState({});
 
   const toastRef = useRef(null);
@@ -48,21 +53,40 @@ const Page = () => {
   
   const validateForm = () => {
     const newErrors = {};
-    if (!form.NAMAAGAMA.trim()) newErrors.NAMAAGAMA = 
-    <span  style={{color: 'red'}}>
-      Nama agama wajib diisi
-    </span>;
+
+    if (!form.NAMAJENIS.trim()) {
+    newErrors.NAMAJENIS = (
+      <span style={{ color: 'red' }}>Jenis kamar wajib diisi</span>
+      );
+    }
+
+    if (
+      form.HARGA_PER_HARI === null ||
+      form.HARGA_PER_HARI === undefined ||
+      isNaN(form.HARGA_PER_HARI)
+    ) {
+      newErrors.HARGA_PER_HARI = (
+        <span style={{ color: 'red' }}>Harga wajib diisi</span>
+      );
+    }
+
+    if (!form.FASILITAS.trim()) {
+      newErrors.FASILITAS = (
+        <span style={{ color: 'red' }}>Fasilitas wajib diisi</span>
+      );
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-
-    const isEdit = !!form.IDAGAMA;
+    
+    const isEdit = !!form.IDJENISKAMAR;
     const url = isEdit
-      ? `${API_URL}/agama/${form.IDAGAMA}`
-      : `${API_URL}/agama`;
+      ? `${API_URL}/jeniskamar/${form.IDJENISKAMAR}`
+      : `${API_URL}/jeniskamar`;
 
     try {
       if (isEdit) {
@@ -75,7 +99,12 @@ const Page = () => {
 
       fetchData();
       setDialogVisible(false);
-      setForm({ NAMAAGAMA: '' });
+      
+      setForm({
+        NAMAJENIS: '',
+        HARGA_PER_HARI: null,
+        FASILITAS: '',
+      });
     } catch (err) {
       console.error('Gagal simpan data:', err);
       toastRef.current?.showToast('01', 'Gagal menyimpan data');
@@ -125,9 +154,14 @@ const Page = () => {
           setData(filtered);
         }}
         onAddClick={() => {
-          setForm({ NAMAAGAMA: '' });
+          setForm({
+            NAMAJENIS: '',
+            HARGA_PER_HARI: null,
+            FASILITAS: '',
+          });
           setDialogVisible(true);
         }}
+        
       />
 
       <TabelJenis
@@ -141,7 +175,7 @@ const Page = () => {
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);
-          setForm({ NAMAAGAMA: '' });
+          setForm({ NAMAJENIS: '' });
         }}
         onSubmit={handleSubmit}
         form={form}
