@@ -16,8 +16,8 @@ import dokterRoutes from './routes/dokterRoutes.js';
 import dashboardPasienRoutes from './routes/dashboardPasienRoutes.js';
 import invoiceRoutes from './routes/invoiceRoutes.js';
 import userRoutes from './routes/userRoutes.js';
-import jenisKamarRoutes from './routes/jenisKamarRoutes.js';
-import { verifyToken } from './middlewares/jwt.js'
+import jenisBangsalRoutes from './routes/jenisBangsalRoutes.js';
+import kamarRoutes from './routes/kamarRoutes.js';
 const app = express();
 
 app.use(cors({ 
@@ -40,11 +40,12 @@ app.use('/api/antrian', antrianRoutes);
 app.use('/api/printer', printerRoutes);
 app.use('/api/poli', poliRoutes)
 app.use('/api/dokter', dokterRoutes)
-app.use('/api/jeniskamar', jenisKamarRoutes);
+app.use('/api/jenisbangsal', jenisBangsalRoutes);
 app.use('/api/profile', userRoutes);
 app.use('/api/poli', poliRoutes);
 app.use('/api/dokter', dokterRoutes);
 app.use('/api', dashboardPasienRoutes);
 app.use('/api/invoice', invoiceRoutes);
+app.use('/api/kamar', kamarRoutes)
 
 export default app;
