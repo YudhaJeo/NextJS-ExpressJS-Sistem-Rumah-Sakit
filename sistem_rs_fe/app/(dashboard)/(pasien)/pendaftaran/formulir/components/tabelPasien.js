@@ -21,10 +21,9 @@ const TabelPendaftaran = ({ data, loading, onEdit, onDelete }) => {
           });
         }}
       />
-      <Column field="LAYANAN" header="Layanan" />
+      <Column field="KELUHAN" header="Keluhan" />
       <Column field="POLI" header="Poli" />
       <Column field="NAMADOKTER" header="Dokter" />
-      <Column field="KELUHAN" header="Keluhan" />
       <Column field="STATUSKUNJUNGAN" header="Status" />
       <Column
         header="Aksi"
