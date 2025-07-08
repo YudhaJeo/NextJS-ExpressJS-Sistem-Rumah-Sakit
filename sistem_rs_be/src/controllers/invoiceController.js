@@ -1,101 +1,103 @@
 import * as InvoiceModel from '../models/invoiceModel.js';
+import db from '../core/config/knex.js';
 
 export async function getAllInvoice(req, res) {
   try {
     const data = await InvoiceModel.getAll();
-    res.json({ data });
+    res.status(200).json({ success: true, data });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Get All Error:', err);
+    res.status(500).json({ success: false, message: err.message });
   }
 }
 
 export async function getInvoiceById(req, res) {
   try {
-    const id = req.params.id;
-    const data = await InvoiceModel.getById(id);
+    const { id } = req.params;
+    const invoice = await InvoiceModel.getById(id);
 
-    if (!data) {
-      return res.status(404).json({ error: 'Invoice tidak ditemukan' });
+    if (!invoice) {
+      return res.status(404).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    res.json({ data });
+    res.status(200).json({ success: true, data: invoice });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Get By ID Error:', err);
+    res.status(500).json({ success: false, message: err.message });
   }
 }
 
 export async function createInvoice(req, res) {
   try {
-    const {
-      NOINVOICE,
-      NIK,
-      IDASURANSI,
-      TANGGALINVOICE,
-      TOTALTAGIHAN,
-      STATUS,
-    } = req.body;
+    const { NOINVOICE, NIK, TANGGALINVOICE, TOTALTAGIHAN, STATUS } = req.body;
+
+    if (!NOINVOICE || !NIK || !TOTALTAGIHAN) {
+      return res.status(400).json({ success: false, message: 'NOINVOICE, NIK, dan TOTALTAGIHAN wajib diisi' });
+    }
+
+    const pasien = await db('pasien').where('NIK', NIK).first();
+    if (!pasien) {
+      return res.status(400).json({ success: false, message: 'Pasien dengan NIK ini tidak ditemukan' });
+    }
 
     await InvoiceModel.create({
       NOINVOICE,
       NIK,
-      IDASURANSI,
-      TANGGALINVOICE,
+      IDASURANSI: pasien.IDASURANSI,
+      TANGGALINVOICE: TANGGALINVOICE || db.fn.now(),
       TOTALTAGIHAN,
-      STATUS,
+      STATUS: STATUS || 'Belum Dibayar'
     });
 
-    res.json({ message: 'Invoice berhasil ditambahkan' });
+    res.status(201).json({ success: true, message: 'Invoice berhasil ditambahkan' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Create Error:', err);
+    res.status(500).json({ success: false, message: err.message });
   }
 }
 
 export async function updateInvoice(req, res) {
   try {
-    const id = req.params.id;
-    const {
-      NOINVOICE,
-      NIK,
-      IDASURANSI,
-      TANGGALINVOICE,
-      TOTALTAGIHAN,
-      STATUS,
-    } = req.body;
+    const { id } = req.params;
+    const { NOINVOICE, NIK, TANGGALINVOICE, TOTALTAGIHAN, STATUS } = req.body;
 
-    console.log('Update ID:', id);
-    console.log('Update Data:', req.body);
-
-    const result = await InvoiceModel.update(id, {
-      NOINVOICE,
-      NIK,
-      IDASURANSI,
-      TANGGALINVOICE,
-      TOTALTAGIHAN,
-      STATUS,
-    });
-
-    if (!result) {
-      return res.status(404).json({ error: 'Invoice tidak ditemukan' });
+    const pasien = await db('pasien').where('NIK', NIK).first();
+    if (!pasien) {
+      return res.status(400).json({ success: false, message: 'Pasien dengan NIK ini tidak ditemukan' });
     }
 
-    res.json({ message: 'Invoice berhasil diperbarui' });
+    const updated = await InvoiceModel.update(id, {
+      NOINVOICE,
+      NIK,
+      IDASURANSI: pasien.IDASURANSI,
+      TANGGALINVOICE: TANGGALINVOICE || db.fn.now(),
+      TOTALTAGIHAN,
+      STATUS
+    });
+
+    if (!updated) {
+      return res.status(404).json({ success: false, message: 'Invoice tidak ditemukan' });
+    }
+
+    res.status(200).json({ success: true, message: 'Invoice berhasil diperbarui' });
   } catch (err) {
     console.error('Update Error:', err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ success: false, message: err.message });
   }
 }
 
 export async function deleteInvoice(req, res) {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
+    const deleted = await InvoiceModel.remove(id);
 
-    const result = await InvoiceModel.remove(id);
-    if (!result) {
-      return res.status(404).json({ error: 'Invoice tidak ditemukan' });
+    if (!deleted) {
+      return res.status(404).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    res.json({ message: 'Invoice berhasil dihapus' });
+    res.status(200).json({ success: true, message: 'Invoice berhasil dihapus' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Delete Error:', err);
+    res.status(500).json({ success: false, message: err.message });
   }
 }

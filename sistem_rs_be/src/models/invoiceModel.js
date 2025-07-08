@@ -1,43 +1,24 @@
 import db from '../core/config/knex.js';
 
-const table = 'invoice';
-
 export const getAll = () => {
-  return db(table)
-    .join('pasien', `${table}.NIK`, 'pasien.NIK')
-    .leftJoin('asuransi', `${table}.IDASURANSI`, 'asuransi.IDASURANSI')
+  return db('invoice')
+    .join('pasien', 'invoice.NIK', 'pasien.NIK')
+    .leftJoin('asuransi', 'pasien.IDASURANSI', 'asuransi.IDASURANSI')
     .select(
-      `${table}.*`,
-      'pasien.NAMALENGKAP',
+      'invoice.*',
+      'pasien.NAMALENGKAP as NAMAPASIEN',
       'asuransi.NAMAASURANSI'
     );
 };
 
-export const getById = (id) => {
-  return db(table)
-    .join('pasien', `${table}.NIK`, 'pasien.NIK')
-    .leftJoin('asuransi', `${table}.IDASURANSI`, 'asuransi.IDASURANSI')
-    .select(
-      `${table}.*`,
-      'pasien.NAMALENGKAP',
-      'asuransi.NAMAASURANSI'
-    )
-    .where(`${table}.IDINVOICE`, id)
-    .first();
-};
-
 export const create = (data) => {
-  return db(table).insert(data);
+  return db('invoice').insert(data);
 };
 
 export const update = (id, data) => {
-  return db(table)
-    .where('IDINVOICE', id)
-    .update({ ...data, UPDATED_AT: db.fn.now() });
+  return db('invoice').where('IDINVOICE', id).update(data);
 };
 
 export const remove = (id) => {
-  return db(table)
-    .where('IDINVOICE', id)
-    .del();
+  return db('invoice').where('IDINVOICE', id).del();
 };
