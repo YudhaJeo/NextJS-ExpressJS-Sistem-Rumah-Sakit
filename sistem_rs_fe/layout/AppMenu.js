@@ -163,7 +163,7 @@ const AppMenu = () => {
         { label: "Invoice & Pembayaran", 
           icon: "pi pi-fw pi-file-invoice",
           items: [
-            { label: "Invoice", icon: "pi pi-fw pi-receipt", to: "/kasir/invoice" },
+            { label: "Invoice", icon: "pi pi-fw pi-receipt", to: "/invoice" },
             { label: "Pembayaran", icon: "pi pi-fw pi-money-bill", to: "/kasir/pembayaran" },
           ],
         },
