@@ -66,6 +66,7 @@ const Page = () => {
         label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
         value: pasien.NIK,
         NAMALENGKAP: pasien.NAMALENGKAP,
+        ASURANSI: pasien.NAMAASURANSI || '-',
       }));
       setPasienOptions(options);
     } catch (err) {

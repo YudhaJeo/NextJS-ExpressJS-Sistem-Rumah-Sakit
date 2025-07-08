@@ -55,6 +55,7 @@ const FormDialogInvoice = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
+        {/* No Invoice */}
         <div>
           <label className="font-medium">No Invoice</label>
           <InputText
@@ -66,6 +67,7 @@ const FormDialogInvoice = ({
           {errors.NOINVOICE && <small className="p-error">{errors.NOINVOICE}</small>}
         </div>
 
+        {/* NIK Pasien */}
         <div>
           <label className="font-medium">NIK Pasien</label>
           <Dropdown
@@ -78,6 +80,7 @@ const FormDialogInvoice = ({
                 ...form,
                 NIK: e.value,
                 NAMAPASIEN: selected?.NAMALENGKAP || '',
+                ASURANSI: selected?.ASURANSI || '-', // ✅ otomatis isi asuransi
               });
             }}
             placeholder="Pilih Pasien"
@@ -87,6 +90,17 @@ const FormDialogInvoice = ({
           {errors.NIK && <small className="p-error">{errors.NIK}</small>}
         </div>
 
+        {/* Asuransi */}
+        <div>
+          <label className="font-medium">Asuransi</label>
+          <InputText
+            className="w-full mt-2"
+            value={form.ASURANSI || '-'}
+            readOnly // ✅ readonly agar tidak bisa diubah manual
+          />
+        </div>
+
+        {/* Tanggal Invoice */}
         <div>
           <label className="font-medium">Tanggal Invoice</label>
           <Calendar
@@ -104,6 +118,7 @@ const FormDialogInvoice = ({
           {errors.TANGGALINVOICE && <small className="p-error">{errors.TANGGALINVOICE}</small>}
         </div>
 
+        {/* Total Tagihan */}
         <div>
           <label className="font-medium">Total Tagihan</label>
           <InputNumber
@@ -117,6 +132,7 @@ const FormDialogInvoice = ({
           {errors.TOTALTAGIHAN && <small className="p-error">{errors.TOTALTAGIHAN}</small>}
         </div>
 
+        {/* Status */}
         <div>
           <label className="font-medium">Status</label>
           <Dropdown
@@ -129,6 +145,7 @@ const FormDialogInvoice = ({
           {errors.STATUS && <small className="p-error">{errors.STATUS}</small>}
         </div>
 
+        {/* Tombol Simpan */}
         <div className="text-right pt-3">
           <Button
             type="submit"
