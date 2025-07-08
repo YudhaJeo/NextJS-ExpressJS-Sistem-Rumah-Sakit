@@ -11,8 +11,8 @@ export async function getAllPendaftaran(req, res) {
 
 export async function createPendaftaran(req, res) {
   try {
-    const { NIK, TANGGALKUNJUNGAN, LAYANAN, POLI, NAMADOKTER, KELUHAN, STATUSKUNJUNGAN } = req.body;
-    await PendaftaranModel.create({ NIK, TANGGALKUNJUNGAN, LAYANAN, POLI, NAMADOKTER, KELUHAN, STATUSKUNJUNGAN });
+    const { NIK, TANGGALKUNJUNGAN, IDPOLI, KELUHAN, STATUSKUNJUNGAN } = req.body;
+    await PendaftaranModel.create({ NIK, TANGGALKUNJUNGAN, IDPOLI, KELUHAN, STATUSKUNJUNGAN });
     res.json({ message: 'Pendaftaran berhasil ditambahkan' });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -23,12 +23,12 @@ export async function createPendaftaran(req, res) {
 export async function updatePendaftaran(req, res) {
   try {
     const id = req.params.id;
-    const { NIK, TANGGALKUNJUNGAN, LAYANAN, POLI, NAMADOKTER, KELUHAN, STATUSKUNJUNGAN } = req.body;
+    const { NIK, TANGGALKUNJUNGAN, IDPOLI, KELUHAN, STATUSKUNJUNGAN } = req.body;
 
     console.log('Update ID:', id);
     console.log('Update Data:', req.body); 
 
-    const result = await PendaftaranModel.update(id, { NIK, TANGGALKUNJUNGAN, LAYANAN, POLI, NAMADOKTER, KELUHAN, STATUSKUNJUNGAN });
+    const result = await PendaftaranModel.update(id, { NIK, TANGGALKUNJUNGAN, IDPOLI, KELUHAN, STATUSKUNJUNGAN });
 
     res.json({ message: 'Pendaftaran berhasil diperbarui' });
   } catch (err) {

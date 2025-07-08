@@ -23,8 +23,8 @@ const FormDialogPendaftaran = ({
     const newErrors = {};
     if (!form.NIK) newErrors.NIK = 'NIK harus dipilih';
     if (!form.TANGGALKUNJUNGAN) newErrors.TANGGALKUNJUNGAN = 'Tanggal kunjungan wajib diisi';
-    if (!form.NAMADOKTER) newErrors.NAMADOKTER = 'Nama Dokter wajib diisi';
     if (!form.KELUHAN) newErrors.KELUHAN = 'Keluhan wajib diisi';
+    if (!form.IDPOLI) newErrors.IDPOLI = 'Poli wajib dipilih';
     if (!form.STATUSKUNJUNGAN) newErrors.STATUSKUNJUNGAN = 'Status wajib dipilih';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -107,17 +107,10 @@ const FormDialogPendaftaran = ({
             value={form.IDPOLI}
             onChange={(e) => {
               const selectedPoli = e.value;
-
-              setFormData({
-                ...formData,
-                IDPOLI: selectedPoli,
-                IDDOKTER: "",
+              setForm({
+                ...form,
+                IDPOLI: selectedPoli
               });
-
-              const filteredDokter = allDokterOptions.filter(
-                (dokter) => dokter.IDPOLI === selectedPoli
-              );
-              setDokterOptions(filteredDokter);
             }}
             placeholder="Pilih Poli"
             filter

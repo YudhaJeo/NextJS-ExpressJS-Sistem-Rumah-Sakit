@@ -4,14 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import TabelPendaftaran from './components/tabelPasien'; 
+import TabelPendaftaran from './components/tabelFormulir'; 
 import FormDialogPendaftaran from './components/formDialogFormulir';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import FilterTanggal from '@/app/components/filterTanggal';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { Calendar } from 'primereact/calendar';
-import { Button } from 'primereact/button';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -30,8 +28,8 @@ const Page = () => {
     NIK: '',
     NAMALENGKAP: '',
     TANGGALKUNJUNGAN: '',
-    POLI: '',
     KELUHAN: '',
+    IDPOLI: '',
     STATUSKUNJUNGAN: 'Diperiksa',
   });
 
@@ -178,9 +176,8 @@ const Page = () => {
       NIK: '',
       NAMALENGKAP: '',
       TANGGALKUNJUNGAN: today,
-      POLI: '',
-      NAMADOKTER: '',
       KELUHAN: '',
+      IDPOLI: '',
       STATUSKUNJUNGAN: 'Diperiksa',
     });
   };
@@ -217,6 +214,7 @@ const Page = () => {
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        poliOptions={poliOptions}
       />
 
       <FormDialogPendaftaran

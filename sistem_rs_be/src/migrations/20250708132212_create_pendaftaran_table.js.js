@@ -8,10 +8,9 @@ export const up = function (knex) {
     table.string('NIK', 20).notNullable()
       .references('NIK').inTable('pasien').onDelete('CASCADE');
     table.date('TANGGALKUNJUNGAN').notNullable();
-    table.enu('LAYANAN', ['Rawat Jalan', 'Rawat Inap', 'IGD']).notNullable();
-    table.string('POLI', 50);
-    table.string('NAMADOKTER', 100);
     table.string('KELUHAN', 255).nullable();
+    table.integer('IDPOLI').unsigned().notNullable()
+      .references('IDPOLI').inTable('poli').onDelete('CASCADE');
     table.enu('STATUSKUNJUNGAN', ['Diperiksa', 'Batal', 'Selesai']).defaultTo('Diperiksa');
   });
 };
