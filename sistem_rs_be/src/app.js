@@ -41,7 +41,7 @@ app.use('/api/printer', printerRoutes);
 app.use('/api/poli', poliRoutes)
 app.use('/api/dokter', dokterRoutes)
 app.use('/api/jeniskamar', jenisKamarRoutes);
-app.use('/api', userRoutes);
+app.use('/api/profile', userRoutes);
 app.use('/api/poli', poliRoutes);
 app.use('/api/dokter', dokterRoutes);
 app.use('/api', dashboardPasienRoutes);
