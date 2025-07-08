@@ -34,9 +34,9 @@ const AppMenu = () => {
             { label: "Poli", icon: "pi pi-fw pi-warehouse", to: "/master/poli" },
             { label: "Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/dokter" },
             {
-              label: "Jenis Kamar",
+              label: "Jenis Bangsal",
               icon: "pi pi-fw pi-tag",
-              to: "/master/jeniskamar",
+              to: "/master/jenisbangsal",
             },
           ],
         },
