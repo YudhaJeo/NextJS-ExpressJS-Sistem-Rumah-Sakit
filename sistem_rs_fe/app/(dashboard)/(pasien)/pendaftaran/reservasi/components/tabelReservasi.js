@@ -53,7 +53,7 @@ const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }) => {
           return <Tag value={status} severity={severity()} />;
         }}
       />
-      <Column field="KETERANGAN" header="Keterangan" />
+      <Column header="Keluhan" />
       <Column
         header="Aksi"
         body={(row) => (

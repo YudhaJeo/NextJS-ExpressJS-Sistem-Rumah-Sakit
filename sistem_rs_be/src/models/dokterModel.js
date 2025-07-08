@@ -1,18 +1,43 @@
 import db from '../core/config/knex.js';
 
-// Ambil semua dokter beserta jadwalnya
-export const getAllDokter = async () => {
-    const dokterList = await db('dokter as d')
-        .join('poli as p', 'd.IDPOLI', 'p.IDPOLI')
-        .select('d.*', 'p.NAMAPOLI');
+export async function getAllDokter() {
+  const rows = await db('dokter')
+    .leftJoin('jadwal_dokter', 'dokter.IDDOKTER', 'jadwal_dokter.IDDOKTER')
+    .leftJoin('poli', 'dokter.IDPOLI', 'poli.IDPOLI')
+    .select(
+      'dokter.IDDOKTER',
+      'dokter.NAMADOKTER',
+      'dokter.IDPOLI',
+      'poli.NAMAPOLI',
+      'jadwal_dokter.HARI',
+      'jadwal_dokter.JAM_MULAI',
+      'jadwal_dokter.JAM_SELESAI'
+    );
 
-    const jadwalList = await db('jadwal_dokter');
+  const result = {};
+  rows.forEach((row) => {
+    if (!result[row.IDDOKTER]) {
+      result[row.IDDOKTER] = {
+        IDDOKTER: row.IDDOKTER,
+        NAMADOKTER: row.NAMADOKTER,
+        IDPOLI: row.IDPOLI,
+        NAMAPOLI: row.NAMAPOLI,
+        JADWALPRAKTEK: [],
+      };
+    }
 
-    return dokterList.map((dokter) => ({
-        ...dokter,
-        JADWAL: jadwalList.filter(j => j.IDDOKTER === dokter.IDDOKTER)
-    }));
-};
+    if (row.HARI && row.JAM_MULAI && row.JAM_SELESAI) {
+      result[row.IDDOKTER].JADWALPRAKTEK.push(
+        `${row.HARI} ${row.JAM_MULAI.slice(0, 5)} - ${row.JAM_SELESAI.slice(0, 5)}`
+      );
+    }
+  });
+
+  return Object.values(result).map((d) => ({
+    ...d,
+    JADWALPRAKTEK: d.JADWALPRAKTEK.join(', ')
+  }));
+}
 
 export const getDokterById = async (id) => {
     const dokter = await db('dokter').where('IDDOKTER', id).first();

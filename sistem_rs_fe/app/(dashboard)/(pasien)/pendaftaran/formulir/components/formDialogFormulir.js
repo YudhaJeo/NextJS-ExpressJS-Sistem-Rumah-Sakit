@@ -22,9 +22,6 @@ const FormDialogPendaftaran = ({
     const newErrors = {};
     if (!form.NIK) newErrors.NIK = 'NIK harus dipilih';
     if (!form.TANGGALKUNJUNGAN) newErrors.TANGGALKUNJUNGAN = 'Tanggal kunjungan wajib diisi';
-    if (!form.LAYANAN) newErrors.LAYANAN = 'Layanan wajib dipilih';
-    if (form.LAYANAN === 'Rawat Jalan' && !form.POLI)
-      newErrors.POLI = 'Poli wajib diisi untuk Rawat Jalan';
     if (!form.NAMADOKTER) newErrors.NAMADOKTER = 'Nama Dokter wajib diisi';
     if (!form.KELUHAN) newErrors.KELUHAN = 'Keluhan wajib diisi';
     if (!form.STATUSKUNJUNGAN) newErrors.STATUSKUNJUNGAN = 'Status wajib dipilih';
@@ -37,14 +34,6 @@ const FormDialogPendaftaran = ({
     if (validate()) {
       onSubmit();
     }
-  };
-
-  const handleLayananChange = (value) => {
-    setForm({
-      ...form,
-      LAYANAN: value,
-      POLI: value === 'Rawat Jalan' ? form.POLI : '', // reset POLI jika bukan Rawat Jalan
-    });
   };
 
   return (
