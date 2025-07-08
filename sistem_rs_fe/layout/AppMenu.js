@@ -83,7 +83,7 @@ const AppMenu = () => {
     {
       label: "Menu",
       items: [
-        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/dokter/dashboard" },
+        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/dokter" },
         { label: "Data Dokter", icon: "pi pi-fw pi-user", to: "/dokter/data" },
         {
           label: "Jadwal",

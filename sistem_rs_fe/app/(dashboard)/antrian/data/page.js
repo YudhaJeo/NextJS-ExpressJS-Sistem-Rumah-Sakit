@@ -6,12 +6,14 @@ import TabelAntrian from './components/tabelAntrian';
 import { Toast } from 'primereact/toast';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || API_URL.replace("http", "ws");
 
 function DataAntrian() {
   const [data, setData] = useState([]);
   const [loketList, setLoketList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentId, setCurrentId] = useState(null);
+  const ws = useRef(null);
 
   const toastRef = useRef(null);
 
@@ -22,7 +24,7 @@ function DataAntrian() {
     const savedId = localStorage.getItem('currentAntrianId');
     if (savedId) setCurrentId(parseInt(savedId));
 
-    const socket = new WebSocket(`${API_URL}/api/ws`);
+    const socket = new WebSocket(`${WS_URL}/api/ws`);
 
     socket.onopen = () => {
       console.log("WebSocket tersambung");
