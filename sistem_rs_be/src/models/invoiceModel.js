@@ -7,7 +7,7 @@ export const getAll = () => {
     .select(
       'invoice.*',
       'pasien.NAMALENGKAP as NAMAPASIEN',
-      'asuransi.NAMAASURANSI as ASURANSI' // ✅ alias harus ASURANSI agar sinkron dengan frontend
+      'asuransi.NAMAASURANSI as ASURANSI'
     );
 };
 

@@ -22,12 +22,10 @@ const FormDialogInvoice = ({
   const statusOptions = [
     { label: 'Belum Dibayar', value: 'BELUM_LUNAS' },
     { label: 'Sudah Dibayar', value: 'LUNAS' },
-    { label: 'Batal', value: 'BATAL' },
   ];
 
   const validate = () => {
     const newErrors = {};
-    if (!form.NOINVOICE) newErrors.NOINVOICE = 'No Invoice wajib diisi';
     if (!form.NIK) newErrors.NIK = 'NIK pasien wajib dipilih';
     if (!form.TANGGALINVOICE) newErrors.TANGGALINVOICE = 'Tanggal Invoice wajib diisi';
     if (!form.TOTALTAGIHAN || form.TOTALTAGIHAN <= 0)
@@ -59,15 +57,12 @@ const FormDialogInvoice = ({
         <div>
           <label className="font-medium">No Invoice</label>
           <InputText
-            className={classNames('w-full mt-2', { 'p-invalid': errors.NOINVOICE })}
-            value={form.NOINVOICE}
-            onChange={(e) => setForm({ ...form, NOINVOICE: e.target.value })}
-            placeholder="Contoh: INV-20250701-001"
+            className="w-full mt-2"
+            value={form.NOINVOICE || 'Otomatis'}
+            readOnly
           />
-          {errors.NOINVOICE && <small className="p-error">{errors.NOINVOICE}</small>}
         </div>
 
-        {/* NIK Pasien */}
         <div>
           <label className="font-medium">NIK Pasien</label>
           <Dropdown
@@ -80,7 +75,7 @@ const FormDialogInvoice = ({
                 ...form,
                 NIK: e.value,
                 NAMAPASIEN: selected?.NAMALENGKAP || '',
-                ASURANSI: selected?.ASURANSI || '-', // ✅ otomatis isi asuransi
+                ASURANSI: selected?.ASURANSI || '-', 
               });
             }}
             placeholder="Pilih Pasien"
@@ -90,23 +85,20 @@ const FormDialogInvoice = ({
           {errors.NIK && <small className="p-error">{errors.NIK}</small>}
         </div>
 
-        {/* Asuransi */}
         <div>
           <label className="font-medium">Asuransi</label>
           <InputText
             className="w-full mt-2"
             value={form.ASURANSI || '-'}
-            readOnly // ✅ readonly agar tidak bisa diubah manual
+            readOnly 
           />
         </div>
 
-        {/* Tanggal Invoice */}
         <div>
           <label className="font-medium">Tanggal Invoice</label>
           <Calendar
             className={classNames('w-full mt-2', { 'p-invalid': errors.TANGGALINVOICE })}
             dateFormat="yy-mm-dd"
-            value={form.TANGGALINVOICE ? new Date(form.TANGGALINVOICE) : undefined}
             onChange={(e) =>
               setForm({
                 ...form,
@@ -118,7 +110,6 @@ const FormDialogInvoice = ({
           {errors.TANGGALINVOICE && <small className="p-error">{errors.TANGGALINVOICE}</small>}
         </div>
 
-        {/* Total Tagihan */}
         <div>
           <label className="font-medium">Total Tagihan</label>
           <InputNumber
@@ -132,7 +123,6 @@ const FormDialogInvoice = ({
           {errors.TOTALTAGIHAN && <small className="p-error">{errors.TOTALTAGIHAN}</small>}
         </div>
 
-        {/* Status */}
         <div>
           <label className="font-medium">Status</label>
           <Dropdown
@@ -145,7 +135,6 @@ const FormDialogInvoice = ({
           {errors.STATUS && <small className="p-error">{errors.STATUS}</small>}
         </div>
 
-        {/* Tombol Simpan */}
         <div className="text-right pt-3">
           <Button
             type="submit"

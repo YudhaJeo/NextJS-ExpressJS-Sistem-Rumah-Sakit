@@ -1,4 +1,5 @@
 import * as InvoiceModel from '../models/invoiceModel.js';
+import { generateNoInvoice } from '../utils/generateNoInvoice.js';
 import db from '../core/config/knex.js';
 
 export async function getAllInvoice(req, res) {
@@ -28,29 +29,32 @@ export async function getInvoiceById(req, res) {
 }
 
 export async function createInvoice(req, res) {
+  const trx = await db.transaction();
   try {
-    const { NOINVOICE, NIK, TANGGALINVOICE, TOTALTAGIHAN, STATUS } = req.body;
+    const { NIK, TANGGALINVOICE, TOTALTAGIHAN, STATUS } = req.body;
 
-    if (!NOINVOICE || !NIK || !TOTALTAGIHAN) {
-      return res.status(400).json({ success: false, message: 'NOINVOICE, NIK, dan TOTALTAGIHAN wajib diisi' });
-    }
-
-    const pasien = await db('pasien').where('NIK', NIK).first();
+    const pasien = await trx('pasien').where('NIK', NIK).first();
     if (!pasien) {
-      return res.status(400).json({ success: false, message: 'Pasien dengan NIK ini tidak ditemukan' });
+      await trx.rollback();
+      return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan' });
     }
 
-    await InvoiceModel.create({
+    const invoiceDate = TANGGALINVOICE || new Date().toISOString().split('T')[0];
+    const NOINVOICE = await generateNoInvoice(invoiceDate);
+
+    await trx('invoice').insert({
       NOINVOICE,
       NIK,
       IDASURANSI: pasien.IDASURANSI,
-      TANGGALINVOICE: TANGGALINVOICE || db.fn.now(),
+      TANGGALINVOICE: invoiceDate,
       TOTALTAGIHAN,
-      STATUS: STATUS || 'Belum Dibayar'
+      STATUS: STATUS || 'BELUM_LUNAS'
     });
 
-    res.status(201).json({ success: true, message: 'Invoice berhasil ditambahkan' });
+    await trx.commit();
+    res.status(201).json({ success: true, message: 'Invoice berhasil ditambahkan', NOINVOICE });
   } catch (err) {
+    await trx.rollback();
     console.error('Create Error:', err);
     res.status(500).json({ success: false, message: err.message });
   }
@@ -59,7 +63,7 @@ export async function createInvoice(req, res) {
 export async function updateInvoice(req, res) {
   try {
     const { id } = req.params;
-    const { NOINVOICE, NIK, TANGGALINVOICE, TOTALTAGIHAN, STATUS } = req.body;
+    const { NIK, TANGGALINVOICE, TOTALTAGIHAN, STATUS } = req.body; // ⏮️ Hapus NOINVOICE
 
     const pasien = await db('pasien').where('NIK', NIK).first();
     if (!pasien) {
@@ -67,7 +71,6 @@ export async function updateInvoice(req, res) {
     }
 
     const updated = await InvoiceModel.update(id, {
-      NOINVOICE,
       NIK,
       IDASURANSI: pasien.IDASURANSI,
       TANGGALINVOICE: TANGGALINVOICE || db.fn.now(),

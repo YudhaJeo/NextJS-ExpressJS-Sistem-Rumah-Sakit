@@ -8,13 +8,11 @@ import { Tag } from 'primereact/tag';
 const statusLabels = {
   BELUM_LUNAS: 'Belum Dibayar',
   LUNAS: 'Sudah Dibayar',
-  BATAL: 'Batal',
 };
 
 const statusSeverity = {
-  BELUM_LUNAS: 'danger',  // merah
-  LUNAS: 'success',       // hijau
-  BATAL: 'secondary',     // abu-abu
+  BELUM_LUNAS: 'danger',
+  LUNAS: 'success',  
 };
 
 const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
