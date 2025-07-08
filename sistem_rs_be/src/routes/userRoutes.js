@@ -8,7 +8,7 @@ import { verifyToken } from '../middlewares/jwt.js';
 
 const router = express.Router();
 
-router.get('/profile', verifyToken, getUser);
-router.put('/profile', verifyToken, updateUser);
+router.get('/', verifyToken, getUser);
+router.put('/', verifyToken, updateUser);
 
 export default router;

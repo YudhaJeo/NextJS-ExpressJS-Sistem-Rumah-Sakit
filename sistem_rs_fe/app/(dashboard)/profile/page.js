@@ -89,7 +89,7 @@ export default function ProfilePage() {
         <div className="">
           <div className="">
             <span className=" text-gray-600 font-medium">Role:</span>
-            <div className="card text-lg font-semibold mt-1 uppercase">{user.role} -</div>
+            <div className="card text-lg font-semibold mt-1 uppercase">{user.role}</div>
           </div>
         </div>
       </div>
