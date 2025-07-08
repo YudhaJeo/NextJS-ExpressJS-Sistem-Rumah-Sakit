@@ -13,5 +13,5 @@ export const create = (data) =>
 export const update = (id, data) =>
     db('jenis_kamar').where({ IDJENISKAMAR: id }).update(data);
   
-//   export const remove = (id) =>
-//     db('jenis_kamar').where({ IDJENISKAMAR: id }).del();
+export const remove = (id) =>
+    db('jenis_kamar').where({ IDJENISKAMAR: id }).del();

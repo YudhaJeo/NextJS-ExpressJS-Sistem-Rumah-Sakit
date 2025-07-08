@@ -118,14 +118,14 @@ const Page = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Yakin hapus '${row.NAMAAGAMA}'?`,
+      message: `Yakin hapus '${row.NAMAJENIS}'?`,
       header: 'Konfirmasi Hapus',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Ya',
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/agama/${row.IDAGAMA}`);
+          await axios.delete(`${API_URL}/jeniskamar/${row.IDJENISKAMAR}`);
           fetchData();
           toastRef.current?.showToast('00', 'Data berhasil dihapus');
         } catch (err) {

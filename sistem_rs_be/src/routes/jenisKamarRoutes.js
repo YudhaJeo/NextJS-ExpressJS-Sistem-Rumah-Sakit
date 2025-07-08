@@ -4,7 +4,7 @@ import {
     getAllJenisKamar,
     createJenisKamar, 
     updateJenisKamar, 
-    // deleteJenisKamar 
+    deleteJenisKamar 
 } from '../controllers/jenisKamarController.js';
 
 const router = express.Router();
@@ -12,6 +12,6 @@ const router = express.Router();
 router.get('/', getAllJenisKamar);
 router.post('/', createJenisKamar);
 router.put('/:id', updateJenisKamar);
-// router.delete('/:id', deleteJenisKamar);
+router.delete('/:id', deleteJenisKamar);
 
 export default router;
