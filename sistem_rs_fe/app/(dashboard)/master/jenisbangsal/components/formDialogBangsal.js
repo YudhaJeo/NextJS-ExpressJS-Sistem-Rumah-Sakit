@@ -1,4 +1,4 @@
-// app/(dashboard)/master/agama/components/formDialogAgama.js
+// app/(dashboard)/master/jenisbangsal/components/formDialogBangsal.js
 'use client';
 
 import { Button } from 'primereact/button';
@@ -13,7 +13,7 @@ const FormDialog = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
 
   return (
     <Dialog
-      header={form.IDJENISKAMAR ? 'Edit Jenis Kamar' : 'Tambah Jenis Kamar'}
+      header={form.IDJENISBANGSAL ? 'Edit Jenis Bangsal' : 'Tambah Jenis Bangsal'}
       visible={visible}
       onHide={onHide}
       style={{ width: '30vw' }}
@@ -26,7 +26,7 @@ const FormDialog = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
         }}
       >
         <div>
-          <label>Jenis Kamar</label>
+          <label>Jenis Bangsal</label>
           <InputText
             className={inputClass('NAMAJENIS')}
             value={form.NAMAJENIS}
