@@ -17,6 +17,7 @@ import dashboardPasienRoutes from './routes/dashboardPasienRoutes.js';
 import invoiceRoutes from './routes/invoiceRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import jenisKamarRoutes from './routes/jenisKamarRoutes.js';
+import antrianPoliRoutes from './routes/antrianPoliRoutes.js';
 import { verifyToken } from './middlewares/jwt.js'
 const app = express();
 
@@ -46,5 +47,6 @@ app.use('/api/poli', poliRoutes);
 app.use('/api/dokter', dokterRoutes);
 app.use('/api', dashboardPasienRoutes);
 app.use('/api/invoice', invoiceRoutes);
+app.use('/api/antrianpoli', antrianPoliRoutes)
 
 export default app;

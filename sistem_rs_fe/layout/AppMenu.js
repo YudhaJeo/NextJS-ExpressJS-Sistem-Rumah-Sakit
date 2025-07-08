@@ -18,7 +18,8 @@ const AppMenu = () => {
       label: "Antrian",
       icon: "pi pi-fw pi-list",
       items: [
-        { label: "Data Antrian", icon: "pi pi-fw pi-users", to: "/antrian/data" },
+        { label: "Antrian Pendaftaran", icon: "pi pi-fw pi-users", to: "/antrian/data" },
+        { label: "Antrian Poli", icon: "pi pi-fw pi-users", to: "/antrian/antrianPoli" },
         { label: "Data Printer", icon: "pi pi-fw pi-print", to: "/antrian/printer" },
       ],
     },

@@ -1,3 +1,4 @@
+// components/tabelAntrianPoli.js
 "use client";
 
 import { DataTable } from "primereact/datatable";
@@ -7,20 +8,20 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import "@/styles/customTable.css";
 
-const TabelAntrian = ({ data, loketList, loading, onPanggil, onReset, currentId, fetchData }) => {
+const TabelAntrianPoli = ({ data, poliList, loading, onPanggil, onReset, currentId, fetchData }) => {
   useEffect(() => {
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
-        fetchData(); 
+        fetchData();
       }
     };
     document.addEventListener("visibilitychange", handleVisibility);
     return () => document.removeEventListener("visibilitychange", handleVisibility);
   }, [fetchData]);
 
-  const renderTable = (loketName) => {
+  const renderTable = (poliName) => {
     const filtered = data
-      .filter((item) => item.LOKET === loketName)
+      .filter((item) => item.POLI === poliName)
       .sort((a, b) => a.ID - b.ID);
 
     const handleNext = (row) => {
@@ -75,17 +76,17 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil, onReset, currentId,
     };
 
     return (
-      <div key={loketName} className="card mb-6">
+      <div key={poliName} className="card mb-6">
         <div className="mb-3">
-          <h3 className="font-semibold text-lg mb-2">Loket {loketName}</h3>
+          <h3 className="font-semibold text-lg mb-2">Poli {poliName}</h3>
           <Button
             label="Reset Antrian"
             icon="pi pi-refresh"
             severity="danger"
             size="small"
             onClick={() => {
-              if (confirm(`Apakah kamu yakin ingin mereset antrian di Loket ${loketName}?`)) {
-                onReset(loketName);
+              if (confirm(`Apakah kamu yakin ingin mereset antrian Poli ${poliName}?`)) {
+                onReset(poliName);
               }
             }}
           />
@@ -107,7 +108,7 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil, onReset, currentId,
           >
             <Column header="No" body={(_, { rowIndex }) => rowIndex + 1} style={{ width: '5rem' }} />
             <Column field="NO_ANTRIAN" header="No Antrian" style={{ minWidth: '8rem' }} />
-            <Column field="LOKET" header="Loket" style={{ minWidth: '8rem' }} />
+            <Column field="POLI" header="Poli" style={{ minWidth: '8rem' }} />
             <Column field="STATUS" header="Status" body={statusBodyTemplate} style={{ minWidth: '7rem' }} />
             <Column header="Aksi" body={actionBodyTemplate} style={{ minWidth: '16rem' }} />
           </DataTable>
@@ -119,21 +120,21 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil, onReset, currentId,
   return (
     <>
       <div className="flex justify-content-end gap-2 mb-4">
-        <Link href="/antrian/pendaftaran" target="_blank" rel="noopener noreferrer">
-          <Button label="Display Antrian" icon="pi pi-table" />
+        <Link href="/antrian/poli" target="_blank" rel="noopener noreferrer">
+          <Button label="Display Antrian Poli" icon="pi pi-table" />
         </Link>
-        <Link href="/monitor/pendaftaran" target="_blank" rel="noopener noreferrer">
-          <Button label="Display Monitor" icon="pi pi-desktop" />
+        <Link href="/monitor/poli" target="_blank" rel="noopener noreferrer">
+          <Button label="Display Monitor Poli" icon="pi pi-desktop" />
         </Link>
       </div>
 
-      {loketList.length > 0 ? (
-        loketList.map((loket) => renderTable(loket.NAMALOKET))
+      {poliList.length > 0 ? (
+        poliList.map((poli) => renderTable(poli.NAMAPOLI))
       ) : (
-        <p className="text-center text-gray-500 mt-10">Tidak ada loket tersedia</p>
+        <p className="text-center text-gray-500 mt-10">Tidak ada poli tersedia</p>
       )}
     </>
   );
 };
 
-export default TabelAntrian;
+export default TabelAntrianPoli;
