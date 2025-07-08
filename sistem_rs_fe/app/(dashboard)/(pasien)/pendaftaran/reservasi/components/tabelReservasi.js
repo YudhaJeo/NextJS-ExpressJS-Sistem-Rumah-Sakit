@@ -4,7 +4,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Tag } from "primereact/tag";
-import { formatTanggal, formatJam } from "@/types/dateformat";
+import { formatTanggal } from "@/types/dateformat";
 
 const tanggalTemplate = (rowData) => {
   return formatTanggal(rowData.TANGGALRESERVASI);
@@ -22,17 +22,15 @@ const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }) => {
     >
       <Column field="NAMALENGKAP" header="Nama Pasien" />
       <Column field="NIK" header="NIK" />
-      <Column field="NAMAPOLI" header="Poli" />
-      <Column field="NAMADOKTER" header="Nama Dokter" />
       <Column
         field="TANGGALRESERVASI"
         header="Tanggal Reservasi"
         body={tanggalTemplate}
       />
-      <Column
-        field="JADWALPRAKTEK"
-        header="Jadwal Praktek"
-      />
+      <Column field="NAMAPOLI" header="Poli" />
+      <Column field="NAMADOKTER" header="Nama Dokter" />
+      <Column field="JADWAL_PRAKTEK_HARI_INI" header="Jam" />
+      <Column field="KETERANGAN" header="Keluhan" />
       <Column
         header="Status"
         body={(row) => {
@@ -53,7 +51,6 @@ const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }) => {
           return <Tag value={status} severity={severity()} />;
         }}
       />
-      <Column header="Keluhan" />
       <Column
         header="Aksi"
         body={(row) => (

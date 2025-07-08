@@ -5,6 +5,13 @@ import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
+import { useEffect } from "react";
+
+const getNamaHari = (tanggalString) => {
+  const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at", 'Sabtu'];
+  const tanggal = new Date(tanggalString);
+  return hari[tanggal.getDay()];
+};
 
 const FormReservasiPasien = ({
   visible,
@@ -19,6 +26,26 @@ const FormReservasiPasien = ({
   setDokterOptions,
   allDokterOptions,
 }) => {
+  useEffect(() => {
+  if (!formData.TANGGALRESERVASI || !formData.IDPOLI) {
+    setDokterOptions([]);
+    return;
+  }
+
+  const hari = getNamaHari(formData.TANGGALRESERVASI);
+
+  const filtered = allDokterOptions.filter(
+    (dokter) =>
+      dokter.IDPOLI === formData.IDPOLI &&
+      dokter.label.toLowerCase().includes(hari.toLowerCase())
+  );
+
+  setDokterOptions(filtered);
+
+  if (!filtered.some((d) => d.value === formData.IDDOKTER)) {
+    setFormData((prev) => ({ ...prev, IDDOKTER: "" }));
+  }
+}, [formData.TANGGALRESERVASI, formData.IDPOLI]);
   return (
     <Dialog
       header={formData.IDRESERVASI ? "Edit Reservasi" : "Tambah Reservasi"}
@@ -51,10 +78,11 @@ const FormReservasiPasien = ({
           />
         </div>
 
-        <div>
+        <div className="flex flex-col md:flex-row gap-4">
+  <div className="w-full md:w-1/2">
           <label>Tanggal Reservasi</label>
           <Calendar
-            className="w-full mt-2"
+            className='w-full mt-2'
             dateFormat="yy-mm-dd"
             value={
               formData.TANGGALRESERVASI
@@ -71,7 +99,7 @@ const FormReservasiPasien = ({
           />
         </div>
 
-        <div>
+        <div className="w-full md:w-1/2">
           <label>Poli</label>
           <Dropdown
             className="w-full mt-2"
@@ -96,9 +124,10 @@ const FormReservasiPasien = ({
             showClear
           />
         </div>
+        </div>
 
-        <div>
-          <label>Nama Dokter & Jadwal Praktek</label>
+      <div>
+        <label>Nama Dokter & Jadwal Praktek</label>
           <Dropdown
             className="w-full mt-2"
             options={dokterOptions}
@@ -113,6 +142,17 @@ const FormReservasiPasien = ({
             filter
             showClear
           />
+      </div>
+
+        <div>
+          <label>Keluhan</label>
+          <InputText
+            className="w-full mt-2"
+            value={formData.KETERANGAN}
+            onChange={(e) =>
+              onChange({ ...formData, KETERANGAN: e.target.value })
+            }
+          />
         </div>
 
         <div>
@@ -126,17 +166,6 @@ const FormReservasiPasien = ({
             value={formData.STATUS}
             onChange={(e) => onChange({ ...formData, STATUS: e.value })}
             placeholder="Pilih Status"
-          />
-        </div>
-
-        <div>
-          <label>Keluhan</label>
-          <InputText
-            className="w-full mt-2"
-            value={formData.KETERANGAN}
-            onChange={(e) =>
-              onChange({ ...formData, KETERANGAN: e.target.value })
-            }
           />
         </div>
 

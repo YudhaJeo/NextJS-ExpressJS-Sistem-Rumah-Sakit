@@ -113,11 +113,37 @@ const DokterPage = () => {
     }
 };
 
+const parseJadwalPraktek = (text) => {
+    if (!text) return [];
 
-    const handleEdit = (row) => {
-    setFormData({ ...row });
+    return text.split(',').map((slot) => {
+        const trimmed = slot.trim(); // "Senin 10:00 - 12:00"
+        const firstSpaceIndex = trimmed.indexOf(' ');
+        const hari = trimmed.substring(0, firstSpaceIndex); // Senin
+        const jamString = trimmed.substring(firstSpaceIndex + 1); // "10:00 - 12:00"
+
+        const [mulai, selesai] = jamString.split('-').map(j => j.trim()); // "10:00", "12:00"
+
+        return {
+            HARI: hari,
+            JAM_MULAI: mulai,
+            JAM_SELESAI: selesai,
+        };
+    });
+};
+
+const handleEdit = (row) => {
+    const jadwal = parseJadwalPraktek(row.JADWALPRAKTEK);
+
+    setFormData({
+        IDDOKTER: row.IDDOKTER,
+        NAMADOKTER: row.NAMADOKTER,
+        IDPOLI: row.IDPOLI,
+        JADWAL: jadwal
+    });
+
     setDialogVisible(true);
-    };
+};
 
     const handleDelete = (row) => {
         confirmDialog({
