@@ -80,63 +80,40 @@ const Page = () => {
   const validateForm = () => {
     const newErrors = {};
   
-    if (!form.NAMALENGKAP.trim()) newErrors.NAMALENGKAP = <span style={{color: 'red'}}>Nama wajib diisi</span>;
-    if (!form.NIK.trim()) {
-      newErrors.NIK = <span style={{color: 'red'}}>NIK wajib diisi</span>;
-    } else if (!/^\d{16}$/.test(form.NIK)) {
-      newErrors.NIK = <span style={{color: 'red'}}>NIK harus 16 digit angka</span>;
+    if (!form.NAMABANGSAL?.trim()) {
+      newErrors.NAMABANGSAL = (
+        <span style={{ color: 'red' }}>Nama bangsal wajib diisi</span>
+      );
     }
   
-    if (!form.TANGGALLAHIR) newErrors.TANGGALLAHIR = 
-      <span style={{color: 'red'}}>
-        Tanggal Lahir wajib diisi
-      </span>;
-    if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = 
-      <span style={{color: 'red'}}>
-        Jenis kelamin wajib dipilih
-      </span>;
-    if (!form.ALAMAT?.trim()) newErrors.ALAMAT = 
-      <span style={{color: 'red'}}>
-        Alamat wajib diisi
-      </span>;
-    if (!form.NOHP?.trim()) {
-      newErrors.NOHP = 
-      <span style={{color: 'red'}}>
-        No HP wajib diisi
-      </span>;
-    } else if (!/^\d{9,13}$/.test(form.NOHP)) {
-      newErrors.NOHP = 
-      <span style={{color: 'red'}}>
-        No HP harus 9–13 digit angka
-      </span>;
+    if (!form.IDJENISBANGSAL) {
+      newErrors.IDJENISBANGSAL = (
+        <span style={{ color: 'red' }}>Jenis bangsal wajib dipilih</span>
+      );
     }
   
-    if (!form.IDAGAMA) newErrors.IDAGAMA = 
-      <span style={{color: 'red'}}>
-        Agama wajib diisi
-      </span>;
-    if (!form.GOLDARAH) newErrors.GOLDARAH = 
-      <span style={{color: 'red'}}>
-        Golongan darah wajib dipilih
-      </span>;
-    if (!form.IDASURANSI) {
-      newErrors.IDASURANSI = 
-        <span style={{color: 'red'}}>
-          Asuransi wajib dipilih
-        </span>;
-    // } else {
-    //   const selected = asuransiOptions.find(opt => opt.value === form.IDASURANSI);
-    //   if (selected?.label !== 'Umum' && !form.NOASURANSI.trim()) {
-    //     newErrors.NOASURANSI = 
-    //       <span style={{color: 'red'}}>
-    //         No Asuransi wajib diisi
-    //       </span>;
-    //   }
+    if (!form.KAPASITAS || isNaN(form.KAPASITAS)) {
+      newErrors.KAPASITAS = (
+        <span style={{ color: 'red' }}>Kapasitas wajib diisi dan harus berupa angka</span>
+      );
+    }
+  
+    if (!form.TERISI || isNaN(form.TERISI)) {
+      newErrors.TERISI = (
+        <span style={{ color: 'red' }}>Tersedia wajib diisi dan harus berupa angka</span>
+      );
+    }
+  
+    if (!form.STATUS) {
+      newErrors.STATUS = (
+        <span style={{ color: 'red' }}>Status wajib dipilih</span>
+      );
     }
   
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+  
   
   const handleSearch = (keyword) => {
     if (!keyword) {
@@ -152,49 +129,40 @@ const Page = () => {
   };
 
   const handleSubmit = async () => {
-  
     if (!validateForm()) return;
-
-    const isEdit = !!form.IDPASIEN;
+  
+    const isEdit = !!form.IDBANGSAL;
     const url = isEdit
-      ? `${API_URL}/pasien/${form.IDPASIEN}`
-      : `${API_URL}/pasien`;
-
+      ? `${API_URL}/bangsal/${form.IDBANGSAL}`
+      : `${API_URL}/bangsal`;
+  
+    const payload = {
+      ...form,
+    };
+  
     try {
-      const payload = {
-        ...form,
-        TANGGALLAHIR: form.TANGGALLAHIR,
-      };
-
       if (isEdit) {
         await axios.put(url, payload);
-        toastRef.current?.showToast('00', 'Data pasien berhasil diperbarui');
+        toastRef.current?.showToast('00', 'Data bangsal berhasil diperbarui');
       } else {
         await axios.post(url, payload);
-        toastRef.current?.showToast('00', 'Pasien baru berhasil didaftarkan');
+        toastRef.current?.showToast('00', 'Bangsal baru berhasil didaftarkan');
       }
-
+  
       fetchData();
       setDialogVisible(false);
       resetForm();
     } catch (err) {
       console.error('Gagal simpan data:', err);
-      toastRef.current?.showToast('01', 'Gagal menyimpan data pasien');
+      toastRef.current?.showToast('01', 'Gagal menyimpan data bangsal');
     }
   };
-
+  
   const handleEdit = (row) => {
-    const formattedTanggal = row.TANGGALLAHIR
-      ? new Date(row.TANGGALLAHIR).toISOString().split('T')[0]
-      : '';
-
-    setForm({
-      ...row,
-      TANGGALLAHIR: formattedTanggal,
-    });
-
+    setForm({ ...row });
     setDialogVisible(true);
   };
+  
 
   const handleDelete = (row) => {
     confirmDialog({
@@ -271,7 +239,3 @@ const Page = () => {
 };
 
 export default Page;
-
-
-
-// GET BELUM WORK, bisa cek BE juga

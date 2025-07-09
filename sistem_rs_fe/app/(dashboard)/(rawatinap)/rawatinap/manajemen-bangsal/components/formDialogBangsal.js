@@ -58,14 +58,23 @@ const FormDialogBangsal = ({
         </div>
 
         <div>
-          <label>NIK</label>
+          <label>Kapasitas</label>
           <InputText
-            className={inputClass('NIK')}
-            maxLength={16}
-            value={form.NIK}
-            onChange={(e) => setForm({ ...form, NIK: e.target.value })}
+            className={inputClass('KAPASITAS')}
+            value={form.KAPASITAS}
+            onChange={(e) => setForm({ ...form, KAPASITAS: e.target.value })}
           />
-          {errors.NIK && <small className="text-red-500">{errors.NIK}</small>}
+          {errors.KAPASITAS && <small className="text-red-500">{errors.KAPASITAS}</small>}
+        </div>
+
+        <div>
+          <label>Tersedia</label>
+          <InputText
+            className={inputClass('TERISI')}
+            value={form.TERISI}
+            onChange={(e) => setForm({ ...form, TERISI: e.target.value })}
+          />
+          {errors.TERISI && <small className="text-red-500">{errors.TERISI}</small>}
         </div>
 
         <div>
@@ -85,15 +94,13 @@ const FormDialogBangsal = ({
         </div>
 
         <div>
-          <label>Asuransi</label>
-          <Dropdown
-              className={inputClass('IDASURANSI')}
-              options={asuransiOptions}
-              value={form.IDASURANSI}
-              onChange={(e) => setForm({ ...form, IDASURANSI: e.value })}
-              placeholder="Pilih"
-            />
-            {errors.IDASURANSI && <small className="text-red-500">{errors.IDASURANSI}</small>}
+          <label>Keterangan</label>
+          <InputText
+            className={inputClass('KETERANGAN')}
+            value={form.KETERANGAN}
+            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
+          />
+          {errors.KETERANGAN && <small className="text-red-500">{errors.KETERANGAN}</small>}
         </div>
 
         <div className="text-right pt-3">
