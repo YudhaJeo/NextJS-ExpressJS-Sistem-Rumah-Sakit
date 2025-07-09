@@ -121,12 +121,13 @@ const Page = () => {
     } else {
       const filtered = originalData.filter(
         (item) =>
-          item.NIK.toLowerCase().includes(keyword.toLowerCase()) ||
-          item.NAMALENGKAP.toLowerCase().includes(keyword.toLowerCase()) 
+          item.NAMABANGSAL.toLowerCase().includes(keyword.toLowerCase()) ||
+          item.NAMAJENIS?.toLowerCase().includes(keyword.toLowerCase())
       );
       setData(filtered);
     }
   };
+  
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
@@ -206,7 +207,7 @@ const Page = () => {
 
       <HeaderBar
         title=""
-        placeholder="Cari berdasarkan NIK atau Nama"
+        placeholder="Cari berdasarkan nama atau jenis bangsal"
         onSearch={handleSearch}
         onAddClick={() => {
           resetForm();
