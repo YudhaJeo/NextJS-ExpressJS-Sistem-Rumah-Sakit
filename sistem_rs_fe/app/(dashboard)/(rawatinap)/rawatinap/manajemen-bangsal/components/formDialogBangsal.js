@@ -4,7 +4,7 @@
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { Calendar } from 'primereact/calendar';
+import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import React from 'react';
 
@@ -41,11 +41,12 @@ const FormDialogBangsal = ({
             className={inputClass('NAMABANGSAL')}
             value={form.NAMABANGSAL}
             onChange={(e) => setForm({ ...form, NAMABANGSAL: e.target.value })}
+            placeholder='Masukan nama bangsal'
           />
           {errors.NAMABANGSAL && <small className="text-red-500">{errors.NAMABANGSAL}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label>Jenis Bangsal</label>
           <Dropdown
             className={inputClass('IDJENISBANGSAL')}
@@ -57,27 +58,35 @@ const FormDialogBangsal = ({
           {errors.IDJENISBANGSAL && <small className="text-red-500">{errors.IDJENISBANGSAL}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label>Kapasitas</label>
-          <InputText
-            className={inputClass('KAPASITAS')}
+          <InputNumber
+            inputClassName={inputClass('KAPASITAS')}
             value={form.KAPASITAS}
-            onChange={(e) => setForm({ ...form, KAPASITAS: e.target.value })}
+            onValueChange={(e) => setForm({ ...form, KAPASITAS: e.value })}
+            useGrouping={false}
+            min={0}
+            className="w-full"
+            placeholder="Masukkan angka"
           />
           {errors.KAPASITAS && <small className="text-red-500">{errors.KAPASITAS}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label>Tersedia</label>
-          <InputText
-            className={inputClass('TERISI')}
+          <InputNumber
+            inputClassName={inputClass('TERISI')}
             value={form.TERISI}
-            onChange={(e) => setForm({ ...form, TERISI: e.target.value })}
+            onValueChange={(e) => setForm({ ...form, TERISI: e.value })}
+            useGrouping={false}
+            min={0}
+            className="w-full"
+            placeholder="Masukkan angka"
           />
           {errors.TERISI && <small className="text-red-500">{errors.TERISI}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label>Status</label>
           <Dropdown
             className={inputClass('STATUS')}
@@ -93,12 +102,13 @@ const FormDialogBangsal = ({
           {errors.STATUS && <small className="text-red-500">{errors.STATUS}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label>Keterangan</label>
           <InputText
             className={inputClass('KETERANGAN')}
             value={form.KETERANGAN}
             onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
+            placeholder='Tambahkan keterangan lokasi dsb.'
           />
           {errors.KETERANGAN && <small className="text-red-500">{errors.KETERANGAN}</small>}
         </div>
