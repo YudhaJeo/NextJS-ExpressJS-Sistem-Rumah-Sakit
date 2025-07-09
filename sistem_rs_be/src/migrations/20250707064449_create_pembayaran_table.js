@@ -5,6 +5,7 @@
 export const up = function (knex) {
   return knex.schema.createTable('pembayaran', (table) => {
     table.increments('IDPEMBAYARAN').primary();
+    table.string('NOPEMBAYARAN', 30).unique();
     table.integer('IDINVOICE').unsigned().notNullable()
       .references('IDINVOICE').inTable('invoice').onDelete('CASCADE');
     table.string('NIK', 20).notNullable()
