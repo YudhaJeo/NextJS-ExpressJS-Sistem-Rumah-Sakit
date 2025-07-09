@@ -1,7 +1,7 @@
-// src/migrations/20250704131000_create_master_jenis_kamar.js
+// src/migrations/20250704131000_create_master_jenis_bangsal.js
 export const up = function (knex) {
-  return knex.schema.createTable('jenis_kamar', (table) => {
-    table.increments('IDJENISKAMAR').primary();
+  return knex.schema.createTable('jenis_bangsal', (table) => {
+    table.increments('IDJENISBANGSAL').primary();
     table.string('NAMAJENIS', 50).notNullable().unique();
     table.specificType('HARGA_PER_HARI', 'DOUBLE').notNullable(); 
     table.text('FASILITAS');
@@ -9,5 +9,5 @@ export const up = function (knex) {
 };
 
 export const down = function (knex) {
-  return knex.schema.dropTable('jenis_kamar');
+  return knex.schema.dropTable('jenis_bangsal');
 };

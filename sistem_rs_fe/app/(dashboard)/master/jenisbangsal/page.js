@@ -6,8 +6,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
-import TabelJenis from './components/tabelJenis';
-import FormDialog from './components/formDialog';
+import TabelJenis from './components/tabelJenisBangsal';
+import FormDialog from './components/formDialogBangsal';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
@@ -23,9 +23,8 @@ const Page = () => {
     HARGA_PER_HARI: null,
     FASILITAS: '',
   });
-  
-  const [errors, setErrors] = useState({});
 
+  const [errors, setErrors] = useState({});
   const toastRef = useRef(null);
   const router = useRouter();
 
@@ -41,7 +40,7 @@ const Page = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/jeniskamar`);
+      const res = await axios.get(`${API_URL}/jenisbangsal`);
       setData(res.data.data);
     } catch (err) {
       console.error('Gagal ambil data:', err);
@@ -50,13 +49,12 @@ const Page = () => {
     }
   };
 
-  
   const validateForm = () => {
     const newErrors = {};
 
     if (!form.NAMAJENIS.trim()) {
-    newErrors.NAMAJENIS = (
-      <span style={{ color: 'red' }}>Jenis kamar wajib diisi</span>
+      newErrors.NAMAJENIS = (
+        <span style={{ color: 'red' }}>Jenis bangsal wajib diisi</span>
       );
     }
 
@@ -82,11 +80,11 @@ const Page = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-    
-    const isEdit = !!form.IDJENISKAMAR;
+
+    const isEdit = !!form.IDJENISBANGSAL;
     const url = isEdit
-      ? `${API_URL}/jeniskamar/${form.IDJENISKAMAR}`
-      : `${API_URL}/jeniskamar`;
+      ? `${API_URL}/jenisbangsal/${form.IDJENISBANGSAL}`
+      : `${API_URL}/jenisbangsal`;
 
     try {
       if (isEdit) {
@@ -99,7 +97,6 @@ const Page = () => {
 
       fetchData();
       setDialogVisible(false);
-      
       setForm({
         NAMAJENIS: '',
         HARGA_PER_HARI: null,
@@ -125,7 +122,7 @@ const Page = () => {
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/jeniskamar/${row.IDJENISKAMAR}`);
+          await axios.delete(`${API_URL}/jenisbangsal/${row.IDJENISBANGSAL}`);
           fetchData();
           toastRef.current?.showToast('00', 'Data berhasil dihapus');
         } catch (err) {
@@ -141,11 +138,11 @@ const Page = () => {
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
 
-      <h3 className="text-xl font-semibold mb-3">Master Jenis Kamar</h3>
+      <h3 className="text-xl font-semibold mb-3">Master Jenis Bangsal</h3>
 
       <HeaderBar
         title=""
-        placeholder="Cari jenis kamar"
+        placeholder="Cari jenis bangsal"
         onSearch={(keyword) => {
           if (!keyword) return fetchData();
           const filtered = data.filter((item) =>
@@ -161,14 +158,13 @@ const Page = () => {
           });
           setDialogVisible(true);
         }}
-        
       />
 
       <TabelJenis
-        data={data} 
-        loading={loading} 
-        onEdit={handleEdit} 
-        onDelete={handleDelete} 
+        data={data}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
       />
 
       <FormDialog
