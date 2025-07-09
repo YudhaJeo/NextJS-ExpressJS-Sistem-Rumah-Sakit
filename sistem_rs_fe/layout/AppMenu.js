@@ -93,7 +93,7 @@ const AppMenu = () => {
           label: "Jadwal",
           icon: "pi pi-fw pi-calendar",
           items: [
-            { label: "Jadwal Praktek", icon: "pi pi-fw pi-calendar", to: "/dokter/jadwal-praktek" },
+            { label: "Jadwal Praktek", icon: "pi pi-fw pi-calendar", to: "/dokter/jadwal_praktek" },
             { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/dokter/kalender-dokter" },
             { label: "Kalender Libur", icon: "pi pi-fw pi-ban", to: "/dokter/kalender-libur" },
             { label: "Kalender Perjanjian", icon: "pi pi-fw pi-clock", to: "/dokter/kalender-perjanjian" },
