@@ -53,9 +53,7 @@ const Page = () => {
     IDBANGSAL: '',
     NAMABANGSAL: '',
     IDJENISBANGSAL: '',
-    KAPASITAS: '',
-    TERISI: '',
-    STATUS: 'TERSEDIA',
+    LOKASI: '',
     KETERANGAN: '',
   });
 
@@ -91,39 +89,10 @@ const Page = () => {
         <span style={{ color: 'red' }}>Jenis bangsal wajib dipilih</span>
       );
     }
-
-      if (form.KAPASITAS === '' || form.KAPASITAS === null || isNaN(form.KAPASITAS)) {
-      newErrors.KAPASITAS = (
-        <span style={{ color: 'red' }}>Kapasitas wajib diisi dan harus berupa angka</span>
-      );
-    }
-
-    if (form.TERISI === '' || form.TERISI === null || isNaN(form.TERISI)) {
-      newErrors.TERISI = (
-        <span style={{ color: 'red' }}>Tersedia wajib diisi dan harus berupa angka</span>
-      );
-    }
-
-    // Validasi: TERISI tidak boleh melebihi KAPASITAS
-    if (
-      form.KAPASITAS !== '' &&
-      form.TERISI !== '' &&
-      !isNaN(form.KAPASITAS) &&
-      !isNaN(form.TERISI) &&
-      Number(form.TERISI) > Number(form.KAPASITAS)
-    ) {
-      newErrors.TERISI = (
-        <span style={{ color: 'red' }}>
-          Jumlah terisi tidak boleh melebihi kapasitas
-        </span>
-      );
-    }
-
-    
   
-    if (!form.STATUS) {
-      newErrors.STATUS = (
-        <span style={{ color: 'red' }}>Status wajib dipilih</span>
+    if (!form.LOKASI?.trim()) {
+      newErrors.LOKASI = (
+        <span style={{ color: 'red' }}>Lokasi bangsal wajib diisi</span>
       );
     }
   
@@ -156,8 +125,6 @@ const Page = () => {
   
       const payload = {
         ...form,
-        KAPASITAS: parseInt(form.KAPASITAS),
-        TERISI: parseInt(form.TERISI)
       };
       
   
@@ -211,11 +178,9 @@ const Page = () => {
       IDBANGSAL: '',
       NAMABANGSAL: '',
       IDJENISBANGSAL: '',
-      KAPASITAS: '',
-      TERISI: '',
-      STATUS: '',
+      LOKASI: '',
       KETERANGAN: '',
-    });
+    });    
     setErrors({});
   };
 
