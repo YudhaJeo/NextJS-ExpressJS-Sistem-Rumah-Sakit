@@ -5,7 +5,6 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
 const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
-
   const tanggalBodyTemplate = (row) => {
     const tgl = new Date(row.TANGGALBAYAR);
     return tgl.toLocaleDateString('id-ID', {
@@ -33,7 +32,8 @@ const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
     >
       <Column field="NOPEMBAYARAN" header="No Pembayaran" />
       <Column field="NOINVOICE" header="No Invoice" />
-      <Column field="NAMAPASIEN" header="Pasien" />
+      <Column field="NIK" header="NIK" />
+      <Column field="NAMAPASIEN" header="Nama Pasien" />
       <Column field="ASURANSI" header="Asuransi" />
       <Column field="METODEPEMBAYARAN" header="Metode" />
       <Column field="JUMLAHBAYAR" header="Jumlah Bayar" body={jumlahBodyTemplate} />
