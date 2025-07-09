@@ -11,6 +11,8 @@ export const up = function (knex) {
     table.timestamp('TANGGALPINJAM').defaultTo(knex.fn.now());
     table.timestamp('TANGGALKEMBALI');
     table.enu('STATUS', ['Dipinjam', 'Dikembalikan']).defaultTo('Dipinjam');
+    table.timestamp('CREATED_AT').defaultTo(knex.fn.now()).notNullable();
+    table.timestamp('UPDATED_AT').defaultTo(knex.fn.now()).notNullable();
   });
 };
 

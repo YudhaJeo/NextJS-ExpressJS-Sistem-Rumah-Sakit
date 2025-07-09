@@ -7,11 +7,13 @@ export const up = function (knex) {
     table.increments('IDPENDAFTARAN').primary();
     table.string('NIK', 20).notNullable()
       .references('NIK').inTable('pasien').onDelete('CASCADE');
-    table.date('TANGGALKUNJUNGAN').notNullable();
+    table.datetime('TANGGALKUNJUNGAN').notNullable();
     table.string('KELUHAN', 255).nullable();
     table.integer('IDPOLI').unsigned().notNullable()
       .references('IDPOLI').inTable('poli').onDelete('CASCADE');
     table.enu('STATUSKUNJUNGAN', ['Diperiksa', 'Batal', 'Selesai']).defaultTo('Diperiksa');
+    table.timestamp('CREATED_AT').defaultTo(knex.fn.now()).notNullable();
+    table.timestamp('UPDATED_AT').defaultTo(knex.fn.now()).notNullable();
   });
 };
 
