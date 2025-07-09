@@ -13,7 +13,6 @@ function DataAntrian() {
   const [loketList, setLoketList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentId, setCurrentId] = useState(null);
-  const ws = useRef(null);
 
   const toastRef = useRef(null);
 
@@ -33,7 +32,6 @@ function DataAntrian() {
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
       if (message.type === 'update') {
-        console.log("Menerima update dari server");
         fetchData();
       }
     };
@@ -48,19 +46,6 @@ function DataAntrian() {
 
     return () => socket.close();
   }, []);
-
-  const checkUpdate = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/antrian/data`);
-      const newData = res.data.data || [];
-
-      if (newData.length !== data.length || JSON.stringify(newData) !== JSON.stringify(data)) {
-        setData(newData);
-      }
-    } catch (err) {
-      console.error('Gagal polling data antrian:', err);
-    }
-  };
 
   const fetchData = async () => {
     setLoading(true);

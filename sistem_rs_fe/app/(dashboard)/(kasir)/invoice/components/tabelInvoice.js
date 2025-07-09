@@ -12,15 +12,31 @@ const statusLabels = {
 
 const statusSeverity = {
   BELUM_LUNAS: 'danger',
-  LUNAS: 'success',  
+  LUNAS: 'success',
+};
+
+const asuransiSeverity = {
+  UMUM: 'info',      // biru
+  BPJS: 'success',   // hijau
+  DEFAULT: 'warning' // kuning untuk selain Umum/BPJS
 };
 
 const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
-  const statusBodyTemplate = (row) => {
+  const statusBodyTemplate = (row) => (
+    <Tag
+      value={statusLabels[row.STATUS] || row.STATUS}
+      severity={statusSeverity[row.STATUS] || 'info'}
+    />
+  );
+
+  const asuransiBodyTemplate = (row) => {
+    const severity =
+      asuransiSeverity[row.ASURANSI?.toUpperCase()] || asuransiSeverity.DEFAULT;
+
     return (
       <Tag
-        value={statusLabels[row.STATUS] || row.STATUS}
-        severity={statusSeverity[row.STATUS] || 'info'}
+        value={row.ASURANSI}
+        severity={severity}
       />
     );
   };
@@ -37,7 +53,11 @@ const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
       <Column field="NOINVOICE" header="No Invoice" />
       <Column field="NIK" header="NIK" />
       <Column field="NAMAPASIEN" header="Nama Pasien" />
-      <Column field="ASURANSI" header="Asuransi" />
+      <Column
+        field="ASURANSI"
+        header="Asuransi"
+        body={asuransiBodyTemplate}
+      />
       <Column
         field="TANGGALINVOICE"
         header="Tgl Invoice"
@@ -54,11 +74,10 @@ const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
         field="TOTALTAGIHAN"
         header="Total Tagihan"
         body={(row) =>
-          `Rp ${Number(row.TOTALTAGIHAN)
-            .toLocaleString('id-ID', {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}`
+          `Rp ${Number(row.TOTALTAGIHAN).toLocaleString('id-ID', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          })}`
         }
       />
       <Column field="STATUS" header="Status" body={statusBodyTemplate} />

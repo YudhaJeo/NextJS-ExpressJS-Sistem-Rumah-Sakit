@@ -1,4 +1,3 @@
-// components/tabelAntrianPoli.js
 "use client";
 
 import { DataTable } from "primereact/datatable";

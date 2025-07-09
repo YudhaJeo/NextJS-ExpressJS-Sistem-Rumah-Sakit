@@ -9,7 +9,7 @@ const TabelData = ({ data, loading, onEdit, onDelete }) => {
     <DataTable value={data} paginator rows={10} loading={loading}>
       <Column field="NAMA_DOKTER" header="Nama Dokter" />
       <Column field="POLI" header="Poli" />
-      <Column field="JADWALPRAKTEK" header="Jadwal" />
+      <Column field="JADWALPRAKTEK" header="Jadwal Praktek" />
       <Column field="NO_TELEPON" header="Telepon" />
       <Column field="EMAIL" header="Email" />
       <Column field="JENIS_KELAMIN" header="Jenis Kelamin" />

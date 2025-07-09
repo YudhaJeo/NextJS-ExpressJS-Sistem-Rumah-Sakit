@@ -1,0 +1,189 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { Calendar } from 'primereact/calendar';
+import { Dropdown } from 'primereact/dropdown';
+import { InputNumber } from 'primereact/inputnumber';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { Button } from 'primereact/button';
+import { classNames } from 'primereact/utils';
+
+const FormDialogPembayaran = ({
+  visible,
+  onHide,
+  onSubmit,
+  form,
+  setForm,
+  invoiceOptions,
+  pasienOptions,
+}) => {
+  const [errors, setErrors] = useState({});
+
+  const metodeOptions = [
+    { label: 'Tunai', value: 'TUNAI' },
+    { label: 'Transfer Bank', value: 'TRANSFER' },
+    { label: 'Debit Card', value: 'DEBIT' },
+    { label: 'Kredit Card', value: 'KREDIT' },
+  ];
+
+  const validate = () => {
+    const newErrors = {};
+    if (!form.NOPEMBAYARAN) newErrors.NOPEMBAYARAN = 'No Pembayaran wajib diisi';
+    if (!form.IDINVOICE) newErrors.IDINVOICE = 'Invoice wajib dipilih';
+    if (!form.NIK) newErrors.NIK = 'Pasien wajib dipilih';
+    if (!form.METODEPEMBAYARAN) newErrors.METODEPEMBAYARAN = 'Metode wajib dipilih';
+    if (!form.JUMLAHBAYAR || form.JUMLAHBAYAR <= 0)
+      newErrors.JUMLAHBAYAR = 'Jumlah bayar harus lebih dari 0';
+    if (!form.TANGGALBAYAR) newErrors.TANGGALBAYAR = 'Tanggal Bayar wajib diisi';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validate()) {
+      onSubmit();
+    }
+  };
+
+  return (
+    <Dialog
+      header={form.IDPEMBAYARAN ? 'Edit Pembayaran' : 'Tambah Pembayaran'}
+      visible={visible}
+      onHide={() => {
+        setErrors({});
+        onHide();
+      }}
+      style={{ width: '40vw' }}
+    >
+      <form className="space-y-3" onSubmit={handleSubmit}>
+        {/* No Pembayaran */}
+        <div>
+          <label className="font-medium">No Pembayaran</label>
+          <InputText
+            className={classNames('w-full mt-2', { 'p-invalid': errors.NOPEMBAYARAN })}
+            value={form.NOPEMBAYARAN}
+            onChange={(e) => setForm({ ...form, NOPEMBAYARAN: e.target.value })}
+            placeholder="Contoh: PAY-20250709-001"
+          />
+          {errors.NOPEMBAYARAN && <small className="p-error">{errors.NOPEMBAYARAN}</small>}
+        </div>
+
+        {/* Invoice */}
+        <div>
+          <label className="font-medium">Invoice</label>
+          <Dropdown
+            className={classNames('w-full mt-2', { 'p-invalid': errors.IDINVOICE })}
+            options={invoiceOptions}
+            value={form.IDINVOICE}
+            onChange={(e) => setForm({ ...form, IDINVOICE: e.value })}
+            placeholder="Pilih Invoice"
+            optionLabel="label"
+            optionValue="value"
+            filter
+            showClear
+          />
+          {errors.IDINVOICE && <small className="p-error">{errors.IDINVOICE}</small>}
+        </div>
+
+        {/* Pasien */}
+        <div>
+          <label className="font-medium">Pasien</label>
+          <Dropdown
+            className={classNames('w-full mt-2', { 'p-invalid': errors.NIK })}
+            options={pasienOptions}
+            value={form.NIK}
+            onChange={(e) => {
+              const selected = pasienOptions.find((p) => p.value === e.value);
+              setForm({
+                ...form,
+                NIK: e.value,
+                IDASURANSI: selected?.IDASURANSI || null,
+              });
+            }}
+            placeholder="Pilih Pasien"
+            optionLabel="label"
+            optionValue="value"
+            filter
+            showClear
+          />
+          {errors.NIK && <small className="p-error">{errors.NIK}</small>}
+        </div>
+
+        {/* Tanggal Bayar */}
+        <div>
+          <label className="font-medium">Tanggal Bayar</label>
+          <Calendar
+            className={classNames('w-full mt-2', { 'p-invalid': errors.TANGGALBAYAR })}
+            dateFormat="yy-mm-dd"
+            value={form.TANGGALBAYAR ? new Date(form.TANGGALBAYAR) : null}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                TANGGALBAYAR: e.value?.toISOString().split('T')[0] || '',
+              })
+            }
+            showIcon
+            showButtonBar
+            placeholder="Pilih Tanggal"
+          />
+          {errors.TANGGALBAYAR && <small className="p-error">{errors.TANGGALBAYAR}</small>}
+        </div>
+
+        {/* Metode Pembayaran */}
+        <div>
+          <label className="font-medium">Metode Pembayaran</label>
+          <Dropdown
+            className={classNames('w-full mt-2', { 'p-invalid': errors.METODEPEMBAYARAN })}
+            options={metodeOptions}
+            value={form.METODEPEMBAYARAN}
+            onChange={(e) => setForm({ ...form, METODEPEMBAYARAN: e.value })}
+            placeholder="Pilih Metode"
+          />
+          {errors.METODEPEMBAYARAN && (
+            <small className="p-error">{errors.METODEPEMBAYARAN}</small>
+          )}
+        </div>
+
+        {/* Jumlah Bayar */}
+        <div>
+          <label className="font-medium">Jumlah Bayar</label>
+          <InputNumber
+            className={classNames('w-full mt-2', { 'p-invalid': errors.JUMLAHBAYAR })}
+            value={form.JUMLAHBAYAR}
+            onValueChange={(e) => setForm({ ...form, JUMLAHBAYAR: e.value })}
+            mode="currency"
+            currency="IDR"
+            locale="id-ID"
+          />
+          {errors.JUMLAHBAYAR && <small className="p-error">{errors.JUMLAHBAYAR}</small>}
+        </div>
+
+        {/* Keterangan */}
+        <div>
+          <label className="font-medium">Keterangan</label>
+          <InputTextarea
+            className="w-full mt-2"
+            value={form.KETERANGAN}
+            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
+            rows={3}
+            placeholder="Opsional"
+          />
+        </div>
+
+        <div className="text-right pt-3">
+          <Button
+            type="submit"
+            label="Simpan"
+            icon="pi pi-save"
+            className="p-button-primary"
+          />
+        </div>
+      </form>
+    </Dialog>
+  );
+};
+
+export default FormDialogPembayaran;

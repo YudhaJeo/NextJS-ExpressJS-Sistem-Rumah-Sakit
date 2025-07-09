@@ -2,10 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Card } from 'primereact/card';
 import { Chart } from 'primereact/chart';
-import { ProgressBar } from 'primereact/progressbar';
-import { InputText } from 'primereact/inputtext';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Tag } from 'primereact/tag';
@@ -14,30 +11,33 @@ import { useRouter } from 'next/navigation';
 
 const Dokter = () => {
     const [chartOptions, setChartOptions] = useState({});
+    const [tanggalHariIni, setTanggalHariIni] = useState('');
     const router = useRouter();
 
     const chartData = {
         labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
         datasets: [
             {
-                label: 'New',
-                data: [10, 20, 40, 60, 90, 10, 20, 40, 60, 90,40, 60],
+                label: 'Dokter',
+                data: [10, 20, 40, 60, 90, 10, 20, 40, 60, 90, 40, 60],
                 fill: false,
-                borderColor: '#06b6d4',
+                backgroundColor: '#B13BFF',
+                borderColor: '#B13BFF',
                 tension: 0.4
             },
             {
-                label: 'Completed',
-                data: [5, 15, 30, 45, 60, 10, 20, 40, 60, 90,40, 60],
+                label: 'Pasien',
+                data: [5, 15, 30, 45, 60, 10, 20, 40, 60, 90, 40, 60],
                 fill: false,
+                backgroundColor: '#FFCC00',
                 borderColor: '#fb923c',
                 tension: 0.4
             },
             {
-                label: 'Canceled',
+                label: 'Laporan',
                 data: [2, 5, 10, 20, 30, 10, 20, 40, 60, 90, 40, 60],
                 fill: true,
-                backgroundColor: '#a78bfa88',
+                backgroundColor: '#8A0000',
                 borderColor: '#a78bfa',
                 tension: 0.4
             }
@@ -50,7 +50,6 @@ const Dokter = () => {
             router.push('/login');
         }
 
-        // Default chart theme (light)
         const options = {
             plugins: {
                 legend: {
@@ -69,18 +68,27 @@ const Dokter = () => {
             }
         };
         setChartOptions(options);
+
+        // Set tanggal real-time
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        setTanggalHariIni(formattedDate);
     }, []);
 
     const topCards = [
         { title: 'Jadwal Dokter Hari ini', value: 3882, icon: "pi pi-users", bgColor: "bg-blue-100", borderColor: "#B13BFF" },
         { title: 'Jumlah Pasien', value: 532, icon: "pi pi-users", bgColor: "bg-yellow-100", borderColor: "#FFCC00" },
-        { title: 'Tanggal Real Time', value: "12.6%", icon: "pi pi-calendar", bgColor: "bg-green-100", borderColor: "#06923E" },
+        { title: 'Tanggal', value: tanggalHariIni, icon: "pi pi-calendar", bgColor: "bg-green-100", borderColor: "#06923E" },
         { title: 'Laporan Hari ini', value: 440, icon: "pi pi-book", bgColor: "bg-purple-100", borderColor: "#8A0000" },
     ];
 
-
     const infodokter = [
-        { nama_dokter: 'Dr. Syamsudin', poli: 'Gigi', jadwal_praktek: '18:00 - 20:00'},
+        { nama_dokter: 'Dr. Syamsudin', poli: 'Gigi', jadwal_praktek: '18:00 - 20:00' },
         { nama_dokter: 'Dr. Ali', poli: 'Mata', jadwal_praktek: '18:00 - 20:00' },
         { nama_dokter: 'Dr. Agus', poli: 'Kaki', jadwal_praktek: '18:00 - 20:00' }
     ];
@@ -122,7 +130,7 @@ const Dokter = () => {
                 </div>
             </div>
 
-            {/* Product Sales Table */}
+            {/* Info Dokter Table */}
             <div className="col-12">
                 <div className="card">
                     <h5>Info Dokter Hari ini</h5>

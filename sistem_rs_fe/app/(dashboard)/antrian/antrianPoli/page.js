@@ -23,19 +23,31 @@ function DataAntrianPoli() {
     if (savedId) setCurrentId(parseInt(savedId));
 
     const socket = new WebSocket(`${WS_URL}/api/ws`);
+    socket.onopen = () => {
+      console.log("WebSocket tersambung");
+    };
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
       if (message.type === 'update') {
         fetchData();
       }
     };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    socket.onclose = () => {
+      console.warn("WebSocket terputus");
+    };
+        
     return () => socket.close();
   }, []);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/antrian-poli/data`);
+      const res = await axios.get(`${API_URL}/antrianpoli/data`);
       setData(res.data.data || []);
     } catch (err) {
       console.error('Gagal fetch antrian poli:', err);
@@ -68,6 +80,11 @@ function DataAntrianPoli() {
 
       setCurrentId(id);
       localStorage.setItem('currentAntrianPoliId', id);
+
+      localStorage.setItem('lastPanggilan', JSON.stringify({
+        no: panggilan.NO_ANTRIAN,
+        loket: panggilan.POLI,
+      }));      
 
       fetchData();
     } catch (err) {
