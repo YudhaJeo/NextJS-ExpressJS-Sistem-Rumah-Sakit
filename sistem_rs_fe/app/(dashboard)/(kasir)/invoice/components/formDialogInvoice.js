@@ -22,12 +22,10 @@ const FormDialogInvoice = ({
   const statusOptions = [
     { label: 'Belum Dibayar', value: 'BELUM_LUNAS' },
     { label: 'Sudah Dibayar', value: 'LUNAS' },
-    { label: 'Batal', value: 'BATAL' },
   ];
 
   const validate = () => {
     const newErrors = {};
-    if (!form.NOINVOICE) newErrors.NOINVOICE = 'No Invoice wajib diisi';
     if (!form.NIK) newErrors.NIK = 'NIK pasien wajib dipilih';
     if (!form.TANGGALINVOICE) newErrors.TANGGALINVOICE = 'Tanggal Invoice wajib diisi';
     if (!form.TOTALTAGIHAN || form.TOTALTAGIHAN <= 0)
@@ -55,15 +53,14 @@ const FormDialogInvoice = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
+        {/* No Invoice */}
         <div>
           <label className="font-medium">No Invoice</label>
           <InputText
-            className={classNames('w-full mt-2', { 'p-invalid': errors.NOINVOICE })}
-            value={form.NOINVOICE}
-            onChange={(e) => setForm({ ...form, NOINVOICE: e.target.value })}
-            placeholder="Contoh: INV-20250701-001"
+            className="w-full mt-2"
+            value={form.NOINVOICE || 'Otomatis'}
+            readOnly
           />
-          {errors.NOINVOICE && <small className="p-error">{errors.NOINVOICE}</small>}
         </div>
 
         <div>
@@ -78,6 +75,7 @@ const FormDialogInvoice = ({
                 ...form,
                 NIK: e.value,
                 NAMAPASIEN: selected?.NAMALENGKAP || '',
+                ASURANSI: selected?.ASURANSI || '-', 
               });
             }}
             placeholder="Pilih Pasien"
@@ -88,11 +86,20 @@ const FormDialogInvoice = ({
         </div>
 
         <div>
+          <label className="font-medium">Asuransi</label>
+          <InputText
+            className="w-full mt-2"
+            value={form.ASURANSI || '-'}
+            readOnly 
+          />
+        </div>
+
+        <div>
           <label className="font-medium">Tanggal Invoice</label>
           <Calendar
             className={classNames('w-full mt-2', { 'p-invalid': errors.TANGGALINVOICE })}
             dateFormat="yy-mm-dd"
-            value={form.TANGGALINVOICE ? new Date(form.TANGGALINVOICE) : undefined}
+            value={form.TANGGALINVOICE ? new Date(form.TANGGALINVOICE) : null}
             onChange={(e) =>
               setForm({
                 ...form,
@@ -100,6 +107,8 @@ const FormDialogInvoice = ({
               })
             }
             showIcon
+            showButtonBar
+            placeholder="Pilih Tanggal"
           />
           {errors.TANGGALINVOICE && <small className="p-error">{errors.TANGGALINVOICE}</small>}
         </div>

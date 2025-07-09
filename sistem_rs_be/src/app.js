@@ -17,6 +17,8 @@ import dashboardPasienRoutes from './routes/dashboardPasienRoutes.js';
 import invoiceRoutes from './routes/invoiceRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import jenisBangsalRoutes from './routes/jenisBangsalRoutes.js';
+import antrianPoliRoutes from './routes/antrianPoliRoutes.js';
+import datadokterRoutes from './routes/datadokterRoutes.js';
 import bangsalRoutes from './routes/bangsalRoutes.js';
 const app = express();
 
@@ -47,5 +49,7 @@ app.use('/api/dokter', dokterRoutes);
 app.use('/api', dashboardPasienRoutes);
 app.use('/api/invoice', invoiceRoutes);
 app.use('/api/bangsal', bangsalRoutes)
+app.use('/api/antrianpoli', antrianPoliRoutes)
+app.use('/api/datadokter', datadokterRoutes)
 
 export default app;

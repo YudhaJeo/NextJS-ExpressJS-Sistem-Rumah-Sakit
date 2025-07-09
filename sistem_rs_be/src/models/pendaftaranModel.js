@@ -3,7 +3,8 @@ import db from '../core/config/knex.js';
 export const getAll = () =>{
   return db('pendaftaran')
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
-    .select('pendaftaran.*', 'pasien.NAMALENGKAP');
+    .join('poli', 'pendaftaran.IDPOLI', 'poli.IDPOLI')
+    .select('pendaftaran.*', 'pasien.NAMALENGKAP', 'poli.NAMAPOLI as POLI');
 }
 
 export const create = (data) => {

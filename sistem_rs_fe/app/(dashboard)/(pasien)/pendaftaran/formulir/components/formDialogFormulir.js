@@ -14,6 +14,7 @@ const FormDialogPendaftaran = ({
   onSubmit,
   form,
   setForm,
+  poliOptions,
   pasienOptions,
 }) => {
   const [errors, setErrors] = useState({});
@@ -22,11 +23,8 @@ const FormDialogPendaftaran = ({
     const newErrors = {};
     if (!form.NIK) newErrors.NIK = 'NIK harus dipilih';
     if (!form.TANGGALKUNJUNGAN) newErrors.TANGGALKUNJUNGAN = 'Tanggal kunjungan wajib diisi';
-    if (!form.LAYANAN) newErrors.LAYANAN = 'Layanan wajib dipilih';
-    if (form.LAYANAN === 'Rawat Jalan' && !form.POLI)
-      newErrors.POLI = 'Poli wajib diisi untuk Rawat Jalan';
-    if (!form.NAMADOKTER) newErrors.NAMADOKTER = 'Nama Dokter wajib diisi';
     if (!form.KELUHAN) newErrors.KELUHAN = 'Keluhan wajib diisi';
+    if (!form.IDPOLI) newErrors.IDPOLI = 'Poli wajib dipilih';
     if (!form.STATUSKUNJUNGAN) newErrors.STATUSKUNJUNGAN = 'Status wajib dipilih';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -37,14 +35,6 @@ const FormDialogPendaftaran = ({
     if (validate()) {
       onSubmit();
     }
-  };
-
-  const handleLayananChange = (value) => {
-    setForm({
-      ...form,
-      LAYANAN: value,
-      POLI: value === 'Rawat Jalan' ? form.POLI : '', // reset POLI jika bukan Rawat Jalan
-    });
   };
 
   return (
@@ -111,23 +101,23 @@ const FormDialogPendaftaran = ({
 
           <div>
             <label className="font-medium">Poli</label>
-            <InputText
-              className={classNames('w-full mt-2', { 'p-invalid': errors.POLI })}
-              value={form.POLI}
-              onChange={(e) => setForm({ ...form, POLI: e.target.value })}
-            />
+          <Dropdown
+            className="w-full mt-2"
+            options={poliOptions}
+            value={form.IDPOLI}
+            onChange={(e) => {
+              const selectedPoli = e.value;
+              setForm({
+                ...form,
+                IDPOLI: selectedPoli
+              });
+            }}
+            placeholder="Pilih Poli"
+            filter
+            showClear
+          />
             {errors.POLI && <small className="p-error">{errors.POLI}</small>}
           </div>
-
-        <div>
-          <label className="font-medium">Nama Dokter</label>
-          <InputText
-            className={classNames('w-full mt-2', { 'p-invalid': errors.NAMADOKTER })}
-            value={form.NAMADOKTER}
-            onChange={(e) => setForm({ ...form, NAMADOKTER: e.target.value })}
-          />
-          {errors.NAMADOKTER && <small className="p-error">{errors.NAMADOKTER}</small>}
-        </div>
 
         <div>
           <label className="font-medium">Status Kunjungan</label>

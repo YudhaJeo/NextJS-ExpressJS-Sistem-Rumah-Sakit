@@ -4,14 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import TabelPendaftaran from './components/tabelPasien'; 
+import TabelPendaftaran from './components/tabelFormulir'; 
 import FormDialogPendaftaran from './components/formDialogFormulir';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import FilterTanggal from '@/app/components/filterTanggal';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { Calendar } from 'primereact/calendar';
-import { Button } from 'primereact/button';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -22,6 +20,7 @@ const Page = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [poliOptions, setPoliOptions] = useState([]);
   const [pasienOptions, setPasienOptions] = useState([]);
 
   const [form, setForm] = useState({
@@ -29,9 +28,8 @@ const Page = () => {
     NIK: '',
     NAMALENGKAP: '',
     TANGGALKUNJUNGAN: '',
-    POLI: '',
-    NAMADOKTER: '',
     KELUHAN: '',
+    IDPOLI: '',
     STATUSKUNJUNGAN: 'Diperiksa',
   });
 
@@ -46,6 +44,7 @@ const Page = () => {
     }
     fetchData();
     fetchPasien();
+    fetchPoli();
   }, []);
 
   const fetchData = async () => {
@@ -60,6 +59,23 @@ const Page = () => {
       setLoading(false);
     }
   };
+
+  const fetchPoli = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/poli`);
+    console.log('Data poli API:', res.data);
+
+    const options = res.data.map((poli) => ({
+      label: `${poli.NAMAPOLI}`,
+      value: poli.IDPOLI,
+      }));
+
+    setPoliOptions(options);
+      } catch (err) {
+    console.error('Gagal ambil data poli:', err);
+      }
+    };
+
 
   const fetchPasien = async () => {
     try {
@@ -160,9 +176,8 @@ const Page = () => {
       NIK: '',
       NAMALENGKAP: '',
       TANGGALKUNJUNGAN: today,
-      POLI: '',
-      NAMADOKTER: '',
       KELUHAN: '',
+      IDPOLI: '',
       STATUSKUNJUNGAN: 'Diperiksa',
     });
   };
@@ -199,6 +214,7 @@ const Page = () => {
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        poliOptions={poliOptions}
       />
 
       <FormDialogPendaftaran
@@ -211,6 +227,7 @@ const Page = () => {
         form={form}
         setForm={setForm}
         pasienOptions={pasienOptions}
+        poliOptions={poliOptions}
       />
     </div>
   );

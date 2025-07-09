@@ -18,7 +18,8 @@ const AppMenu = () => {
       label: "Antrian",
       icon: "pi pi-fw pi-list",
       items: [
-        { label: "Data Antrian", icon: "pi pi-fw pi-users", to: "/antrian/data" },
+        { label: "Antrian Pendaftaran", icon: "pi pi-fw pi-users", to: "/antrian/data" },
+        { label: "Antrian Poli", icon: "pi pi-fw pi-users", to: "/antrian/antrianPoli" },
         { label: "Data Printer", icon: "pi pi-fw pi-print", to: "/antrian/printer" },
       ],
     },
@@ -167,7 +168,7 @@ const AppMenu = () => {
           icon: "pi pi-fw pi-file-invoice",
           items: [
             { label: "Invoice", icon: "pi pi-fw pi-receipt", to: "/invoice" },
-            { label: "Pembayaran", icon: "pi pi-fw pi-money-bill", to: "/kasir/pembayaran" },
+            { label: "Pembayaran", icon: "pi pi-fw pi-money-bill", to: "/pembayaran" },
           ],
         },
         { label: "Pembayaran Angsuran", icon: "pi pi-fw pi-credit-card", to: "/kasir/pembayaran-angsuran" },

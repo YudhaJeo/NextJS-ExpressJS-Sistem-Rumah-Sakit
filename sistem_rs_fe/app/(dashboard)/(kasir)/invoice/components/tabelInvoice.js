@@ -3,16 +3,26 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { Tag } from 'primereact/tag';
 
 const statusLabels = {
   BELUM_LUNAS: 'Belum Dibayar',
   LUNAS: 'Sudah Dibayar',
-  BATAL: 'Batal',
+};
+
+const statusSeverity = {
+  BELUM_LUNAS: 'danger',
+  LUNAS: 'success',  
 };
 
 const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
   const statusBodyTemplate = (row) => {
-    return statusLabels[row.STATUS] || row.STATUS;
+    return (
+      <Tag
+        value={statusLabels[row.STATUS] || row.STATUS}
+        severity={statusSeverity[row.STATUS] || 'info'}
+      />
+    );
   };
 
   return (
@@ -25,7 +35,9 @@ const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
       scrollable
     >
       <Column field="NOINVOICE" header="No Invoice" />
+      <Column field="NIK" header="NIK" />
       <Column field="NAMAPASIEN" header="Nama Pasien" />
+      <Column field="ASURANSI" header="Asuransi" />
       <Column
         field="TANGGALINVOICE"
         header="Tgl Invoice"
@@ -41,7 +53,13 @@ const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
       <Column
         field="TOTALTAGIHAN"
         header="Total Tagihan"
-        body={(row) => `Rp ${row.TOTALTAGIHAN.toLocaleString('id-ID')}`}
+        body={(row) =>
+          `Rp ${Number(row.TOTALTAGIHAN)
+            .toLocaleString('id-ID', {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}`
+        }
       />
       <Column field="STATUS" header="Status" body={statusBodyTemplate} />
       <Column

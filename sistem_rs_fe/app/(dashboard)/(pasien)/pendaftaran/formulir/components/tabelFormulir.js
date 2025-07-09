@@ -5,6 +5,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
 const TabelPendaftaran = ({ data, loading, onEdit, onDelete }) => {
+
   return (
     <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
       <Column field="NAMALENGKAP" header="Nama Pasien" />
@@ -23,7 +24,6 @@ const TabelPendaftaran = ({ data, loading, onEdit, onDelete }) => {
       />
       <Column field="KELUHAN" header="Keluhan" />
       <Column field="POLI" header="Poli" />
-      <Column field="NAMADOKTER" header="Dokter" />
       <Column field="STATUSKUNJUNGAN" header="Status" />
       <Column
         header="Aksi"

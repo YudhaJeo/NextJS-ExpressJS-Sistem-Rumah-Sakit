@@ -10,6 +10,7 @@ import HeaderBar from '@/app/components/headerbar';
 import FilterTanggal from '@/app/components/filterTanggal';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { getHariFromTanggal } from '@/utils/dataHelper';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -29,7 +30,6 @@ const ReservasiPasienPage = () => {
     IDPOLI: '',
     IDDOKTER: '',
     TANGGALRESERVASI: '',
-    JADWALPRAKTEK: '',
     STATUS: 'Menunggu',
     KETERANGAN: '',
   });
@@ -55,19 +55,36 @@ const ReservasiPasienPage = () => {
     fetchDokter();
   }, []);
 
-  const fetchReservasi = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`${API_URL}/reservasi`);
-      console.log('Data reservasi API:', res.data);
-      setData(res.data);
-      setOriginalData(res.data);
-    } catch (err) {
-      console.error('Gagal mengambil data:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+const fetchReservasi = async () => {
+  setLoading(true);
+  try {
+    const res = await axios.get(`${API_URL}/reservasi`);
+    const transformed = transformJadwalHariIni(res.data);
+    setData(transformed);
+    setOriginalData(transformed);
+  } catch (err) {
+    console.error('Gagal mengambil data:', err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+const transformJadwalHariIni = (list) => {
+  return list.map((item) => {
+    const hariReservasi = getHariFromTanggal(item.TANGGALRESERVASI).toLowerCase(); 
+    const semuaJadwal = item.JADWALPRAKTEK || [];
+
+    const jadwalHariIni = semuaJadwal
+      .map((j) => j.trim()) 
+      .filter((j) => j.toLowerCase().includes(hariReservasi)) 
+      .join(', ') || '-'; 
+
+    return {
+      ...item,
+      JADWAL_PRAKTEK_HARI_INI: jadwalHariIni,
+    };
+  });
+};
 
   const fetchPasien = async () => {
     try {
@@ -89,7 +106,7 @@ const fetchPoli = async () => {
     console.log('Data poli API:', res.data);
 
     const options = res.data.map((poli) => ({
-      label: `${poli.IDPOLI} - ${poli.NAMAPOLI}`,
+      label: `${poli.NAMAPOLI}`,
       value: poli.IDPOLI,
       }));
 
@@ -105,7 +122,7 @@ const fetchDokter = async () => {
     console.log('Data poli API:', res.data);
 
     const options = res.data.map((dokter) => ({
-      label: `${dokter.IDDOKTER} - ${dokter.NAMADOKTER}`,
+      label: `${dokter.NAMADOKTER} (${dokter.JADWALPRAKTEK || 'Jadwal tidak tersedia' })`,
       value: dokter.IDDOKTER,
       IDPOLI: dokter.IDPOLI,
     }));
@@ -134,10 +151,9 @@ const fetchDokter = async () => {
   const handleSubmit = async () => {
     if (
       !formData.NIK ||
+      !formData.TANGGALRESERVASI ||
       !formData.IDPOLI ||
       !formData.IDDOKTER ||
-      !formData.TANGGALRESERVASI ||
-      !formData.JADWALPRAKTEK ||
       !formData.STATUS
     ) {
       toastRef.current?.showToast('01', 'Semua field wajib diisi!');
@@ -215,10 +231,9 @@ const fetchDokter = async () => {
     setFormData({
       IDRESERVASI: 0,
       NIK: '',
+      TANGGALRESERVASI: '',
       IDPOLI: '',
       IDDOKTER: '',
-      TANGGALRESERVASI: '',
-      JADWALPRAKTEK : '',
       STATUS: 'Menunggu',
       KETERANGAN: '',
     });

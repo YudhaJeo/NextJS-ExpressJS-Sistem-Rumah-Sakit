@@ -1,11 +1,13 @@
-//formPoli
 "use client";
 
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 
-const FormPoli = ({ visible, formData, onHide, onChange, onSubmit }) => {
+const FormPoli = ({ visible, formData, onHide, onChange, onSubmit, errors }) => {
+  const inputClass = (field) =>
+    errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
+
   return (
     <Dialog
       header={formData.IDPOLI ? "Edit Poli" : "Tambah Poli"}
@@ -27,6 +29,16 @@ const FormPoli = ({ visible, formData, onHide, onChange, onSubmit }) => {
             value={formData.NAMAPOLI}
             onChange={(e) => onChange({ ...formData, NAMAPOLI: e.target.value })}
           />
+        </div>
+
+        <div>
+          <label>Kode</label>
+          <InputText
+            className={inputClass('KODE')}
+            value={formData.KODE}
+            onChange={(e) => onChange({ ...formData, KODE: e.target.value })}
+          />
+          {errors.KODE && <small className="text-red-500">{errors.KODE}</small>}
         </div>
 
         <div className="text-right pt-3">

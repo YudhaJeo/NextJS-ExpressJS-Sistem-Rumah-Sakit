@@ -12,7 +12,6 @@ import { Divider } from 'primereact/divider';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// Helper functions
 const getResponsiveConfig = (screen, count) => {
   const { width } = screen;
   const config = {
@@ -35,7 +34,6 @@ const getResponsiveConfig = (screen, count) => {
   return config;
 };
 
-// Component for loading state
 const LoadingState = () => (
   <div className="flex flex-col items-center justify-center h-full">
     <ProgressSpinner style={{ width: '50px', height: '50px' }} strokeWidth="4" />
@@ -46,7 +44,6 @@ const LoadingState = () => (
   </div>
 );
 
-// Component for empty state
 const EmptyState = () => (
   <div className="text-center h-full flex flex-col items-center justify-center">
     <i className="pi pi-inbox text-[2rem] text-black mb-4" />
@@ -55,7 +52,6 @@ const EmptyState = () => (
   </div>
 );
 
-// Component for statistics display
 const Stats = ({ count, label, color }) => (
   <div className="flex flex-col items-center">
     <Tag value={count} severity={color} className="text-base font-bold mb-1 px-3 py-2" />
@@ -64,7 +60,6 @@ const Stats = ({ count, label, color }) => (
 );
 
 function DisplayAntrian() {
-  // State management
   const [loketList, setLoketList] = useState([]);
   const [antrianList, setAntrianList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,7 +69,6 @@ function DisplayAntrian() {
   
   const toast = useRef(null);
 
-  // Initialize QZ Tray script
   useEffect(() => {
     const script = document.createElement('script');
     script.src = '/qz-tray.js';
@@ -89,7 +83,6 @@ function DisplayAntrian() {
     };
   }, []);
 
-  // Initialize QZ Tray connection
   useEffect(() => {
     if (typeof window !== 'undefined' && window.qz) {
       window.qz.websocket.connect().catch(err => {
@@ -98,7 +91,6 @@ function DisplayAntrian() {
     }
   }, []);
 
-  // Time update effect
   useEffect(() => {
     const updateTime = () => setTime(new Date());
     updateTime();
@@ -106,7 +98,6 @@ function DisplayAntrian() {
     return () => clearInterval(interval);
   }, []);
 
-  // Screen size tracking
   useEffect(() => {
     const updateSize = () =>
       setScreenSize({ width: window.innerWidth, height: window.innerHeight });
@@ -116,7 +107,6 @@ function DisplayAntrian() {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
-  // Fullscreen change tracking
   useEffect(() => {
     const handleFullScreenChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
@@ -128,12 +118,10 @@ function DisplayAntrian() {
     };
   }, []);
 
-  // Initial data fetch
   useEffect(() => {
     fetchData();
   }, []);
 
-  // API functions
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -151,7 +139,6 @@ function DisplayAntrian() {
     }
   };
 
-  // Utility functions
   const showToast = (severity, detail) => {
     toast.current?.show({
       severity,
@@ -189,7 +176,6 @@ function DisplayAntrian() {
     }
   };
 
-  // Print functionality
   const printStruk = async (nomorBaru, loketName) => {
     try {
       if (!window.qz) throw new Error("QZ Tray belum tersedia");
@@ -197,7 +183,6 @@ function DisplayAntrian() {
       await window.qz.websocket.connect();
       const config = window.qz.configs.create("POS-58");
 
-      // Formatting
       const now = new Date();
       const jam = now
         .toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false })
@@ -275,7 +260,6 @@ function DisplayAntrian() {
     }
   };
 
-  // Render functions
   const renderCard = (loket, index) => {
     const currentNumber = getAntrianByLoket(loket.NAMALOKET);
     const hasQueue = currentNumber !== '-';
@@ -340,7 +324,6 @@ function DisplayAntrian() {
 
   return (
     <div className="h-screen flex flex-col overflow-hidden relative">
-      {/* Fullscreen Toggle Button */}
       {!isFullScreen && (
         <div className="fixed bottom-4 right-4 z-[999]">
           <Button
@@ -357,7 +340,6 @@ function DisplayAntrian() {
 
       <Toast ref={toast} position="top-right" />
 
-      {/* Header */}
       <div className="text-black px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <img src="/layout/images/logo.png" alt="Logo" className="h-[50px]" />
@@ -378,7 +360,6 @@ function DisplayAntrian() {
 
       <div className={`px-[${config.containerPadding}] pb-2 shrink-0`} />
 
-      {/* Main Content */}
       <div className={`flex-1 overflow-auto px-[${config.containerPadding}] pt-0`}>
         {loading ? (
           <LoadingState />
@@ -391,7 +372,6 @@ function DisplayAntrian() {
         )}
       </div>
 
-      {/* Footer Statistics */}
       {!loading && loketList.length > 0 && (
         <div className={`px-[${config.containerPadding}] pt-2 shrink-0`}>
           <Divider />

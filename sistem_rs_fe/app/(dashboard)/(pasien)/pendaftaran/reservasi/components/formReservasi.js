@@ -5,6 +5,13 @@ import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
+import { useEffect } from "react";
+
+const getNamaHari = (tanggalString) => {
+  const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at", 'Sabtu'];
+  const tanggal = new Date(tanggalString);
+  return hari[tanggal.getDay()];
+};
 
 const FormReservasiPasien = ({
   visible,
@@ -17,8 +24,28 @@ const FormReservasiPasien = ({
   poliOptions,
   dokterOptions,
   setDokterOptions,
-  allDokterOptions
+  allDokterOptions,
 }) => {
+  useEffect(() => {
+  if (!formData.TANGGALRESERVASI || !formData.IDPOLI) {
+    setDokterOptions([]);
+    return;
+  }
+
+  const hari = getNamaHari(formData.TANGGALRESERVASI);
+
+  const filtered = allDokterOptions.filter(
+    (dokter) =>
+      dokter.IDPOLI === formData.IDPOLI &&
+      dokter.label.toLowerCase().includes(hari.toLowerCase())
+  );
+
+  setDokterOptions(filtered);
+
+  if (!filtered.some((d) => d.value === formData.IDDOKTER)) {
+    setFormData((prev) => ({ ...prev, IDDOKTER: "" }));
+  }
+}, [formData.TANGGALRESERVASI, formData.IDPOLI]);
   return (
     <Dialog
       header={formData.IDRESERVASI ? "Edit Reservasi" : "Tambah Reservasi"}
@@ -40,7 +67,6 @@ const FormReservasiPasien = ({
             options={pasienOptions}
             value={formData.NIK}
             onChange={(e) => {
-              const selected = pasienOptions.find((p) => p.value === e.value);
               setFormData({
                 ...formData,
                 NIK: e.value,
@@ -52,62 +78,11 @@ const FormReservasiPasien = ({
           />
         </div>
 
-        <div>
-          <label>Poli</label>
-          <Dropdown
-  className="w-full mt-2"
-  options={poliOptions}
-  value={formData.IDPOLI}
-  onChange={(e) => {
-    const selectedPoli = e.value;
-
-    // Update form dan reset dokter yang terpilih
-    setFormData({
-      ...formData,
-      IDPOLI: selectedPoli,
-      IDDOKTER: '', // reset dokter saat poli berubah
-    });
-
-    // Filter dokter sesuai poli yang dipilih
-    const filteredDokter = allDokterOptions.filter(
-      (dokter) => dokter.IDPOLI === selectedPoli
-    );
-
-    console.log('Dokter yang cocok dengan poli:', filteredDokter);
-
-    // Update opsi dokter
-    setDokterOptions(filteredDokter);
-  }}
-  placeholder="Pilih Poli"
-  filter
-  showClear
-/>
-
-        </div>
-
-        <div>
-          <label>Nama Dokter</label>
-          <Dropdown
-            className="w-full mt-2"
-            options={dokterOptions}
-            value={formData.IDDOKTER}
-            onChange={(e) => {
-              const selected = dokterOptions.find((p) => p.value === e.value);
-              setFormData({
-                ...formData,
-                IDDOKTER: e.value,
-              });
-            }}
-            placeholder="Pilih Dokter"
-            filter
-            showClear
-          />
-        </div>
-
-        <div>
+        <div className="flex flex-col md:flex-row gap-4">
+  <div className="w-full md:w-1/2">
           <label>Tanggal Reservasi</label>
           <Calendar
-            className="w-full mt-2"
+            className='w-full mt-2'
             dateFormat="yy-mm-dd"
             value={
               formData.TANGGALRESERVASI
@@ -117,22 +92,65 @@ const FormReservasiPasien = ({
             onChange={(e) =>
               onChange({
                 ...formData,
-                TANGGALRESERVASI:
-                  e.value?.toISOString().split("T")[0] || "",
+                TANGGALRESERVASI: e.value?.toISOString().split("T")[0] || "",
               })
             }
             showIcon
           />
         </div>
 
-        <div>
-          <label>Jadwal Praktek</label>
-          <InputText
-            type="text"
+        <div className="w-full md:w-1/2">
+          <label>Poli</label>
+          <Dropdown
             className="w-full mt-2"
-            value={formData.JADWALPRAKTEK}
+            options={poliOptions}
+            value={formData.IDPOLI}
+            onChange={(e) => {
+              const selectedPoli = e.value;
+
+              setFormData({
+                ...formData,
+                IDPOLI: selectedPoli,
+                IDDOKTER: "",
+              });
+
+              const filteredDokter = allDokterOptions.filter(
+                (dokter) => dokter.IDPOLI === selectedPoli
+              );
+              setDokterOptions(filteredDokter);
+            }}
+            placeholder="Pilih Poli"
+            filter
+            showClear
+          />
+        </div>
+        </div>
+
+      <div>
+        <label>Nama Dokter & Jadwal Praktek</label>
+          <Dropdown
+            className="w-full mt-2"
+            options={dokterOptions}
+            value={formData.IDDOKTER}
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                IDDOKTER: e.value,
+              });
+            }}
+            placeholder="Pilih Dokter"
+            filter
+            showClear
+          />
+      </div>
+
+        <div>
+          <label>Keluhan</label>
+          <InputText
+            className="w-full mt-2"
+            value={formData.KETERANGAN}
             onChange={(e) =>
-              onChange({ ...formData, JADWALPRAKTEK: e.target.value })
+              onChange({ ...formData, KETERANGAN: e.target.value })
             }
           />
         </div>
@@ -146,21 +164,8 @@ const FormReservasiPasien = ({
               value: val,
             }))}
             value={formData.STATUS}
-            onChange={(e) =>
-              onChange({ ...formData, STATUS: e.value })
-            }
+            onChange={(e) => onChange({ ...formData, STATUS: e.value })}
             placeholder="Pilih Status"
-          />
-        </div>
-
-        <div>
-          <label>Keterangan</label>
-          <InputText
-            className="w-full mt-2"
-            value={formData.KETERANGAN}
-            onChange={(e) =>
-              onChange({ ...formData, KETERANGAN: e.target.value })
-            }
           />
         </div>
 

@@ -7,7 +7,7 @@ export const getAll = () => {
     .select(
       'invoice.*',
       'pasien.NAMALENGKAP as NAMAPASIEN',
-      'asuransi.NAMAASURANSI'
+      'asuransi.NAMAASURANSI as ASURANSI'
     );
 };
 
