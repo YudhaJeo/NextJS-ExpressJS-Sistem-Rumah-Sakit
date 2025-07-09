@@ -47,7 +47,7 @@ function DataAntrianPoli() {
   const fetchPoli = async () => {
     try {
       const res = await axios.get(`${API_URL}/poli`);
-      setPoliList(res.data.data || []);
+      setPoliList(res.data || []); 
     } catch (err) {
       console.error('Gagal fetch poli:', err);
     }
@@ -58,7 +58,7 @@ function DataAntrianPoli() {
       const panggilan = data.find((item) => item.ID === id);
       if (!panggilan) return;
 
-      await axios.post(`${API_URL}/antrian-poli/panggil/${id}`);
+      await axios.post(`${API_URL}/antrianpoli/panggil/${id}`);
 
       toastRef.current.show({
         severity: 'success',
@@ -82,7 +82,7 @@ function DataAntrianPoli() {
 
   const handleReset = async (poliName) => {
     try {
-      await axios.post(`${API_URL}/antrian-poli/reset`, { poli: poliName });
+      await axios.post(`${API_URL}/antrianpoli/reset`, { poli: poliName });
       toastRef.current.show({
         severity: 'info',
         summary: 'Reset berhasil',
