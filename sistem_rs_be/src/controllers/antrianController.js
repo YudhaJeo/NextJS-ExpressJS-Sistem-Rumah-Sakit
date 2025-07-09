@@ -1,4 +1,3 @@
-// be_sistem_rs\src\controllers\antrianController.js
 import * as Antrian from '../models/antrianModel.js';
 import db from '../core/config/knex.js';
 
