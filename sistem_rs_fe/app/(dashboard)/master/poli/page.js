@@ -1,4 +1,3 @@
-//pagepoli
 "use client";
 
 import axios from "axios";
@@ -22,7 +21,10 @@ const PoliPage = () => {
   const [formData, setFormData] = useState({
     IDPOLI: 0,
     NAMAPOLI: "",
+    KODE: "",
   });
+
+  const [errors, setErrors] = useState({});
 
   const toastRef = useRef(null);
   const router = useRouter();
@@ -50,22 +52,30 @@ const PoliPage = () => {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.NAMAPOLI?.trim()) newErrors.NAMAPOLI = 'Nama Poli wajib diisi';
+    if (!formData.KODE?.trim()) newErrors.KODE = 'Kode wajib diisi';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSearch = (keyword) => {
     if (!keyword) {
       setData(originalData);
     } else {
       const filtered = originalData.filter((item) =>
-        item.NAMAPOLI.toLowerCase().includes(keyword.toLowerCase())
+        item.NAMAPOLI.toLowerCase().includes(keyword.toLowerCase()) ||
+        item.KODE.toLowerCase().includes(keyword.toLowerCase())
       );
       setData(filtered);
     }
   };
 
   const handleSubmit = async () => {
-    if (!formData.NAMAPOLI) {
-      toastRef.current?.showToast('01', 'Nama Poli wajib diisi!');
-      return;
-    }
+    if (!validateForm()) return;
 
     const isEdit = !!formData.IDPOLI;
     const url = isEdit
@@ -118,7 +128,9 @@ const PoliPage = () => {
     setFormData({
       IDPOLI: 0,
       NAMAPOLI: "",
+      KODE: "",
     });
+    setErrors({});
   };
 
   return (
@@ -130,7 +142,7 @@ const PoliPage = () => {
 
       <HeaderBar
         title=""
-        placeholder="Cari Nama Poli..."
+        placeholder="Cari Nama Poli atau Kode"
         onSearch={handleSearch}
         onAddClick={() => {
           resetForm();
@@ -154,6 +166,7 @@ const PoliPage = () => {
         onChange={setFormData}
         onSubmit={handleSubmit}
         formData={formData}
+        errors={errors}
       />
     </div>
   );

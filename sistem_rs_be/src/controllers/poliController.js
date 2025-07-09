@@ -1,8 +1,5 @@
-//controller
-// controllers/poliController.js
 import * as PoliModel from '../models/poliModel.js';
 
-// GET all poli
 export async function getAllPoli(req, res) {
     try {
         const poli = await PoliModel.getAll();
@@ -13,7 +10,6 @@ export async function getAllPoli(req, res) {
     }
 }
 
-// GET poli by ID
 export async function getPoliById(req, res) {
     try {
         const id = req.params.id;
@@ -26,16 +22,11 @@ export async function getPoliById(req, res) {
     }
 }
 
-// POST tambah poli
 export async function createPoli(req, res) {
     try {
-        const { NAMAPOLI } = req.body;
+        const { NAMAPOLI, KODE } = req.body;
 
-        if (!NAMAPOLI) {
-            return res.status(400).json({ error: 'Nama Poli wajib diisi' });
-        }
-
-        await PoliModel.create({ NAMAPOLI });
+        await PoliModel.create({ NAMAPOLI, KODE });
         res.json({ message: 'Poli berhasil ditambahkan' });
     } catch (err) {
         console.error('Error backend:', err);
@@ -43,17 +34,12 @@ export async function createPoli(req, res) {
     }
 }
 
-// PUT update poli
 export async function updatePoli(req, res) {
     try {
         const id = req.params.id;
-        const { NAMAPOLI } = req.body;
+        const { NAMAPOLI, KODE } = req.body;
 
-        if (!NAMAPOLI) {
-            return res.status(400).json({ error: 'Nama Poli wajib diisi' });
-        }
-
-        await PoliModel.update(id, { NAMAPOLI });
+        await PoliModel.update(id, { NAMAPOLI, KODE });
         res.json({ message: 'Poli berhasil diperbarui' });
     } catch (err) {
         console.error('Error backend:', err);
@@ -61,7 +47,6 @@ export async function updatePoli(req, res) {
     }
 }
 
-// DELETE hapus poli
 export async function deletePoli(req, res) {
     try {
         const id = req.params.id;
