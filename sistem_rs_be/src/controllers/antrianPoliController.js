@@ -1,4 +1,5 @@
 import * as AntrianPoli from '../models/antrianPoliModel.js';
+import db from '../core/config/knex.js';
 
 export const getAllAntrianPoli = async (req, res) => {
   try {
@@ -21,7 +22,7 @@ export const createAntrianPoli = async (req, res) => {
 
     const last = await db('antrian_poli')
       .where('POLI_ID', poli.IDPOLI)
-      .andWhere('NO_ANTRIAN', 'like', `${poli.NAMAPOLI.slice(0, 3).toUpperCase()}%`)
+      .andWhere('NO_ANTRIAN', 'like', `${poli.KODE}%`)
       .orderBy('ID', 'desc')
       .first();
 
@@ -35,7 +36,7 @@ export const createAntrianPoli = async (req, res) => {
 
     const nextNo = lastNo + 1;
     const nomor = nextNo.toString().padStart(3, '0');
-    const NO_ANTRIAN = `${poli.NAMAPOLI.slice(0, 3).toUpperCase()}${nomor}`;
+    const NO_ANTRIAN = `${poli.KODE}${nomor}`;
 
     const newAntrian = {
       NO_ANTRIAN,
@@ -47,6 +48,7 @@ export const createAntrianPoli = async (req, res) => {
 
     res.json({ success: true, message: 'Antrian poli berhasil ditambahkan', data: newAntrian });
   } catch (err) {
+    console.error("❌ Error createAntrianPoli:", err);
     res.status(500).json({ success: false, message: 'Gagal membuat antrian poli', error: err.message });
   }
 };
@@ -60,7 +62,6 @@ export const panggilAntrianPoli = async (req, res) => {
     if (broadcastUpdate) {
       broadcastUpdate(); 
     }
-
     res.json({ success: true, message: 'Antrian poli berhasil dipanggil' });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Gagal memanggil antrian poli', error: err.message });
