@@ -60,6 +60,7 @@ const FormDialogPembayaran = ({
         NIK: pasien?.value || '',
         NAMAPASIEN: pasien?.label.split(' - ')[1] || '',
         ASURANSI: pasien?.NAMAASURANSI || '',
+        JUMLAHBAYAR: selectedInvoice.JUMLAHBAYAR || 0,
       });
     } else {
       setForm({
@@ -69,6 +70,7 @@ const FormDialogPembayaran = ({
         NIK: '',
         NAMAPASIEN: '',
         ASURANSI: '',
+        JUMLAHBAYAR: 0,
       });
     }
   };
@@ -190,6 +192,7 @@ const FormDialogPembayaran = ({
             mode="currency"
             currency="IDR"
             locale="id-ID"
+            readOnly
           />
           {errors.JUMLAHBAYAR && <small className="p-error">{errors.JUMLAHBAYAR}</small>}
         </div>

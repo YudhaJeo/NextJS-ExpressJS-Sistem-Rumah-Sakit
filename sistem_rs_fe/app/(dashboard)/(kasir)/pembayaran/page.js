@@ -74,8 +74,8 @@ const Page = () => {
         value: inv.IDINVOICE,
         NIK: inv.NIK,
         NAMAPASIEN: inv.NAMAPASIEN,
-        IDASURANSI: inv.IDASURANSI, // Pastikan query invoice bawa ini!
         NAMAASURANSI: inv.NAMAASURANSI,
+        JUMLAHBAYAR: inv.TOTALTAGIHAN,
       }));
       setInvoiceOptions(options);
     } catch (err) {
