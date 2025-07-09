@@ -17,7 +17,7 @@ import dashboardPasienRoutes from './routes/dashboardPasienRoutes.js';
 import invoiceRoutes from './routes/invoiceRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import jenisBangsalRoutes from './routes/jenisBangsalRoutes.js';
-import kamarRoutes from './routes/kamarRoutes.js';
+import bangsalRoutes from './routes/bangsalRoutes.js';
 const app = express();
 
 app.use(cors({ 
@@ -46,6 +46,6 @@ app.use('/api/poli', poliRoutes);
 app.use('/api/dokter', dokterRoutes);
 app.use('/api', dashboardPasienRoutes);
 app.use('/api/invoice', invoiceRoutes);
-app.use('/api/kamar', kamarRoutes)
+app.use('/api/bangsal', bangsalRoutes)
 
 export default app;
