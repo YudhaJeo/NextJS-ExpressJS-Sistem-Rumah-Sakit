@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Calendar } from 'primereact/calendar';
@@ -17,7 +17,7 @@ const FormDialogPembayaran = ({
   form,
   setForm,
   invoiceOptions,
-  pasienOptions,
+  pasienOptions, // biarkan ada untuk menjaga struktur meski tidak dipakai
 }) => {
   const [errors, setErrors] = useState({});
 
@@ -32,7 +32,8 @@ const FormDialogPembayaran = ({
     const newErrors = {};
     if (!form.NOPEMBAYARAN) newErrors.NOPEMBAYARAN = 'No Pembayaran wajib diisi';
     if (!form.IDINVOICE) newErrors.IDINVOICE = 'Invoice wajib dipilih';
-    if (!form.NIK) newErrors.NIK = 'Pasien wajib dipilih';
+    if (!form.NIK) newErrors.NIK = 'NIK wajib ada';
+    if (!form.NAMAPASIEN) newErrors.NAMAPASIEN = 'Nama Pasien wajib ada';
     if (!form.METODEPEMBAYARAN) newErrors.METODEPEMBAYARAN = 'Metode wajib dipilih';
     if (!form.JUMLAHBAYAR || form.JUMLAHBAYAR <= 0)
       newErrors.JUMLAHBAYAR = 'Jumlah bayar harus lebih dari 0';
@@ -45,6 +46,30 @@ const FormDialogPembayaran = ({
     e.preventDefault();
     if (validate()) {
       onSubmit();
+    }
+  };
+
+  const handleInvoiceChange = (e) => {
+    const selectedInvoice = invoiceOptions.find((inv) => inv.value === e.value);
+    if (selectedInvoice) {
+      const pasien = pasienOptions.find((p) => selectedInvoice.label.includes(p.label.split(' - ')[1]));
+      setForm({
+        ...form,
+        IDINVOICE: selectedInvoice.value,
+        NOINVOICE: selectedInvoice.label.split(' - ')[0],
+        NIK: pasien?.value || '',
+        NAMAPASIEN: pasien?.label.split(' - ')[1] || '',
+        ASURANSI: pasien?.NAMAASURANSI || '',
+      });
+    } else {
+      setForm({
+        ...form,
+        IDINVOICE: '',
+        NOINVOICE: '',
+        NIK: '',
+        NAMAPASIEN: '',
+        ASURANSI: '',
+      });
     }
   };
 
@@ -78,7 +103,7 @@ const FormDialogPembayaran = ({
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDINVOICE })}
             options={invoiceOptions}
             value={form.IDINVOICE}
-            onChange={(e) => setForm({ ...form, IDINVOICE: e.value })}
+            onChange={handleInvoiceChange}
             placeholder="Pilih Invoice"
             optionLabel="label"
             optionValue="value"
@@ -88,28 +113,36 @@ const FormDialogPembayaran = ({
           {errors.IDINVOICE && <small className="p-error">{errors.IDINVOICE}</small>}
         </div>
 
-        {/* Pasien */}
+        {/* NIK */}
         <div>
-          <label className="font-medium">Pasien</label>
-          <Dropdown
+          <label className="font-medium">NIK</label>
+          <InputText
             className={classNames('w-full mt-2', { 'p-invalid': errors.NIK })}
-            options={pasienOptions}
             value={form.NIK}
-            onChange={(e) => {
-              const selected = pasienOptions.find((p) => p.value === e.value);
-              setForm({
-                ...form,
-                NIK: e.value,
-                IDASURANSI: selected?.IDASURANSI || null,
-              });
-            }}
-            placeholder="Pilih Pasien"
-            optionLabel="label"
-            optionValue="value"
-            filter
-            showClear
+            readOnly
           />
           {errors.NIK && <small className="p-error">{errors.NIK}</small>}
+        </div>
+
+        {/* Nama Pasien */}
+        <div>
+          <label className="font-medium">Nama Pasien</label>
+          <InputText
+            className={classNames('w-full mt-2', { 'p-invalid': errors.NAMAPASIEN })}
+            value={form.NAMAPASIEN}
+            readOnly
+          />
+          {errors.NAMAPASIEN && <small className="p-error">{errors.NAMAPASIEN}</small>}
+        </div>
+
+        {/* Asuransi */}
+        <div>
+          <label className="font-medium">Asuransi</label>
+          <InputText
+            className="w-full mt-2"
+            value={form.ASURANSI}
+            readOnly
+          />
         </div>
 
         {/* Tanggal Bayar */}

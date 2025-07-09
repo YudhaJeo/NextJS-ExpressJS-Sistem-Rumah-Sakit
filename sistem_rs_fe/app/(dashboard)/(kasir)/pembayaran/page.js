@@ -72,6 +72,10 @@ const Page = () => {
       const options = res.data.data.map((inv) => ({
         label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN}`,
         value: inv.IDINVOICE,
+        NIK: inv.NIK,
+        NAMAPASIEN: inv.NAMAPASIEN,
+        IDASURANSI: inv.IDASURANSI, // Pastikan query invoice bawa ini!
+        NAMAASURANSI: inv.NAMAASURANSI,
       }));
       setInvoiceOptions(options);
     } catch (err) {
@@ -86,6 +90,7 @@ const Page = () => {
         label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
         value: pasien.NIK,
         IDASURANSI: pasien.IDASURANSI,
+        NAMAASURANSI: pasien.NAMAASURANSI,
       }));
       setPasienOptions(options);
     } catch (err) {
