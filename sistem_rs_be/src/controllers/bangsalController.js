@@ -13,7 +13,7 @@ export async function getAllBangsal(req, res) {
 
 export async function createBangsal(req, res) {
   try {
-    const { NAMABANGSAL, IDJENISBANGSAL, KAPASITAS, TERISI, STATUS, KETERANGAN } = req.body;
+    const { NAMABANGSAL, IDJENISBANGSAL, LOKASI, KETERANGAN } = req.body;
 
     const existing = await BangsalModel.getByNama(NAMABANGSAL);
     if (existing) {
@@ -23,9 +23,7 @@ export async function createBangsal(req, res) {
     await BangsalModel.create({
       NAMABANGSAL,
       IDJENISBANGSAL,
-      KAPASITAS,
-      TERISI,
-      STATUS,
+      LOKASI,
       KETERANGAN,
     });
 
@@ -39,14 +37,12 @@ export async function createBangsal(req, res) {
 export async function updateBangsal(req, res) {
   try {
     const { id } = req.params;
-    const { NAMABANGSAL, IDJENISBANGSAL, KAPASITAS, TERISI, STATUS, KETERANGAN } = req.body;
+    const { NAMABANGSAL, IDJENISBANGSAL, LOKASI, KETERANGAN } = req.body;
 
     const updated = await BangsalModel.update(id, {
       NAMABANGSAL,
       IDJENISBANGSAL,
-      KAPASITAS,
-      TERISI,
-      STATUS,
+      LOKASI,
       KETERANGAN,
     });
 

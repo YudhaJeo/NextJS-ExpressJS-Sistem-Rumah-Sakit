@@ -6,7 +6,9 @@ export const getAll = () => {
     .join('jenis_bangsal', 'bangsal.IDJENISBANGSAL', 'jenis_bangsal.IDJENISBANGSAL')
     .select(
       'bangsal.*',
-      'jenis_bangsal.NAMAJENIS'
+      'jenis_bangsal.NAMAJENIS',
+      'jenis_bangsal.HARGA_PER_HARI',
+      'jenis_bangsal.FASILITAS'
     );
 };
 
@@ -23,6 +25,5 @@ export const update = (id, data) => {
 };
 
 export const deleteById = (id) => {
-    return db('bangsal').where({ IDBANGSAL: id }).del();
-  };
-  
+  return db('bangsal').where({ IDBANGSAL: id }).del();
+};
