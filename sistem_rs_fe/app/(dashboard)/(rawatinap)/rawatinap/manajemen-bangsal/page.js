@@ -163,11 +163,9 @@ const Page = () => {
   
     try {
       if (isEdit) {
-        console.log('Payload:', payload); // debug
         await axios.put(url, payload);
         toastRef.current?.showToast('00', 'Data bangsal berhasil diperbarui');
       } else {
-        console.log('Payload:', payload); // debug
         await axios.post(url, payload);
         toastRef.current?.showToast('00', 'Bangsal baru berhasil didaftarkan');
       }
