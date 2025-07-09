@@ -10,6 +10,8 @@ import { InputText } from "primereact/inputtext";
 import "@/styles/gradient.css";
 import ToastNotifier from "@/app/components/toastNotifier";
 
+const URL = process.env.NEXT_PUBLIC_URL;
+
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +22,7 @@ function LoginPage() {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:4000/login", {
+      const res = await axios.post(`${URL}/login`, {
         email,
         password,
       });
