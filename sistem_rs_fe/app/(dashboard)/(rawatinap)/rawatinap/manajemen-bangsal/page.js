@@ -137,9 +137,12 @@ const Page = () => {
       ? `${API_URL}/bangsal/${form.IDBANGSAL}`
       : `${API_URL}/bangsal`;
   
-    const payload = {
-      ...form,
-    };
+      const payload = {
+        ...form,
+        KAPASITAS: parseInt(form.KAPASITAS),
+        TERISI: parseInt(form.TERISI)
+      };
+      
   
     try {
       if (isEdit) {
@@ -167,23 +170,24 @@ const Page = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Apakah Anda yakin ingin menghapus pasien '${row.NAMALENGKAP}'?`,
+      message: `Apakah Anda yakin ingin menghapus bangsal '${row.NAMABANGSAL}'?`,
       header: 'Konfirmasi Hapus',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Ya',
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/pasien/${row.IDPASIEN}`);
+          await axios.delete(`${API_URL}/bangsal/${row.IDBANGSAL}`);
           fetchData();
-          toastRef.current?.showToast('00', 'Data pasien berhasil dihapus');
+          toastRef.current?.showToast('00', 'Data bangsal berhasil dihapus');
         } catch (err) {
           console.error('Gagal hapus data:', err);
-          toastRef.current?.showToast('01', 'Gagal menghapus data pasien');
+          toastRef.current?.showToast('01', 'Gagal menghapus data bangsal');
         }
       },
     });
   };
+  
 
   const resetForm = () => {
     setForm({

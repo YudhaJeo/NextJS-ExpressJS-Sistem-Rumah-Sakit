@@ -21,3 +21,8 @@ export const create = (data) => {
 export const update = (id, data) => {
   return db('bangsal').where({ IDBANGSAL: id }).update(data);
 };
+
+export const deleteById = (id) => {
+    return db('bangsal').where({ IDBANGSAL: id }).del();
+  };
+  

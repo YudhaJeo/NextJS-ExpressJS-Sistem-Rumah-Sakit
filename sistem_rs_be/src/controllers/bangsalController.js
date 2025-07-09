@@ -60,3 +60,19 @@ export async function updateBangsal(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
+
+export async function deleteBangsal(req, res) {
+  try {
+    const { id } = req.params;
+    const deleted = await BangsalModel.deleteById(id);
+
+    if (deleted === 0) {
+      return res.status(404).json({ error: 'Bangsal tidak ditemukan' });
+    }
+
+    res.json({ message: 'Bangsal berhasil dihapus' });
+  } catch (err) {
+    console.error('Gagal hapus bangsal:', err);
+    res.status(500).json({ error: 'Gagal menghapus bangsal' });
+  }
+}
