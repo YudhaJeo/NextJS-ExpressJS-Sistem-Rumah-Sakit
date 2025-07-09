@@ -143,7 +143,7 @@ const AppMenu = () => {
     {
       label: "Menu",
       items: [
-        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/rawatinap/dashboard" },
+        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/rawatinap" },
         { label: "Manajemen Bangsal (Bed)", icon: "pi pi-fw pi-th-large", to: "/rawatinap/manajemen-bangsal" },
         { label: "Monitoring Bangsal (Bed)", icon: "pi pi-fw pi-eye", to: "/rawatinap/monitoring-bangsal" },
         { label: "Charge Kamar", icon: "pi pi-fw pi-wallet", to: "/rawatinap/charge-kamar" },
