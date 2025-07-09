@@ -18,24 +18,26 @@ const Dokter = () => {
         labels: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
         datasets: [
             {
-                label: 'New',
+                label: 'Dokter',
                 data: [10, 20, 40, 60, 90, 10, 20, 40, 60, 90, 40, 60],
                 fill: false,
-                borderColor: '#06b6d4',
+                backgroundColor: '#B13BFF',
+                borderColor: '#B13BFF',
                 tension: 0.4
             },
             {
-                label: 'Completed',
+                label: 'Pasien',
                 data: [5, 15, 30, 45, 60, 10, 20, 40, 60, 90, 40, 60],
                 fill: false,
+                backgroundColor: '#FFCC00',
                 borderColor: '#fb923c',
                 tension: 0.4
             },
             {
-                label: 'Canceled',
+                label: 'Laporan',
                 data: [2, 5, 10, 20, 30, 10, 20, 40, 60, 90, 40, 60],
                 fill: true,
-                backgroundColor: '#a78bfa88',
+                backgroundColor: '#8A0000',
                 borderColor: '#a78bfa',
                 tension: 0.4
             }

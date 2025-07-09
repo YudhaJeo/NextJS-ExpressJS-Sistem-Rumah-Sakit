@@ -9,6 +9,7 @@ export const up = function (knex) {
       .references('IDDOKTER')
       .inTable('data_dokter')
       .onDelete('CASCADE');
+    table.string('POLI', 20).notNullable;
     table.string('HARI', 20).notNullable();
     table.time('JAM_MULAI').notNullable();
     table.time('JAM_SELESAI').notNullable();

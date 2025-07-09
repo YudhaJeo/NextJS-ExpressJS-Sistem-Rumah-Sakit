@@ -24,14 +24,15 @@ export async function getByIdJadwal(req, res) {
 
 export async function createJadwal(req, res) {
   try {
-    const { IDDOKTER, HARI, JAM_MULAI, JAM_SELESAI } = req.body;
+    const { IDDOKTER, POLI, HARI, JAM_MULAI, JAM_SELESAI } = req.body;
 
-    if (!IDDOKTER || !HARI || !JAM_MULAI || !JAM_SELESAI) {
+    if (!IDDOKTER || !POLI || !HARI || !JAM_MULAI || !JAM_SELESAI) {
       return res.status(400).json({ error: 'Field wajib tidak boleh kosong' });
     }
 
     await JadwalModel.createJadwal({
       IDDOKTER,
+      POLI,
       HARI,
       JAM_MULAI,
       JAM_SELESAI,
@@ -47,10 +48,11 @@ export async function createJadwal(req, res) {
 export async function updateJadwal(req, res) {
   try {
     const id = req.params.id;
-    const { IDDOKTER, HARI, JAM_MULAI, JAM_SELESAI } = req.body;
+    const { IDDOKTER, POLI, HARI, JAM_MULAI, JAM_SELESAI } = req.body;
 
     const updated = await JadwalModel.updateJadwal(id, {
       IDDOKTER,
+      POLI,
       HARI,
       JAM_MULAI,
       JAM_SELESAI,
