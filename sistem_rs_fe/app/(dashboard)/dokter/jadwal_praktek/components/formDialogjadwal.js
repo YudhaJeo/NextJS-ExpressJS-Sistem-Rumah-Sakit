@@ -17,17 +17,19 @@ const FormDialogJadwal = ({
   allDokterOptions,
 }) => {
   useEffect(() => {
-    if (formData.IDDOKTER) {
-      const selectedDokter = allDokterOptions.find(
-        (dokter) => dokter.value === formData.IDDOKTER
-      );
-      if (selectedDokter && selectedDokter.jadwal) {
-        onChange((prev) => ({
-          ...prev,
-          HARI: selectedDokter.jadwal,
-        }));
-      }
+  if (formData.IDDOKTER) {
+    const selectedDokter = allDokterOptions.find(
+      (dokter) => dokter.value === formData.IDDOKTER
+    );
+    console.log('Selected Dokter:', selectedDokter);
+    if (selectedDokter) {
+      onChange((prev) => ({
+        ...prev,
+        HARI: selectedDokter.jadwal || '',
+        POLI: selectedDokter.poli || '',
+      }));
     }
+  }
   }, [formData.IDDOKTER]);
   return (
     <Dialog header={formData.ID ? 'Edit Jadwal' : 'Tambah Jadwal'} visible={visible} onHide={onHide} style={{ width: '40vw' }}>
@@ -44,6 +46,16 @@ const FormDialogJadwal = ({
         </div>
 
         <div>
+          <label>Poli</label>
+          <InputText
+            value={formData.POLI}
+            placeholder="Poli"
+            className="w-full"
+            readOnly
+          />
+        </div>
+
+        <div>
           <label>Hari</label>
           <InputText
             value={formData.HARI}
@@ -56,6 +68,7 @@ const FormDialogJadwal = ({
         <div>
           <label>Jam Mulai</label>
           <InputText
+            type='time'
             className="w-full mt-1"
             value={formData.JAM_MULAI}
             onChange={(e) => onChange({ ...formData, JAM_MULAI: e.target.value })}
@@ -66,6 +79,7 @@ const FormDialogJadwal = ({
         <div>
           <label>Jam Selesai</label>
           <InputText
+            type='time'
             className="w-full mt-1"
             value={formData.JAM_SELESAI}
             onChange={(e) => onChange({ ...formData, JAM_SELESAI: e.target.value })}

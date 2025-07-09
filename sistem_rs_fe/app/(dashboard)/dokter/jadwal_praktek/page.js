@@ -22,6 +22,7 @@ const JadwalPraktekPage = () => {
   const [formData, setFormData] = useState({
     ID: 0,
     IDDOKTER: "",
+    POLI:"",
     HARI: "",
     JAM_MULAI: "",
     JAM_SELESAI: "",
@@ -62,6 +63,7 @@ const JadwalPraktekPage = () => {
       label: `${data_dokter.NAMA_DOKTER}`,
       value: data_dokter.IDDOKTER,
       jadwal: data_dokter.JADWALPRAKTEK,
+      poli: data_dokter.POLI,
     }));
 
     setDokterOptions(options);
@@ -83,7 +85,7 @@ const JadwalPraktekPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (!formData.IDDOKTER || !formData.HARI || !formData.JAM_MULAI || !formData.JAM_SELESAI) {
+    if (!formData.IDDOKTER || !formData.POLI || !formData.HARI || !formData.JAM_MULAI || !formData.JAM_SELESAI) {
       toastRef.current?.showToast("01", "Semua field wajib diisi!");
       return;
     }
@@ -139,6 +141,7 @@ const JadwalPraktekPage = () => {
     setFormData({
       ID: 0,
       IDDOKTER: "",
+      POLI:"",
       HARI: "",
       JAM_MULAI: "",
       JAM_SELESAI: "",
