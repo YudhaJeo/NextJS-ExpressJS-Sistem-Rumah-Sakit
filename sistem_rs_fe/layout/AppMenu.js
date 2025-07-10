@@ -11,7 +11,7 @@ const AppMenu = () => {
     {
       label: "dashboard",
       items: [
-        { label: "Dashboard utama", icon: "pi pi-fw pi-chart-bar", to: "/antrian/data"},
+        { label: "Dashboard utama", icon: "pi pi-fw pi-chart-bar", to: "/"},
       ],
     },
     {
