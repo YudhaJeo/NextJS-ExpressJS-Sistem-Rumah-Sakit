@@ -24,10 +24,10 @@ const Page = () => {
   const [bangsalOptions, setBangsalOptions] = useState([]);
 
   const [form, setForm] = useState({
+    IDBED: '',
+    NOMORBED: '',
     IDKAMAR: '',
-    NAMAKAMAR: '',
-    IDBANGSAL: '',
-    KAPASITAS: '',
+    STATUS: '',
     KETERANGAN: '',
   });
 
@@ -41,7 +41,7 @@ const Page = () => {
     }
 
     fetchData();
-    fetchBangsal();
+    fetchKamar();
   }, []);
 
   const fetchData = async () => {
@@ -57,33 +57,28 @@ const Page = () => {
     }
   };
 
-  const fetchBangsal = async () => {
+  const fetchKamar = async () => {
     try {
-      const res = await axios.get(`${API_URL}/bangsal`);
+      const res = await axios.get(`${API_URL}/kamar`);
       const options = res.data.data.map((item) => ({
-        label: `${item.NAMABANGSAL} - ${item.NAMAJENIS}`,
-        value: item.IDBANGSAL,
-        NAMAJENIS: item.NAMAJENIS,
+        label: `${item.IDKAMAR} - ${item.NAMAKAMAR}`,
+        value: item.IDKAMAR,
       }));
       setBangsalOptions(options);
     } catch (err) {
-      console.error('Gagal ambil bangsal:', err);
+      console.error('Gagal ambil kamar:', err);
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (!form.NAMAKAMAR?.trim()) {
+    if (!form.NOMORBED?.trim()) {
       newErrors.NAMAKAMAR = 'Nama bed wajib diisi';
     }
 
-    if (!form.IDBANGSAL) {
-      newErrors.IDBANGSAL = 'Bangsal wajib dipilih';
-    }
-
-    if (!form.KAPASITAS || isNaN(form.KAPASITAS)) {
-      newErrors.KAPASITAS = 'Kapasitas harus berupa angka';
+    if (!form.IDKAMAR) {
+      newErrors.IDKAMAR = 'Kamar wajib dipilih';
     }
 
     setErrors(newErrors);
@@ -92,10 +87,10 @@ const Page = () => {
 
   const resetForm = () => {
     setForm({
+      IDBED: '',
+      NOMORBED: '',
       IDKAMAR: '',
-      NAMAKAMAR: '',
-      IDBANGSAL: '',
-      KAPASITAS: '',
+      STATUS: '',
       KETERANGAN: '',
     });
     setErrors({});
@@ -104,9 +99,9 @@ const Page = () => {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    const isEdit = !!form.IDKAMAR;
+    const isEdit = !!form.IDBED;
     const url = isEdit
-      ? `${API_URL}/bed/${form.IDKAMAR}`
+      ? `${API_URL}/bed/${form.IDBED}`
       : `${API_URL}/bed`;
 
     try {
