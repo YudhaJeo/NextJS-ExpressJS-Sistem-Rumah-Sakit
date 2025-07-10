@@ -17,13 +17,19 @@ export const getByNomor = (nomorbed) => {
 
 export const create = (data) => {
     return db('bed').insert(data);
-  };
+};
   
-  export const update = (id, data) => {
+export const update = (id, data) => {
     return db('bed')
       .where({ IDBED: id })
       .update({
         ...data,
         UPDATED_AT: db.fn.now(),
       });
-  };
+};
+
+  
+export const deleteById = (id) => {
+    return db('bed').where({ IDBED: id }).del();
+};
+  

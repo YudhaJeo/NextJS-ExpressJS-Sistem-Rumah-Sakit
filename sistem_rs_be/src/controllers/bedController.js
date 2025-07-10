@@ -56,3 +56,20 @@ export async function createBed(req, res) {
       res.status(500).json({ error: err.message });
     }
   }
+
+  export async function deleteBed(req, res) {
+    try {
+      const { id } = req.params;
+      const deleted = await BedModel.deleteById(id);
+  
+      if (deleted === 0) {
+        return res.status(404).json({ error: 'Bed tidak ditemukan' });
+      }
+  
+      res.json({ message: 'Bed berhasil dihapus' });
+    } catch (err) {
+      console.error('Gagal hapus bed:', err);
+      res.status(500).json({ error: 'Gagal menghapus bed' });
+    }
+  }
+  

@@ -129,14 +129,14 @@ const Page = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Apakah Anda yakin ingin menghapus bed '${row.NAMAKAMAR}'?`,
+      message: `Apakah Anda yakin ingin menghapus bed '${row.NOMORBED}'?`,
       header: 'Konfirmasi Hapus',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Ya',
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/bed/${row.IDKAMAR}`);
+          await axios.delete(`${API_URL}/bed/${row.IDBED}`);
           fetchData();
           toastRef.current?.showToast('00', 'Data bed berhasil dihapus');
         } catch (err) {
