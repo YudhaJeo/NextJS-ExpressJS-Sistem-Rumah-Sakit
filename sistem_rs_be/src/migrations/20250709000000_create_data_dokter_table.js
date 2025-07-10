@@ -13,6 +13,8 @@ export const up = function (knex) {
     table.string('EMAIL', 100).unique().notNullable();
     table.string('ALAMAT', 255);
     table.enu('JENIS_KELAMIN', ['Laki-laki', 'Perempuan']).notNullable();
+    table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
+    table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());
   });
 };
 
