@@ -5,6 +5,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import React from 'react';
+import { Tag } from "primereact/tag";
 
 const TabelBed = ({ data, loading, onEdit, onDelete }) => {
   return (
@@ -17,7 +18,30 @@ const TabelBed = ({ data, loading, onEdit, onDelete }) => {
         body={(row) => row.NAMAKAMAR}
       />
       <Column field="NOMORBED" header="Nomor Bed" />
-      <Column field="STATUS" header="Status" />
+      <Column
+        header="Status"
+        body={(row) => {
+          const status = row.STATUS;
+          const severity = () => {
+            switch (status) {
+              case "TERSEDIA":
+                return "success";
+              case "PENUH":
+                return "danger"; 
+              case "DIBERSIHKAN":
+                return "warning"; 
+              default:
+                return "info"; 
+            }
+          };
+
+          return <Tag 
+          value={status.toLowerCase().replace(/^\w/, c => c.toUpperCase())} 
+          severity={severity()} 
+        />
+        ;
+        }}
+      />
       <Column field="KETERANGAN" header="Keterangan" />
 
       <Column
