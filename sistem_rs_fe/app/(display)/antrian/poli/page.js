@@ -203,7 +203,7 @@ function DisplayAntrianPoli() {
 
         '\x1B\x21\x00',
         '\x1B\x61\x00',
-        `LOKET  : ${poliName}\n`,
+        `RUANG  : ${poliName}\n`,
         `TANGGAL: ${tanggal}\n`,
         `JAM    : ${jam}\n`,
 
