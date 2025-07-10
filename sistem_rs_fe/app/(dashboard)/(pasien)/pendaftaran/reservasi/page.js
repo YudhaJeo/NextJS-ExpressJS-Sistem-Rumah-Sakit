@@ -22,6 +22,7 @@ const ReservasiPasienPage = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [allDokterOptions, setAllDokterOptions] = useState([]);
+  const [errors, setErrors] = useState({});
 
 
   const [formData, setFormData] = useState({
@@ -30,8 +31,8 @@ const ReservasiPasienPage = () => {
     IDPOLI: '',
     IDDOKTER: '',
     TANGGALRESERVASI: '',
-    STATUS: 'Menunggu',
     KETERANGAN: '',
+    STATUS: 'Menunggu',
   });
 
   const [pasienOptions, setPasienOptions] = useState([]);
@@ -148,17 +149,23 @@ const fetchDokter = async () => {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.NIK.trim()) newErrors.NIK = <span style={{color: 'red'}}>NIK wajib diisi</span>;
+    if (!formData.TANGGALRESERVASI.trim()) newErrors.TANGGALRESERVASI = <span style={{color: 'red'}}>Tanggal Reservasi wajib diisi</span>;
+    if (!formData.IDPOLI) newErrors.IDPOLI = <span style={{color: 'red'}}>Poli wajib dipilih</span>;
+    if (!formData.IDDOKTER) newErrors.IDDOKTER = <span style={{color: 'red'}}>Dokter wajib dipilih</span>;
+    if (!formData.KETERANGAN.trim()) newErrors.KETERANGAN = <span style={{color: 'red'}}>Keluhan wajib dipilih</span>;
+    if (!formData.STATUS.trim()) newErrors.STATUS = <span style={{color: 'red'}}>Status wajib dipilih</span>;
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
+
   const handleSubmit = async () => {
-    if (
-      !formData.NIK ||
-      !formData.TANGGALRESERVASI ||
-      !formData.IDPOLI ||
-      !formData.IDDOKTER ||
-      !formData.STATUS
-    ) {
-      toastRef.current?.showToast('01', 'Semua field wajib diisi!');
-      return;
-    }
+    if (!validateForm()) return;
 
     const isEdit = !!formData.IDRESERVASI;
     const url = isEdit
@@ -234,8 +241,8 @@ const fetchDokter = async () => {
       TANGGALRESERVASI: '',
       IDPOLI: '',
       IDDOKTER: '',
-      STATUS: 'Menunggu',
       KETERANGAN: '',
+      STATUS: 'Menunggu',
     });
   };
 
@@ -282,6 +289,7 @@ const fetchDokter = async () => {
         onSubmit={handleSubmit}
         formData={formData}
         setFormData={setFormData}
+        errors={errors}
         pasienOptions={pasienOptions}
         poliOptions={poliOptions}
         dokterOptions={dokterOptions}
