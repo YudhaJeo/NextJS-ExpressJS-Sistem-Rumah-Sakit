@@ -7,18 +7,21 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import TabelKamar from './components/tabelKamar';
-import FormKamar from './components/formKamar';
+import FormDialogKamar from './components/formDialogKamar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
+  const router = useRouter();
+  const toastRef = useRef(null);
+
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [bangsalOption, setBangsalOptions] = useState([]);
+  const [bangsalOptions, setBangsalOptions] = useState([]);
 
   const [form, setForm] = useState({
     IDKAMAR: '',
@@ -29,21 +32,17 @@ const Page = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const toastRef = useRef(null);
-  const router = useRouter();
 
-  const fetchBangsal = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/bangsal`);
-      const options = res.data.data.map((item) => ({
-        label: item.NAMABANGSAL,
-        value: item.IDBANGSAL,
-      }));
-      setBangsalOptions(options);
-    } catch (err) {
-      console.error('Gagal ambil data bangsal:', err);
+  useEffect(() => {
+    const token = Cookies.get('token');
+    if (!token) {
+      router.push('/login');
+      return;
     }
-  };
+
+    fetchData();
+    fetchBangsal();
+  }, []);
 
   const fetchData = async () => {
     setLoading(true);
@@ -58,38 +57,66 @@ const Page = () => {
     }
   };
 
-  useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) {
-      router.push('/login');
-      return;
+  const fetchBangsal = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/bangsal`);
+      const options = res.data.data.map((item) => ({
+        label: item.NAMABANGSAL,
+        value: item.IDBANGSAL,
+      }));
+      setBangsalOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil bangsal:', err);
     }
-
-    fetchBangsal();
-    fetchData();
-  }, []);
+  };
 
   const validateForm = () => {
     const newErrors = {};
-    if (!form.NAMAKAMAR?.trim()) newErrors.NAMAKAMAR = 'Nama kamar wajib diisi';
-    if (!form.IDBANGSAL) newErrors.IDBANGSAL = 'Bangsal wajib dipilih';
-    if (!form.KAPASITAS || isNaN(form.KAPASITAS)) newErrors.KAPASITAS = 'Kapasitas harus angka';
+
+    if (!form.NAMAKAMAR?.trim()) {
+      newErrors.NAMAKAMAR = 'Nama kamar wajib diisi';
+    }
+
+    if (!form.IDBANGSAL) {
+      newErrors.IDBANGSAL = 'Bangsal wajib dipilih';
+    }
+
+    if (!form.KAPASITAS || isNaN(form.KAPASITAS)) {
+      newErrors.KAPASITAS = 'Kapasitas harus berupa angka';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
+  const resetForm = () => {
+    setForm({
+      IDKAMAR: '',
+      NAMAKAMAR: '',
+      IDBANGSAL: '',
+      KAPASITAS: '',
+      KETERANGAN: '',
+    });
+    setErrors({});
+  };
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
+
     const isEdit = !!form.IDKAMAR;
-    const url = isEdit ? `${API_URL}/kamar/${form.IDKAMAR}` : `${API_URL}/kamar`;
+    const url = isEdit
+      ? `${API_URL}/kamar/${form.IDKAMAR}`
+      : `${API_URL}/kamar`;
+
     try {
       if (isEdit) {
         await axios.put(url, form);
         toastRef.current?.showToast('00', 'Data kamar berhasil diperbarui');
       } else {
         await axios.post(url, form);
-        toastRef.current?.showToast('00', 'Kamar baru berhasil didaftarkan');
+        toastRef.current?.showToast('00', 'Data kamar berhasil ditambahkan');
       }
+
       fetchData();
       setDialogVisible(false);
       resetForm();
@@ -106,7 +133,7 @@ const Page = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Apakah yakin ingin menghapus kamar '${row.NAMAKAMAR}'?`,
+      message: `Apakah Anda yakin ingin menghapus kamar '${row.NAMAKAMAR}'?`,
       header: 'Konfirmasi Hapus',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Ya',
@@ -124,18 +151,15 @@ const Page = () => {
     });
   };
 
-  const resetForm = () => {
-    setForm({ IDKAMAR: '', NAMAKAMAR: '', IDBANGSAL: '', KAPASITAS: '', KETERANGAN: '' });
-    setErrors({});
-  };
-
   const handleSearch = (keyword) => {
-    if (!keyword) return setData(originalData);
-    const filtered = originalData.filter((item) =>
-      item.NAMAKAMAR.toLowerCase().includes(keyword.toLowerCase()) ||
-      item.NAMABANGSAL?.toLowerCase().includes(keyword.toLowerCase())
-    );
-    setData(filtered);
+    if (!keyword) {
+      setData(originalData);
+    } else {
+      const filtered = originalData.filter((item) =>
+        item.NAMAKAMAR.toLowerCase().includes(keyword.toLowerCase())
+      );
+      setData(filtered);
+    }
   };
 
   return (
@@ -147,7 +171,7 @@ const Page = () => {
 
       <HeaderBar
         title=""
-        placeholder="Cari nama kamar atau bangsal"
+        placeholder="Cari nama kamar"
         onSearch={handleSearch}
         onAddClick={() => {
           resetForm();
@@ -155,9 +179,14 @@ const Page = () => {
         }}
       />
 
-      <TabelKamar data={data} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
+      <TabelKamar
+        data={data}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
 
-      <FormKamar
+      <FormDialogKamar
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);
@@ -167,7 +196,7 @@ const Page = () => {
         form={form}
         setForm={setForm}
         errors={errors}
-        bangsalOption={bangsalOption}
+        bangsalOptions={bangsalOptions}
       />
     </div>
   );
