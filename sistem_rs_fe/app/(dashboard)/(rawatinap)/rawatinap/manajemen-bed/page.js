@@ -146,17 +146,23 @@ const Page = () => {
       },
     });
   };
-
   const handleSearch = (keyword) => {
     if (!keyword) {
       setData(originalData);
     } else {
-      const filtered = originalData.filter((item) =>
-        item.NAMAKAMAR.toLowerCase().includes(keyword.toLowerCase())
-      );
+      const filtered = originalData.filter((item) => {
+        const key = keyword.toLowerCase();
+        return (
+          item.NOMORBED.toLowerCase().includes(key) ||
+          item.STATUS.toLowerCase().includes(key) ||
+          item.NAMAKAMAR.toLowerCase().includes(key)
+        );
+      });
       setData(filtered);
     }
   };
+  
+  
 
   return (
     <div className="card">
@@ -167,7 +173,7 @@ const Page = () => {
 
       <HeaderBar
         title=""
-        placeholder="Cari nama bed"
+        placeholder="Cari bed"
         onSearch={handleSearch}
         onAddClick={() => {
           resetForm();
