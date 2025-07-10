@@ -7,6 +7,8 @@ export const up = function (knex) {
       .references('IDJENISBANGSAL').inTable('jenis_bangsal').onDelete('CASCADE');
     table.string('LOKASI', 100);
     table.text('KETERANGAN');
+    table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
+    table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());
   });
 };
 
