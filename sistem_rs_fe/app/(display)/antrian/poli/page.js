@@ -7,6 +7,7 @@ import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
+import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Divider } from 'primereact/divider';
 
@@ -313,6 +314,15 @@ function DisplayAntrianPoli() {
   };
 
   const config = getResponsiveConfig(screenSize, poliList.length);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const onSearch = (value) => {
+    setSearchTerm(value);
+  };
+
+  const filteredPoliList = poliList.filter((p) =>
+    p.NAMAPOLI?.toLowerCase().includes(searchTerm)
+  );
 
   return (
     <div className="h-screen flex flex-col overflow-hidden relative">
@@ -332,12 +342,22 @@ function DisplayAntrianPoli() {
 
       <Toast ref={toast} position="top-right" />
 
-      <div className="text-black px-6 py-4 flex justify-between items-center">
+      <div className="text-black px-6 py-4 flex justify-between items-center flex-wrap gap-4">
         <div className="flex items-center gap-4">
           <img src="/layout/images/logo.png" alt="Logo" className="h-[50px]" />
           <h2 className="text-lg font-semibold text-black m-0">RUMAH SAKIT</h2>
         </div>
-        <div className="font-bold text-sm">
+
+        <span className="p-input-icon-left w-64">
+          <i className="pi pi-search" />
+          <InputText
+            placeholder="Cari Poli..."
+            className="w-full"
+            onChange={(e) => onSearch(e.target.value.toLowerCase())}
+          />
+        </span>
+
+        <div className="font-bold text-sm text-right">
           {time?.toLocaleString('id-ID', {
             weekday: 'long',
             day: '2-digit',
@@ -359,7 +379,7 @@ function DisplayAntrianPoli() {
           <EmptyState />
         ) : (
           <div className="h-full">
-            <div className="grid">{poliList.map(renderCard)}</div>
+            <div className="grid">{filteredPoliList.map(renderCard)}</div>
           </div>
         )}
       </div>

@@ -1,25 +1,26 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
-import { Toast } from 'primereact/toast';
-import TabelAntrianPoli from './components/tabelAntrianPoli';
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { Toast } from "primereact/toast";
+import TabelAntrianPoli from "./components/tabelAntrianPoli";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || API_URL.replace('http', 'ws');
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || API_URL.replace("http", "ws");
 
 function DataAntrianPoli() {
   const [data, setData] = useState([]);
   const [poliList, setPoliList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentId, setCurrentId] = useState(null);
+  const [selectedZona, setSelectedZona] = useState(null);
   const toastRef = useRef(null);
 
   useEffect(() => {
     fetchData();
     fetchPoli();
 
-    const savedId = localStorage.getItem('currentAntrianPoliId');
+    const savedId = localStorage.getItem("currentAntrianPoliId");
     if (savedId) setCurrentId(parseInt(savedId));
 
     const socket = new WebSocket(`${WS_URL}/api/ws`);
@@ -28,19 +29,16 @@ function DataAntrianPoli() {
     };
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      if (message.type === 'update') {
+      if (message.type === "update") {
         fetchData();
       }
     };
-
     socket.onerror = (error) => {
       console.error("WebSocket error:", error);
     };
-
     socket.onclose = () => {
       console.warn("WebSocket terputus");
     };
-        
     return () => socket.close();
   }, []);
 
@@ -50,7 +48,7 @@ function DataAntrianPoli() {
       const res = await axios.get(`${API_URL}/antrianpoli/data`);
       setData(res.data.data || []);
     } catch (err) {
-      console.error('Gagal fetch antrian poli:', err);
+      console.error("Gagal fetch antrian poli:", err);
     } finally {
       setLoading(false);
     }
@@ -59,9 +57,9 @@ function DataAntrianPoli() {
   const fetchPoli = async () => {
     try {
       const res = await axios.get(`${API_URL}/poli`);
-      setPoliList(res.data || []); 
+      setPoliList(res.data || []);
     } catch (err) {
-      console.error('Gagal fetch poli:', err);
+      console.error("Gagal fetch poli:", err);
     }
   };
 
@@ -73,26 +71,28 @@ function DataAntrianPoli() {
       await axios.post(`${API_URL}/antrianpoli/panggil/${id}`);
 
       toastRef.current.show({
-        severity: 'success',
-        summary: 'Berhasil',
+        severity: "success",
+        summary: "Berhasil",
         detail: `Antrian ${panggilan.NO_ANTRIAN} dipanggil`,
       });
 
       setCurrentId(id);
-      localStorage.setItem('currentAntrianPoliId', id);
-
-      localStorage.setItem('lastPanggilan', JSON.stringify({
-        no: panggilan.NO_ANTRIAN,
-        loket: panggilan.POLI,
-      }));      
+      localStorage.setItem("currentAntrianPoliId", id);
+      localStorage.setItem(
+        "lastPanggilan",
+        JSON.stringify({
+          no: panggilan.NO_ANTRIAN,
+          loket: panggilan.POLI,
+        })
+      );
 
       fetchData();
     } catch (err) {
-      console.error('Gagal memanggil antrian poli:', err);
+      console.error("Gagal memanggil antrian poli:", err);
       toastRef.current.show({
-        severity: 'error',
-        summary: 'Gagal',
-        detail: 'Gagal memanggil antrian poli',
+        severity: "error",
+        summary: "Gagal",
+        detail: "Gagal memanggil antrian poli",
       });
     }
   };
@@ -101,28 +101,54 @@ function DataAntrianPoli() {
     try {
       await axios.post(`${API_URL}/antrianpoli/reset`, { poli: poliName });
       toastRef.current.show({
-        severity: 'info',
-        summary: 'Reset berhasil',
+        severity: "info",
+        summary: "Reset berhasil",
         detail: `Antrian poli ${poliName} telah direset.`,
       });
       fetchData();
     } catch (err) {
-      console.error('Gagal reset antrian poli:', err);
+      console.error("Gagal reset antrian poli:", err);
     }
   };
+
+  // Filter antrian berdasarkan zona
+  const filteredData = selectedZona
+    ? data.filter((d) =>
+        poliList.find((p) => p.NAMAPOLI === d.POLI && p.ZONA === selectedZona)
+      )
+    : data;
+
+  // List zona unik dari poliList
+  const zonaOptions = [
+    { label: "Semua", value: null },
+    ...[...new Set(poliList.map((p) => p.ZONA))].map((z) => ({
+      label: z,
+      value: z,
+    })),
+  ];
 
   return (
     <div className="card">
       <Toast ref={toastRef} />
-      <h3 className="text-xl font-semibold mb-4">Data Antrian Poli</h3>
+
+      {/* Header + Filter */}
+      <div className="flex flex-wrap items-center justify-between mb-4 gap-4">
+        <h3 className="text-xl font-semibold">Data Antrian Poli</h3>
+      </div>
+
       <TabelAntrianPoli
-        data={data}
-        poliList={poliList}
+        data={filteredData}
+        poliList={    selectedZona
+      ? poliList.filter((p) => p.ZONA === selectedZona)
+      : poliList
+  }
         loading={loading}
         onPanggil={handlePanggil}
         onReset={handleReset}
         currentId={currentId}
         fetchData={fetchData}
+        selectedZona={selectedZona}
+        setSelectedZona={setSelectedZona}        
       />
     </div>
   );

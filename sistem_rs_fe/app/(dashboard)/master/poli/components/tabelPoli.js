@@ -10,6 +10,7 @@ const TabelPoli = ({ data, loading, onEdit, onDelete }) => {
       <Column field="IDPOLI" header="ID Poli" />
       <Column field="NAMAPOLI" header="Nama Poli" />
       <Column field="KODE" header="Kode" />
+      <Column field="ZONA" header="Zona" />
       <Column
         header="Aksi"
         body={(row) => (
