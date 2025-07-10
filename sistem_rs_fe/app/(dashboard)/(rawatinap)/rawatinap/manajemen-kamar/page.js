@@ -61,8 +61,9 @@ const Page = () => {
     try {
       const res = await axios.get(`${API_URL}/bangsal`);
       const options = res.data.data.map((item) => ({
-        label: item.NAMABANGSAL,
+        label: `${item.NAMABANGSAL} - ${item.NAMAJENIS}`,
         value: item.IDBANGSAL,
+        NAMAJENIS: item.NAMAJENIS,
       }));
       setBangsalOptions(options);
     } catch (err) {

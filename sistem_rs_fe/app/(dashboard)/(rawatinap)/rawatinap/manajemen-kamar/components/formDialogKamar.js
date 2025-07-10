@@ -55,7 +55,16 @@ const FormDialogKamar = ({
             placeholder="Pilih Bangsal"
           />
           {errors.IDBANGSAL && <small className="text-red-500">{errors.IDBANGSAL}</small>}
+
+          {form.IDBANGSAL && (
+            <small className="text-gray-500">
+              Jenis: {
+                bangsalOptions.find(opt => opt.value === form.IDBANGSAL)?.NAMAJENIS || '-'
+              }
+            </small>
+          )}
         </div>
+
 
         <div className="mt-2">
           <label>Kapasitas</label>

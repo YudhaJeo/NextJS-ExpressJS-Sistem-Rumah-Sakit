@@ -8,7 +8,7 @@ import React from 'react';
 
 const TabelKamar = ({ data, loading, onEdit, onDelete }) => {
   return (
-    <DataTable value={data} paginator rows={5} loading={loading} size="small" scrollable>
+    <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
       
       <Column field="IDKAMAR" header="ID" />
       <Column field="NAMAKAMAR" header="Nama Kamar" />
