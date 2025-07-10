@@ -10,7 +10,9 @@ export const up = function (knex) {
     table.string('NAMAFILE', 100).notNullable();
     table.string('JENISDOKUMEN', 50);
     table.string('LOKASIFILE', 255);
-    table.timestamp('TANGGALUPLOAD').defaultTo(knex.fn.now());
+    table.datetime('TANGGALUPLOAD').defaultTo(knex.fn.now());
+    table.timestamp('CREATED_AT').defaultTo(knex.fn.now()).notNullable();
+    table.timestamp('UPDATED_AT').defaultTo(knex.fn.now()).notNullable();
   });
 };
 

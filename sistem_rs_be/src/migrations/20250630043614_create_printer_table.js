@@ -8,6 +8,8 @@ export const up = function (knex) {
     table.string('NAMAPRINTER', 100).notNullable();
     table.string('KODEPRINTER', 10).unique().notNullable();
     table.enu('KETERANGAN', ['AKTIF', 'TIDAK AKTIF']).notNullable().defaultTo('AKTIF');
+    table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
+    table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());
   });
 };
 

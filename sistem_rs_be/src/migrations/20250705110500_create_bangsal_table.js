@@ -4,9 +4,10 @@ export const up = function (knex) {
     table.increments('IDBANGSAL').primary();
     table.string('NAMABANGSAL', 100).notNullable().unique();
     table.integer('IDJENISBANGSAL').unsigned().notNullable()
-      .references('IDJENISBANGSAL').inTable('jenis_bangsal').onDelete('CASCADE');
-    table.string('LOKASI', 100);
-    table.text('KETERANGAN');
+      .references('IDJENISBANGSAL')
+      .inTable('jenis_bangsal')
+      .onDelete('CASCADE');
+    table.string('LOKASI', 100); 
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
     table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());
   });

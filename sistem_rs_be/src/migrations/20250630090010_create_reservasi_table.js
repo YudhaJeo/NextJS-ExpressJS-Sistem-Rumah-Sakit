@@ -12,10 +12,12 @@ export const up = function (knex) {
       .references('IDPOLI').inTable('poli').onDelete('SET NULL');
     table.integer('IDDOKTER').unsigned()
       .references('IDDOKTER').inTable('dokter').onDelete('SET NULL');
-    table.date('TANGGALRESERVASI').notNullable();
-    table.string('JADWALPRAKTEK', 100).notNullable;
+    table.datetime('TANGGALRESERVASI').notNullable();
+    table.string('JADWALPRAKTEK', 100).notNullable();
     table.enu('STATUS', ['Menunggu', 'Dikonfirmasi', 'Dibatalkan']).defaultTo('Menunggu');
     table.text('KETERANGAN');
+    table.timestamp('CREATED_AT').defaultTo(knex.fn.now()).notNullable();
+    table.timestamp('UPDATED_AT').defaultTo(knex.fn.now()).notNullable();
   });
 };
 

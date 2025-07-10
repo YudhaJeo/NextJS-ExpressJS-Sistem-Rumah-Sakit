@@ -87,13 +87,13 @@ const AppMenu = () => {
     {
       label: "Menu",
       items: [
-        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/dokter" },
-        { label: "Data Dokter", icon: "pi pi-fw pi-user", to: "/dokter/data" },
+        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/dashboarddokter" },
+        { label: "Data Dokter", icon: "pi pi-fw pi-user", to: "/data" },
         {
           label: "Jadwal",
           icon: "pi pi-fw pi-calendar",
           items: [
-            { label: "Jadwal Praktek", icon: "pi pi-fw pi-calendar", to: "/dokter/jadwal_praktek" },
+            { label: "Jadwal Praktek", icon: "pi pi-fw pi-calendar", to: "/jadwal_praktek" },
             { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/dokter/kalender-dokter" },
             { label: "Kalender Libur", icon: "pi pi-fw pi-ban", to: "/dokter/kalender-libur" },
             { label: "Kalender Perjanjian", icon: "pi pi-fw pi-clock", to: "/dokter/kalender-perjanjian" },

@@ -10,6 +10,8 @@ export const up = function (knex) {
     table.timestamp('TANGGAL').defaultTo(knex.fn.now());
     table.string('JENISTRANSAKSI', 100);
     table.text('KETERANGAN');
+    table.timestamp('CREATED_AT').defaultTo(knex.fn.now()).notNullable();
+    table.timestamp('UPDATED_AT').defaultTo(knex.fn.now()).notNullable();
   });
 };
 

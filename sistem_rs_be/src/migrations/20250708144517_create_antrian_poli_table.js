@@ -10,6 +10,7 @@ export const up = function (knex) {
       .references('IDPOLI').inTable('poli').onDelete('CASCADE');
     table.string('STATUS').defaultTo('Belum');
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
+    table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());
   });
 };
 
