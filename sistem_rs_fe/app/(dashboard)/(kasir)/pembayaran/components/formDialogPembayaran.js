@@ -30,7 +30,6 @@ const FormDialogPembayaran = ({
 
   const validate = () => {
     const newErrors = {};
-    if (!form.NOPEMBAYARAN) newErrors.NOPEMBAYARAN = 'No Pembayaran wajib diisi';
     if (!form.IDINVOICE) newErrors.IDINVOICE = 'Invoice wajib dipilih';
     if (!form.NIK) newErrors.NIK = 'NIK wajib ada';
     if (!form.NAMAPASIEN) newErrors.NAMAPASIEN = 'Nama Pasien wajib ada';
@@ -90,10 +89,9 @@ const FormDialogPembayaran = ({
         <div>
           <label className="font-medium">No Pembayaran</label>
           <InputText
-            className={classNames('w-full mt-2', { 'p-invalid': errors.NOPEMBAYARAN })}
-            value={form.NOPEMBAYARAN}
-            onChange={(e) => setForm({ ...form, NOPEMBAYARAN: e.target.value })}
-            placeholder="Contoh: PAY-20250709-001"
+            className={classNames('w-full mt-2')}
+            value={form.NOPEMBAYARAN || 'Otomatis'}
+            readOnly
           />
           {errors.NOPEMBAYARAN && <small className="p-error">{errors.NOPEMBAYARAN}</small>}
         </div>

@@ -3,11 +3,22 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
+import { Dropdown } from "primereact/dropdown";
 import React, { useEffect } from "react";
 import Link from "next/link";
 import "@/styles/customTable.css";
 
-const TabelAntrianPoli = ({ data, poliList, loading, onPanggil, onReset, currentId, fetchData }) => {
+const TabelAntrianPoli = ({
+  data,
+  poliList,
+  loading,
+  onPanggil,
+  onReset,
+  currentId,
+  fetchData,
+  selectedZona,
+  setSelectedZona,
+}) => {
   useEffect(() => {
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
@@ -15,7 +26,8 @@ const TabelAntrianPoli = ({ data, poliList, loading, onPanggil, onReset, current
       }
     };
     document.addEventListener("visibilitychange", handleVisibility);
-    return () => document.removeEventListener("visibilitychange", handleVisibility);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibility);
   }, [fetchData]);
 
   const renderTable = (poliName) => {
@@ -84,7 +96,11 @@ const TabelAntrianPoli = ({ data, poliList, loading, onPanggil, onReset, current
             severity="danger"
             size="small"
             onClick={() => {
-              if (confirm(`Apakah kamu yakin ingin mereset antrian Poli ${poliName}?`)) {
+              if (
+                confirm(
+                  `Apakah kamu yakin ingin mereset antrian Poli ${poliName}?`
+                )
+              ) {
                 onReset(poliName);
               }
             }}
@@ -105,11 +121,28 @@ const TabelAntrianPoli = ({ data, poliList, loading, onPanggil, onReset, current
             className="w-full"
             emptyMessage="Tidak ada data antrian"
           >
-            <Column header="No" body={(_, { rowIndex }) => rowIndex + 1} style={{ width: '5rem' }} />
-            <Column field="NO_ANTRIAN" header="No Antrian" style={{ minWidth: '8rem' }} />
-            <Column field="POLI" header="Poli" style={{ minWidth: '8rem' }} />
-            <Column field="STATUS" header="Status" body={statusBodyTemplate} style={{ minWidth: '7rem' }} />
-            <Column header="Aksi" body={actionBodyTemplate} style={{ minWidth: '16rem' }} />
+            <Column
+              header="No"
+              body={(_, { rowIndex }) => rowIndex + 1}
+              style={{ width: "5rem" }}
+            />
+            <Column
+              field="NO_ANTRIAN"
+              header="No Antrian"
+              style={{ minWidth: "8rem" }}
+            />
+            <Column field="POLI" header="Poli" style={{ minWidth: "8rem" }} />
+            <Column
+              field="STATUS"
+              header="Status"
+              body={statusBodyTemplate}
+              style={{ minWidth: "7rem" }}
+            />
+            <Column
+              header="Aksi"
+              body={actionBodyTemplate}
+              style={{ minWidth: "16rem" }}
+            />
           </DataTable>
         </div>
       </div>
@@ -118,19 +151,49 @@ const TabelAntrianPoli = ({ data, poliList, loading, onPanggil, onReset, current
 
   return (
     <>
-      <div className="flex justify-content-end gap-2 mb-4">
-        <Link href="/antrian/poli" target="_blank" rel="noopener noreferrer">
-          <Button label="Display Antrian Poli" icon="pi pi-table" />
-        </Link>
-        <Link href="/monitor/poli" target="_blank" rel="noopener noreferrer">
-          <Button label="Display Monitor Poli" icon="pi pi-desktop" />
-        </Link>
+      <div className="flex justify-between items-center flex-wrap gap-4 mb-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">Filter Zona:</span>
+          <Dropdown
+            value={selectedZona}
+            onChange={(e) => setSelectedZona(e.value)}
+            options={[
+              { label: "Semua", value: null },
+              ...[...new Set(poliList.map((p) => p.ZONA))].map((z) => ({
+                label: z,
+                value: z,
+              })),
+            ]}
+            placeholder="Pilih Zona"
+            className="w-[180px] text-sm"
+            showClear
+          />
+        </div>
+
+        <div className="flex gap-2 ml-auto">
+          <Link href="/antrian/poli" target="_blank" rel="noopener noreferrer">
+            <Button label="Display Antrian Poli" icon="pi pi-table" />
+          </Link>
+          <Link
+            href={
+              selectedZona
+                ? `/monitor/poli?zona=${encodeURIComponent(selectedZona)}`
+                : "/monitor/poli"
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button label="Display Monitor Poli" icon="pi pi-desktop" />
+          </Link>
+        </div>
       </div>
 
       {poliList.length > 0 ? (
         poliList.map((poli) => renderTable(poli.NAMAPOLI))
       ) : (
-        <p className="text-center text-gray-500 mt-10">Tidak ada poli tersedia</p>
+        <p className="text-center text-gray-500 mt-10">
+          Tidak ada poli tersedia
+        </p>
       )}
     </>
   );

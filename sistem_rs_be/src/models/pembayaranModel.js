@@ -28,8 +28,8 @@ export const getById = (id) => {
     .first();
 };
 
-export const create = (data) => {
-  return db('pembayaran').insert(data);
+export const create = (data, trx) => {
+  return db('pembayaran').transacting(trx).insert(data);
 };
 
 export const update = (id, data) => {

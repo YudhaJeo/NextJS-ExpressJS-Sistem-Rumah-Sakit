@@ -25,10 +25,11 @@ const FormPoli = ({ visible, formData, onHide, onChange, onSubmit, errors }) => 
         <div>
           <label>Nama Poli</label>
           <InputText
-            className="w-full mt-2"
+            className={inputClass('NAMAPOLI')}
             value={formData.NAMAPOLI}
             onChange={(e) => onChange({ ...formData, NAMAPOLI: e.target.value })}
           />
+          {errors.NAMAPOLI && <small className="text-red-500">{errors.NAMAPOLI}</small>}
         </div>
 
         <div>
@@ -39,6 +40,16 @@ const FormPoli = ({ visible, formData, onHide, onChange, onSubmit, errors }) => 
             onChange={(e) => onChange({ ...formData, KODE: e.target.value })}
           />
           {errors.KODE && <small className="text-red-500">{errors.KODE}</small>}
+        </div>
+
+        <div>
+          <label>Zona</label>
+          <InputText
+            className={inputClass('ZONA')}
+            value={formData.ZONA}
+            onChange={(e) => onChange({ ...formData, ZONA: e.target.value})}
+          />
+          {errors.ZONA && <small className="text-red-500">{errors.ZONA}</small>}
         </div>
 
         <div className="text-right pt-3">

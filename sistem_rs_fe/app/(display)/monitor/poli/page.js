@@ -9,6 +9,7 @@ import { Toast } from "primereact/toast";
 import { Tag } from "primereact/tag";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Divider } from "primereact/divider";
+import { useSearchParams } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || API_URL.replace("http", "ws");
@@ -22,6 +23,9 @@ function MonitorAntrianPoli() {
   const [userHasInteracted, setUserHasInteracted] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [time, setTime] = useState(null);
+  
+  const searchParams = useSearchParams();
+  const zona = searchParams.get("zona");
 
   const toast = useRef(null);
   const ws = useRef(null);
@@ -109,7 +113,13 @@ function MonitorAntrianPoli() {
         axios.get(`${API_URL}/poli`),
         axios.get(`${API_URL}/antrianpoli/data`),
       ]);
-      setPoliList(poliRes.data || []);
+      let filteredPoli = poliRes.data || [];
+      if (zona) {
+        filteredPoli = filteredPoli.filter(
+          (p) => p.ZONA?.toLowerCase() === zona.toLowerCase()
+        );
+      }
+      setPoliList(filteredPoli);
       setAntrianList(antrianRes.data.data || []);
     } catch {
       showToast("error", "Gagal memuat data");
