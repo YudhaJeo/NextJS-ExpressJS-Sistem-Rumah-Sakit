@@ -22,6 +22,7 @@ const PoliPage = () => {
     IDPOLI: 0,
     NAMAPOLI: "",
     KODE: "",
+    ZONA: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -57,6 +58,7 @@ const PoliPage = () => {
 
     if (!formData.NAMAPOLI?.trim()) newErrors.NAMAPOLI = 'Nama Poli wajib diisi';
     if (!formData.KODE?.trim()) newErrors.KODE = 'Kode wajib diisi';
+    if (!formData.ZONA?.trim()) newErrors.ZONA = 'Zona wajib diisi';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -68,7 +70,8 @@ const PoliPage = () => {
     } else {
       const filtered = originalData.filter((item) =>
         item.NAMAPOLI.toLowerCase().includes(keyword.toLowerCase()) ||
-        item.KODE.toLowerCase().includes(keyword.toLowerCase())
+        item.KODE.toLowerCase().includes(keyword.toLowerCase()) ||
+        item.ZONA.toLowerCase().includes(keyword.toLowerCase())
       );
       setData(filtered);
     }
@@ -129,6 +132,7 @@ const PoliPage = () => {
       IDPOLI: 0,
       NAMAPOLI: "",
       KODE: "",
+      ZONA: "",
     });
     setErrors({});
   };
