@@ -4,7 +4,6 @@
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import React from 'react';
 
@@ -15,8 +14,7 @@ const FormDialogBangsal = ({
   form, 
   setForm,
   errors,
-  bangsalOption,
-  asuransiOptions
+  bangsalOption
 }) => {
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
@@ -67,18 +65,6 @@ const FormDialogBangsal = ({
             placeholder="Masukkan lokasi bangsal"
           />
           {errors.LOKASI && <small className="text-red-500">{errors.LOKASI}</small>}
-        </div>
-
-
-        <div className="mt-2">
-          <label>Keterangan</label>
-          <InputText
-            className={inputClass('KETERANGAN')}
-            value={form.KETERANGAN}
-            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
-            placeholder='Tambahkan keterangan lokasi dsb.'
-          />
-          {errors.KETERANGAN && <small className="text-red-500">{errors.KETERANGAN}</small>}
         </div>
 
         <div className="text-right pt-3">

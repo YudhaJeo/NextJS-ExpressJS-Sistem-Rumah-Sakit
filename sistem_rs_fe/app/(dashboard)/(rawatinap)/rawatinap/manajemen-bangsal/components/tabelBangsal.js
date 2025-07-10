@@ -19,7 +19,6 @@ const TabelBangsal = ({ data, loading, onEdit, onDelete }) => {
         body={(row) => row.NAMAJENIS}
       />
       <Column field="LOKASI" header="Lokasi" />
-      <Column field="KETERANGAN" header="Keterangan" />
 
       <Column
         header="Aksi"

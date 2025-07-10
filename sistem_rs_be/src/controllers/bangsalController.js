@@ -13,7 +13,7 @@ export async function getAllBangsal(req, res) {
 
 export async function createBangsal(req, res) {
   try {
-    const { NAMABANGSAL, IDJENISBANGSAL, LOKASI, KETERANGAN } = req.body;
+    const { NAMABANGSAL, IDJENISBANGSAL, LOKASI } = req.body;
 
     const existing = await BangsalModel.getByNama(NAMABANGSAL);
     if (existing) {
@@ -24,12 +24,10 @@ export async function createBangsal(req, res) {
       NAMABANGSAL,
       IDJENISBANGSAL,
       LOKASI,
-      KETERANGAN,
     });
 
     res.json({ message: 'Bangsal berhasil ditambahkan' });
   } catch (err) {
-    console.error('Gagal tambah bangsal:', err);
     res.status(500).json({ error: err.message });
   }
 }
@@ -37,13 +35,12 @@ export async function createBangsal(req, res) {
 export async function updateBangsal(req, res) {
   try {
     const { id } = req.params;
-    const { NAMABANGSAL, IDJENISBANGSAL, LOKASI, KETERANGAN } = req.body;
+    const { NAMABANGSAL, IDJENISBANGSAL, LOKASI} = req.body;
 
     const updated = await BangsalModel.update(id, {
       NAMABANGSAL,
       IDJENISBANGSAL,
       LOKASI,
-      KETERANGAN,
     });
 
     if (!updated) {
