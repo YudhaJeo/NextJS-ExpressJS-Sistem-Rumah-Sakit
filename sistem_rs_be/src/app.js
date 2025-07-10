@@ -22,6 +22,8 @@ import datadokterRoutes from './routes/datadokterRoutes.js';
 import bangsalRoutes from './routes/bangsalRoutes.js';
 import jadwalpraktekRoutes from './routes/jadwalpraktekRoutes.js';
 import pembayaranRoutes from './routes/pembayaranRoutes.js';
+import kamarRoutes from './routes/kamarRoutes.js';
+
 const app = express();
 
 app.use(cors({ 
@@ -55,5 +57,6 @@ app.use('/api/antrianpoli', antrianPoliRoutes);
 app.use('/api/datadokter', datadokterRoutes);
 app.use('/api/jadwalpraktek', jadwalpraktekRoutes);
 app.use('/api/pembayaran', pembayaranRoutes);
+app.use('/api/kamar', kamarRoutes);
 
 export default app;
