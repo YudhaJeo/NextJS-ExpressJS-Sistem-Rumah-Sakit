@@ -14,3 +14,16 @@ export const getAll = () => {
 export const getByNomor = (nomorbed) => {
     return db('bed').where({ NOMORBED: nomorbed }).first();
 }
+
+export const create = (data) => {
+    return db('bed').insert(data);
+  };
+  
+  export const update = (id, data) => {
+    return db('bed')
+      .where({ IDBED: id })
+      .update({
+        ...data,
+        UPDATED_AT: db.fn.now(),
+      });
+  };
