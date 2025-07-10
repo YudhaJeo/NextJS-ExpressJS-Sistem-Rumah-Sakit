@@ -116,10 +116,10 @@ function MonitorAntrianPoli() {
       let filteredPoli = poliRes.data || [];
       if (zona) {
         filteredPoli = filteredPoli.filter(
-          (p) => p.ZONA?.tolowerCase() === zona.toLowerCase()
+          (p) => p.ZONA?.toLowerCase() === zona.toLowerCase()
         );
       }
-      setPoliList(poliRes.data || []);
+      setPoliList(filteredPoli);
       setAntrianList(antrianRes.data.data || []);
     } catch {
       showToast("error", "Gagal memuat data");

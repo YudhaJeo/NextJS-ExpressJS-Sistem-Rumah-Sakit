@@ -151,34 +151,42 @@ const TabelAntrianPoli = ({
 
   return (
     <>
-     <div className="flex justify-between items-center flex-wrap gap-4 mb-4">
-  <div className="flex items-center gap-2">
-    <span className="text-sm font-medium">Filter Zona:</span>
-    <Dropdown
-      value={selectedZona}
-      onChange={(e) => setSelectedZona(e.value)}
-      options={[
-        { label: "Semua", value: null },
-        ...[...new Set(poliList.map((p) => p.ZONA))].map((z) => ({
-          label: z,
-          value: z,
-        })),
-      ]}
-      placeholder="Pilih Zona"
-      className="w-[180px] text-sm"
-      showClear
-    />
-  </div>
+      <div className="flex justify-between items-center flex-wrap gap-4 mb-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">Filter Zona:</span>
+          <Dropdown
+            value={selectedZona}
+            onChange={(e) => setSelectedZona(e.value)}
+            options={[
+              { label: "Semua", value: null },
+              ...[...new Set(poliList.map((p) => p.ZONA))].map((z) => ({
+                label: z,
+                value: z,
+              })),
+            ]}
+            placeholder="Pilih Zona"
+            className="w-[180px] text-sm"
+            showClear
+          />
+        </div>
 
-  <div className="flex gap-2 ml-auto">
-    <Link href="/antrian/poli" target="_blank" rel="noopener noreferrer">
-      <Button label="Display Antrian Poli" icon="pi pi-table" />
-    </Link>
-    <Link href="/monitor/poli" target="_blank" rel="noopener noreferrer">
-      <Button label="Display Monitor Poli" icon="pi pi-desktop" />
-    </Link>
-  </div>
-</div>
+        <div className="flex gap-2 ml-auto">
+          <Link href="/antrian/poli" target="_blank" rel="noopener noreferrer">
+            <Button label="Display Antrian Poli" icon="pi pi-table" />
+          </Link>
+          <Link
+            href={
+              selectedZona
+                ? `/monitor/poli?zona=${encodeURIComponent(selectedZona)}`
+                : "/monitor/poli"
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button label="Display Monitor Poli" icon="pi pi-desktop" />
+          </Link>
+        </div>
+      </div>
 
       {poliList.length > 0 ? (
         poliList.map((poli) => renderTable(poli.NAMAPOLI))
