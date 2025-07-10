@@ -9,7 +9,6 @@ import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Button } from 'primereact/button';
 import FilterTanggal from '@/app/components/filterTanggal';
-
 import TabelPembayaran from './components/tabelPembayaran';
 import FormDialogPembayaran from './components/formDialogPembayaran';
 
@@ -126,27 +125,36 @@ const Page = () => {
   };
 
   const handleSubmit = async () => {
-    const isEdit = !!form.IDPEMBAYARAN;
-    const url = isEdit
-      ? `${API_URL}/pembayaran/${form.IDPEMBAYARAN}`
-      : `${API_URL}/pembayaran`;
+  const isEdit = !!form.IDPEMBAYARAN;
+  const url = isEdit
+    ? `${API_URL}/pembayaran/${form.IDPEMBAYARAN}`
+    : `${API_URL}/pembayaran`;
 
-    try {
-      if (isEdit) {
-        const { NAMAPASIEN, NOINVOICE, ASURANSI, ...body } = form;
-        await axios.put(url, body);
-        toastRef.current?.showToast('00', 'Data berhasil diperbarui');
-      } else {
-        await axios.post(url, form);
-        toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
-      }
-      fetchData();
-      setDialogVisible(false);
-      resetForm();
-    } catch (err) {
-      console.error('Gagal simpan data pembayaran:', err);
-      toastRef.current?.showToast('01', 'Gagal menyimpan data');
+  try {
+    if (isEdit) {
+      const { NAMAPASIEN, NOINVOICE, ASURANSI, NOPEMBAYARAN, ...body } = form; 
+      await axios.put(url, body);
+      toastRef.current?.showToast('00', 'Data berhasil diperbarui');
+    } else {
+      const { NOPEMBAYARAN, NAMAPASIEN, NOINVOICE, ASURANSI, ...body } = form; 
+      const res = await axios.post(url, body);
+
+      // ✅ Ambil NOPEMBAYARAN hasil generate dari backend
+      const { NOPEMBAYARAN: generatedNo } = res.data;
+
+      toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
+
+      // ✅ Update form pakai nomor baru, kalau mau tampilkan ke user
+      setForm((prev) => ({ ...prev, NOPEMBAYARAN: generatedNo }));
     }
+
+    fetchData();
+    setDialogVisible(false);
+    resetForm();
+  } catch (err) {
+    console.error('Gagal simpan data pembayaran:', err);
+    toastRef.current?.showToast('01', 'Gagal menyimpan data');
+  }
   };
 
   const handleEdit = (row) => {

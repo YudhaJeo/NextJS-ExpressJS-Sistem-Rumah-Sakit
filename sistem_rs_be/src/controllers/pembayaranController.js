@@ -1,5 +1,6 @@
 import * as PembayaranModel from '../models/pembayaranModel.js';
 import db from '../core/config/knex.js';
+import { generateNoPembayaran } from '../utils/generateNoPembayaran.js';
 
 export async function getAllPembayaran(req, res) {
   try {
@@ -31,7 +32,6 @@ export async function createPembayaran(req, res) {
   const trx = await db.transaction();
   try {
     const {
-      NOPEMBAYARAN,
       IDINVOICE,
       NIK,
       IDASURANSI,
@@ -41,36 +41,48 @@ export async function createPembayaran(req, res) {
       KETERANGAN
     } = req.body;
 
-    // Validasi foreign key: invoice
+    // Validasi foreign key
     const invoice = await trx('invoice').where('IDINVOICE', IDINVOICE).first();
     if (!invoice) {
       await trx.rollback();
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    // Validasi foreign key: pasien
     const pasien = await trx('pasien').where('NIK', NIK).first();
     if (!pasien) {
       await trx.rollback();
       return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan' });
     }
 
-    // Opsional: validasi IDASURANSI kalau mau
     let idAsuransi = IDASURANSI || pasien.IDASURANSI;
 
-    await PembayaranModel.create({
-      NOPEMBAYARAN,
-      IDINVOICE,
-      NIK,
-      IDASURANSI: idAsuransi,
-      TANGGALBAYAR: TANGGALBAYAR || db.fn.now(),
-      METODEPEMBAYARAN,
-      JUMLAHBAYAR,
-      KETERANGAN
-    });
+    // ✅ Panggil helper generateNoPembayaran
+    const NOPEMBAYARAN = await generateNoPembayaran(
+      TANGGALBAYAR || new Date().toISOString(),
+      trx
+    );
+
+    // ✅ Insert PAKAI trx
+    await PembayaranModel.create(
+      {
+        NOPEMBAYARAN,
+        IDINVOICE,
+        NIK,
+        IDASURANSI: idAsuransi,
+        TANGGALBAYAR: TANGGALBAYAR || db.fn.now(),
+        METODEPEMBAYARAN,
+        JUMLAHBAYAR,
+        KETERANGAN
+      },
+      trx // ⬅️ PENTING!
+    );
 
     await trx.commit();
-    res.status(201).json({ success: true, message: 'Pembayaran berhasil ditambahkan' });
+    res.status(201).json({
+      success: true,
+      message: 'Pembayaran berhasil ditambahkan',
+      NOPEMBAYARAN // Kirim balik ke frontend
+    });
   } catch (err) {
     await trx.rollback();
     console.error('Create Error:', err);
