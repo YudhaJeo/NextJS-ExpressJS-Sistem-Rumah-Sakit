@@ -24,9 +24,9 @@ export async function getPoliById(req, res) {
 
 export async function createPoli(req, res) {
     try {
-        const { NAMAPOLI, KODE } = req.body;
+        const { NAMAPOLI, KODE, ZONA } = req.body;
 
-        await PoliModel.create({ NAMAPOLI, KODE });
+        await PoliModel.create({ NAMAPOLI, KODE, ZONA });
         res.json({ message: 'Poli berhasil ditambahkan' });
     } catch (err) {
         console.error('Error backend:', err);
@@ -37,9 +37,9 @@ export async function createPoli(req, res) {
 export async function updatePoli(req, res) {
     try {
         const id = req.params.id;
-        const { NAMAPOLI, KODE } = req.body;
+        const { NAMAPOLI, KODE, ZONA } = req.body;
 
-        await PoliModel.update(id, { NAMAPOLI, KODE });
+        await PoliModel.update(id, { NAMAPOLI, KODE, ZONA });
         res.json({ message: 'Poli berhasil diperbarui' });
     } catch (err) {
         console.error('Error backend:', err);
