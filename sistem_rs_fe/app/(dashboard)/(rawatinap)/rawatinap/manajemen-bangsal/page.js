@@ -54,7 +54,6 @@ const Page = () => {
     NAMABANGSAL: '',
     IDJENISBANGSAL: '',
     LOKASI: '',
-    KETERANGAN: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -179,7 +178,6 @@ const Page = () => {
       NAMABANGSAL: '',
       IDJENISBANGSAL: '',
       LOKASI: '',
-      KETERANGAN: '',
     });    
     setErrors({});
   };

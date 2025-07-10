@@ -1,24 +1,24 @@
-// app\(dashboard)\(rawatinap)\rawatinap\manajemen-bangsal\components\tabelBangsal.js
+// app\(dashboard)\(rawatinap)\rawatinap\manajemen-kamar\components\tabelKamar.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import React from 'react';
-import { Tag } from "primereact/tag";
 
-const TabelBangsal = ({ data, loading, onEdit, onDelete }) => {
+const TabelKamar = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable value={data} paginator rows={5} loading={loading} size="small" scrollable>
       
-      <Column field="IDBANGSAL" header="ID" />
-      <Column field="NAMABANGSAL" header="Nama Bangsal"/>
+      <Column field="IDKAMAR" header="ID" />
+      <Column field="NAMAKAMAR" header="Nama Kamar" />
       <Column
-        field="IDJENISBANGSAL"
-        header="Jenis Bangsal"
-        body={(row) => row.NAMAJENIS}
+        field="IDBANGSAL"
+        header="Bangsal"
+        body={(row) => row.NAMABANGSAL}
       />
-      <Column field="LOKASI" header="Lokasi" />
+      <Column field="KAPASITAS" header="Kapasitas" />
+      <Column field="KETERANGAN" header="Keterangan" />
 
       <Column
         header="Aksi"
@@ -44,4 +44,4 @@ const TabelBangsal = ({ data, loading, onEdit, onDelete }) => {
   );
 };
 
-export default TabelBangsal;
+export default TabelKamar;
