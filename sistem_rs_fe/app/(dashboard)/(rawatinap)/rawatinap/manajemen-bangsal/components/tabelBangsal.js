@@ -18,34 +18,7 @@ const TabelBangsal = ({ data, loading, onEdit, onDelete }) => {
         header="Jenis Bangsal"
         body={(row) => row.NAMAJENIS}
       />
-      <Column field="KAPASITAS" header="Kapasitas" />
-      <Column field="TERISI" header="Terisi" />
-      <Column
-        header="Status"
-        body={(row) => {
-          const status = row.STATUS;
-          const severity = () => {
-            switch (status) {
-              case "TERSEDIA":
-                return "success";
-              case "PENUH":
-                return "danger"; 
-              case "DIBERSIHKAN":
-                return "warning"; 
-              default:
-                return "info"; 
-            }
-          };
-
-          return <Tag 
-          value={status.toLowerCase().replace(/^\w/, c => c.toUpperCase())} 
-          severity={severity()} 
-        />
-        ;
-        }}
-      />
-
-
+      <Column field="LOKASI" header="Lokasi" />
       <Column field="KETERANGAN" header="Keterangan" />
 
       <Column

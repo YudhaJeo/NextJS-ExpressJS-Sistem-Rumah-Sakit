@@ -59,48 +59,16 @@ const FormDialogBangsal = ({
         </div>
 
         <div className="mt-2">
-          <label>Kapasitas</label>
-          <InputNumber
-            inputClassName={inputClass('KAPASITAS')}
-            value={form.KAPASITAS}
-            onValueChange={(e) => setForm({ ...form, KAPASITAS: e.value })}
-            useGrouping={false}
-            min={0}
-            className="w-full"
-            placeholder="Masukkan angka"
+          <label>Lokasi</label>
+          <InputText
+            className={inputClass('LOKASI')}
+            value={form.LOKASI}
+            onChange={(e) => setForm({ ...form, LOKASI: e.target.value })}
+            placeholder="Masukkan lokasi bangsal"
           />
-          {errors.KAPASITAS && <small className="text-red-500">{errors.KAPASITAS}</small>}
+          {errors.LOKASI && <small className="text-red-500">{errors.LOKASI}</small>}
         </div>
 
-        <div className="mt-2">
-          <label>Tersedia</label>
-          <InputNumber
-            inputClassName={inputClass('TERISI')}
-            value={form.TERISI}
-            onValueChange={(e) => setForm({ ...form, TERISI: e.value })}
-            useGrouping={false}
-            min={0}
-            className="w-full"
-            placeholder="Masukkan angka"
-          />
-          {errors.TERISI && <small className="text-red-500">{errors.TERISI}</small>}
-        </div>
-
-        <div className="mt-2">
-          <label>Status</label>
-          <Dropdown
-            className={inputClass('STATUS')}
-            options={[
-              { label: 'Tersedia', value: 'TERSEDIA' },
-              { label: 'Penuh', value: 'PENUH' },
-              { label: 'Dibersihkan', value: 'DIBERSIHKAN' },
-            ]}
-            value={form.STATUS}
-            onChange={(e) => setForm({ ...form, STATUS: e.value })}
-            placeholder="Pilih"
-          />
-          {errors.STATUS && <small className="text-red-500">{errors.STATUS}</small>}
-        </div>
 
         <div className="mt-2">
           <label>Keterangan</label>
