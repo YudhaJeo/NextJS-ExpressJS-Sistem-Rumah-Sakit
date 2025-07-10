@@ -24,12 +24,11 @@ export async function createKamar(req, res) {
       NAMAKAMAR,
       IDBANGSAL,
       KAPASITAS,
-      KETERANGAN
+      KETERANGAN,
     });
 
     res.json({ message: 'Kamar berhasil ditambahkan' });
   } catch (err) {
-    console.error('Gagal tambah kamar:', err);
     res.status(500).json({ error: err.message });
   }
 }
@@ -43,7 +42,7 @@ export async function updateKamar(req, res) {
       NAMAKAMAR,
       IDBANGSAL,
       KAPASITAS,
-      KETERANGAN
+      KETERANGAN,
     });
 
     if (!updated) {
@@ -62,7 +61,7 @@ export async function deleteKamar(req, res) {
     const { id } = req.params;
     const deleted = await KamarModel.deleteById(id);
 
-    if (!deleted) {
+    if (deleted === 0) {
       return res.status(404).json({ error: 'Kamar tidak ditemukan' });
     }
 

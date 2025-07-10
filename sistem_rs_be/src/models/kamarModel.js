@@ -6,7 +6,8 @@ export const getAll = () => {
     .join('bangsal', 'kamar.IDBANGSAL', 'bangsal.IDBANGSAL')
     .select(
       'kamar.*',
-      'bangsal.NAMABANGSAL'
+      'bangsal.NAMABANGSAL',
+      'bangsal.LOKASI'
     );
 };
 
@@ -14,19 +15,17 @@ export const getByNama = (nama) => {
   return db('kamar').where({ NAMAKAMAR: nama }).first();
 };
 
-export const getById = (id) => {
-  return db('kamar').where({ IDKAMAR: id }).first();
-};
-
 export const create = (data) => {
   return db('kamar').insert(data);
 };
 
 export const update = (id, data) => {
-  return db('kamar').where({ IDKAMAR: id }).update({
-    ...data,
-    UPDATED_AT: db.fn.now()
-  });
+  return db('kamar')
+    .where({ IDKAMAR: id })
+    .update({
+      ...data,
+      UPDATED_AT: db.fn.now(),
+    });
 };
 
 export const deleteById = (id) => {

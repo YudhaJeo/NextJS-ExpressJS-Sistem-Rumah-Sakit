@@ -1,12 +1,17 @@
 // src/routes/kamarRoutes.js
 import express from 'express';
-import * as KamarController from '../controllers/kamarController.js';
+import {
+    getAllKamar, 
+    createKamar, 
+    updateKamar, 
+    deleteKamar
+} from '../controllers/kamarController.js';
 
 const router = express.Router();
 
-router.get('/', KamarController.getAllKamar);
-router.post('/', KamarController.createKamar);
-router.put('/:id', KamarController.updateKamar);
-router.delete('/:id', KamarController.deleteKamar);
+router.get('/', getAllKamar);
+router.post('/', createKamar);
+router.put('/:id', updateKamar);
+router.delete('/:id', deleteKamar);
 
 export default router;

@@ -1,4 +1,5 @@
 // app\(dashboard)\(rawatinap)\rawatinap\manajemen-kamar\components\formKamar.js
+// app\(dashboard)\(rawatinap)\rawatinap\manajemen-kamar\components\FormKamar.js
 'use client';
 
 import { Button } from 'primereact/button';
@@ -7,14 +8,14 @@ import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import React from 'react';
 
-const FormKamar = ({ 
+const FormDialogKamar = ({ 
   visible, 
   onHide, 
   onSubmit, 
   form, 
   setForm,
   errors,
-  bangsalOptions,
+  bangsalOptions
 }) => {
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
@@ -39,12 +40,12 @@ const FormKamar = ({
             className={inputClass('NAMAKAMAR')}
             value={form.NAMAKAMAR}
             onChange={(e) => setForm({ ...form, NAMAKAMAR: e.target.value })}
-            placeholder="Masukkan nama kamar"
+            placeholder='Masukkan nama kamar'
           />
           {errors.NAMAKAMAR && <small className="text-red-500">{errors.NAMAKAMAR}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label>Bangsal</label>
           <Dropdown
             className={inputClass('IDBANGSAL')}
@@ -56,25 +57,25 @@ const FormKamar = ({
           {errors.IDBANGSAL && <small className="text-red-500">{errors.IDBANGSAL}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label>Kapasitas</label>
           <InputText
-            keyfilter="pint"
             className={inputClass('KAPASITAS')}
             value={form.KAPASITAS}
             onChange={(e) => setForm({ ...form, KAPASITAS: e.target.value })}
-            placeholder="Masukkan kapasitas kamar"
+            placeholder="Masukkan kapasitas"
+            keyfilter="int"
           />
           {errors.KAPASITAS && <small className="text-red-500">{errors.KAPASITAS}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label>Keterangan</label>
           <InputText
             className={inputClass('KETERANGAN')}
             value={form.KETERANGAN}
             onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
-            placeholder="Opsional"
+            placeholder="Masukkan keterangan"
           />
           {errors.KETERANGAN && <small className="text-red-500">{errors.KETERANGAN}</small>}
         </div>
@@ -87,4 +88,4 @@ const FormKamar = ({
   );
 };
 
-export default FormKamar;
+export default FormDialogKamar;
