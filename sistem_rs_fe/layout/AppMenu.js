@@ -153,7 +153,6 @@ const AppMenu = () => {
             { label: "Manajemen Bed", icon: "pi pi-fw pi-objects-column", to: "/rawatinap/manajemen-bed" },
           ],
         },
-        { label: "Monitoring Bangsal", icon: "pi pi-fw pi-eye", to: "/rawatinap/monitoring-bangsal" },
         { label: "Charge Kamar", icon: "pi pi-fw pi-wallet", to: "/rawatinap/charge-kamar" },
         { label: "Resep Obat", icon: "pi pi-fw pi-briefcase", to: "/rawatinap/resep" },
         { label: "Tindakan Medis", icon: "pi pi-fw pi-heart", to: "/rawatinap/tindakan" },
