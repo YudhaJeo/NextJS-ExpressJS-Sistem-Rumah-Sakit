@@ -61,7 +61,7 @@ const Page = () => {
     try {
       const res = await axios.get(`${API_URL}/kamar`);
       const options = res.data.data.map((item) => ({
-        label: `${item.IDKAMAR} - ${item.NAMAKAMAR}`,
+        label: `${item.NAMAKAMAR} - ${item.NAMABANGSAL}`,
         value: item.IDKAMAR,
       }));
       setBangsalOptions(options);
@@ -69,6 +69,7 @@ const Page = () => {
       console.error('Gagal ambil kamar:', err);
     }
   };
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -155,7 +156,8 @@ const Page = () => {
         return (
           item.NOMORBED.toLowerCase().includes(key) ||
           item.STATUS.toLowerCase().includes(key) ||
-          item.NAMAKAMAR.toLowerCase().includes(key)
+          item.NAMAKAMAR.toLowerCase().includes(key) || 
+          item.NAMAJENIS?.toLowerCase().includes(key)   
         );
       });
       setData(filtered);

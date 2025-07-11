@@ -4,12 +4,16 @@ import db from '../core/config/knex.js'
 
 export const getAll = () => {
   return db('bed')
-    .join('kamar', 'bed.IDKAMAR', 'kamar.IDKAMAR')
+    .join('kamar', 'bed.IDKAMAR', '=', 'kamar.IDKAMAR')
+    .join('bangsal', 'kamar.IDBANGSAL', '=', 'bangsal.IDBANGSAL')
     .select(
       'bed.*',
-      'kamar.NAMAKAMAR'
+      'kamar.NAMAKAMAR',
+      'bangsal.NAMABANGSAL' // <-- ambil nama bangsal di sini
     );
 };
+
+
 export const getByNomor = (nomorbed) => {
     return db('bed').where({ NOMORBED: nomorbed }).first();
 }

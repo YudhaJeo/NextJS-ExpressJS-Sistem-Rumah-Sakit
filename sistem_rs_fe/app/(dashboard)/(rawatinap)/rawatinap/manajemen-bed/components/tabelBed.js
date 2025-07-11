@@ -17,9 +17,14 @@ const TabelBed = ({ data, loading, onEdit, onDelete }) => {
         body={(row) => row.NAMAKAMAR}
       />
       <Column
+        header="Bangsal"
+        body={(row) => row.NAMABANGSAL}
+      />
+      
+      <Column
         header="Status"
         body={(row) => {
-          const status = row.STATUS;
+          const status = row.STATUS || 'Tidak Diketahui';
           const severity = () => {
             switch (status) {
               case "TERSEDIA":
