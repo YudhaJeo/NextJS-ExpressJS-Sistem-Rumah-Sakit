@@ -12,14 +12,12 @@ const server = createServer(app);
 const wss = new WebSocketServer({ server, path: '/api/ws' });
 
 wss.on('connection', (ws) => {
-  console.log('Klien WebSocket tersambung');
 
   ws.on('message', (message) => {
     console.log('Pesan diterima:', message.toString());
   });
 
   ws.on('close', () => {
-    console.log('Klien WebSocket terputus');
   });
 });
 
