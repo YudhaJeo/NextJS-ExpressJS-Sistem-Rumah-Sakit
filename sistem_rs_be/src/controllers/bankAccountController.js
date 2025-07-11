@@ -12,9 +12,25 @@ export async function getAllBank(req, res) {
 export async function createBank(req, res) {
   try {
     const { NAMA_BANK, NO_REKENING, ATAS_NAMA, CABANG, KODE_BANK, STATUS, CATATAN } = req.body;
-    await BankModel.create({ NAMA_BANK, NO_REKENING, ATAS_NAMA, CABANG, KODE_BANK, STATUS, CATATAN });
+
+    if (!NAMA_BANK || !NO_REKENING || !ATAS_NAMA) {
+      return res.status(400).json({ error: 'NAMA_BANK, NO_REKENING, dan ATAS_NAMA wajib diisi' });
+    }
+
+    const dataToInsert = {
+      NAMA_BANK,
+      NO_REKENING,
+      ATAS_NAMA,
+      CABANG: CABANG ?? '',
+      KODE_BANK: KODE_BANK ?? '',
+      STATUS: STATUS ?? 'AKTIF',
+      CATATAN: CATATAN ?? '',
+    };
+
+    await BankModel.create(dataToInsert);
     res.json({ message: 'Rekening bank berhasil ditambahkan' });
   } catch (err) {
+    console.error('CreateBank Error:', err);
     res.status(500).json({ error: err.message });
   }
 }
@@ -23,9 +39,21 @@ export async function updateBank(req, res) {
   try {
     const id = req.params.id;
     const { NAMA_BANK, NO_REKENING, ATAS_NAMA, CABANG, KODE_BANK, STATUS, CATATAN } = req.body;
-    await BankModel.update(id, { NAMA_BANK, NO_REKENING, ATAS_NAMA, CABANG, KODE_BANK, STATUS, CATATAN });
+
+    const dataToUpdate = {
+      NAMA_BANK,
+      NO_REKENING,
+      ATAS_NAMA,
+      CABANG: CABANG ?? '',
+      KODE_BANK: KODE_BANK ?? '',
+      STATUS: STATUS ?? 'AKTIF',
+      CATATAN: CATATAN ?? '',
+    };
+
+    await BankModel.update(id, dataToUpdate);
     res.json({ message: 'Rekening bank berhasil diperbarui' });
   } catch (err) {
+    console.error('UpdateBank Error:', err);
     res.status(500).json({ error: err.message });
   }
 }

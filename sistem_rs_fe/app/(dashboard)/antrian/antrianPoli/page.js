@@ -23,7 +23,7 @@ function DataAntrianPoli() {
     const savedId = localStorage.getItem("currentAntrianPoliId");
     if (savedId) setCurrentId(parseInt(savedId));
 
-    const socket = new WebSocket(`${WS_URL}/api/ws`);
+    const socket = new WebSocket(`${WS_URL}`);
     socket.onopen = () => {
       console.log("WebSocket tersambung");
     };
