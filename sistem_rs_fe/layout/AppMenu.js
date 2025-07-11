@@ -48,10 +48,10 @@ const AppMenu = () => {
     {
       label: "Fitur Pasien",
       items: [
+        { label: "Dashboard Pasien", icon: "pi pi-fw pi-chart-bar", to: "/dashboard" },
         {
           label: "Menu",
           items: [
-        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/dashboard" },
         { label: "Pasien", icon: "pi pi-fw pi-user", to: "/pasien" },
         { label: "Pendaftaran Pasien", 
           icon: "pi pi-fw pi-user-plus",
@@ -65,8 +65,8 @@ const AppMenu = () => {
           label: "Rekam Medis",
           icon: "pi pi-fw pi-folder-open",
           items: [
-            { label: "File Dokumen", icon: "pi pi-fw pi-file", to: "/dataMedis/dokumen" },
-            { label: "Tracer Rekam Medis", icon: "pi pi-fw pi-notes", to: "/dataMedis/tracer" },
+            { label: "File Dokumen", icon: "pi pi-fw pi-file", to: "/rekamMedis/dokumen" },
+            { label: "Tracer Rekam Medis", icon: "pi pi-fw pi-notes", to: "/rekamMedis/tracer" },
           ],
         },
         {
@@ -86,10 +86,10 @@ const AppMenu = () => {
 {
   label: "Fitur Dokter",
   items: [
+    { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dashboarddokter" },
     {
       label: "Menu",
       items: [
-        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/dashboarddokter" },
         { label: "Data Dokter", icon: "pi pi-fw pi-user", to: "/data" },
         { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/dokter/kalender_dokter" },
         { label: "Riwayat Pengobatan", icon: "pi pi-fw pi-folder-open", to: "/dokter/riwayat_pengobatan" },
