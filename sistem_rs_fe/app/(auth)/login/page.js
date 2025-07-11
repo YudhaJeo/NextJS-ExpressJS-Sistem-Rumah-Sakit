@@ -9,6 +9,7 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import "@/styles/gradient.css";
 import ToastNotifier from "@/app/components/toastNotifier";
+import Image from 'next/image';
 
 const URL = process.env.NEXT_PUBLIC_URL;
 
@@ -54,12 +55,14 @@ function LoginPage() {
           <div className="grid h-full">
             <div className="col-12 md:col-6 gap-2 flex flex-col justify-between h-full w-full">
               <div className="w-1/2">
-                <img
-                  src="/layout/images/logo.png"
-                  style={{ maxWidth: "100%" }}
-                  className="h-4rem md:h-5rem"
-                  alt="logo"
-                />
+              <Image
+                src="/layout/images/logo.png"
+                width={80}
+                height={80}
+                style={{ maxWidth: "100%", height: "auto" }}
+                className="h-4rem md:h-5rem"
+                alt="logo"
+              />
 
                 <h3 className="text-2xl text-left font-semibold font-sans mt-2 mb-10">
                   RUMAH SAKIT
@@ -97,11 +100,14 @@ function LoginPage() {
 
               <div className="hidden md:block h-full overflow-hidden w-1/2">
                 <div className="w-full h-full">
-                  <img
-                    src="/layout/images/hospital.jpg"
-                    className="w-full h-full object-cover scale-[1.2]"
-                    alt="cover"
-                  />
+                <Image
+                  src="/layout/images/hospital.jpg"
+                  width={800} 
+                  height={600}
+                  className="w-full h-full object-cover scale-[1.2]"
+                  alt="cover"
+                />
+
                 </div>
               </div>
             </div>
