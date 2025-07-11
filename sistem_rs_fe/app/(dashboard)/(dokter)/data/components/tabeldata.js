@@ -7,11 +7,15 @@ import { Button } from 'primereact/button';
 const TabelData = ({ data, loading, onEdit, onDelete }) => {
 const formatJadwal = (jadwalArray) => {
   if (!jadwalArray || !Array.isArray(jadwalArray)) return "-";
+
   return jadwalArray
-    .map(j => `${j.HARI} ${j.JAM_MULAI}-${j.JAM_SELESAI}`)
+    .map(j => {
+      const jamMulai = j.JAM_MULAI?.substring(0, 5);     
+      const jamSelesai = j.JAM_SELESAI?.substring(0, 5);  
+      return `${j.HARI}, ${jamMulai} - ${jamSelesai}`;
+    })
     .join(", ");
 };
-
   return (
     <DataTable value={data} paginator rows={10} loading={loading}>
       <Column field="NAMADOKTER" header="Nama Dokter" />
