@@ -1,20 +1,23 @@
 import db from '../core/config/knex.js';
 
 export const getAll = () => {
-  return db('data_dokter as d')
-    .leftJoin('poli as p', 'd.IDPOLI', 'p.IDPOLI')
+  return db('data_dokter')
+    .join('dokter', 'data_dokter.IDDOKTER', 'dokter.IDDOKTER')
+    .join('poli', 'data_dokter.IDPOLI', 'poli.IDPOLI')
+    .leftJoin('jadwal_dokter', 'dokter.IDDOKTER', 'jadwal_dokter.IDDOKTER')
+    .groupBy('data_dokter.IDDOKTER')
     .select(
-      'd.IDDOKTER',
-      'd.NAMA_DOKTER',
-      'p.NAMAPOLI as POLI', // Ganti IDPOLI dengan NAMAPOLI
-      'd.JADWALPRAKTEK',
-      'd.NO_TELEPON',
-      'd.EMAIL',
-      'd.ALAMAT',
-      'd.JENIS_KELAMIN'
+      'data_dokter.*',
+      'dokter.NAMADOKTER',
+      'poli.NAMAPOLI',
+      db.raw(`
+        GROUP_CONCAT(
+          CONCAT(jadwal_dokter.HARI, ' ', jadwal_dokter.JAM_MULAI, '-', jadwal_dokter.JAM_SELESAI)
+          SEPARATOR ', '
+        ) as JADWAL
+      `)
     );
 };
-
 
 export const getById = (id) => {
   return db('data_dokter').where('IDDOKTER', id).first();

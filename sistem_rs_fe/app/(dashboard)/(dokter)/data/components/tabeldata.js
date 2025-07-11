@@ -5,11 +5,21 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
 const TabelData = ({ data, loading, onEdit, onDelete }) => {
+const formatJadwal = (jadwalArray) => {
+  if (!jadwalArray || !Array.isArray(jadwalArray)) return "-";
+  return jadwalArray
+    .map(j => `${j.HARI} ${j.JAM_MULAI}-${j.JAM_SELESAI}`)
+    .join(", ");
+};
+
   return (
     <DataTable value={data} paginator rows={10} loading={loading}>
-      <Column field="NAMA_DOKTER" header="Nama Dokter" />
-      <Column field="POLI" header="Poli" />
-      <Column field="JADWALPRAKTEK" header="Jadwal Praktek" />
+      <Column field="NAMADOKTER" header="Nama Dokter" />
+      <Column field="NAMAPOLI" header="Poli" />
+      <Column 
+        header="Jadwal Praktek"
+        body={(rowData) => formatJadwal(rowData.JADWAL)}
+      />
       <Column field="NO_TELEPON" header="Telepon" />
       <Column field="EMAIL" header="Email" />
       <Column field="JENIS_KELAMIN" header="Jenis Kelamin" />
