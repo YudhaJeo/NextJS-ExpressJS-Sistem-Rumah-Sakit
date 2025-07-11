@@ -1,7 +1,7 @@
-// sistem_rs_fe\app\(display)\monitor\poli\page.js
+// sistem_rs_fe/app/(display)/monitor/poli/page.js
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
@@ -10,7 +10,6 @@ import { Toast } from "primereact/toast";
 import { Tag } from "primereact/tag";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Divider } from "primereact/divider";
-import { useSearchParams } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || API_URL.replace("http", "ws");
@@ -24,23 +23,49 @@ function MonitorAntrianPoli() {
   const [userHasInteracted, setUserHasInteracted] = useState(false);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [time, setTime] = useState(null);
-  
   const [zona, setZona] = useState(null);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const z = params.get("zona");
-    if (z) setZona(z);
-  }, []);
-
 
   const toast = useRef(null);
   const ws = useRef(null);
 
   useEffect(() => {
-    fetchData(true);
+    const params = new URLSearchParams(window.location.search);
+    const z = params.get("zona");
+    setZona(z || "");
+  }, []);
+
+const fetchData = useCallback(async (showLoading = false) => {
+  if (showLoading) setLoading(true);
+  try {
+    const [poliRes, antrianRes] = await Promise.all([
+      axios.get(`${API_URL}/poli`),
+      axios.get(`${API_URL}/antrianpoli/data`),
+    ]);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentZona = urlParams.get("zona") || "";
+
+    let filteredPoli = poliRes.data || [];
+    if (currentZona) {
+      filteredPoli = filteredPoli.filter(
+        (p) => p.ZONA?.toLowerCase() === currentZona.toLowerCase()
+      );
+    }
+
+    setPoliList(filteredPoli);
+    setAntrianList(antrianRes.data.data || []);
+  } catch (error) {
+    showToast("error", "Gagal memuat data");
+  } finally {
+    if (showLoading) setLoading(false);
+  }
+}, []);
+
+  useEffect(() => {
+    if (zona !== null) fetchData(true);
+
     const connectWebSocket = () => {
-      ws.current = new WebSocket(`${WS_URL}`);
+      ws.current = new WebSocket(WS_URL);
       ws.current.onopen = () => showToast("success", "WebSocket tersambung");
       ws.current.onmessage = (e) => {
         try {
@@ -51,42 +76,20 @@ function MonitorAntrianPoli() {
       ws.current.onclose = () => setTimeout(connectWebSocket, 5000);
       ws.current.onerror = () => startPolling();
     };
+
     let pollingInterval = null;
     const startPolling = () => {
-      if (!pollingInterval)
+      if (!pollingInterval) {
         pollingInterval = setInterval(() => fetchData(false), 2000);
+      }
     };
+
     connectWebSocket();
     return () => {
       ws.current?.close();
       if (pollingInterval) clearInterval(pollingInterval);
     };
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const stored = localStorage.getItem("lastPanggilan");
-      if (!stored) return;
-      const panggilan = JSON.parse(stored);
-      if (!panggilan || panggilan.no === lastNoDipanggil) return;
-      setLastNoDipanggil(panggilan.no);
-      if (userHasInteracted) {
-        const ding = new Audio("/sounds/opening.mp3");
-        ding.play().catch(() => {});
-        ding.onended = () => {
-          const suara = new SpeechSynthesisUtterance();
-          suara.lang = "id-ID";
-          suara.text = `Nomor antrian ${panggilan.no
-            .split("")
-            .join(" ")}, silakan menuju ruang ${panggilan.poli}`;
-          suara.rate = 0.9;
-          window.speechSynthesis.cancel();
-          window.speechSynthesis.speak(suara);
-        };
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [lastNoDipanggil, userHasInteracted]);
+  }, [zona, fetchData]);
 
   useEffect(() => {
     const updateTime = () => setTime(new Date());
@@ -108,32 +111,35 @@ function MonitorAntrianPoli() {
       setIsFullScreen(!!document.fullscreenElement);
     };
     document.addEventListener("fullscreenchange", handleFullScreenChange);
-    return () => {
+    return () =>
       document.removeEventListener("fullscreenchange", handleFullScreenChange);
-    };
   }, []);
 
-  const fetchData = async (showLoading = false) => {
-    if (showLoading) setLoading(true);
-    try {
-      const [poliRes, antrianRes] = await Promise.all([
-        axios.get(`${API_URL}/poli`),
-        axios.get(`${API_URL}/antrianpoli/data`),
-      ]);
-      let filteredPoli = poliRes.data || [];
-      if (zona) {
-        filteredPoli = filteredPoli.filter(
-          (p) => p.ZONA?.toLowerCase() === zona.toLowerCase()
-        );
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const stored = localStorage.getItem("lastPanggilan");
+      if (!stored) return;
+      const panggilan = JSON.parse(stored);
+      if (!panggilan || panggilan.no === lastNoDipanggil) return;
+      setLastNoDipanggil(panggilan.no);
+
+      if (userHasInteracted) {
+        const ding = new Audio("/sounds/opening.mp3");
+        ding.play().catch(() => {});
+        ding.onended = () => {
+          const suara = new SpeechSynthesisUtterance();
+          suara.lang = "id-ID";
+          suara.text = `Nomor antrian ${panggilan.no
+            .split("")
+            .join(" ")}, silakan menuju ruang ${panggilan.poli}`;
+          suara.rate = 0.9;
+          window.speechSynthesis.cancel();
+          window.speechSynthesis.speak(suara);
+        };
       }
-      setPoliList(filteredPoli);
-      setAntrianList(antrianRes.data.data || []);
-    } catch {
-      showToast("error", "Gagal memuat data");
-    } finally {
-      if (showLoading) setLoading(false);
-    }
-  };
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [lastNoDipanggil, userHasInteracted]);
 
   const showToast = (severity, detail) => {
     toast.current?.show({
@@ -149,6 +155,12 @@ function MonitorAntrianPoli() {
       .filter((a) => a.POLI === namaPoli && a.STATUS === "Dipanggil")
       .sort((a, b) => b.ID - a.ID);
     return filtered?.[0]?.NO_ANTRIAN || "-";
+  };
+
+  const getJumlahBelumDipanggil = (namaPoli) => {
+    return antrianList.filter(
+      (a) => a.POLI === namaPoli && a.STATUS === "Belum"
+    ).length;
   };
 
   const getResponsiveConfig = (screen, count) => {
@@ -191,8 +203,6 @@ function MonitorAntrianPoli() {
     return {
       backgroundColor: colors[colorIndex],
       borderLeft: `6px solid ${borderColors[colorIndex]}`,
-      transition: "transform 0.3s, box-shadow 0.3s",
-      cursor: "default",
     };
   };
 
@@ -208,12 +218,6 @@ function MonitorAntrianPoli() {
 
   const config = getResponsiveConfig(screenSize, poliList.length);
 
-  const getJumlahBelumDipanggil = (namaPoli) => {
-    return antrianList.filter(
-      (a) => a.POLI === namaPoli && a.STATUS === "Belum"
-    ).length;
-  };
-
   const renderCard = (poli, index) => {
     const currentNumber = getNomorAntrianDipanggil(poli.NAMAPOLI);
     const hasQueue = currentNumber !== "-";
@@ -223,24 +227,14 @@ function MonitorAntrianPoli() {
       <div key={index} className={`col-${12 / config.cols}`}>
         <Card
           header={
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "0.5rem",
-              }}
-            >
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-              >
+            <div className="flex justify-between mb-2">
+              <div className="flex items-center gap-2">
                 <i
                   className={`pi pi-circle-fill text-sm ${
                     isActive ? "text-green-500" : "text-red-500"
                   }`}
                 />
-                <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
-                  {poli.NAMAPOLI}
-                </span>
+                <span className="font-bold text-base">{poli.NAMAPOLI}</span>
               </div>
               <Tag
                 value={hasQueue ? "Sedang Dipanggil" : "Kosong"}
@@ -250,28 +244,16 @@ function MonitorAntrianPoli() {
           }
           style={getCardStyle(index)}
         >
-          <div style={{ textAlign: "center" }}>
-            <small style={{ color: "#757575", fontWeight: "500" }}>
+          <div className="text-center">
+            <small className="text-gray-500 font-medium">
               Poli #{poli.IDPOLI}
             </small>
-
-            <div
-              style={{
-                fontSize: "0.75rem",
-                color: "#757575",
-                margin: "0.5rem 0",
-              }}
-            >
+            <div className="text-sm text-gray-600 my-2">
               Nomor Antrian Saat Ini
             </div>
             <div
-              style={{
-                fontSize: config.numberSize,
-                fontWeight: "bold",
-                padding: "0.5rem",
-                border: "2px dashed #ccc",
-                borderRadius: "6px",
-              }}
+              className="font-bold border-2 border-dashed border-gray-300 rounded-md"
+              style={{ fontSize: config.numberSize, padding: "0.5rem" }}
             >
               {currentNumber}
             </div>
@@ -284,8 +266,7 @@ function MonitorAntrianPoli() {
                 />
               </div>
             )}
-
-            <div style={{ marginTop: "0.5rem" }}>
+            <div className="mt-2">
               <Tag
                 value={`Antrian Belum Dipanggil: ${getJumlahBelumDipanggil(
                   poli.NAMAPOLI
@@ -301,11 +282,11 @@ function MonitorAntrianPoli() {
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden relative bg-white">
+    <div className="h-screen flex flex-col overflow-hidden bg-white">
       <Toast ref={toast} position="top-right" />
 
       {!isFullScreen && (
-        <div className="fixed bottom-4 right-4 z-[999]">
+        <div className="fixed bottom-4 right-4 z-50">
           <Button
             icon="pi pi-window-maximize"
             onClick={toggleFullScreen}
@@ -329,11 +310,10 @@ function MonitorAntrianPoli() {
         </div>
       )}
 
-      {/* Header */}
       <div className="text-black px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <img src="/layout/images/logo.png" alt="Logo" className="h-[50px]" />
-          <h2 className="text-lg font-semibold text-black m-0">RUMAH SAKIT</h2>
+          <h2 className="text-lg font-semibold m-0">RUMAH SAKIT</h2>
         </div>
         <div className="font-bold text-sm">
           {time?.toLocaleString("id-ID", {
@@ -355,21 +335,20 @@ function MonitorAntrianPoli() {
           scrollamount="2"
           className="text-blue-900 font-semibold text-2xl"
         >
-          Selamat datang di RSUD Bayza Medika • Harap menunggu dengan tertib • Gunakan masker • Jaga jarak • 
-          Cuci tangan sebelum masuk ruangan • Antrian akan dipanggil sesuai urutan • Terima kasih atas kesabaran Anda 🙏
+          Selamat datang di RSUD Bayza Medika • Harap menunggu dengan tertib •
+          Gunakan masker • Jaga jarak • Cuci tangan sebelum masuk ruangan •
+          Antrian akan dipanggil sesuai urutan • Terima kasih atas kesabaran
+          Anda 🙏
         </marquee>
       </div>
 
-      {/* Main Content */}
       <div
-        className={`flex-1 overflow-auto px-[${config.containerPadding}] pt-0`}
+        className="flex-1 overflow-auto"
+        style={{ padding: config.containerPadding }}
       >
         {loading ? (
           <div className="flex flex-col items-center justify-center h-full">
-            <ProgressSpinner
-              style={{ width: "50px", height: "50px" }}
-              strokeWidth="4"
-            />
+            <ProgressSpinner style={{ width: "50px", height: "50px" }} />
             <p className="text-black font-medium mt-4 text-base">
               <i className="pi pi-spin pi-spinner mr-2" />
               Memuat data...
@@ -390,52 +369,30 @@ function MonitorAntrianPoli() {
         )}
       </div>
 
-      {/* Footer Statistik */}
       {!loading && poliList.length > 0 && (
         <div className={`px-[${config.containerPadding}] pt-2 shrink-0`}>
           <Divider />
           <div className="flex justify-center flex-wrap gap-8 text-center">
-            <div className="flex flex-col items-center">
-              <Tag
-                value={poliList.filter((l) => l.AKTIF !== false).length}
-                severity="success"
-                className="text-base font-bold mb-1 px-3 py-2"
-              />
-              <span className="text-sm text-black">Loket Aktif</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <Tag
-                value={
-                  antrianList.filter((a) => a.STATUS === "Dipanggil").length
-                }
-                severity="info"
-                className="text-base font-bold mb-1 px-3 py-2"
-              />
-              <span className="text-sm text-black">Antrian Dipanggil</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <Tag
-                value={antrianList.filter((a) => a.STATUS === "Belum").length}
-                severity="danger"
-                className="text-base font-bold mb-1 px-3 py-2"
-              />
-              <span className="text-sm text-black">
-                Antrian Belum Dipanggil
-              </span>
-            </div>
-            <div className="flex flex-col items-center">
-              <Tag
-                value={poliList.length}
-                severity="warning"
-                className="text-base font-bold mb-1 px-3 py-2"
-              />
-              <span className="text-sm text-black">Total Loket</span>
-            </div>
+            <Stat label="Loket Aktif" value={poliList.filter((l) => l.AKTIF !== false).length} severity="success" />
+            <Stat label="Antrian Dipanggil" value={antrianList.filter((a) => a.STATUS === "Dipanggil").length} severity="info" />
+            <Stat label="Belum Dipanggil" value={antrianList.filter((a) => a.STATUS === "Belum").length} severity="danger" />
+            <Stat label="Total Loket" value={poliList.length} severity="warning" />
           </div>
         </div>
       )}
     </div>
   );
 }
+
+const Stat = ({ label, value, severity }) => (
+  <div className="flex flex-col items-center">
+    <Tag
+      value={value}
+      severity={severity}
+      className="text-base font-bold mb-1 px-3 py-2"
+    />
+    <span className="text-sm text-black">{label}</span>
+  </div>
+);
 
 export default MonitorAntrianPoli;
