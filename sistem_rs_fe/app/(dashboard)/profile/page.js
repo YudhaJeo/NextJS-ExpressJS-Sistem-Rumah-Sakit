@@ -5,7 +5,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
-import FormDialogProfile from './components/FormDialogProfile';
+import FormDialogProfile from './components/formDialogProfile';
 import ToastNotifier from '@/app/components/toastNotifier';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;

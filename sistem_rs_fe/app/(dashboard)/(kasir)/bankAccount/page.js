@@ -5,8 +5,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
-import TabelBankAccount from './components/TabelBankAccount';
-import FormDialogBankAccount from './components/FormDialogBankAccount';
+import TabelBankAccount from './components/tabelBankAccount';
+import FormDialogBankAccount from './components/formDialogBankAccount';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
