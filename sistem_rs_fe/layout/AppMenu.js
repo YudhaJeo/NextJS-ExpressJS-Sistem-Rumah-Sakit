@@ -89,9 +89,9 @@ const AppMenu = () => {
       items: [
         { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/dashboarddokter" },
         { label: "Data Dokter", icon: "pi pi-fw pi-user", to: "/data" },
-        { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/dokter/kalender-dokter" },
-        { label: "Riwayat Pengobatan", icon: "pi pi-fw pi-folder-open", to: "/dokter/riwayat-pengobatan" },
-        { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/dokter/manajemen-komisi" },
+        { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/dokter/kalender_dokter" },
+        { label: "Riwayat Pengobatan", icon: "pi pi-fw pi-folder-open", to: "/dokter/riwayat_pengobatan" },
+        { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/dokter/manajemen_komisi" },
         {
           label: "Laporan",
           icon: "pi pi-fw pi-chart-bar",
