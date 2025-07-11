@@ -71,7 +71,7 @@ function MonitorAntrianPoli() {
           suara.lang = "id-ID";
           suara.text = `Nomor antrian ${panggilan.no
             .split("")
-            .join(" ")}, silakan menuju loket ${panggilan.poli}`;
+            .join(" ")}, silakan menuju ruang ${panggilan.poli}`;
           suara.rate = 0.9;
           window.speechSynthesis.cancel();
           window.speechSynthesis.speak(suara);

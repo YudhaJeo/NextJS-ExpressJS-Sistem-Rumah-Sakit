@@ -82,7 +82,7 @@ function DataAntrianPoli() {
         "lastPanggilan",
         JSON.stringify({
           no: panggilan.NO_ANTRIAN,
-          loket: panggilan.POLI,
+          poli: panggilan.POLI,
         })
       );
 
