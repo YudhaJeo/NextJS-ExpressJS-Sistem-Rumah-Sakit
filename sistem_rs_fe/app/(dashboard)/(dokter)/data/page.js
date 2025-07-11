@@ -53,7 +53,6 @@ const DataDokterPage = () => {
       axios.get(`${API_URL}/jadwaldokter`),
     ]);
 
-    // Gabungkan jadwal ke dalam data dokter
     const merged = dokterData.data.map((dokter) => ({
       ...dokter,
       JADWAL: jadwalData.data.filter((j) => j.IDDOKTER === dokter.IDDOKTER),
@@ -67,7 +66,6 @@ const DataDokterPage = () => {
     setLoading(false);
   }
 };
-
 
   const fetchDropdowns = async () => {
     try {

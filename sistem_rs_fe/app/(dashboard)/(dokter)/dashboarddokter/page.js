@@ -69,7 +69,6 @@ const Dokter = () => {
         };
         setChartOptions(options);
 
-        // Set tanggal real-time
         const today = new Date();
         const formattedDate = today.toLocaleDateString('id-ID', {
             weekday: 'long',
@@ -95,12 +94,10 @@ const Dokter = () => {
 
     return (
         <div className="grid">
-            {/* Header with Search */}
             <div className="col-12 flex justify-content-between align-items-center mb-4">
                 <h2 className="text-2xl font-bold">Dashboard Dokter</h2>
             </div>
 
-            {/* Top Cards */}
             {topCards.map((card, idx) => (
                 <div className="col-12 lg:col-6 xl:col-3" key={idx}>
                     <div className="card mb-0" style={{ borderTop: `3px solid ${card.borderColor}` }}>
@@ -117,7 +114,6 @@ const Dokter = () => {
                 </div>
             ))}
 
-            {/* Chart */}
             <div className="col-12">
                 <div className="card">
                     <div className="flex justify-content-between mb-4 flex-wrap gap-2">
@@ -130,7 +126,6 @@ const Dokter = () => {
                 </div>
             </div>
 
-            {/* Info Dokter Table */}
             <div className="col-12">
                 <div className="card">
                     <h5>Info Dokter Hari ini</h5>

@@ -13,7 +13,6 @@ const FormDialogData = ({
   onSubmit,
   dokterOptions,
   poliOptions,
-  jadwalOptions,
   allJadwal,
 }) => {
   const filteredJadwal = allJadwal
