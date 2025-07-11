@@ -111,37 +111,17 @@ function DataAntrianPoli() {
     }
   };
 
-  // Filter antrian berdasarkan zona
-  const filteredData = selectedZona
-    ? data.filter((d) =>
-        poliList.find((p) => p.NAMAPOLI === d.POLI && p.ZONA === selectedZona)
-      )
-    : data;
-
-  // List zona unik dari poliList
-  const zonaOptions = [
-    { label: "Semua", value: null },
-    ...[...new Set(poliList.map((p) => p.ZONA))].map((z) => ({
-      label: z,
-      value: z,
-    })),
-  ];
-
   return (
     <div className="card">
       <Toast ref={toastRef} />
 
-      {/* Header + Filter */}
       <div className="flex flex-wrap items-center justify-between mb-4 gap-4">
         <h3 className="text-xl font-semibold">Data Antrian Poli</h3>
       </div>
 
       <TabelAntrianPoli
-        data={filteredData}
-        poliList={    selectedZona
-      ? poliList.filter((p) => p.ZONA === selectedZona)
-      : poliList
-  }
+        data={data}
+        poliList={poliList}
         loading={loading}
         onPanggil={handlePanggil}
         onReset={handleReset}
