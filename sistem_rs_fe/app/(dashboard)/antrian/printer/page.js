@@ -1,4 +1,3 @@
-// app\(dashboard)\antrian\printer\page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -26,7 +25,6 @@ const Page = () => {
   });
 
   const [errors, setErrors] = useState({});
-
   const toastRef = useRef(null);
   const router = useRouter();
 
@@ -36,9 +34,8 @@ const Page = () => {
       router.push('/login');
       return;
     }
-
     fetchData();
-  }, []);
+  }, [router]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -48,6 +45,7 @@ const Page = () => {
       setOriginalData(res.data.data);
     } catch (err) {
       console.error('Gagal ambil data:', err);
+      toastRef.current?.showToast('01', 'Gagal memuat data printer');
     } finally {
       setLoading(false);
     }
@@ -58,7 +56,7 @@ const Page = () => {
 
     if (!form.NAMAPRINTER?.trim()) newErrors.NAMAPRINTER = 'Nama Printer wajib diisi';
     if (!form.KODEPRINTER?.trim()) newErrors.KODEPRINTER = 'Kode Printer wajib diisi';
-    if (!form.KETERANGAN?.trim()) newErrors.KETERANGAN = 'Status wajib dipilih';
+    if (!form.KETERANGAN) newErrors.KETERANGAN = 'Status wajib dipilih';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -104,7 +102,7 @@ const Page = () => {
   };
 
   const handleEdit = (row) => {
-    setForm(row);
+    setForm({ ...row }); // clone supaya aman dari mutasi
     setDialogVisible(true);
   };
 
@@ -154,7 +152,12 @@ const Page = () => {
         }}
       />
 
-      <TabelPrinter data={data} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
+      <TabelPrinter
+        data={data}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
 
       <FormDialogPrinter
         visible={dialogVisible}

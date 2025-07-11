@@ -7,5 +7,6 @@ router.get('/', MetodeController.getAllMetode);
 router.post('/', MetodeController.createMetode);
 router.put('/:id', MetodeController.updateMetode);
 router.delete('/:id', MetodeController.deleteMetode);
+router.get('/aktif', MetodeController.getAktif);
 
 export default router;

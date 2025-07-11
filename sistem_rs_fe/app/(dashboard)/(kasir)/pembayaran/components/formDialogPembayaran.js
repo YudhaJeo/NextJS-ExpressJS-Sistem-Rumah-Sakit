@@ -17,16 +17,10 @@ const FormDialogPembayaran = ({
   form,
   setForm,
   invoiceOptions,
-  pasienOptions, // biarkan ada untuk menjaga struktur meski tidak dipakai
+  pasienOptions,
+  metodeOptions,
 }) => {
   const [errors, setErrors] = useState({});
-
-  const metodeOptions = [
-    { label: 'Tunai', value: 'TUNAI' },
-    { label: 'Transfer Bank', value: 'TRANSFER' },
-    { label: 'Debit Card', value: 'DEBIT' },
-    { label: 'Kredit Card', value: 'KREDIT' },
-  ];
 
   const validate = () => {
     const newErrors = {};
@@ -85,7 +79,6 @@ const FormDialogPembayaran = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
-        {/* No Pembayaran */}
         <div>
           <label className="font-medium">No Pembayaran</label>
           <InputText
@@ -96,7 +89,6 @@ const FormDialogPembayaran = ({
           {errors.NOPEMBAYARAN && <small className="p-error">{errors.NOPEMBAYARAN}</small>}
         </div>
 
-        {/* Invoice */}
         <div>
           <label className="font-medium">Invoice</label>
           <Dropdown
@@ -113,7 +105,6 @@ const FormDialogPembayaran = ({
           {errors.IDINVOICE && <small className="p-error">{errors.IDINVOICE}</small>}
         </div>
 
-        {/* NIK */}
         <div>
           <label className="font-medium">NIK</label>
           <InputText
@@ -124,7 +115,6 @@ const FormDialogPembayaran = ({
           {errors.NIK && <small className="p-error">{errors.NIK}</small>}
         </div>
 
-        {/* Nama Pasien */}
         <div>
           <label className="font-medium">Nama Pasien</label>
           <InputText
@@ -135,7 +125,6 @@ const FormDialogPembayaran = ({
           {errors.NAMAPASIEN && <small className="p-error">{errors.NAMAPASIEN}</small>}
         </div>
 
-        {/* Asuransi */}
         <div>
           <label className="font-medium">Asuransi</label>
           <InputText
@@ -145,7 +134,6 @@ const FormDialogPembayaran = ({
           />
         </div>
 
-        {/* Tanggal Bayar */}
         <div>
           <label className="font-medium">Tanggal Bayar</label>
           <Calendar
@@ -165,7 +153,6 @@ const FormDialogPembayaran = ({
           {errors.TANGGALBAYAR && <small className="p-error">{errors.TANGGALBAYAR}</small>}
         </div>
 
-        {/* Metode Pembayaran */}
         <div>
           <label className="font-medium">Metode Pembayaran</label>
           <Dropdown
@@ -180,7 +167,6 @@ const FormDialogPembayaran = ({
           )}
         </div>
 
-        {/* Jumlah Bayar */}
         <div>
           <label className="font-medium">Jumlah Bayar</label>
           <InputNumber
@@ -195,7 +181,6 @@ const FormDialogPembayaran = ({
           {errors.JUMLAHBAYAR && <small className="p-error">{errors.JUMLAHBAYAR}</small>}
         </div>
 
-        {/* Keterangan */}
         <div>
           <label className="font-medium">Keterangan</label>
           <InputTextarea

@@ -1,4 +1,3 @@
-// app/(dashboard)/master/asuransi/page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -18,7 +17,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
 
-  const [form, setForm] = useState({ NAMAASURANSI: '', KETERANGAN:'' });
+  const [form, setForm] = useState({ NAMAASURANSI: '', KETERANGAN: '' });
   const [errors, setErrors] = useState({});
 
   const toastRef = useRef(null);
@@ -31,7 +30,7 @@ const Page = () => {
       return;
     }
     fetchData();
-  }, []);
+  }, [router]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -71,7 +70,7 @@ const Page = () => {
 
       fetchData();
       setDialogVisible(false);
-      setForm({ NAMAASURANSI: '' });
+      setForm({ NAMAASURANSI: '', KETERANGAN: '' });
     } catch (err) {
       console.error('Gagal simpan data:', err);
       toastRef.current?.showToast('01', 'Gagal menyimpan data');
@@ -121,18 +120,23 @@ const Page = () => {
           setData(filtered);
         }}
         onAddClick={() => {
-          setForm({ NAMAASURANSI: '' });
+          setForm({ NAMAASURANSI: '', KETERANGAN: '' });
           setDialogVisible(true);
         }}
       />
 
-      <TabelAsuransi data={data} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
+      <TabelAsuransi
+        data={data}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
 
       <FormDialogAsuransi
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);
-          setForm({ NAMAASURANSI: '' });
+          setForm({ NAMAASURANSI: '', KETERANGAN: '' });
         }}
         onSubmit={handleSubmit}
         form={form}

@@ -89,7 +89,7 @@ const TabelAntrianPoli = ({
     return (
       <div key={poliName} className="card mb-6">
         <div className="mb-3">
-          <h3 className="font-semibold text-lg mb-2">Poli {poliName}</h3>
+          <h3 className="font-semibold text-lg mb-2">{poliName}</h3>
           <Button
             label="Reset Antrian"
             icon="pi pi-refresh"
@@ -98,7 +98,7 @@ const TabelAntrianPoli = ({
             onClick={() => {
               if (
                 confirm(
-                  `Apakah kamu yakin ingin mereset antrian Poli ${poliName}?`
+                  `Apakah kamu yakin ingin mereset antrian ${poliName}?`
                 )
               ) {
                 onReset(poliName);
@@ -157,15 +157,12 @@ const TabelAntrianPoli = ({
           <Dropdown
             value={selectedZona}
             onChange={(e) => setSelectedZona(e.value)}
-            options={[
-              { label: "Semua", value: null },
-              ...[...new Set(poliList.map((p) => p.ZONA))].map((z) => ({
+            options={[...new Set(poliList.map((p) => p.ZONA))].map((z) => ({
                 label: z,
                 value: z,
-              })),
-            ]}
+              }))}
             placeholder="Pilih Zona"
-            className="w-[180px] text-sm"
+            className="w-full md:w-14rem"
             showClear
           />
         </div>
@@ -189,7 +186,9 @@ const TabelAntrianPoli = ({
       </div>
 
       {poliList.length > 0 ? (
-        poliList.map((poli) => renderTable(poli.NAMAPOLI))
+        poliList
+          .filter((p) => !selectedZona || p.ZONA === selectedZona)
+          .map((poli) => renderTable(poli.NAMAPOLI))
       ) : (
         <p className="text-center text-gray-500 mt-10">
           Tidak ada poli tersedia

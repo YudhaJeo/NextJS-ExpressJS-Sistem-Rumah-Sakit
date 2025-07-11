@@ -12,17 +12,17 @@ const statusLabels = {
 };
 
 const statusSeverity = {
-  AKTIF: 'success',   
+  AKTIF: 'success',  
   NONAKTIF: 'danger', 
 };
 
-const TabelBankAccount = ({ data, loading, onEdit, onDelete }) => {
+const TabelMetodePembayaran = ({ data, loading, onEdit, onDelete }) => {
   const statusBodyTemplate = (row) => {
-    const statusKey = (row.STATUS || '').toUpperCase(); 
+    const statusKey = (row.STATUS || '').toUpperCase();
     return (
       <Tag
         value={statusLabels[statusKey] || row.STATUS}
-        severity={statusSeverity[statusKey] || 'info'} 
+        severity={statusSeverity[statusKey] || 'info'}
       />
     );
   };
@@ -36,11 +36,13 @@ const TabelBankAccount = ({ data, loading, onEdit, onDelete }) => {
       size="small"
       scrollable
     >
-      <Column field="NAMA_BANK" header="Nama Bank" sortable />
-      <Column field="NO_REKENING" header="No Rekening" />
-      <Column field="ATAS_NAMA" header="Atas Nama" />
-      <Column field="CABANG" header="Cabang" />
-      <Column field="KODE_BANK" header="Kode Bank" />
+      <Column field="NAMA" header="Nama Metode" sortable />
+      <Column
+        field="FEE_PERSEN"
+        header="Fee (%)"
+        body={(row) => `${row.FEE_PERSEN || 0}%`}
+        sortable
+      />
       <Column field="STATUS" header="Status" body={statusBodyTemplate} />
       <Column field="CATATAN" header="Catatan" />
       <Column
@@ -67,4 +69,4 @@ const TabelBankAccount = ({ data, loading, onEdit, onDelete }) => {
   );
 };
 
-export default TabelBankAccount;
+export default TabelMetodePembayaran;
