@@ -23,6 +23,7 @@ const Page = () => {
   const [endDate, setEndDate] = useState(null);
   const [invoiceOptions, setInvoiceOptions] = useState([]);
   const [pasienOptions, setPasienOptions] = useState([]);
+  const [metodeOptions, setMetodeOptions] = useState([]);
 
   const [form, setForm] = useState({
     IDPEMBAYARAN: 0,
@@ -50,6 +51,7 @@ const Page = () => {
     fetchData();
     fetchInvoices();
     fetchPasien();
+    fetchMetode(); 
   }, []);
 
   const fetchData = async () => {
@@ -97,6 +99,19 @@ const Page = () => {
     }
   };
 
+  const fetchMetode = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/metodePembayaran/aktif`);
+      const options = res.data.data.map((metode) => ({
+        label: metode.NAMA,
+        value: metode.NAMA,
+      }));
+      setMetodeOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil metode pembayaran:', err);
+    }
+  };
+
   const handleSearch = (keyword) => {
     if (!keyword) return setData(originalData);
     const filtered = originalData.filter(
@@ -125,36 +140,31 @@ const Page = () => {
   };
 
   const handleSubmit = async () => {
-  const isEdit = !!form.IDPEMBAYARAN;
-  const url = isEdit
-    ? `${API_URL}/pembayaran/${form.IDPEMBAYARAN}`
-    : `${API_URL}/pembayaran`;
+    const isEdit = !!form.IDPEMBAYARAN;
+    const url = isEdit
+      ? `${API_URL}/pembayaran/${form.IDPEMBAYARAN}`
+      : `${API_URL}/pembayaran`;
 
-  try {
-    if (isEdit) {
-      const { NAMAPASIEN, NOINVOICE, ASURANSI, NOPEMBAYARAN, ...body } = form; 
-      await axios.put(url, body);
-      toastRef.current?.showToast('00', 'Data berhasil diperbarui');
-    } else {
-      const { NOPEMBAYARAN, NAMAPASIEN, NOINVOICE, ASURANSI, ...body } = form; 
-      const res = await axios.post(url, body);
+    try {
+      if (isEdit) {
+        const { NAMAPASIEN, NOINVOICE, ASURANSI, NOPEMBAYARAN, ...body } = form;
+        await axios.put(url, body);
+        toastRef.current?.showToast('00', 'Data berhasil diperbarui');
+      } else {
+        const { NOPEMBAYARAN, NAMAPASIEN, NOINVOICE, ASURANSI, ...body } = form;
+        const res = await axios.post(url, body);
+        const { NOPEMBAYARAN: generatedNo } = res.data;
+        toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
+        setForm((prev) => ({ ...prev, NOPEMBAYARAN: generatedNo }));
+      }
 
-      // ✅ Ambil NOPEMBAYARAN hasil generate dari backend
-      const { NOPEMBAYARAN: generatedNo } = res.data;
-
-      toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
-
-      // ✅ Update form pakai nomor baru, kalau mau tampilkan ke user
-      setForm((prev) => ({ ...prev, NOPEMBAYARAN: generatedNo }));
+      fetchData();
+      setDialogVisible(false);
+      resetForm();
+    } catch (err) {
+      console.error('Gagal simpan data pembayaran:', err);
+      toastRef.current?.showToast('01', 'Gagal menyimpan data');
     }
-
-    fetchData();
-    setDialogVisible(false);
-    resetForm();
-  } catch (err) {
-    console.error('Gagal simpan data pembayaran:', err);
-    toastRef.current?.showToast('01', 'Gagal menyimpan data');
-  }
   };
 
   const handleEdit = (row) => {
@@ -205,9 +215,7 @@ const Page = () => {
     <div className="card">
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
-
       <h3 className="text-xl font-semibold mb-3">Manajemen Pembayaran</h3>
-
       <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
         <FilterTanggal
           startDate={startDate}
@@ -246,6 +254,7 @@ const Page = () => {
         setForm={setForm}
         invoiceOptions={invoiceOptions}
         pasienOptions={pasienOptions}
+        metodeOptions={metodeOptions} 
       />
     </div>
   );

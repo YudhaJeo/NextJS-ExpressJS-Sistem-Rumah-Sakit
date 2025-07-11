@@ -41,7 +41,6 @@ export async function createPembayaran(req, res) {
       KETERANGAN
     } = req.body;
 
-    // Validasi foreign key
     const invoice = await trx('invoice').where('IDINVOICE', IDINVOICE).first();
     if (!invoice) {
       await trx.rollback();
@@ -56,13 +55,11 @@ export async function createPembayaran(req, res) {
 
     let idAsuransi = IDASURANSI || pasien.IDASURANSI;
 
-    // ✅ Panggil helper generateNoPembayaran
     const NOPEMBAYARAN = await generateNoPembayaran(
       TANGGALBAYAR || new Date().toISOString(),
       trx
     );
 
-    // ✅ Insert PAKAI trx
     await PembayaranModel.create(
       {
         NOPEMBAYARAN,
@@ -74,14 +71,14 @@ export async function createPembayaran(req, res) {
         JUMLAHBAYAR,
         KETERANGAN
       },
-      trx // ⬅️ PENTING!
+      trx 
     );
 
     await trx.commit();
     res.status(201).json({
       success: true,
       message: 'Pembayaran berhasil ditambahkan',
-      NOPEMBAYARAN // Kirim balik ke frontend
+      NOPEMBAYARAN 
     });
   } catch (err) {
     await trx.rollback();
@@ -103,13 +100,11 @@ export async function updatePembayaran(req, res) {
       KETERANGAN
     } = req.body;
 
-    // Validasi foreign key: invoice
     const invoice = await db('invoice').where('IDINVOICE', IDINVOICE).first();
     if (!invoice) {
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    // Validasi foreign key: pasien
     const pasien = await db('pasien').where('NIK', NIK).first();
     if (!pasien) {
       return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan' });

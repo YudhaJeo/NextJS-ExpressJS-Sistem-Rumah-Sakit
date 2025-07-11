@@ -39,3 +39,13 @@ export async function deleteMetode(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
+
+export async function getAktif(req, res) {
+  try {
+    const data = await MetodeModel.getAktif();
+    res.status(200).json({ success: true, data });
+  } catch (err) {
+    console.error('Get Aktif Metode Error:', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+}

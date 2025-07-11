@@ -6,19 +6,17 @@ import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 import React from 'react';
 
-// Label dan warna status
 const statusLabels = {
   AKTIF: 'Aktif',
   NONAKTIF: 'Non Aktif',
 };
 
 const statusSeverity = {
-  AKTIF: 'success',   // hijau
-  NONAKTIF: 'danger', // merah
+  AKTIF: 'success',  
+  NONAKTIF: 'danger', 
 };
 
 const TabelMetodePembayaran = ({ data, loading, onEdit, onDelete }) => {
-  // Template badge status
   const statusBodyTemplate = (row) => {
     const statusKey = (row.STATUS || '').toUpperCase();
     return (

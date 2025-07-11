@@ -14,7 +14,7 @@ const FormDialogBankAccount = ({
   onSubmit,
   form,
   setForm,
-  errors: externalErrors // support errors dari props jika ada
+  errors: externalErrors 
 }) => {
   const [errors, setErrors] = useState({});
 
@@ -37,7 +37,7 @@ const FormDialogBankAccount = ({
     e.preventDefault();
     if (validate()) {
       onSubmit();
-      setErrors({}); // reset error setelah submit sukses
+      setErrors({}); 
     }
   };
 

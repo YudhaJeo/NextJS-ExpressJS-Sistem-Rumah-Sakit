@@ -15,3 +15,9 @@ export const update = (id, data) => {
 export const remove = (id) => {
   return db('metode_pembayaran').where('IDMETODE', id).del();
 };
+
+export const getAktif = () => {
+  return db('metode_pembayaran')
+    .where('STATUS', 'AKTIF')
+    .select('IDMETODE', 'NAMA', 'STATUS', 'FEE_PERSEN');
+};
