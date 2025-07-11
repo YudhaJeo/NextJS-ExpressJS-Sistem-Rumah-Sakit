@@ -1,4 +1,4 @@
-// app/(dashboard)/(rawatinap)/rawatinap/manajemen-kamar/page.js
+// app/(dashboard)/(rawatinap)/rawatinap/manajemen-bed/page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -6,8 +6,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
-import TabelKamar from './components/tabelKamar';
-import FormDialogKamar from './components/formDialogKamar';
+import TabelBed from './components/tabelBed';
+import FormBed from './components/formBed';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
@@ -24,10 +24,10 @@ const Page = () => {
   const [bangsalOptions, setBangsalOptions] = useState([]);
 
   const [form, setForm] = useState({
+    IDBED: '',
+    NOMORBED: '',
     IDKAMAR: '',
-    NAMAKAMAR: '',
-    IDBANGSAL: '',
-    KAPASITAS: '',
+    STATUS: '',
     KETERANGAN: '',
   });
 
@@ -41,49 +41,45 @@ const Page = () => {
     }
 
     fetchData();
-    fetchBangsal();
+    fetchKamar();
   }, []);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/kamar`);
+      const res = await axios.get(`${API_URL}/bed`);
       setData(res.data.data);
       setOriginalData(res.data.data);
     } catch (err) {
-      console.error('Gagal ambil data kamar:', err);
+      console.error('Gagal ambil data bed:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchBangsal = async () => {
+  const fetchKamar = async () => {
     try {
-      const res = await axios.get(`${API_URL}/bangsal`);
+      const res = await axios.get(`${API_URL}/kamar`);
       const options = res.data.data.map((item) => ({
-        label: `${item.NAMABANGSAL} - ${item.NAMAJENIS}`,
-        value: item.IDBANGSAL,
-        NAMAJENIS: item.NAMAJENIS,
+        label: `${item.NAMAKAMAR} - ${item.NAMABANGSAL}`,
+        value: item.IDKAMAR,
       }));
       setBangsalOptions(options);
     } catch (err) {
-      console.error('Gagal ambil bangsal:', err);
+      console.error('Gagal ambil kamar:', err);
     }
   };
+
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (!form.NAMAKAMAR?.trim()) {
-      newErrors.NAMAKAMAR = 'Nama kamar wajib diisi';
+    if (!form.NOMORBED?.trim()) {
+      newErrors.NAMAKAMAR = 'Nama bed wajib diisi';
     }
 
-    if (!form.IDBANGSAL) {
-      newErrors.IDBANGSAL = 'Bangsal wajib dipilih';
-    }
-
-    if (!form.KAPASITAS || isNaN(form.KAPASITAS)) {
-      newErrors.KAPASITAS = 'Kapasitas harus berupa angka';
+    if (!form.IDKAMAR) {
+      newErrors.IDKAMAR = 'Kamar wajib dipilih';
     }
 
     setErrors(newErrors);
@@ -92,10 +88,10 @@ const Page = () => {
 
   const resetForm = () => {
     setForm({
+      IDBED: '',
+      NOMORBED: '',
       IDKAMAR: '',
-      NAMAKAMAR: '',
-      IDBANGSAL: '',
-      KAPASITAS: '',
+      STATUS: '',
       KETERANGAN: '',
     });
     setErrors({});
@@ -104,26 +100,26 @@ const Page = () => {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    const isEdit = !!form.IDKAMAR;
+    const isEdit = !!form.IDBED;
     const url = isEdit
-      ? `${API_URL}/kamar/${form.IDKAMAR}`
-      : `${API_URL}/kamar`;
+      ? `${API_URL}/bed/${form.IDBED}`
+      : `${API_URL}/bed`;
 
     try {
       if (isEdit) {
         await axios.put(url, form);
-        toastRef.current?.showToast('00', 'Data kamar berhasil diperbarui');
+        toastRef.current?.showToast('00', 'Data bed berhasil diperbarui');
       } else {
         await axios.post(url, form);
-        toastRef.current?.showToast('00', 'Data kamar berhasil ditambahkan');
+        toastRef.current?.showToast('00', 'Data bed berhasil ditambahkan');
       }
 
       fetchData();
       setDialogVisible(false);
       resetForm();
     } catch (err) {
-      console.error('Gagal simpan data kamar:', err);
-      toastRef.current?.showToast('01', 'Gagal menyimpan data kamar');
+      console.error('Gagal simpan data bed:', err);
+      toastRef.current?.showToast('01', 'Gagal menyimpan data bed');
     }
   };
 
@@ -134,45 +130,52 @@ const Page = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Apakah Anda yakin ingin menghapus kamar '${row.NAMAKAMAR}'?`,
+      message: `Apakah Anda yakin ingin menghapus bed '${row.NOMORBED}'?`,
       header: 'Konfirmasi Hapus',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Ya',
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/kamar/${row.IDKAMAR}`);
+          await axios.delete(`${API_URL}/bed/${row.IDBED}`);
           fetchData();
-          toastRef.current?.showToast('00', 'Data kamar berhasil dihapus');
+          toastRef.current?.showToast('00', 'Data bed berhasil dihapus');
         } catch (err) {
-          console.error('Gagal hapus kamar:', err);
-          toastRef.current?.showToast('01', 'Gagal menghapus data kamar');
+          console.error('Gagal hapus bed:', err);
+          toastRef.current?.showToast('01', 'Gagal menghapus data bed');
         }
       },
     });
   };
-
   const handleSearch = (keyword) => {
     if (!keyword) {
       setData(originalData);
     } else {
-      const filtered = originalData.filter((item) =>
-        item.NAMAKAMAR.toLowerCase().includes(keyword.toLowerCase())
-      );
+      const filtered = originalData.filter((item) => {
+        const key = keyword.toLowerCase();
+        return (
+          item.NOMORBED.toLowerCase().includes(key) ||
+          item.STATUS.toLowerCase().includes(key) ||
+          item.NAMAKAMAR.toLowerCase().includes(key) || 
+          item.NAMAJENIS?.toLowerCase().includes(key)   
+        );
+      });
       setData(filtered);
     }
   };
+  
+  
 
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
 
-      <h3 className="text-xl font-semibold mb-3">Manajemen Data Kamar</h3>
+      <h3 className="text-xl font-semibold mb-3">Manajemen Data Bed</h3>
 
       <HeaderBar
         title=""
-        placeholder="Cari nama kamar"
+        placeholder="Cari bed"
         onSearch={handleSearch}
         onAddClick={() => {
           resetForm();
@@ -180,14 +183,14 @@ const Page = () => {
         }}
       />
 
-      <TabelKamar
+      <TabelBed
         data={data}
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
 
-      <FormDialogKamar
+      <FormBed
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);

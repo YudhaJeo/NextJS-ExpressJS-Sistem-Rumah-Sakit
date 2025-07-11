@@ -5,19 +5,46 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import React from 'react';
+import { Tag } from "primereact/tag";
 
-const TabelKamar = ({ data, loading, onEdit, onDelete }) => {
+const TabelBed = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
-      
-      <Column field="IDKAMAR" header="ID" />
-      <Column field="NAMAKAMAR" header="Nama Kamar" />
+      <Column field="NOMORBED" header="Nomor Bed" />
       <Column
-        field="IDBANGSAL"
+        field="IDKAMAR"
+        header="Kamar"
+        body={(row) => row.NAMAKAMAR}
+      />
+      <Column
         header="Bangsal"
         body={(row) => row.NAMABANGSAL}
       />
-      <Column field="KAPASITAS" header="Kapasitas" />
+      
+      <Column
+        header="Status"
+        body={(row) => {
+          const status = row.STATUS || 'Tidak Diketahui';
+          const severity = () => {
+            switch (status) {
+              case "TERSEDIA":
+                return "success";
+              case "PENUH":
+                return "danger"; 
+              case "DIBERSIHKAN":
+                return "warning"; 
+              default:
+                return "info"; 
+            }
+          };
+
+          return <Tag 
+          value={status.toLowerCase().replace(/^\w/, c => c.toUpperCase())} 
+          severity={severity()} 
+        />
+        ;
+        }}
+      />
       <Column field="KETERANGAN" header="Keterangan" />
 
       <Column
@@ -44,4 +71,4 @@ const TabelKamar = ({ data, loading, onEdit, onDelete }) => {
   );
 };
 
-export default TabelKamar;
+export default TabelBed;

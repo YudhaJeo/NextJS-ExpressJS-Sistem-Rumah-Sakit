@@ -4,10 +4,12 @@
       table.increments('IDBED').primary();
       table.integer('IDKAMAR').unsigned().notNullable()
         .references('IDKAMAR').inTable('kamar').onDelete('CASCADE');
-      table.string('NOMOR_BED', 10).notNullable();
+      table.string('NOMORBED', 10).notNullable();
       table.enu('STATUS', ['TERSEDIA', 'TERISI', 'DIBERSIHKAN'])
         .notNullable().defaultTo('TERSEDIA');
       table.text('KETERANGAN');
+      table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
+      table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());
     });
   };
   
