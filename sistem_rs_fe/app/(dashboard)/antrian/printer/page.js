@@ -1,7 +1,7 @@
 // app\(dashboard)\antrian\printer\page.js
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
@@ -143,7 +143,7 @@ const Page = () => {
       <ConfirmDialog />
 
       <h3 className="text-xl font-semibold mb-3">Data Printer</h3>
-
+<Suspense>
       <HeaderBar
         title=""
         placeholder="Cari berdasarkan Nama Printer atau Kode"
@@ -153,6 +153,7 @@ const Page = () => {
           setDialogVisible(true);
         }}
       />
+</Suspense>
 
       <TabelPrinter data={data} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
 
