@@ -11,8 +11,8 @@ export async function getAllMetode(req, res) {
 
 export async function createMetode(req, res) {
   try {
-    const { NAMA, TIPE, FEE_PERSEN, STATUS, IDBANK, CATATAN } = req.body;
-    await MetodeModel.create({ NAMA, TIPE, FEE_PERSEN, STATUS, IDBANK, CATATAN });
+    const { NAMA, FEE_PERSEN, STATUS, CATATAN } = req.body;
+    await MetodeModel.create({ NAMA, FEE_PERSEN, STATUS, CATATAN });
     res.json({ message: 'Metode pembayaran berhasil ditambahkan' });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -22,8 +22,8 @@ export async function createMetode(req, res) {
 export async function updateMetode(req, res) {
   try {
     const id = req.params.id;
-    const { NAMA, TIPE, FEE_PERSEN, STATUS, IDBANK, CATATAN } = req.body;
-    await MetodeModel.update(id, { NAMA, TIPE, FEE_PERSEN, STATUS, IDBANK, CATATAN });
+    const { NAMA, FEE_PERSEN, STATUS, CATATAN } = req.body;
+    await MetodeModel.update(id, { NAMA, FEE_PERSEN, STATUS, CATATAN });
     res.json({ message: 'Metode pembayaran berhasil diperbarui' });
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -70,8 +70,6 @@ const Page = () => {
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return;
-
     const isEdit = !!form.IDBANK;
     const url = isEdit
       ? `${API_URL}/bankAccount/${form.IDBANK}`
