@@ -1,4 +1,6 @@
+// sistem_rs_fe\layout\AppMenu.js
 /* eslint-disable @next/next/no-img-element */
+
 import React, { useContext } from "react";
 import AppMenuitem from "./AppMenuitem";
 import { LayoutContext } from "./context/layoutcontext";

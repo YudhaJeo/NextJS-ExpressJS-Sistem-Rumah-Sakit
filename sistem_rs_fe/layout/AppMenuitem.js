@@ -1,3 +1,4 @@
+// \sistem_rs_fe\layout\AppMenuitem.js
 'use client';
 
 import { useRouter } from 'next/navigation';
@@ -7,11 +8,10 @@ import { classNames } from 'primereact/utils';
 import React, { useEffect, useContext, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { MenuContext } from './context/menucontext';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 const AppMenuitem = (props) => {
     const pathname = usePathname();
-    const searchParams = useSearchParams();
     const { activeMenu, setActiveMenu } = useContext(MenuContext);
 
     const item = props.item;
@@ -29,8 +29,7 @@ const AppMenuitem = (props) => {
 
     useEffect(() => {
         onRouteChange(pathname);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pathname, searchParams]);
+    }, [pathname]);
 
     const itemClick = (event) => {
         if (item?.disabled) {
