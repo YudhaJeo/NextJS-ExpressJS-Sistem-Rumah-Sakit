@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, Suspense } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
@@ -109,23 +109,21 @@ const Page = () => {
 
       <h3 className="text-xl font-semibold mb-3">Master Asuransi</h3>
 
-      <Suspense fallback={<div>Loading Search...</div>}>
-        <HeaderBar
-          title=""
-          placeholder="Cari nama asuransi"
-          onSearch={(keyword) => {
-            if (!keyword) return fetchData();
-            const filtered = data.filter((item) =>
-              item.NAMAASURANSI.toLowerCase().includes(keyword.toLowerCase())
-            );
-            setData(filtered);
-          }}
-          onAddClick={() => {
-            setForm({ NAMAASURANSI: '', KETERANGAN: '' });
-            setDialogVisible(true);
-          }}
-        />
-      </Suspense>
+      <HeaderBar
+        title=""
+        placeholder="Cari nama asuransi"
+        onSearch={(keyword) => {
+          if (!keyword) return fetchData();
+          const filtered = data.filter((item) =>
+            item.NAMAASURANSI.toLowerCase().includes(keyword.toLowerCase())
+          );
+          setData(filtered);
+        }}
+        onAddClick={() => {
+          setForm({ NAMAASURANSI: '', KETERANGAN: '' });
+          setDialogVisible(true);
+        }}
+      />
 
       <TabelAsuransi
         data={data}
