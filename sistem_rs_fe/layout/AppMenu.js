@@ -140,13 +140,13 @@ const AppMenu = () => {
 {
   label: "Fitur Rawat Inap",
   items: [
+    { label: "Dashboard Rawat Inap", icon: "pi pi-fw pi-chart-bar", to: "/rawatinap" },
     {
       label: "Menu",
       items: [
-        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/rawatinap" },
         {
           label: "Ruangan",
-          icon: "pi pi-fw pi-table",
+          icon: "pi pi-fw pi-home",
           items: [
             { label: "Manajemen Bangsal", icon: "pi pi-fw pi-th-large", to: "/rawatinap/manajemen-bangsal" },
             { label: "Manajemen Kamar", icon: "pi pi-fw pi-table", to: "/rawatinap/manajemen-kamar" },
@@ -157,7 +157,7 @@ const AppMenu = () => {
         { label: "Resep Obat", icon: "pi pi-fw pi-briefcase", to: "/rawatinap/resep" },
         { label: "Tindakan Medis", icon: "pi pi-fw pi-heart", to: "/rawatinap/tindakan" },
         { label: "Cetak Tindakan Medis", icon: "pi pi-fw pi-print", to: "/rawatinap/cetak-tindakan" },
-        { label: "Tagihan Sementara", icon: "pi pi-fw pi-file-invoice", to: "/rawatinap/tagihan-sementara" },
+        { label: "Tagihan Sementara", icon: "pi pi-fw pi-money-bill", to: "/rawatinap/tagihan-sementara" },
         { label: "Riwayat Sementara", icon: "pi pi-fw pi-history", to: "/rawatinap/riwayat-sementara" },
         { label: "Riwayat Pasien", icon: "pi pi-fw pi-users", to: "/rawatinap/riwayat-pasien" },
       ],
