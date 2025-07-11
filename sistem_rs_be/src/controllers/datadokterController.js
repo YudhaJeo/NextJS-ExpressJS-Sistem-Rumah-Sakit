@@ -24,16 +24,16 @@ export async function getById(req, res) {
 
 export async function create(req, res) {
   try {
-    const { NAMA_DOKTER, IDPOLI, JADWALPRAKTEK, NO_TELEPON, EMAIL, ALAMAT, JENIS_KELAMIN } = req.body;
+    const { IDDOKTER, IDPOLI, IDJADWAL, NO_TELEPON, EMAIL, ALAMAT, JENIS_KELAMIN } = req.body;
 
-    if (!NAMA_DOKTER || !EMAIL || !JADWALPRAKTEK || !JENIS_KELAMIN) {
+    if (!IDDOKTER || !EMAIL || !IDJADWAL || !JENIS_KELAMIN) {
       return res.status(400).json({ error: 'Field wajib tidak boleh kosong' });
     }
 
     await DokterModel.create({
-      NAMA_DOKTER,
+      IDDOKTER,
       IDPOLI,
-      JADWALPRAKTEK,
+      IDJADWAL,
       NO_TELEPON,
       EMAIL,
       ALAMAT,
@@ -50,12 +50,12 @@ export async function create(req, res) {
 export async function update(req, res) {
   try {
     const id = req.params.id;
-    const { NAMA_DOKTER, IDPOLI, JADWALPRAKTEK, NO_TELEPON, EMAIL, ALAMAT, JENIS_KELAMIN } = req.body;
+    const { IDDOKTER, IDPOLI, IDJADWAL, NO_TELEPON, EMAIL, ALAMAT, JENIS_KELAMIN } = req.body;
 
     const updated = await DokterModel.update(id, {
-      NAMA_DOKTER,
+      IDDOKTER,
       IDPOLI,
-      JADWALPRAKTEK,
+      IDJADWAL,
       NO_TELEPON,
       EMAIL,
       ALAMAT,

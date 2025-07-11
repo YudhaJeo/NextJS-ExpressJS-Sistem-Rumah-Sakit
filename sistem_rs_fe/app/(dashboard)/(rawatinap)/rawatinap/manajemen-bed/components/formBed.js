@@ -8,7 +8,7 @@ import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import React from 'react';
 
-const FormDialogKamar = ({ 
+const FormBed = ({ 
   visible, 
   onHide, 
   onSubmit, 
@@ -22,7 +22,7 @@ const FormDialogKamar = ({
 
   return (
     <Dialog
-      header={form.IDKAMAR ? 'Edit Kamar' : 'Tambah Kamar'}
+      header={form.IDBED ? 'Edit Bed' : 'Tambah Bed'}
       visible={visible}
       onHide={onHide}
       style={{ width: '40vw' }}
@@ -34,49 +34,46 @@ const FormDialogKamar = ({
           onSubmit();
         }}
       >
+
         <div>
-          <label>Nama Kamar</label>
+          <label>Nomor Bed</label>
           <InputText
-            className={inputClass('NAMAKAMAR')}
-            value={form.NAMAKAMAR}
-            onChange={(e) => setForm({ ...form, NAMAKAMAR: e.target.value })}
-            placeholder='Masukkan nama kamar'
+            className={inputClass('')}
+            value={form.NOMORBED}
+            onChange={(e) => setForm({ ...form, NOMORBED: e.target.value })}
+            placeholder='Contoh: B1'
           />
-          {errors.NAMAKAMAR && <small className="text-red-500">{errors.NAMAKAMAR}</small>}
+          {errors.NOMORBED && <small className="text-red-500">{errors.NOMORBED}</small>}
         </div>
 
         <div className="mt-2">
-          <label>Bangsal</label>
+          <label>Kamar</label>
           <Dropdown
-            className={inputClass('IDBANGSAL')}
+            className={inputClass('IDKAMAR')}
             options={bangsalOptions}
-            value={form.IDBANGSAL}
-            onChange={(e) => setForm({ ...form, IDBANGSAL: e.value })}
-            placeholder="Pilih Bangsal"
+            value={form.IDKAMAR}
+            onChange={(e) => setForm({ ...form, IDKAMAR: e.value })}
+            placeholder="Pilih Kamar"
           />
-          {errors.IDBANGSAL && <small className="text-red-500">{errors.IDBANGSAL}</small>}
-
-          {form.IDBANGSAL && (
-            <small className="text-gray-500">
-              Jenis: {
-                bangsalOptions.find(opt => opt.value === form.IDBANGSAL)?.NAMAJENIS || '-'
-              }
-            </small>
-          )}
+          {errors.IDKAMAR && <small className="text-red-500">{errors.IDKAMAR}</small>}
         </div>
-
 
         <div className="mt-2">
-          <label>Kapasitas</label>
-          <InputText
-            className={inputClass('KAPASITAS')}
-            value={form.KAPASITAS}
-            onChange={(e) => setForm({ ...form, KAPASITAS: e.target.value })}
-            placeholder="Masukkan kapasitas"
-            keyfilter="int"
+          <label>Status</label>
+          <Dropdown
+            className={inputClass('STATUS')}
+            options={[
+              { label: 'Tersedia', value: 'TERSEDIA' },
+              { label: 'Terisi', value: 'TERISI' },
+              { label: 'Dibersihkan', value: 'DIBERSIHKAN' },
+            ]}
+            value={form.STATUS}
+            onChange={(e) => setForm({ ...form, STATUS: e.value })}
+            placeholder="Pilih"
           />
-          {errors.KAPASITAS && <small className="text-red-500">{errors.KAPASITAS}</small>}
+          {errors.STATUS && <small className="text-red-500">{errors.STATUS}</small>}
         </div>
+
 
         <div className="mt-2">
           <label>Keterangan</label>
@@ -97,4 +94,4 @@ const FormDialogKamar = ({
   );
 };
 
-export default FormDialogKamar;
+export default FormBed;

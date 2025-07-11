@@ -25,6 +25,9 @@ import pembayaranRoutes from './routes/pembayaranRoutes.js';
 import kamarRoutes from './routes/kamarRoutes.js';
 import bankAccountRoutes from './routes/bankAccountRoutes.js';
 import metodePembayaranRoutes from './routes/metodePembayaranRoutes.js';
+import bedRoutes from './routes/bedRoutes.js';
+import jadwaldokterRoutes from './routes/jadwaldokterRoutes.js';
+
 
 const app = express();
 
@@ -62,5 +65,7 @@ app.use('/api/pembayaran', pembayaranRoutes);
 app.use('/api/kamar', kamarRoutes);
 app.use('/api/bankaccount', bankAccountRoutes);
 app.use('/api/metodepembayaran', metodePembayaranRoutes);
+app.use('/api/bed', bedRoutes);
+app.use('/api/jadwaldokter', jadwaldokterRoutes);
 
 export default app;
