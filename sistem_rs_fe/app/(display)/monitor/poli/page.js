@@ -1,3 +1,4 @@
+// sistem_rs_fe\app\(display)\monitor\poli\page.js
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -24,8 +25,14 @@ function MonitorAntrianPoli() {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [time, setTime] = useState(null);
   
-  const searchParams = useSearchParams();
-  const zona = searchParams.get("zona");
+  const [zona, setZona] = useState(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const z = params.get("zona");
+    if (z) setZona(z);
+  }, []);
+
 
   const toast = useRef(null);
   const ws = useRef(null);

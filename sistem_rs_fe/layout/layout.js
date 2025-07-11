@@ -1,3 +1,4 @@
+// sistem_rs_fe\layout\layout.js
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
@@ -52,11 +53,10 @@ const Layout = ({ children }) => {
     });
 
     const pathname = usePathname();
-    const searchParams = useSearchParams();
     useEffect(() => {
         hideMenu();
         hideProfileMenu();
-    }, [pathname, searchParams]);
+    }, [pathname]);
 
     const hideMenu = () => {
         setLayoutState((prevLayoutState) => ({

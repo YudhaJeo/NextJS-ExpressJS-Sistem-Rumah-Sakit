@@ -1,3 +1,4 @@
+// sistem_rs_fe\app\(display)\layout.js
 import '../globals.css';
 
 export default function DisplayLayout({ children }) {
