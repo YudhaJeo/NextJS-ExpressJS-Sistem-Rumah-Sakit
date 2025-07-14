@@ -1,31 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
-import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
+import { Calendar } from 'primereact/calendar';
+import { Button } from 'primereact/button';
 
-const FormDialogPengobatan = ({
-  visible,
-  onHide,
-  onSubmit,
-  form,
-  setForm,
-  pendaftaranOptions,
-}) => {
-  const [errors, setErrors] = useState([]);
+const FormDialogPengobatan = ({ visible, onHide, onSubmit, form, setForm, pendaftaranOptions }) => {
+  const [errors, setErrors] = useState({});
 
   const validate = () => {
     const newErrors = {};
-    if (!form.NIK) newErrors.NIK = 'NIK harus dipilih';
-    if (!form.TANGGALKUNJUNGAN) newErrors.TANGGALKUNJUNGAN = 'Tanggal kunjungan wajib diisi';
-    if (!form.KELUHAN) newErrors.KELUHAN = 'Keluhan wajib diisi';
-    if (!form.POLI) newErrors.POLI = 'Poli wajib dipilih';
-    if (!form.STATUSKUNJUNGAN) newErrors.STATUSKUNJUNGAN = 'Status wajib dipilih';
-    if (!form.STATUSRAWAT) newErrors.STATUSRAWAT = 'Status wajib dipilih';
+    if (!form.IDPENDAFTARAN) newErrors.IDPENDAFTARAN = 'Pendaftaran wajib dipilih';
+    if (!form.STATUSKUNJUNGAN) newErrors.STATUSKUNJUNGAN = 'Status Kunjungan wajib diisi';
+    if (!form.STATUSRAWAT) newErrors.STATUSRAWAT = 'Status Rawat wajib diisi';
     if (!form.DIAGNOSA) newErrors.DIAGNOSA = 'Diagnosa wajib diisi';
     if (!form.OBAT) newErrors.OBAT = 'Obat wajib diisi';
     setErrors(newErrors);
@@ -50,138 +40,107 @@ const FormDialogPengobatan = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
-        {/* NIK */}
         <div>
-          <label className="font-medium">NIK</label>
+          <label className="font-medium">Pilih Pendaftaran</label>
           <Dropdown
-            className={classNames('w-full mt-2', { 'p-invalid': errors.NIK })}
+            className={classNames('w-full mt-2', { 'p-invalid': errors.IDPENDAFTARAN })}
+            value={form.IDPENDAFTARAN}
             options={pendaftaranOptions}
-            optionLabel="label"
-            optionValue="value"
-            value={form.NIK}
             onChange={(e) => {
               const selected = pendaftaranOptions.find((p) => p.value === e.value);
               setForm({
                 ...form,
-                NIK: selected?.value || '',
-                IDPENDAFTARAN: selected?.IDPENDAFTARAN || '',
-                NAMALENGKAP: selected?.NAMALENGKAP || '',
-                TANGGALKUNJUNGAN: selected?.TANGGALKUNJUNGAN || '',
-                KELUHAN: selected?.KELUHAN || '',
-                POLI: selected?.POLI || '',
-                STATUSKUNJUNGAN: selected?.STATUSKUNJUNGAN || 'Diperiksa',
+                IDPENDAFTARAN: e.value,
+                NIK: selected.NIK,
+                NAMALENGKAP: selected.NAMALENGKAP,
+                TANGGALKUNJUNGAN: selected.TANGGALKUNJUNGAN,
+                KELUHAN: selected.KELUHAN,
+                POLI: selected.POLI,
+                STATUSKUNJUNGAN: selected.STATUSKUNJUNGAN || 'Diperiksa',
               });
             }}
-            placeholder="Pilih NIK"
+            placeholder="Pilih pendaftaran"
             filter
             showClear
           />
-          {errors.NIK && <small className="p-error">{errors.NIK}</small>}
+          {errors.IDPENDAFTARAN && <small className="p-error">{errors.IDPENDAFTARAN}</small>}
         </div>
 
-        {/* Tanggal Kunjungan (read-only) */}
+        {/* FIELD READ-ONLY */}
+        <div>
+          <label className="font-medium">NIK</label>
+          <InputText className="w-full mt-2" value={form.NIK || ''} disabled />
+        </div>
+
+        <div>
+          <label className="font-medium">Nama Lengkap</label>
+          <InputText className="w-full mt-2" value={form.NAMALENGKAP || ''} disabled />
+        </div>
+
         <div>
           <label className="font-medium">Tanggal Kunjungan</label>
-          <Calendar
-            className={classNames('w-full mt-2', { 'p-invalid': errors.TANGGALKUNJUNGAN })}
-            dateFormat="yy-mm-dd"
-            value={form.TANGGALKUNJUNGAN ? new Date(form.TANGGALKUNJUNGAN) : undefined}
-            disabled
-          />
-          {errors.TANGGALKUNJUNGAN && (
-            <small className="p-error">{errors.TANGGALKUNJUNGAN}</small>
-          )}
+          <Calendar value={form.TANGGALKUNJUNGAN ? new Date(form.TANGGALKUNJUNGAN) : undefined} disabled showIcon className="w-full mt-2" />
         </div>
 
-        {/* Keluhan (read-only) */}
-        <div>
-          <label className="font-medium">Keluhan</label>
-          <InputText
-            className={classNames('w-full mt-2', { 'p-invalid': errors.KELUHAN })}
-            value={form.KELUHAN || ''}
-            placeholder="Masukkan keluhan pasien"
-            readOnly
-          />
-          {errors.KELUHAN && <small className="p-error">{errors.KELUHAN}</small>}
-        </div>
-
-        {/* Poli (read-only) */}
         <div>
           <label className="font-medium">Poli</label>
-          <InputText
-            className={classNames('w-full mt-2', { 'p-invalid': errors.POLI })}
-            value={form.POLI || ''}
-            placeholder="Masukkan poli"
-            readOnly
-          />
-          {errors.POLI && <small className="p-error">{errors.POLI}</small>}
+          <InputText className="w-full mt-2" value={form.POLI || ''} disabled />
         </div>
 
-        {/* Status Kunjungan (read-only) */}
+        <div>
+          <label className="font-medium">Keluhan</label>
+          <InputText className="w-full mt-2" value={form.KELUHAN || ''} disabled />
+        </div>
+
+        {/* FIELD YANG BISA DIEDIT */}
         <div>
           <label className="font-medium">Status Kunjungan</label>
-          <InputText
+          <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUSKUNJUNGAN })}
-            options={['Diperiksa', 'Batal', 'Selesai'].map((val) => ({
-              label: val,
-              value: val,
-            }))}
             value={form.STATUSKUNJUNGAN}
+            options={['Diperiksa', 'Selesai', 'Batal'].map((val) => ({ label: val, value: val }))}
+            onChange={(e) => setForm({ ...form, STATUSKUNJUNGAN: e.value })}
             placeholder="Pilih Status"
-            disabled
           />
-          {errors.STATUSKUNJUNGAN && (
-            <small className="p-error">{errors.STATUSKUNJUNGAN}</small>
-          )}
+          {errors.STATUSKUNJUNGAN && <small className="p-error">{errors.STATUSKUNJUNGAN}</small>}
         </div>
 
-        {/* Status Rawat */}
         <div>
           <label className="font-medium">Status Rawat</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUSRAWAT })}
-            options={['Rawat Jalan', 'Rawat Inap'].map((val) => ({
-              label: val,
-              value: val,
-            }))}
             value={form.STATUSRAWAT}
+            options={['Rawat Jalan', 'Rawat Inap'].map((val) => ({ label: val, value: val }))}
             onChange={(e) => setForm({ ...form, STATUSRAWAT: e.value })}
-            placeholder="Pilih Status"
+            placeholder="Pilih Status Rawat"
           />
           {errors.STATUSRAWAT && <small className="p-error">{errors.STATUSRAWAT}</small>}
         </div>
 
-        {/* Diagnosa */}
         <div>
           <label className="font-medium">Diagnosa</label>
           <InputText
             className={classNames('w-full mt-2', { 'p-invalid': errors.DIAGNOSA })}
             value={form.DIAGNOSA || ''}
             onChange={(e) => setForm({ ...form, DIAGNOSA: e.target.value })}
-            placeholder="Masukkan Diagnosa..."
+            placeholder="Masukkan diagnosa"
           />
           {errors.DIAGNOSA && <small className="p-error">{errors.DIAGNOSA}</small>}
         </div>
 
-        {/* Obat */}
         <div>
           <label className="font-medium">Obat</label>
           <InputText
             className={classNames('w-full mt-2', { 'p-invalid': errors.OBAT })}
             value={form.OBAT || ''}
             onChange={(e) => setForm({ ...form, OBAT: e.target.value })}
-            placeholder="Masukkan Obat..."
+            placeholder="Masukkan obat"
           />
           {errors.OBAT && <small className="p-error">{errors.OBAT}</small>}
         </div>
 
         <div className="text-right pt-3">
-          <Button
-            type="submit"
-            label="Simpan"
-            icon="pi pi-save"
-            className="p-button-primary"
-          />
+          <Button type="submit" label="Simpan" icon="pi pi-save" className="p-button-primary" />
         </div>
       </form>
     </Dialog>

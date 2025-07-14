@@ -11,7 +11,8 @@ export const up = function (knex) {
       .references('NIK').inTable('pendaftaran').onDelete('CASCADE');
     table.datetime('TANGGALKUNJUNGAN').notNullable();
     table.string('KELUHAN', 255).nullable();
-    table.integer('POLI').nullable()
+    table.integer('IDPOLI').unsigned().notNullable()
+      .references('IDPOLI').inTable('poli').onDelete('CASCADE');
     table.enu('STATUSKUNJUNGAN', ['Diperiksa', 'Batal', 'Selesai']).defaultTo('Diperiksa');
     table.enu('STATUSRAWAT', ['Rawat Jalan', 'Rawat Inap']).defaultTo('Rawat Jalan');
     table.string('DIAGNOSA', 255).nullable();

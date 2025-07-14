@@ -11,32 +11,37 @@ export async function getAllPengobatan(req, res) {
 
 export async function createPengobatan(req, res) {
   try {
-    const { NIK, TANGGALKUNJUNGAN, POLI, KELUHAN, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
-    await PengobatanModel.createPengobatan({ IDPENDAFTRAN, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT });
+    const { IDPENDAFTARAN, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
+    console.log('Terima data:', req.body); // debug
+    await PengobatanModel.createPengobatan({
+      IDPENDAFTARAN,
+      STATUSKUNJUNGAN,
+      STATUSRAWAT,
+      DIAGNOSA,
+      OBAT
+    });
     res.json({ message: 'Pengobatan berhasil ditambahkan' });
   } catch (err) {
+    console.error('Insert Error:', err); // pastikan ini ada
     res.status(500).json({ error: err.message });
   }
 }
-
 
 export async function updatePengobatan(req, res) {
   try {
     const id = req.params.id;
-    const { NIK, TANGGALKUNJUNGAN, POLI, KELUHAN, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
-
-    console.log('Update ID:', id);
-    console.log('Update Data:', req.body); 
-
-    const result = await PengobatanModel.updatePengobatan(id, { NIK, TANGGALKUNJUNGAN, POLI, KELUHAN, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT });
-
+    const { STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
+    await PengobatanModel.updatePengobatan(id, {
+      STATUSKUNJUNGAN,
+      STATUSRAWAT,
+      DIAGNOSA,
+      OBAT
+    });
     res.json({ message: 'Pengobatan berhasil diperbarui' });
   } catch (err) {
-    console.error('Update Error:', err);
     res.status(500).json({ error: err.message });
   }
 }
-
 
 export async function deletePengobatan(req, res) {
   try {
