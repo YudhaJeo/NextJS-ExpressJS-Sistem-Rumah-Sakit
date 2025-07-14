@@ -111,7 +111,7 @@ const TabelAntrianPoli = ({
           <DataTable
             value={filtered}
             paginator
-            rows={5}
+            rows={10}
             loading={loading}
             stripedRows
             responsiveLayout="scroll"

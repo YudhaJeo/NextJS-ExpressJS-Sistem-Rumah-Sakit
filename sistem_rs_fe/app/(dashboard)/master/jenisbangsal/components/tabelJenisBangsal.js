@@ -10,7 +10,7 @@ const TabelJenis = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable 
       value={data} 
-      paginator rows={5} 
+      paginator rows={10} 
       loading={loading} 
       size="small"
     >

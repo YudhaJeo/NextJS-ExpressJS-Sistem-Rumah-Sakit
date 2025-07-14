@@ -9,7 +9,7 @@ const TabelDokumen = ({ data, loading, onDownload, onEdit, onDelete }) => {
     <DataTable
       value={data}
       paginator
-      rows={5}
+      rows={10}
       loading={loading}
       size="small"
       scrollable

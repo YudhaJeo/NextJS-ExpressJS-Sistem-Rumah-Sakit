@@ -10,7 +10,7 @@ const TabelAgama = ({ data, loading, onEdit, onDelete  }) => {
   return (
     <DataTable 
       value={data} 
-      paginator rows={5} 
+      paginator rows={10} 
       loading={loading} 
       size="small">
       <Column field="IDAGAMA" header="ID" />
