@@ -149,12 +149,12 @@ const AppMenu = () => {
         { label: "Jenis Bangsal", icon: "pi pi-fw pi-tag", to: "/master/jenisbangsal" },
         { label: "Manajemen Bangsal", icon: "pi pi-fw pi-th-large", to: "/rawatinap/manajemen-bangsal" },
         { label: "Manajemen Kamar", icon: "pi pi-fw pi-table", to: "/rawatinap/manajemen-kamar" },
-        { label: "Manajemen Bed", icon: "pi pi-fw pi-objects-column", to: "/rawatinap/manajemen-bed" },
       ],
      },    
     {
       label: "Menu",
       items: [
+        { label: "Manajemen Bed", icon: "pi pi-fw pi-objects-column", to: "/rawatinap/manajemen-bed" },
         { label: "Charge Kamar", icon: "pi pi-fw pi-wallet", to: "/rawatinap/charge-kamar" },
         { label: "Resep Obat", icon: "pi pi-fw pi-briefcase", to: "/rawatinap/resep" },
         { label: "Tindakan Medis", icon: "pi pi-fw pi-heart", to: "/rawatinap/tindakan" },
