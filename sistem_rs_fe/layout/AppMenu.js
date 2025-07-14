@@ -47,19 +47,17 @@ const AppMenu = () => {
         { label: "Dashboard Pasien", icon: "pi pi-fw pi-chart-bar", to: "/dashboard" },
         { label: "Master",
           items: [
-            {},
+            { label: "Pasien", icon: "pi pi-fw pi-user", to: "/pasien" },,
           ],
         },
         {
           label: "Menu",
           items: [
-        { label: "Pasien", icon: "pi pi-fw pi-user", to: "/pasien" },
         { label: "Pendaftaran Pasien", 
           icon: "pi pi-fw pi-user-plus",
           items: [
             { label: "Reservasi", icon: "pi pi-fw pi-calendar", to: "/pendaftaran/reservasi" },
             { label: "Formulir Pendaftaran", icon: "pi pi-fw pi-book", to: "/pendaftaran/formulir" },
-            { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/pendaftaran/riwayatKunjungan" },
           ],
         },
         {
@@ -80,6 +78,7 @@ const AppMenu = () => {
             { label: "Histori Transaksi", icon: "pi pi-fw pi-history", to: "/laporan/histori-transaksi" },
           ],
         },
+        { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/pendaftaran/riwayatKunjungan" },
       ],
     },
   ],
