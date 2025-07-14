@@ -28,6 +28,7 @@ import metodePembayaranRoutes from './routes/metodePembayaranRoutes.js';
 import bedRoutes from './routes/bedRoutes.js'
 import dashboardRawatInapRoutes from './routes/dashboardRawatInapRoutes.js';
 import jadwaldokterRoutes from './routes/jadwaldokterRoutes.js';
+import dashboardDokterRoutes from './routes/dashboardDokterRoutes.js'
 
 const app = express();
 
@@ -68,5 +69,6 @@ app.use('/api/metodepembayaran', metodePembayaranRoutes);
 app.use('/api/bed', bedRoutes);
 app.use('/api/rawatinap', dashboardRawatInapRoutes)
 app.use('/api/jadwaldokter', jadwaldokterRoutes);
+app.use('/api/dashboarddokter', dashboardDokterRoutes);
 
 export default app;
