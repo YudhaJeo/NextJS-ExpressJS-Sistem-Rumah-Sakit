@@ -4,7 +4,14 @@ export const getAll = () =>{
   return db('pendaftaran')
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .join('poli', 'pendaftaran.IDPOLI', 'poli.IDPOLI')
-    .select('pendaftaran.*', 'pasien.NAMALENGKAP', 'poli.NAMAPOLI as POLI');
+    .select(
+        'pendaftaran.IDPENDAFTARAN',
+        'pendaftaran.NIK',
+        'pasien.NAMALENGKAP',
+        'pendaftaran.TANGGALKUNJUNGAN',
+        'pendaftaran.KELUHAN',
+        'pendaftaran.STATUSKUNJUNGAN',
+        'poli.NAMAPOLI');
 }
 
 export const create = (data) => {
