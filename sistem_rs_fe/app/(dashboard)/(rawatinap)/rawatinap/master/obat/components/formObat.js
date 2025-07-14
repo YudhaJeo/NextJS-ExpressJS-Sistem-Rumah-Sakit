@@ -1,4 +1,4 @@
-// app/(dashboard)/master/agama/components/formDialogAgama.js
+// app\(dashboard)\(rawatinap)\rawatinap\master\obat\components\formObat.js
 'use client';
 
 import { Button } from 'primereact/button';
@@ -14,7 +14,7 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
 
   return (
     <Dialog
-      header={form.IDAGAMA ? 'Edit Agama' : 'Tambah Agama'}
+      header={form.IDOBAT ? 'Edit Obat' : 'Tambah Obat'}
       visible={visible}
       onHide={onHide}
       style={{ width: '30vw' }}
@@ -26,18 +26,18 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
           onSubmit();
         }}
       >
-        <div>
+        <div className="mt-2">
           <label>Nama Obat</label>
           <InputText
-            className={inputClass('NAMAAGAMA')}
-            value={form.NAMAAGAMA}
-            onChange={(e) => setForm({ ...form, NAMAAGAMA: e.target.value })}
+            className={inputClass('NAMAOBAT')}
+            value={form.NAMAOBAT}
+            onChange={(e) => setForm({ ...form, NAMAOBAT: e.target.value })}
           />
-          {errors.NAMAAGAMA && <small className="text-red-500">{errors.NAMAAGAMA}</small>}
+          {errors.NAMAOBAT && <small className="text-red-500">{errors.NAMAOBAT}</small>}
         </div>
 
         <div className="mt-2">
-          <label>Status</label>
+          <label>Satuan</label>
           <Dropdown
             className={inputClass('SATUAN')}
             options={[
@@ -56,7 +56,21 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
           {errors.SATUAN && <small className="text-red-500">{errors.SATUAN}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
+          <label>Stok</label>
+          <InputNumber
+            inputId="stok"
+            className="w-full mt-2"
+            inputClassName={errors.STOK ? 'p-invalid' : ''}
+            value={form.STOK}
+            onValueChange={(e) => setForm({ ...form, STOK: e.value })}
+          />
+          {errors.STOK && (
+            <small className="text-red-500">{errors.STOK}</small>
+          )}
+        </div>
+
+        <div className="mt-2">
           <label>Harga (Rupiah)</label>
           <InputNumber
             inputId="harga"
@@ -71,6 +85,16 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
           {errors.HARGA && (
             <small className="text-red-500">{errors.HARGA}</small>
           )}
+        </div>
+
+        <div className="mt-2">
+          <label>Keterangan</label>
+          <InputText
+            className={inputClass('KETERANGAN')}
+            value={form.KETERANGAN}
+            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
+          />
+          {errors.KETERANGAN && <small className="text-red-500">{errors.KETERANGAN}</small>}
         </div>
 
         <div className="text-right pt-3">

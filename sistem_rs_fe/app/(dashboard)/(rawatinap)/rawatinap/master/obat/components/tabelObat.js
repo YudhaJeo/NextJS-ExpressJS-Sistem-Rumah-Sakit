@@ -1,4 +1,4 @@
-// app/(dashboard)/master/asuransi/components/tabelAgama.js
+// app\(dashboard)\(rawatinap)\rawatinap\master\obat\components\tabelObat.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
