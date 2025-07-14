@@ -7,7 +7,7 @@ import React from 'react';
 
 const TabelPasien = ({ data, loading, onEdit, onDelete }) => {
   return (
-    <DataTable value={data} paginator rows={5} loading={loading} size="small" scrollable>
+    <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
       <Column field="NAMALENGKAP" header="Nama Lengkap" sortable />
       <Column field="NIK" header="NIK" />
       <Column

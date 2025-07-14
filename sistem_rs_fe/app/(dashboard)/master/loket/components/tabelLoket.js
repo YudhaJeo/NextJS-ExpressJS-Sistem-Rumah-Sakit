@@ -7,7 +7,7 @@ import React from 'react';
 
 const TabelLoket = ({ data, loading, onEdit, onDelete }) => {
   return (
-    <DataTable value={data} paginator rows={5} loading={loading} size="small" scrollable>
+    <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
       <Column field="NO" header="No" style={{ width: '70px' }} />
       <Column field="NAMALOKET" header="Nama Loket" sortable />
       <Column field="KODE" header="Kode" />

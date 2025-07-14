@@ -15,7 +15,7 @@ const TabelPrinter = ({ data, loading, onEdit, onDelete }) => {
   };
 
   return (
-    <DataTable value={data} paginator rows={5} loading={loading} size="small" scrollable>
+    <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
       <Column field="NOPRINTER" header="No" style={{ width: '70px' }} />
       <Column field="NAMAPRINTER" header="Nama Printer" sortable />
       <Column field="KODEPRINTER" header="Kode Printer" />

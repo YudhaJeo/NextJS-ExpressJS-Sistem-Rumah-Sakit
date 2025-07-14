@@ -95,7 +95,7 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil, onReset, currentId,
           <DataTable
             value={filtered}
             paginator
-            rows={5}
+            rows={10}
             loading={loading}
             stripedRows
             responsiveLayout="scroll"
