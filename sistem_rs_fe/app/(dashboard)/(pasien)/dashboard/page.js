@@ -66,12 +66,19 @@ const DashboardPasien = () => {
           plugins: { legend: { display: false } },
           scales: {
             x: {
-              beginAtZero: true,
-              grid: { color: style.getPropertyValue('--surface-border') },
-              ticks: { color: style.getPropertyValue('--text-color') },
+              min: 0, 
+              ticks: {
+                stepSize: 1,
+                color: style.getPropertyValue('--text-color'),
+              },
+              grid: {
+                color: style.getPropertyValue('--surface-border'),
+              },
             },
             y: {
-              ticks: { color: style.getPropertyValue('--text-color') },
+              ticks: {
+                color: style.getPropertyValue('--text-color'),
+              },
             },
           },
         });
