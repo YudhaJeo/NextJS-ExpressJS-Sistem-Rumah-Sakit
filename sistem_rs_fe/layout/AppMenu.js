@@ -49,6 +49,11 @@ const AppMenu = () => {
       label: "Fitur Pasien",
       items: [
         { label: "Dashboard Pasien", icon: "pi pi-fw pi-chart-bar", to: "/dashboard" },
+        { label: "Master",
+          items: [
+            {},
+          ],
+        },
         {
           label: "Menu",
           items: [
@@ -87,6 +92,11 @@ const AppMenu = () => {
   label: "Fitur Dokter",
   items: [
     { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dashboarddokter" },
+    { label: "Master",
+      items: [
+        {},
+      ],
+     },
     {
       label: "Menu",
       items: [
@@ -111,10 +121,15 @@ const AppMenu = () => {
     {
   label: "Fitur Rawat Jalan",
   items: [
+    { label: "Dashboard Rawat Jalan", icon: "pi pi-fw pi-home", to: "/rawatjalan/dashboard" },
+    { label: "Master",
+      items: [
+        {},
+      ],
+     },
     {
       label: "Menu",
       items: [
-        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/rawatjalan/dashboard" },
         { label: "Tindakan & Layanan Medis", icon: "pi pi-fw pi-heart", to: "/rawatjalan/tindakan-layanan" },
         { label: "Resep Obat", icon: "pi pi-fw pi-briefcase", to: "/rawatjalan/resep" },
         { label: "Perjanjian", icon: "pi pi-fw pi-calendar-plus", to: "/rawatjalan/perjanjian" },
@@ -134,6 +149,11 @@ const AppMenu = () => {
   label: "Fitur Rawat Inap",
   items: [
     { label: "Dashboard Rawat Inap", icon: "pi pi-fw pi-chart-bar", to: "/rawatinap" },
+    { label: "Master",
+      items: [
+        {},
+      ],
+     },    
     {
       label: "Menu",
       items: [
@@ -160,10 +180,15 @@ const AppMenu = () => {
 {
   label: "Fitur Kasir & Sales",
   items: [
+    { label: "Dashboard Kasir", icon: "pi pi-fw pi-chart-bar", to: "/kasir/dashboard" },
+    { label: "Master",
+      items: [
+        {},
+      ],
+     },
     {
       label: "Menu",
       items: [
-        { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/kasir/dashboard" },
         { label: "Invoice & Pembayaran", 
           icon: "pi pi-fw pi-wallet",
           items: [
