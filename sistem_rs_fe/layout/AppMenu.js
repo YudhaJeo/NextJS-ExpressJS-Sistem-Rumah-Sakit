@@ -146,7 +146,7 @@ const AppMenu = () => {
     { label: "Dashboard Rawat Inap", icon: "pi pi-fw pi-chart-bar", to: "/rawatinap" },
     { label: "Master",
       items: [
-        { label: "Daftar Obat", icon: "pi pi-fw pi-tag", to: "/rawatinap/master/obat" },
+        { label: "Daftar Obat", icon: "pi pi-fw pi-chart-pie", to: "/rawatinap/master/obat" },
         { label: "Tindakan Medis", icon: "pi pi-fw pi-heart", to: "/rawatinap/master/tindakan_medis" },
         { label: "Jenis Bangsal", icon: "pi pi-fw pi-tag", to: "/rawatinap/master/jenisbangsal" },
         { label: "Manajemen Bangsal", icon: "pi pi-fw pi-th-large", to: "/rawatinap/master/manajemen-bangsal" },
