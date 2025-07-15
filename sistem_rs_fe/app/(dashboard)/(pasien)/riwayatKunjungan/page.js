@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { DataTable } from 'primereact/datatable';
+import FilterTanggal from '@/app/components/filterTanggal';
 import TabelRiwayatKunjungan from './components/tabelRiwayatKunjungan';
-import { Column } from 'primereact/column';
+
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const RiwayatKunjunganPage = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);  
 
   useEffect(() => {
     fetchData();
@@ -30,30 +32,38 @@ const RiwayatKunjunganPage = () => {
     }
   };
 
-  const formatTanggal = (tanggal) => {
-    if (!tanggal) return '-';
-    const tgl = new Date(tanggal);
-    return tgl.toLocaleDateString('id-ID', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
+    const handleDateFilter = () => {
+    if (!startDate && !endDate) return setData(originalData);
+    const filtered = originalData.filter((item) => {
+      const visitDate = new Date(item.TANGGALKUNJUNGAN);
+      const from = startDate ? new Date(startDate.setHours(0, 0, 0, 0)) : null;
+      const to = endDate ? new Date(endDate.setHours(23, 59, 59, 999)) : null;
+      return (!from || visitDate >= from) && (!to || visitDate <= to);
     });
+    setData(filtered);
+  };
+
+  const resetFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setData(originalData);
   };
 
   return (
     <div className="card">
       <h3 className="text-xl font-semibold mb-4">Riwayat Kunjungan</h3>
 
-      <TabelRiwayatKunjungan data={data} loading={loading} />
+        <FilterTanggal
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          handleDateFilter={handleDateFilter}
+          resetFilter={resetFilter}
+        />
 
-      {/* <DataTable value={data} loading={loading} paginator rows={10}>
-        <Column field="NAMALENGKAP" header="Nama Pasien" />
-        <Column field="NIK" header="NIK" />
-        <Column field="TANGGALKUNJUNGAN" header="Tgl Kunjungan" body={(row) => formatTanggal(row.TANGGALKUNJUNGAN)} />
-        <Column field="KELUHAN" header="Keluhan" />
-        <Column field="POLI" header="Poli" />
-        <Column field="STATUSKUNJUNGAN" header="Status Kunjungan" />
-      </DataTable> */}
+        <TabelRiwayatKunjungan data={data} loading={loading} />
+
     </div>
   );
 };
