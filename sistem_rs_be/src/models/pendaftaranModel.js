@@ -11,7 +11,7 @@ export const getAll = () =>{
         'pendaftaran.TANGGALKUNJUNGAN',
         'pendaftaran.KELUHAN',
         'pendaftaran.STATUSKUNJUNGAN',
-        'poli.NAMAPOLI');
+        'poli.NAMAPOLI as POLI');
 }
 
 export const create = (data) => {
