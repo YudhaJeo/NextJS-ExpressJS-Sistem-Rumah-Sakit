@@ -39,7 +39,7 @@ const fetchData = useCallback(async (showLoading = false) => {
   try {
     const [poliRes, antrianRes] = await Promise.all([
       axios.get(`${API_URL}/poli`),
-      axios.get(`${API_URL}/antrianpoli/data`),
+      axios.get(`${API_URL}/antrian_poli/data`),
     ]);
 
     const urlParams = new URLSearchParams(window.location.search);

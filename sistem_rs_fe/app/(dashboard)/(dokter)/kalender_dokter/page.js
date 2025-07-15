@@ -57,7 +57,7 @@ const KalenderPage = () => {
 
   const fetchDokter = async () => {
     try {
-      const res = await axios.get(`${API_URL}/datadokter`);
+      const res = await axios.get(`${API_URL}/data_dokter`);
       const options = res.data.map((data_dokter) => ({
         label: `${data_dokter.NAMADOKTER}`,
         value: data_dokter.IDDOKTER,

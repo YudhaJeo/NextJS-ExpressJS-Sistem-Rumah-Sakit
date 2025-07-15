@@ -48,7 +48,7 @@ const KomisiPage = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/komisidokter`);
+      const res = await axios.get(`${API_URL}/komisi_dokter`);
       setData(res.data);
       setOriginalData(res.data);
     } catch (err) {
@@ -107,8 +107,8 @@ const KomisiPage = () => {
 
     const isEdit = !!formData.IDKOMISI;
     const url = isEdit
-      ? `${API_URL}/komisidokter/${formData.IDKOMISI}`
-      : `${API_URL}/komisidokter`;
+      ? `${API_URL}/komisi_dokter/${formData.IDKOMISI}`
+      : `${API_URL}/komisi_dokter`;
 
     try {
       if (isEdit) {
@@ -141,7 +141,7 @@ const KomisiPage = () => {
       rejectLabel: "Batal",
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/datadokter/${row.IDDATA}`);
+          await axios.delete(`${API_URL}/data_dokter/${row.IDDATA}`);
           fetchData();
           toastRef.current?.showToast("00", "Berhasil dihapus");
         } catch (err) {

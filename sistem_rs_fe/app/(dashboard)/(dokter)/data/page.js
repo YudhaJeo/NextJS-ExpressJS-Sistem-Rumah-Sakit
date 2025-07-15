@@ -49,8 +49,8 @@ const DataDokterPage = () => {
   setLoading(true);
   try {
     const [dokterData, jadwalData] = await Promise.all([
-      axios.get(`${API_URL}/datadokter`),
-      axios.get(`${API_URL}/jadwaldokter`),
+      axios.get(`${API_URL}/data_dokter`),
+      axios.get(`${API_URL}/jadwal_dokter`),
     ]);
 
     const merged = dokterData.data.map((dokter) => ({
@@ -72,7 +72,7 @@ const DataDokterPage = () => {
       const [dokter, poli, jadwal] = await Promise.all([
         axios.get(`${API_URL}/dokter`),
         axios.get(`${API_URL}/poli`),
-        axios.get(`${API_URL}/jadwaldokter`),
+        axios.get(`${API_URL}/jadwal_dokter`),
       ]);
 
       setDokterOptions(dokter.data.map((d) => ({ label: d.NAMADOKTER, value: d.IDDOKTER })));
@@ -112,8 +112,8 @@ const DataDokterPage = () => {
 
     const isEdit = !!formData.IDDATA;
     const url = isEdit
-      ? `${API_URL}/datadokter/${formData.IDDATA}`
-      : `${API_URL}/datadokter`;
+      ? `${API_URL}/data_dokter/${formData.IDDATA}`
+      : `${API_URL}/data_dokter`;
 
     try {
       if (isEdit) {
@@ -146,7 +146,7 @@ const DataDokterPage = () => {
       rejectLabel: "Batal",
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/datadokter/${row.IDDATA}`);
+          await axios.delete(`${API_URL}/data_dokter/${row.IDDATA}`);
           fetchData();
           toastRef.current?.showToast("00", "Berhasil dihapus");
         } catch (err) {

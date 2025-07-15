@@ -26,7 +26,7 @@ const RiwayatPengobatanPage = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/riwayatpengobatan`);
+      const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
       setData(res.data.data);
     } catch (err) {
       console.error("Gagal ambil data riwayat:", err);
@@ -56,8 +56,8 @@ const RiwayatPengobatanPage = () => {
   const handleSubmit = async () => {
     const isEdit = !!form.IDPENGOBATAN;
     const url = isEdit
-      ? `${API_URL}/riwayatpengobatan/${form.IDPENGOBATAN}`
-      : `${API_URL}/riwayatpengobatan`;
+      ? `${API_URL}/riwayat_pengobatan/${form.IDPENGOBATAN}`
+      : `${API_URL}/riwayat_pengobatan`;
 
     const payload = {
       IDPENDAFTARAN: form.IDPENDAFTARAN,
@@ -98,7 +98,7 @@ const RiwayatPengobatanPage = () => {
       rejectLabel: "Batal",
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/riwayatpengobatan/${row.IDPENGOBATAN}`);
+          await axios.delete(`${API_URL}/riwayat_pengobatan/${row.IDPENGOBATAN}`);
           fetchData();
           toastRef.current?.showToast("00", "Data berhasil dihapus");
         } catch (err) {
