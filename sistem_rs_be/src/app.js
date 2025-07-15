@@ -62,7 +62,6 @@ app.use('/api/dokter', dokterRoutes)
 app.use('/api/jenis_bangsal', jenisBangsalRoutes);
 app.use('/api/profile', userRoutes);
 app.use('/api/poli', poliRoutes);
-app.use('/api/dokter', dokterRoutes);
 app.use('/api', dashboardPasienRoutes);
 app.use('/api/invoice', invoiceRoutes);
 app.use('/api/bangsal', bangsalRoutes);

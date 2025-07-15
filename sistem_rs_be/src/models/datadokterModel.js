@@ -5,9 +5,27 @@ export const getAll = () => {
     .join('dokter', 'data_dokter.IDDOKTER', 'dokter.IDDOKTER')
     .join('poli', 'data_dokter.IDPOLI', 'poli.IDPOLI')
     .leftJoin('jadwal_dokter', 'dokter.IDDOKTER', 'jadwal_dokter.IDDOKTER')
-    .groupBy('data_dokter.IDDOKTER')
+    .groupBy([
+      'data_dokter.IDDATA',
+      'data_dokter.IDDOKTER',
+      'data_dokter.IDPOLI',
+      'data_dokter.IDJADWAL',
+      'data_dokter.NO_TELEPON',
+      'data_dokter.EMAIL',
+      'data_dokter.ALAMAT',
+      'data_dokter.JENIS_KELAMIN',
+      'dokter.NAMADOKTER',
+      'poli.NAMAPOLI'
+    ])
     .select(
-      'data_dokter.*',
+      'data_dokter.IDDATA',
+      'data_dokter.IDDOKTER',
+      'data_dokter.IDPOLI',
+      'data_dokter.IDJADWAL',
+      'data_dokter.NO_TELEPON',
+      'data_dokter.EMAIL',
+      'data_dokter.ALAMAT',
+      'data_dokter.JENIS_KELAMIN',
       'dokter.NAMADOKTER',
       'poli.NAMAPOLI',
       db.raw(`
