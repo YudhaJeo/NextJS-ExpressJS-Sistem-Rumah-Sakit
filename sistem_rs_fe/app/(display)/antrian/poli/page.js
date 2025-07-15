@@ -123,7 +123,7 @@ function DisplayAntrianPoli() {
     try {
       const [poliRes, antrianRes] = await Promise.all([
         axios.get(`${API_URL}/poli`),
-        axios.get(`${API_URL}/antrianpoli/data`),
+        axios.get(`${API_URL}/antrian_poli/data`),
       ]);
       setPoliList(poliRes.data || []);
       setAntrianList(antrianRes.data.data || []);
@@ -224,7 +224,7 @@ function DisplayAntrianPoli() {
 
   const handleAmbilTiket = async (poliName) => {
     try {
-      const res = await axios.post(`${API_URL}/antrianpoli/store`, {
+      const res = await axios.post(`${API_URL}/antrian_poli/store`, {
         POLI: poliName,
       });
 

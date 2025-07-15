@@ -24,7 +24,7 @@ export default function TabelKalender({
     try {
       const [kalenderRes, dokterRes] = await Promise.all([
         axios.get(`${API_URL}/kalender`),
-        axios.get(`${API_URL}/datadokter`),
+        axios.get(`${API_URL}/data_dokter`),
       ]);
 
       const dokterMap = dokterRes.data.reduce((acc, dokter) => {
