@@ -15,10 +15,8 @@ export const create = (data) => {
 };
 
 export const update = (id, data) => {
-  // ⛔ Hapus CREATED_AT jika ada
-  const { CREATED_AT, ...safeData } = data;
+  const { PASSWORD, CREATED_AT, ...safeData } = data;
 
-  // ⛔ Filter out undefined/null values (optional)
   const cleanData = Object.fromEntries(
     Object.entries(safeData).filter(([_, v]) => v !== undefined && v !== null)
   );

@@ -146,6 +146,13 @@ function FormDialogTenagaMedis({
             value={form.PASSWORD}
             onChange={(e) => setForm({ ...form, PASSWORD: e.target.value })}
             toggleMask
+            placeholder={
+              form.IDTENAGAMEDIS
+                ? "(Password tidak diubah)"
+                : "Masukkan Password"
+            }
+            disabled={!!form.IDTENAGAMEDIS} // ✅ disable jika Edit
+            feedback={false} // ✅ nonaktifkan strength meter
           />
           {errors.PASSWORD && <small className="text-red-500">{errors.PASSWORD}</small>}
         </div>

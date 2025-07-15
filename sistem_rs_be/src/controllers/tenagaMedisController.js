@@ -83,15 +83,11 @@ export const updateTenagaMedis = async (req, res) => {
       TANGGALLAHIR: formatDate(body.TANGGALLAHIR),
       TGLEXPSTR: formatDate(body.TGLEXPSTR),
       TGLEXPSIP: formatDate(body.TGLEXPSIP),
-      UPDATED_AT: toMySQLDateTime(), // ✅ Format MySQL
+      UPDATED_AT: toMySQLDateTime(),
     };
 
-    // ✅ Jangan update CREATED_AT
+    delete data.PASSWORD;
     delete data.CREATED_AT;
-
-    if (body.PASSWORD) {
-      data.PASSWORD = await bcrypt.hash(body.PASSWORD, 10);
-    }
 
     const result = await TenagaMedis.update(req.params.id, data);
     if (!result) {

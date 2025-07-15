@@ -70,7 +70,11 @@ const Page = () => {
     if (!form.NAMALENGKAP.trim()) newErrors.NAMALENGKAP = "Nama wajib diisi";
     if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = "Pilih jenis kelamin";
     if (!form.EMAIL.trim()) newErrors.EMAIL = "Email wajib diisi";
-    if (!form.PASSWORD.trim() && !form.IDTENAGAMEDIS) newErrors.PASSWORD = "Password wajib diisi";
+
+    // Password hanya wajib di tambah data (IDTENAGAMEDIS === 0)
+    if (!form.PASSWORD.trim() && !form.IDTENAGAMEDIS)
+      newErrors.PASSWORD = "Password wajib diisi";
+
     if (!form.JENISTENAGAMEDIS) newErrors.JENISTENAGAMEDIS = "Pilih jenis tenaga medis";
 
     setErrors(newErrors);
@@ -78,59 +82,67 @@ const Page = () => {
   };
 
   const handleSubmit = async () => {
-  if (!validateForm()) return;
+    if (!validateForm()) return;
 
-  try {
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
 
-    for (const key in form) {
-      // Skip undefined & file fields for now
-      if (key === "FOTOPROFIL" || key === "DOKUMENPENDUKUNG") continue;
-      if (form[key] !== undefined && form[key] !== null) {
-        if (["TANGGALLAHIR", "TGLEXPSTR", "TGLEXPSIP"].includes(key) && form[key]) {
-          formData.append(key, new Date(form[key]).toISOString());
-        } else {
-          formData.append(key, form[key]);
+      for (const key in form) {
+        if (key === "FOTOPROFIL" || key === "DOKUMENPENDUKUNG") continue;
+
+        // ⬇️ FIX: Jangan kirim password kosong saat edit
+        if (key === "PASSWORD") {
+          if (form.IDTENAGAMEDIS === 0 || form.PASSWORD.trim()) {
+            formData.append("PASSWORD", form.PASSWORD);
+          }
+          continue;
+        }
+
+        if (form[key] !== undefined && form[key] !== null) {
+          if (["TANGGALLAHIR", "TGLEXPSTR", "TGLEXPSIP"].includes(key) && form[key]) {
+            formData.append(key, new Date(form[key]).toISOString());
+          } else {
+            formData.append(key, form[key]);
+          }
         }
       }
-    }
 
-    // Add files only if user selected new ones
-    if (form.FOTOPROFIL instanceof File) {
-      formData.append("FOTOPROFIL", form.FOTOPROFIL);
-    }
-    if (form.DOKUMENPENDUKUNG instanceof File) {
-      formData.append("DOKUMENPENDUKUNG", form.DOKUMENPENDUKUNG);
-    }
+      // Tambahkan file jika ada
+      if (form.FOTOPROFIL instanceof File) {
+        formData.append("FOTOPROFIL", form.FOTOPROFIL);
+      }
+      if (form.DOKUMENPENDUKUNG instanceof File) {
+        formData.append("DOKUMENPENDUKUNG", form.DOKUMENPENDUKUNG);
+      }
 
-    if (form.IDTENAGAMEDIS) {
-      await axios.put(`${API_URL}/tenagamedis/${form.IDTENAGAMEDIS}`, formData);
-      showToast("success", "Berhasil", "Data berhasil diperbarui");
-    } else {
-      await axios.post(`${API_URL}/tenagamedis`, formData);
-      showToast("success", "Berhasil", "Data berhasil ditambahkan");
-    }
+      if (form.IDTENAGAMEDIS) {
+        await axios.put(`${API_URL}/tenagamedis/${form.IDTENAGAMEDIS}`, formData);
+        showToast("success", "Berhasil", "Data berhasil diperbarui");
+      } else {
+        await axios.post(`${API_URL}/tenagamedis`, formData);
+        showToast("success", "Berhasil", "Data berhasil ditambahkan");
+      }
 
-    fetchData();
-    setDialogVisible(false);
-    resetForm();
-  } catch (err) {
-    console.error("Gagal menyimpan data:", err);
-    showToast("error", "Gagal", "Terjadi kesalahan saat menyimpan data");
-  }
+      fetchData();
+      setDialogVisible(false);
+      resetForm();
+    } catch (err) {
+      console.error("Gagal menyimpan data:", err);
+      showToast("error", "Gagal", "Terjadi kesalahan saat menyimpan data");
+    }
   };
 
   const handleEdit = (row) => {
-  setForm({
-    ...row,
-    TANGGALLAHIR: row.TANGGALLAHIR ? new Date(row.TANGGALLAHIR) : null,
-    TGLEXPSTR: row.TGLEXPSTR ? new Date(row.TGLEXPSTR) : null,
-    TGLEXPSIP: row.TGLEXPSIP ? new Date(row.TGLEXPSIP) : null,
-    FOTOPROFIL: undefined, // Reset so user must upload new if needed
-    DOKUMENPENDUKUNG: undefined,
-    PASSWORD: "", // Empty to avoid accidental overwrite
-  });
-  setDialogVisible(true);
+    setForm({
+      ...row,
+      TANGGALLAHIR: row.TANGGALLAHIR ? new Date(row.TANGGALLAHIR) : null,
+      TGLEXPSTR: row.TGLEXPSTR ? new Date(row.TGLEXPSTR) : null,
+      TGLEXPSIP: row.TGLEXPSIP ? new Date(row.TGLEXPSIP) : null,
+      FOTOPROFIL: undefined,
+      DOKUMENPENDUKUNG: undefined,
+      PASSWORD: "", // Kosongkan password agar tidak accidental overwrite
+    });
+    setDialogVisible(true);
   };
 
   const confirmDelete = (row) => {
