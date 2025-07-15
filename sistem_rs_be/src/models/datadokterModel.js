@@ -38,7 +38,7 @@ export const getAll = () => {
 };
 
 export const getById = (id) => {
-  return db('data_dokter').where('IDDOKTER', id).first();
+  return db('data_dokter').where('IDDATA', id).first();
 };
 
 export const create = (data) => {
@@ -46,9 +46,9 @@ export const create = (data) => {
 };
 
 export const update = (id, data) => {
-  return db('data_dokter').where('IDDOKTER', id).update(data);
+  return db('data_dokter').where('IDDATA', id).update(data);
 };
 
 export const remove = (id) => {
-  return db('data_dokter').where('IDDOKTER', id).del();
+  return db('data_dokter').where('IDDATA', id).del();
 };
