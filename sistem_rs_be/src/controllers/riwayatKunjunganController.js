@@ -1,4 +1,4 @@
-import * as RiwayatKunjunganModel from '../models/riwayatkunjunganModel.js';
+import * as RiwayatKunjunganModel from '../models/riwayatKunjunganModel.js';
 
 export async function getRiwayatKunjungan(req, res) {
   try {
