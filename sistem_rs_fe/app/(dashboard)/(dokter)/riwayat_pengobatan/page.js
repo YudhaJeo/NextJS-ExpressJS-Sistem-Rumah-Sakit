@@ -45,7 +45,7 @@ const RiwayatPengobatanPage = () => {
         NAMALENGKAP: p.NAMALENGKAP,
         TANGGALKUNJUNGAN: p.TANGGALKUNJUNGAN?.split("T")[0] || "",
         KELUHAN: p.KELUHAN,
-        POLI: p.NAMAPOLI,
+        POLI: p.POLI,
       }));
       setPendaftaranOptions(options);
     } catch (err) {

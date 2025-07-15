@@ -78,7 +78,7 @@ const AppMenu = () => {
             { label: "Histori Transaksi", icon: "pi pi-fw pi-history", to: "/laporan/histori-transaksi" },
           ],
         },
-        { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/pendaftaran/riwayatKunjungan" },
+        { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/riwayatKunjungan" },
       ],
     },
   ],
@@ -98,7 +98,7 @@ const AppMenu = () => {
         { label: "Data Dokter", icon: "pi pi-fw pi-user", to: "/data" },
         { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
         { label: "Riwayat Pengobatan", icon: "pi pi-fw pi-folder-open", to: "/riwayat_pengobatan" },
-        { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/dokter/manajemen_komisi" },
+        { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/manajemen_komisi" },
         {
           label: "Laporan",
           icon: "pi pi-fw pi-chart-bar",

@@ -1,5 +1,14 @@
 import db from '../core/config/knex.js';
 
+export const getPendaftaranIdByPengobatanId = async (id) => {
+  const row = await db('riwayat_pengobatan')
+    .select('IDPENDAFTARAN')
+    .where('IDPENGOBATAN', id)
+    .first();
+
+  return row?.IDPENDAFTARAN;
+};
+
 export const getPendaftaranById = (id) => {
   return db('pendaftaran')
     .where('IDPENDAFTARAN', id)
