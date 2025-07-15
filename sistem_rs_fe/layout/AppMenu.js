@@ -147,6 +147,7 @@ const AppMenu = () => {
     { label: "Master",
       items: [
         { label: "Daftar Obat", icon: "pi pi-fw pi-tag", to: "/rawatinap/master/obat" },
+        { label: "Tindakan Medis", icon: "pi pi-fw pi-heart", to: "/rawatinap/master/tindakan_medis" },
         { label: "Jenis Bangsal", icon: "pi pi-fw pi-tag", to: "/rawatinap/master/jenisbangsal" },
         { label: "Manajemen Bangsal", icon: "pi pi-fw pi-th-large", to: "/rawatinap/master/manajemen-bangsal" },
         { label: "Manajemen Kamar", icon: "pi pi-fw pi-table", to: "/rawatinap/master/manajemen-kamar" },
@@ -158,7 +159,6 @@ const AppMenu = () => {
         { label: "Manajemen Bed", icon: "pi pi-fw pi-objects-column", to: "/rawatinap/menu/manajemen-bed" },
         { label: "Charge Kamar", icon: "pi pi-fw pi-wallet", to: "/rawatinap/menu/charge-kamar" },
         { label: "Resep Obat", icon: "pi pi-fw pi-briefcase", to: "/rawatinap/menu/resep" },
-        { label: "Tindakan Medis", icon: "pi pi-fw pi-heart", to: "/rawatinap/menu/tindakan" },
         { label: "Cetak Tindakan Medis", icon: "pi pi-fw pi-print", to: "/rawatinap/menu/cetak-tindakan" },
         { label: "Tagihan Sementara", icon: "pi pi-fw pi-money-bill", to: "/rawatinap/menu/tagihan-sementara" },
         { label: "Riwayat Sementara", icon: "pi pi-fw pi-history", to: "/rawatinap/menu/riwayat-sementara" },
