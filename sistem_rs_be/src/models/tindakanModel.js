@@ -11,7 +11,12 @@ export const createTindakan = (data) =>
     db('tindakan_medis').insert(data);
 
 export const updateTindakan = (id, data) =>
-    db('tindakan_medis').where({ IDTINDAKAN: id }).update(data);
+    db('tindakan_medis')
+        .where({ IDTINDAKAN: id })
+        .update({
+            ...data,
+            UPDATED_AT: db.fn.now(),
+          });
 
 export const remove = (id) =>
     db('tindakan_medis').where({ IDTINDAKAN: id }).delete();
