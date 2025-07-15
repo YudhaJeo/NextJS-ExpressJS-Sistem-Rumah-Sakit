@@ -35,6 +35,7 @@ import kalenderRoutes from './routes/kalenderRoutes.js';
 import riwayatKunjunganRoutes from './routes/riwayatKunjunganRoutes.js';
 import komisidokterRoutes from './routes/komisidokterRoutes.js'
 import tindakanRoutes from './routes/tindakanRoutes.js';
+import tenagaMedisRoutes from './routes/tenagaMedisRoutes.js'
 
 const app = express();
 
@@ -82,5 +83,6 @@ app.use('/api/kalender', kalenderRoutes);
 app.use('/api/tindakan_medis', tindakanRoutes);
 app.use('/api/riwayatkunjungan', riwayatKunjunganRoutes);
 app.use('/api/komisidokter', komisidokterRoutes);
+app.use('/api/tenagamedis', tenagaMedisRoutes);
 
 export default app;
