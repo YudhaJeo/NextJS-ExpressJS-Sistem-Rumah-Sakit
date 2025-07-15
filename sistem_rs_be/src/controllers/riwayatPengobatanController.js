@@ -1,4 +1,5 @@
 import * as PengobatanModel from '../models/riwayatpengobatanModel.js';
+import * as PendaftaranModel from '../models/pendaftaranModel.js';
 
 export async function getAllPengobatan(req, res) {
   try {
@@ -12,7 +13,6 @@ export async function getAllPengobatan(req, res) {
 export async function createPengobatan(req, res) {
   try {
     const { IDPENDAFTARAN, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
-    console.log('Terima data:', req.body); // debug
     await PengobatanModel.createPengobatan({
       IDPENDAFTARAN,
       STATUSKUNJUNGAN,
@@ -22,7 +22,7 @@ export async function createPengobatan(req, res) {
     });
     res.json({ message: 'Pengobatan berhasil ditambahkan' });
   } catch (err) {
-    console.error('Insert Error:', err); // pastikan ini ada
+    console.error('Insert Error:', err); 
     res.status(500).json({ error: err.message });
   }
 }
@@ -31,14 +31,30 @@ export async function updatePengobatan(req, res) {
   try {
     const id = req.params.id;
     const { STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
+
+    // Update pengobatan
     await PengobatanModel.updatePengobatan(id, {
       STATUSKUNJUNGAN,
       STATUSRAWAT,
       DIAGNOSA,
       OBAT
     });
-    res.json({ message: 'Pengobatan berhasil diperbarui' });
+
+    // Ambil IDPENDAFTARAN
+    const IDPENDAFTARAN = await PengobatanModel.getPendaftaranIdByPengobatanId(id);
+
+    console.log('IDPENDAFTARAN hasil ambil:', IDPENDAFTARAN); // ✅ Tambahkan log
+    console.log('STATUSKUNJUNGAN yang dikirim:', STATUSKUNJUNGAN);
+
+    // Update juga ke tabel pendaftaran
+    if (STATUSKUNJUNGAN && IDPENDAFTARAN) {
+      const result = await PendaftaranModel.update(IDPENDAFTARAN, { STATUSKUNJUNGAN });
+      console.log('Update pendaftaran result:', result); // ✅ Cek apakah 1 row kena
+    }
+
+    res.json({ message: 'Pengobatan dan status pendaftaran berhasil diperbarui' });
   } catch (err) {
+    console.error('Update Error:', err);
     res.status(500).json({ error: err.message });
   }
 }

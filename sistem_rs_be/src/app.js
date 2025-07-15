@@ -32,6 +32,7 @@ import dashboardDokterRoutes from './routes/dashboardDokterRoutes.js';
 import riwayatpengobatanRoutes from './routes/riwayatpengobatanRoutes.js';
 import kalenderRoutes from './routes/kalenderRoutes.js';
 import riwayatKunjunganRoutes from './routes/riwayatKunjunganRoutes.js';
+import komisidokterRoutes from './routes/komisidokterRoutes.js'
 
 const app = express();
 
@@ -76,5 +77,6 @@ app.use('/api/dashboarddokter', dashboardDokterRoutes);
 app.use('/api/riwayatpengobatan', riwayatpengobatanRoutes);
 app.use('/api/kalender', kalenderRoutes);
 app.use('/api/riwayatkunjungan', riwayatKunjunganRoutes);
+app.use('/api/komisidokter', komisidokterRoutes);
 
 export default app;

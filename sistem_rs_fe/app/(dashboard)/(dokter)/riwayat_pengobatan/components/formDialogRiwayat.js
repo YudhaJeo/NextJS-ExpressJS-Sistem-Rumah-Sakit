@@ -66,7 +66,6 @@ const FormDialogPengobatan = ({ visible, onHide, onSubmit, form, setForm, pendaf
           {errors.IDPENDAFTARAN && <small className="p-error">{errors.IDPENDAFTARAN}</small>}
         </div>
 
-        {/* FIELD READ-ONLY */}
         <div>
           <label className="font-medium">NIK</label>
           <InputText className="w-full mt-2" value={form.NIK || ''} disabled />
@@ -92,7 +91,6 @@ const FormDialogPengobatan = ({ visible, onHide, onSubmit, form, setForm, pendaf
           <InputText className="w-full mt-2" value={form.KELUHAN || ''} disabled />
         </div>
 
-        {/* FIELD YANG BISA DIEDIT */}
         <div>
           <label className="font-medium">Status Kunjungan</label>
           <Dropdown
