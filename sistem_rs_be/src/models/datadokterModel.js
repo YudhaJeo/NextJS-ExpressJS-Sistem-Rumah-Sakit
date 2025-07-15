@@ -5,9 +5,27 @@ export const getAll = () => {
     .join('dokter', 'data_dokter.IDDOKTER', 'dokter.IDDOKTER')
     .join('poli', 'data_dokter.IDPOLI', 'poli.IDPOLI')
     .leftJoin('jadwal_dokter', 'dokter.IDDOKTER', 'jadwal_dokter.IDDOKTER')
-    .groupBy('data_dokter.IDDOKTER')
+    .groupBy([
+      'data_dokter.IDDATA',
+      'data_dokter.IDDOKTER',
+      'data_dokter.IDPOLI',
+      'data_dokter.IDJADWAL',
+      'data_dokter.NO_TELEPON',
+      'data_dokter.EMAIL',
+      'data_dokter.ALAMAT',
+      'data_dokter.JENIS_KELAMIN',
+      'dokter.NAMADOKTER',
+      'poli.NAMAPOLI'
+    ])
     .select(
-      'data_dokter.*',
+      'data_dokter.IDDATA',
+      'data_dokter.IDDOKTER',
+      'data_dokter.IDPOLI',
+      'data_dokter.IDJADWAL',
+      'data_dokter.NO_TELEPON',
+      'data_dokter.EMAIL',
+      'data_dokter.ALAMAT',
+      'data_dokter.JENIS_KELAMIN',
       'dokter.NAMADOKTER',
       'poli.NAMAPOLI',
       db.raw(`
@@ -20,7 +38,7 @@ export const getAll = () => {
 };
 
 export const getById = (id) => {
-  return db('data_dokter').where('IDDOKTER', id).first();
+  return db('data_dokter').where('IDDATA', id).first();
 };
 
 export const create = (data) => {
@@ -28,9 +46,9 @@ export const create = (data) => {
 };
 
 export const update = (id, data) => {
-  return db('data_dokter').where('IDDOKTER', id).update(data);
+  return db('data_dokter').where('IDDATA', id).update(data);
 };
 
 export const remove = (id) => {
-  return db('data_dokter').where('IDDOKTER', id).del();
+  return db('data_dokter').where('IDDATA', id).del();
 };
