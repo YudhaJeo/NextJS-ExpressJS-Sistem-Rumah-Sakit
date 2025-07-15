@@ -32,7 +32,6 @@ export async function updatePengobatan(req, res) {
     const id = req.params.id;
     const { STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
 
-    // Update pengobatan
     await PengobatanModel.updatePengobatan(id, {
       STATUSKUNJUNGAN,
       STATUSRAWAT,
@@ -40,16 +39,10 @@ export async function updatePengobatan(req, res) {
       OBAT
     });
 
-    // Ambil IDPENDAFTARAN
     const IDPENDAFTARAN = await PengobatanModel.getPendaftaranIdByPengobatanId(id);
 
-    console.log('IDPENDAFTARAN hasil ambil:', IDPENDAFTARAN); // ✅ Tambahkan log
-    console.log('STATUSKUNJUNGAN yang dikirim:', STATUSKUNJUNGAN);
-
-    // Update juga ke tabel pendaftaran
     if (STATUSKUNJUNGAN && IDPENDAFTARAN) {
       const result = await PendaftaranModel.update(IDPENDAFTARAN, { STATUSKUNJUNGAN });
-      console.log('Update pendaftaran result:', result); // ✅ Cek apakah 1 row kena
     }
 
     res.json({ message: 'Pengobatan dan status pendaftaran berhasil diperbarui' });
