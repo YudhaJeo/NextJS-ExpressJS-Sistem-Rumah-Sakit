@@ -64,33 +64,13 @@ const Page = () => {
     toastRef.current?.show({ severity, summary, detail, life: 3000 });
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!form.KODETENAGAMEDIS.trim()) newErrors.KODETENAGAMEDIS = "Kode wajib diisi";
-    if (!form.NAMALENGKAP.trim()) newErrors.NAMALENGKAP = "Nama wajib diisi";
-    if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = "Pilih jenis kelamin";
-    if (!form.EMAIL.trim()) newErrors.EMAIL = "Email wajib diisi";
-
-    // Password hanya wajib di tambah data (IDTENAGAMEDIS === 0)
-    if (!form.PASSWORD.trim() && !form.IDTENAGAMEDIS)
-      newErrors.PASSWORD = "Password wajib diisi";
-
-    if (!form.JENISTENAGAMEDIS) newErrors.JENISTENAGAMEDIS = "Pilih jenis tenaga medis";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleSubmit = async () => {
-    if (!validateForm()) return;
-
     try {
       const formData = new FormData();
 
       for (const key in form) {
         if (key === "FOTOPROFIL" || key === "DOKUMENPENDUKUNG") continue;
 
-        // ⬇️ FIX: Jangan kirim password kosong saat edit
         if (key === "PASSWORD") {
           if (form.IDTENAGAMEDIS === 0 || form.PASSWORD.trim()) {
             formData.append("PASSWORD", form.PASSWORD);
@@ -107,7 +87,6 @@ const Page = () => {
         }
       }
 
-      // Tambahkan file jika ada
       if (form.FOTOPROFIL instanceof File) {
         formData.append("FOTOPROFIL", form.FOTOPROFIL);
       }
@@ -140,7 +119,7 @@ const Page = () => {
       TGLEXPSIP: row.TGLEXPSIP ? new Date(row.TGLEXPSIP) : null,
       FOTOPROFIL: undefined,
       DOKUMENPENDUKUNG: undefined,
-      PASSWORD: "", // Kosongkan password agar tidak accidental overwrite
+      PASSWORD: "",
     });
     setDialogVisible(true);
   };
@@ -241,7 +220,6 @@ const Page = () => {
         onSubmit={handleSubmit}
         form={form}
         setForm={setForm}
-        errors={errors}
         inputClass={inputClass}
       />
     </div>
