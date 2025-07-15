@@ -78,7 +78,7 @@ const AppMenu = () => {
             { label: "Histori Transaksi", icon: "pi pi-fw pi-history", to: "/laporan/histori-transaksi" },
           ],
         },
-        { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/pendaftaran/riwayatKunjungan" },
+        { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/riwayatKunjungan" },
       ],
     },
   ],
