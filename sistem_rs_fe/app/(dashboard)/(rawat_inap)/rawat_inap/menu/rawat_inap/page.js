@@ -80,6 +80,8 @@ const Page = () => {
       const options = res.data.data.map((item) => ({
         label: `${item.NOMORBED} - ${item.NAMAKAMAR} - ${item.NAMABANGSAL}`,
         value: item.IDBED,
+        NAMAKAMAR: item.NAMAKAMAR, 
+        NAMABANGSAL: item.NAMABANGSAL,
       }));
       setBedOptions(options);
     } catch (err) {
@@ -189,7 +191,9 @@ const Page = () => {
         onSearch={(keyword) => {
           if (!keyword) return fetchData();
           const filtered = data.filter((item) =>
-            item.NAMALENGKAP?.toLowerCase().includes(keyword.toLowerCase())
+            item.NAMALENGKAP?.toLowerCase().includes(keyword.toLowerCase()) ||
+            item.NOMORBED?.toLowerCase().includes(keyword.toLowerCase()) ||
+            item.STATUS?.toLowerCase().includes(keyword.toLowerCase()) 
           );
           setData(filtered);
         }}
