@@ -22,7 +22,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [errors, setErrors] = useState({});
-  const [pasienOption, setPasienOptions] = useState([]);
+  const [pasienOptions, setPasienOptions] = useState([]);
   const [kamarOptions, setKamarOptions] = useState([]);
   const [bedOptions, setBedOptions] = useState([]);
 
@@ -67,8 +67,8 @@ const Page = () => {
     try {
       const res = await axios.get(`${API_URL}/pasien`);
       const options = res.data.data.map((pasien) => ({
-        label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
-        value: pasien.IDPASIEn,
+        label: `${pasien.NAMALENGKAP} - ${pasien.NIK}`,
+        value: pasien.IDPASIEN,
         NAMALENGKAP: pasien.NAMALENGKAP,
       }));
       setPasienOptions(options);
@@ -84,7 +84,6 @@ const Page = () => {
         label: `${item.NAMAKAMAR} - ${item.NAMABANGSAL}`,
         value: item.IDKAMAR,
       }));
-      console.log('Isi res:', res)
       setKamarOptions(options);
     } catch (err) {
       console.error('Gagal ambil kamar:', err);
@@ -210,6 +209,9 @@ const Page = () => {
         form={form}
         setForm={setForm}
         errors={errors}
+        pasienOptions={pasienOptions}
+        kamarOptions={kamarOptions}
+        bedOptions={bedOptions}
       />
     </div>
   );

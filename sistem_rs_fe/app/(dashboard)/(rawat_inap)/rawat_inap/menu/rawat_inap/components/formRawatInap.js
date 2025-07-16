@@ -22,6 +22,14 @@ const FormRawatInap = ({
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
+  console.log('form.IDKAMAR:', form.IDKAMAR);
+  console.log('kamarOptions:', kamarOptions);
+  console.log(
+  'Index ditemukan:',
+  kamarOptions.findIndex(opt => opt.value === form.IDKAMAR)
+);
+
+
   return (
     <Dialog
       header={form.IDRAWATINAP ? 'Edit Rawat Inap' : 'Tambah Rawat Inap'}
@@ -42,7 +50,7 @@ const FormRawatInap = ({
             className={inputClass('IDPASIEN')}
             value={form.IDPASIEN}
             options={pasienOptions}
-            onChange={(e) => setForm({ ...form, IDPASIEN: e.value })}
+            onChange={(e) => setForm({ ...form, IDPASIEN: e.target.value })}
             placeholder="Pilih Pasien"
           />
           {errors.IDPASIEN && <small className="text-red-500">{errors.IDPASIEN}</small>}
