@@ -21,15 +21,6 @@ const FormRawatInap = ({
 }) => {
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
-
-  console.log('form.IDKAMAR:', form.IDKAMAR);
-  console.log('kamarOptions:', kamarOptions);
-  console.log(
-  'Index ditemukan:',
-  kamarOptions.findIndex(opt => opt.value === form.IDKAMAR)
-);
-
-
   return (
     <Dialog
       header={form.IDRAWATINAP ? 'Edit Rawat Inap' : 'Tambah Rawat Inap'}
@@ -56,20 +47,6 @@ const FormRawatInap = ({
           {errors.IDPASIEN && <small className="text-red-500">{errors.IDPASIEN}</small>}
         </div>
 
-        <div className="mt-2">
-          <label>Kamar</label>
-          <Dropdown
-            className={inputClass('IDKAMAR')}
-            options={kamarOptions}
-            value={form.IDKAMAR}
-            onChange={(e) => setForm({ ...form, IDKAMAR: e.target.value })}
-            optionLabel="label"
-            optionValue="value" 
-            placeholder="Pilih Kamar"
-          />
-          {errors.IDKAMAR && <small className="text-red-500">{errors.IDKAMAR}</small>}
-        </div>
-
         <div>
           <label>Bed</label>
           <Dropdown
@@ -86,7 +63,7 @@ const FormRawatInap = ({
           <label>Tanggal Masuk</label>
           <Calendar
             className={inputClass('TANGGALMASUK')}
-            value={form.TANGGALMASUK}
+            value={form.TANGGALMASUK ? new Date(form.TANGGALMASUK) : null}
             onChange={(e) => setForm({ ...form, TANGGALMASUK: e.value })}
             showIcon
             dateFormat="yy-mm-dd"

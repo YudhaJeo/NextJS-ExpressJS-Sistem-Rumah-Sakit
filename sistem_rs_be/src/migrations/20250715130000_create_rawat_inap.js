@@ -5,8 +5,6 @@ export const up = function (knex) {
       table.increments('IDRAWATINAP').primary();
       table.integer('IDPASIEN').unsigned().notNullable()
         .references('IDPASIEN').inTable('pasien').onDelete('CASCADE');
-      table.integer('IDKAMAR').unsigned().notNullable()
-        .references('IDKAMAR').inTable('kamar').onDelete('CASCADE');
       table.integer('IDBED').unsigned().notNullable()
         .references('IDBED').inTable('bed').onDelete('CASCADE');
       table.date('TANGGALMASUK').notNullable();

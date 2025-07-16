@@ -28,11 +28,6 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete }) => {
         body={(row) => row.NAMALENGKAP}
       />
       <Column
-        field="IDKAMAR"
-        header="Kamar"
-        body={(row) => row.NAMAKAMAR}
-      />
-      <Column
         field="IDBED"
         header="Kamar"
         body={(row) => row.NOMORBED}

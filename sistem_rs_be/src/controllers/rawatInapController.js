@@ -12,10 +12,12 @@ export async function getAllRawatInap(req, res) {
 
 export async function insertRawatInap(req, res) {
   try {
-    const { IDPASIEN, IDKAMAR, IDBED, TANGGALMASUK, TANGGALKELUAR, STATUS, CATATAN } = req.body;
-    await RawatInap.create({ IDPASIEN, IDKAMAR, IDBED, TANGGALMASUK, TANGGALKELUAR, STATUS, CATATAN });
+    console.log('[INSERT] Rawat Inap payload:', req.body);
+    const { IDPASIEN, IDBED, TANGGALMASUK, TANGGALKELUAR, STATUS, CATATAN } = req.body;
+    await RawatInap.create({ IDPASIEN, IDBED, TANGGALMASUK, TANGGALKELUAR, STATUS, CATATAN });
     res.json({ message: 'Rawat inap berhasil ditambahkan' });
   } catch (err) {
+    console.error('Kirim data gagal:', err)
     res.status(500).json({ error: err.message });
   }
 }

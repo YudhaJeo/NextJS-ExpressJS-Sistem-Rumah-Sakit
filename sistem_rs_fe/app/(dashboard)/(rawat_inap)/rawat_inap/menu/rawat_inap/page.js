@@ -23,13 +23,11 @@ const Page = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [errors, setErrors] = useState({});
   const [pasienOptions, setPasienOptions] = useState([]);
-  const [kamarOptions, setKamarOptions] = useState([]);
   const [bedOptions, setBedOptions] = useState([]);
 
   const defaultForm = {
     IDRAWATINAP: '',
     IDPASIEN: '',
-    IDKAMAR: '',
     IDBED: '',
     TANGGALMASUK: '',
     TANGGALKELUAR: '',
@@ -47,7 +45,6 @@ const Page = () => {
     }
     fetchData();
     fetchPasien();
-    fetchKamar();
     fetchBed();
   }, []);
 
@@ -77,24 +74,11 @@ const Page = () => {
     }
   };
 
-  const fetchKamar = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/kamar`);
-      const options = res.data.data.map((item) => ({
-        label: `${item.NAMAKAMAR} - ${item.NAMABANGSAL}`,
-        value: item.IDKAMAR,
-      }));
-      setKamarOptions(options);
-    } catch (err) {
-      console.error('Gagal ambil kamar:', err);
-    }
-  };
-
   const fetchBed = async () => {
     try {
       const res = await axios.get(`${API_URL}/bed`);
       const options = res.data.data.map((item) => ({
-        label: `${item.NOMORBED} - ${item.NAMABANGSAL}`,
+        label: `${item.NOMORBED} - ${item.NAMAKAMAR} - ${item.NAMABANGSAL}`,
         value: item.IDBED,
       }));
       setBedOptions(options);
@@ -106,7 +90,6 @@ const Page = () => {
   const validateForm = () => {
     const newErrors = {};
     if (!form.IDPASIEN) newErrors.IDPASIEN = 'Pasien harus dipilih';
-    if (!form.IDKAMAR) newErrors.IDKAMAR = 'Kamar harus dipilih';
     if (!form.IDBED) newErrors.IDBED = 'Bed harus dipilih';
     if (!form.TANGGALMASUK) newErrors.TANGGALMASUK = 'Tanggal masuk wajib';
 
@@ -121,21 +104,35 @@ const Page = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-
+  
     const isEdit = !!form.IDRAWATINAP;
     const url = isEdit
       ? `${API_URL}/rawat_inap/${form.IDRAWATINAP}`
       : `${API_URL}/rawat_inap`;
-
+  
+      const payload = {
+        ...form,
+        TANGGALMASUK: form.TANGGALMASUK
+          ? new Date(form.TANGGALMASUK).toISOString().slice(0, 19).replace("T", " ")
+          : null,
+        TANGGALKELUAR:
+          form.TANGGALKELUAR && form.TANGGALKELUAR !== ''
+            ? new Date(form.TANGGALKELUAR).toISOString().slice(0, 19).replace("T", " ")
+            : null,
+        
+        CATATAN: form.CATATAN?.trim() || null,
+      };
+      
+  
     try {
       if (isEdit) {
-        await axios.put(url, form);
+        await axios.put(url, payload);
         toastRef.current?.showToast('00', 'Data berhasil diperbarui');
       } else {
-        await axios.post(url, form);
+        await axios.post(url, payload);
         toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
       }
-
+  
       fetchData();
       setDialogVisible(false);
       resetForm();
@@ -144,6 +141,7 @@ const Page = () => {
       toastRef.current?.showToast('01', 'Gagal menyimpan data');
     }
   };
+  
 
   const handleEdit = (row) => {
     setForm(row);
@@ -210,7 +208,6 @@ const Page = () => {
         setForm={setForm}
         errors={errors}
         pasienOptions={pasienOptions}
-        kamarOptions={kamarOptions}
         bedOptions={bedOptions}
       />
     </div>

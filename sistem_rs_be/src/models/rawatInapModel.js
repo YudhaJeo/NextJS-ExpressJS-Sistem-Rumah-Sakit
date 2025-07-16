@@ -4,12 +4,10 @@ import db from '../core/config/knex.js';
 export const getAll = () =>
     db('rawat_inap')
       .join('pasien', 'rawat_inap.IDPASIEN', 'pasien.IDPASIEN')
-      .join('kamar', 'rawat_inap.IDKAMAR', 'kamar.IDKAMAR')
       .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
       .select(
         'rawat_inap.*',
         'pasien.NAMALENGKAP',
-        'kamar.NAMAKAMAR',
         'bed.NOMORBED'
       );
   
