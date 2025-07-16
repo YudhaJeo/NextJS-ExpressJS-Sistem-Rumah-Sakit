@@ -1,4 +1,3 @@
-// src/models/userModel.js
 import db from '../core/config/knex.js';
 
 export const getById = (id) =>

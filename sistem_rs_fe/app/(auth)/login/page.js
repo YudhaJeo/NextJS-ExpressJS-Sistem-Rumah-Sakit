@@ -1,4 +1,3 @@
-// app/(auth)/login/page.js
 "use client";
 
 import React, { useState, useRef } from "react";

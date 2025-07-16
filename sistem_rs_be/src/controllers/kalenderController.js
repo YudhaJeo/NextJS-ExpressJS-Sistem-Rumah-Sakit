@@ -1,4 +1,3 @@
-//controller
 import * as KalenderModel from '../models/kalenderModel.js';
 
 export async function getAllKalender(req, res) {

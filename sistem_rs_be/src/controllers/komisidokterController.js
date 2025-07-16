@@ -1,6 +1,5 @@
 import * as KomisiModel from '../models/komisidokterModel.js';
 
-// Fungsi bantu untuk konversi tanggal ke format MySQL
 function toMySQLDateTime(date) {
   if (!date) return null;
   const d = new Date(date);

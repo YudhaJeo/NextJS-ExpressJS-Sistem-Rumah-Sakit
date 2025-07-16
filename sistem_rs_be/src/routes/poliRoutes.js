@@ -1,5 +1,3 @@
-//routes
-
 import express from 'express';
 import * as PoliController from '../controllers/poliController.js';
 

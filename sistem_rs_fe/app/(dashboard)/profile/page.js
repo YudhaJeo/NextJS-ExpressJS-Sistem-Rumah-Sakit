@@ -65,12 +65,10 @@ export default function ProfilePage() {
   <div>
     <ToastNotifier ref={toastRef} />
 
-    {/* HEADER  */}
     <div className="card">
       <h3 className="text-xl font-semibold">Profil Pengguna</h3>
     </div>
 
-    {/* USER INFO CARDS */}
     <div className="card w-full justify-center items-stretch">
         <div className="">
           <div className="">
@@ -94,8 +92,6 @@ export default function ProfilePage() {
         </div>
       </div>
 
-
-    {/* BUTTON  */}
     <div className="card">
       <div className="flex gap-3 justify-end">
         <Button
@@ -112,8 +108,6 @@ export default function ProfilePage() {
       </div>
     </div>
     
-
-    {/* FORM  */}
     <FormDialogProfile
       visible={dialogVisible}
       onHide={() => setDialogVisible(false)}

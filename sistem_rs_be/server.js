@@ -1,8 +1,7 @@
-// be_sistem_rs\server.js
 import app from './src/app.js';
 import { config } from 'dotenv';
 import { createServer } from 'http';
-import { WebSocketServer } from 'ws';
+import WebSocket, { WebSocketServer } from 'ws'; 
 
 config();
 
@@ -12,19 +11,21 @@ const server = createServer(app);
 const wss = new WebSocketServer({ server, path: '/api/ws' });
 
 wss.on('connection', (ws) => {
+  console.log('🔌 Klien WebSocket tersambung');
 
   ws.on('message', (message) => {
-    console.log('Pesan diterima:', message.toString());
+    console.log('📩 Pesan diterima:', message.toString());
   });
 
   ws.on('close', () => {
+    console.log('❌ Koneksi WebSocket ditutup');
   });
 });
 
 function broadcastUpdate() {
-  console.log('Broadcasting update ke', wss.clients.size, 'klien...');
+  console.log('📡 Broadcasting update ke', wss.clients.size, 'klien...');
   wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) {
+    if (client.readyState === WebSocket.OPEN) { 
       client.send(JSON.stringify({ type: 'update' }));
     }
   });
@@ -33,5 +34,5 @@ function broadcastUpdate() {
 app.set('broadcastUpdate', broadcastUpdate);
 
 server.listen(port, () => {
-  console.log(`Server berjalan pada http://localhost:${port}`);
+  console.log(`🚀 Server berjalan pada http://localhost:${port}`);
 });

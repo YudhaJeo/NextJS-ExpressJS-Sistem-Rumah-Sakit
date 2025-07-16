@@ -1,5 +1,3 @@
-//routes
-// routes/reservasiRoutes.js
 import express from 'express';
 import * as ReservasiController from '../controllers/reservasiController.js';
 

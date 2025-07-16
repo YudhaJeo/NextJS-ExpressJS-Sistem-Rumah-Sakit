@@ -19,7 +19,6 @@ export function findMatchingItem(menuData, url) {
     return false;
 }
 
-// cek apakah punya session
 export function getSessionServerSide(context, searchUrl) {
     return new Promise(async (resolve) => {
         const sessionData = await getServerSession(context.req, context.res, getNextAuthOptions(context.req, context.res));
@@ -34,11 +33,10 @@ export function getSessionServerSide(context, searchUrl) {
         }
 
         let urlFix = searchUrl;
-        //jika searchUrl character string lebih dari 1
         if (searchUrl.length > 1) {
             urlFix = searchUrl.replace(new RegExp(/\/$/), '');
         }
-        // looping data session menu
+
         const res = findToValuesRecursive(sessionData.user.menu, urlFix);
 
         if (res.length < 1) {
@@ -77,13 +75,11 @@ function findToValuesRecursive(data, searchToValue) {
     const matchingData = [];
 
     function search(item) {
-        //prop to sesuai
         if (item.to === searchToValue) {
             matchingData.push(item);
         }
 
         if (item.items && Array.isArray(item.items)) {
-            //check items dan recursif
             item.items.forEach((subItem) => search(subItem));
         }
     }

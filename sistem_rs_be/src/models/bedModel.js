@@ -1,5 +1,3 @@
-// src/models/bedModel.js
-
 import db from '../core/config/knex.js'
 
 export const getAll = () => {
@@ -9,7 +7,7 @@ export const getAll = () => {
     .select(
       'bed.*',
       'kamar.NAMAKAMAR',
-      'bangsal.NAMABANGSAL' // <-- ambil nama bangsal di sini
+      'bangsal.NAMABANGSAL' 
     );
 };
 

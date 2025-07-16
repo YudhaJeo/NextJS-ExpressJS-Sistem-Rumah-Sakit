@@ -1,4 +1,3 @@
-// src/middleware/jwt.js
 import "dotenv/config";
 import * as jose from "jose";
 import { datetime, status } from "../utils/general.js";

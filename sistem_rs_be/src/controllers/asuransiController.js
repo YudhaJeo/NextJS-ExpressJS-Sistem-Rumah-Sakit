@@ -1,4 +1,3 @@
-// src/controllers/asuransiController.js
 import * as Asuransi from '../models/asuransiModel.js';
 
 export async function getAllAsuransi(req, res) {

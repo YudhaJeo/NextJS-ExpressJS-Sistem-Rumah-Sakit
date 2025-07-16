@@ -4,11 +4,10 @@ export async function generateNoInvoice(tanggalInvoice, trx) {
   const tanggal = tanggalInvoice.split('T')[0].replace(/-/g, '');
   const prefix = `INV-${tanggal}-`;
 
-  // Ambil invoice terakhir di tanggal itu dengan LOCK
   const lastInvoice = await trx('invoice')
     .where('NOINVOICE', 'like', `${prefix}%`)
     .orderBy('NOINVOICE', 'desc')
-    .forUpdate() // 🔑 Lock baris sampai transaksi selesai
+    .forUpdate() 
     .first();
 
   let nextNumber = 1;

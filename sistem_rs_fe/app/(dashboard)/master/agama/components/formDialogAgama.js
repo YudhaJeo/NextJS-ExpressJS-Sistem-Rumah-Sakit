@@ -1,4 +1,3 @@
-// app/(dashboard)/master/agama/components/formDialogAgama.js
 'use client';
 
 import { Button } from 'primereact/button';

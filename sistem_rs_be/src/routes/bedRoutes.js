@@ -1,4 +1,3 @@
-// src/routes/bedRoutes.js
 import express from 'express';
 import * as BedController from '../controllers/bedController.js';
 

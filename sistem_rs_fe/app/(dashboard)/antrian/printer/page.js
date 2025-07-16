@@ -102,7 +102,7 @@ const Page = () => {
   };
 
   const handleEdit = (row) => {
-    setForm({ ...row }); // clone supaya aman dari mutasi
+    setForm({ ...row }); 
     setDialogVisible(true);
   };
 

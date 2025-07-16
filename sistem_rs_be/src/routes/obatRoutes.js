@@ -1,12 +1,5 @@
-// src/routes/obatRoutes.js
 import express from 'express';
-
-import {
-    deleteObat,
-    getAllObat,
-    insertObat,
-    updateObat,
-} from '../controllers/obatController.js'
+import { deleteObat, getAllObat, insertObat, updateObat, } from '../controllers/obatController.js'
 
 const router = express.Router();
 

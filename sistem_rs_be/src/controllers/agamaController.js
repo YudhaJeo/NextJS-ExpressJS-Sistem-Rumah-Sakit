@@ -1,4 +1,3 @@
-// src/controllers/agamaController.js
 import * as Agama from '../models/agamaModel.js';
 
 export async function getAllAgama(req, res) {

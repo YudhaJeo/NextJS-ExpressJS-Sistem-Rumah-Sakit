@@ -1,4 +1,3 @@
-// src/app.js
 import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
@@ -35,7 +34,9 @@ import kalenderRoutes from './routes/kalenderRoutes.js';
 import riwayatKunjunganRoutes from './routes/riwayatKunjunganRoutes.js';
 import komisidokterRoutes from './routes/komisidokterRoutes.js'
 import tindakanRoutes from './routes/tindakanRoutes.js';
-import tenagaMedisRoutes from './routes/tenagaMedisRoutes.js'
+import tenagaMedisRoutes from './routes/tenagaMedisRoutes.js';
+import roleRoutes from './routes/roleRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 import rawatInapRoutes from './routes/rawatInapRoutes.js';
 
 const app = express();
@@ -85,5 +86,7 @@ app.use('/api/riwayat_kunjungan', riwayatKunjunganRoutes);
 app.use('/api/komisi_dokter', komisidokterRoutes);
 app.use('/api/tenaga_medis', tenagaMedisRoutes);
 app.use('/api/rawat_inap', rawatInapRoutes);
+app.use('/api/role', roleRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 export default app;

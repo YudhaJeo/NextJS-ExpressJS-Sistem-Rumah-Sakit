@@ -2,13 +2,11 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-// Buat folder uploads jika belum ada
 const uploadPath = path.join(process.cwd(), 'uploads', 'tenaga_medis');
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
 }
 
-// Konfigurasi penyimpanan file
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadPath);
@@ -19,7 +17,6 @@ const storage = multer.diskStorage({
   }
 });
 
-// Filter file hanya untuk gambar & pdf
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ['.jpg', '.jpeg', '.png', '.pdf'];
   const ext = path.extname(file.originalname).toLowerCase();
@@ -30,9 +27,8 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Limit ukuran file max 5 MB
 const limits = {
-  fileSize: 5 * 1024 * 1024, // 5 MB
+  fileSize: 5 * 1024 * 1024, 
 };
 
 export const upload = multer({

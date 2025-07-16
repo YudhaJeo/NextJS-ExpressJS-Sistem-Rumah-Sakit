@@ -1,4 +1,3 @@
-// app/(dashboard)/master/asuransi/components/tabelAsuansi.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';

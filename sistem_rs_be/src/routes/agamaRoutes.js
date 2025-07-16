@@ -1,11 +1,5 @@
-// src/routes/agamaRoutes.js
 import express from 'express';
-import { 
-    getAllAgama, 
-    createAgama, 
-    updateAgama, 
-    deleteAgama 
-} from '../controllers/agamaController.js';
+import { getAllAgama, createAgama, updateAgama, deleteAgama } from '../controllers/agamaController.js';
 
 const router = express.Router();
 

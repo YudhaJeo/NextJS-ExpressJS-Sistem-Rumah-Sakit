@@ -134,8 +134,11 @@ const Page = () => {
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
+
       <ConfirmDialog />
+
       <h3 className="text-xl font-semibold mb-3">Master Rekening Bank</h3>
+
       <HeaderBar
         title=""
         placeholder="Cari Nama Bank / Rekening / Atas Nama"
