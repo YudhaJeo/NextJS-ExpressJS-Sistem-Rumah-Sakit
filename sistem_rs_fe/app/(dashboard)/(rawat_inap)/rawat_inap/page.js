@@ -22,7 +22,7 @@ const DashboardRawatInap = () => {
     if (!token) return router.push('/login');
 
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/rawat_inap`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/dashboard_rawat_inap`)
       .then((res) => {
         const data = res.data.data;
         setData(data);

@@ -73,7 +73,7 @@ app.use('/api/kamar', kamarRoutes);
 app.use('/api/bank_account', bankAccountRoutes);
 app.use('/api/metode_pembayaran', metodePembayaranRoutes);
 app.use('/api/bed', bedRoutes);
-app.use('/api/rawat_inap', dashboardRawatInapRoutes)
+app.use('/api/dashboard_rawat_inap', dashboardRawatInapRoutes)
 app.use('/api/jadwal_dokter', jadwaldokterRoutes);
 app.use('/api/dashboard_dokter', dashboardDokterRoutes);
 app.use('/api/obat', obatRoutes);
