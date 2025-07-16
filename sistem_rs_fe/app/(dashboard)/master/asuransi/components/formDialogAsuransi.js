@@ -1,4 +1,3 @@
-// app/(dashboard)/master/asuransi/components/formDialogAsuransi.js
 'use client';
 
 import { Button } from 'primereact/button';

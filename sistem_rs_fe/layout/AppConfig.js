@@ -105,7 +105,6 @@ const AppConfig = (props) => {
                         <InputSwitch checked={layoutConfig.ripple} onChange={changeRipple} />
                     </>
                 )}
-                {/* Tema & lainnya tetap seperti sebelumnya */}
             </Sidebar>
         </>
     );

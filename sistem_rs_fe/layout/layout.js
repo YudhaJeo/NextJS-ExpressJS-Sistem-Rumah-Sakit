@@ -1,5 +1,3 @@
-// sistem_rs_fe\layout\layout.js
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { useRouter } from 'next/navigation';

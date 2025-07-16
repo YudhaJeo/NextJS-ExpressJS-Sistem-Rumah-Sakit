@@ -1,4 +1,3 @@
-//modelsReservasi
 import db from '../core/config/knex.js';
 
 export const getAll = async () => {

@@ -168,9 +168,13 @@ const Page = () => {
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
+
       <ConfirmDialog />
+
       <h3 className="text-xl font-semibold mb-3">Manajemen Invoice</h3>
+
       <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
+
         <FilterTanggal
           startDate={startDate}
           endDate={endDate}
@@ -179,6 +183,7 @@ const Page = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
+        
         <HeaderBar
           title=""
           placeholder="Cari no invoice atau nama pasien..."

@@ -7,9 +7,6 @@ export const formatDate = () => {
   return `${day}-${month}-${year}`;
 };
 
-// export const formatMariaDBDatetime = (date) =>
-//   new Date(date).toISOString().slice(0, 19).replace("T", " ");
-
 export const formatMariaDBDatetime = (argsDate) => {
   const date = new Date(argsDate);
   const pad = (n) => n.toString().padStart(2, "0");

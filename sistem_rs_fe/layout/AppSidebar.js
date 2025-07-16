@@ -1,4 +1,3 @@
-// sistem_rs_fe\layout\AppSidebar.js
 'use client';
 
 import { Suspense } from 'react';

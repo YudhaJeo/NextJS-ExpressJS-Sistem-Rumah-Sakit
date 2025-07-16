@@ -1,4 +1,3 @@
-// src/models/jenisBangsalModel.js
 import db from '../core/config/knex.js';
 
 export const getAll = () => 

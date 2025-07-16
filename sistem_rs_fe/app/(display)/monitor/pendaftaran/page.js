@@ -312,7 +312,6 @@ function MonitorAntrian() {
         </div>
       )}
 
-      {/* Header */}
       <div className="text-black px-6 py-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <img src="/layout/images/logo.png" alt="Logo" className="h-[50px]" />
@@ -343,7 +342,6 @@ function MonitorAntrian() {
         </marquee>
       </div>
 
-      {/* Main Content */}
       <div
         className={`flex-1 overflow-auto px-[${config.containerPadding}] pt-0`}
       >
@@ -373,7 +371,6 @@ function MonitorAntrian() {
         )}
       </div>
 
-      {/* Footer Statistik */}
       {!loading && loketList.length > 0 && (
         <div className={`px-[${config.containerPadding}] pt-2 shrink-0`}>
           <Divider />

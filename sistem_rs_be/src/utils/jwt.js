@@ -1,4 +1,3 @@
-// src/utils/jwt.js
 import { SignJWT } from 'jose';
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'defaultSecretKey');

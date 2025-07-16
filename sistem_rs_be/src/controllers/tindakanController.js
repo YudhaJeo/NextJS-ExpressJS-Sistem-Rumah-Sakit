@@ -1,4 +1,3 @@
-// src/controllers/tindakanController.js
 import * as Tindakan from '../models/tindakanModel.js';
 
 export async function getAllTindakan(req, res) {

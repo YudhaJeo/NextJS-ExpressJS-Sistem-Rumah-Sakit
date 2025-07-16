@@ -1,4 +1,3 @@
-// src/controllers/bangsalController.js
 import * as BangsalModel from '../models/bangsalModel.js';
 
 export async function getAllBangsal(req, res) {

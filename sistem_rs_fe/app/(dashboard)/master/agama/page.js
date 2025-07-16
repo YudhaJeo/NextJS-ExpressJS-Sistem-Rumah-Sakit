@@ -1,4 +1,3 @@
-// app/(dashboard)/master/agama/page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';

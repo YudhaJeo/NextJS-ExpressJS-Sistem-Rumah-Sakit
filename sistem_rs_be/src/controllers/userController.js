@@ -1,4 +1,3 @@
-// src/controllers/userController.js
 import * as UserModel from '../models/userModel.js';
 
 export async function getUser(req, res) {
@@ -7,7 +6,6 @@ export async function getUser(req, res) {
     const user = await UserModel.getById(id);
     if (!user) return res.status(404).json({ error: 'User tidak ditemukan' });
     delete user.PASSWORD;
-    // kirim hanya field yang frontend butuh
     res.json({ data: {
       username: user.USERNAME,
       email:    user.EMAIL,

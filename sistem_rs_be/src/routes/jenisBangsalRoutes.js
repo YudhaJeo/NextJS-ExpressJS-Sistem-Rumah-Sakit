@@ -1,11 +1,5 @@
-// src/routes/jenisBangsalRoutes.js
 import express from 'express';
-import { 
-    getAllJenisBangsal,
-    createJenisBangsal, 
-    updateJenisBangsal, 
-    deleteJenisBangsal 
-} from '../controllers/jenisBangsalController.js';
+import { getAllJenisBangsal,createJenisBangsal, updateJenisBangsal, deleteJenisBangsal } from '../controllers/jenisBangsalController.js';
 
 const router = express.Router();
 

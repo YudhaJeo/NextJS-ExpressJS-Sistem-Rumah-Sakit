@@ -1,4 +1,3 @@
-// src/controllers/kamarlController.js
 import * as KamarModel from '../models/kamarModel.js';
 
 export async function getAllKamar(req, res) {

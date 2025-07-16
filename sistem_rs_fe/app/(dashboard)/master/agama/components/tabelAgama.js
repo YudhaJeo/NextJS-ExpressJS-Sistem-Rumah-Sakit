@@ -1,4 +1,3 @@
-// app/(dashboard)/master/asuransi/components/tabelAgama.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';

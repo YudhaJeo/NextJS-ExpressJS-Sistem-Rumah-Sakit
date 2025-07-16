@@ -1,11 +1,6 @@
 import express from 'express';
 import upload from '../middlewares/upload.js';
-import {
-  getAllDokumen,
-  createDokumen,
-  updateDokumen,
-  deleteDokumen
-} from '../controllers/dokumenController.js';
+import { getAllDokumen, createDokumen, updateDokumen, deleteDokumen } from '../controllers/dokumenController.js';
 import { verifyToken } from '../middlewares/jwt.js';
 import path from 'path';
 import fs from 'fs';

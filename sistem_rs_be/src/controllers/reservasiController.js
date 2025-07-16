@@ -1,4 +1,3 @@
-//reservasiCOntroller
 import * as ReservasiModel from '../models/reservasiModel.js';
 
 export async function getAllReservasi(req, res) {

@@ -1,4 +1,3 @@
-// src/controllers/dashboardRawatInapController.js
 import db from '../core/config/knex.js';
 
 export const getRawatInapDashboard = async (req, res) => {

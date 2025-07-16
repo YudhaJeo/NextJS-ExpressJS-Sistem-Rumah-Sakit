@@ -1,4 +1,3 @@
-// src/controllers/bedController.js
 import * as BedModel from '../models/bedModel.js';
 
 export async function getAllBed(req, res) {

@@ -1,4 +1,3 @@
-// src/controllers/jenisBangsalController.js
 import * as JenisBangsal from '../models/jenisBangsalModel.js';
 
 export async function getAllJenisBangsal(req, res) {

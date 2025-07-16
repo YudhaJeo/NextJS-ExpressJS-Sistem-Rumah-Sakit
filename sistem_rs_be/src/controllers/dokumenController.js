@@ -2,7 +2,6 @@ import * as DokumenModel from '../models/dokumenModel.js';
 import fs from 'fs';
 import path from 'path';
 
-// Pastikan folder upload tersedia
 const uploadDir = path.join('uploads/dokumen');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
@@ -51,7 +50,6 @@ export const updateDokumen = async (req, res) => {
     const { NIK, JENISDOKUMEN, NAMAFILE } = req.body;
     const file = req.file;
 
-    // Ambil data lama dari database
     const dokumenLama = await DokumenModel.getById(id);
     if (!dokumenLama) {
       return res.status(404).json({ error: 'Dokumen tidak ditemukan' });
@@ -66,12 +64,10 @@ export const updateDokumen = async (req, res) => {
     };
 
     if (file) {
-      // Hapus file lama (optional, jika ingin bersih)
       if (dokumenLama.LOKASIFILE && fs.existsSync(dokumenLama.LOKASIFILE)) {
         fs.unlinkSync(dokumenLama.LOKASIFILE);
       }
 
-      // Ganti data file
       updatedData.LOKASIFILE = file.path.replace(/\\/g, '/'); 
       updatedData.NAMAFILE = file.filename;
     }
@@ -91,7 +87,6 @@ export const deleteDokumen = async (req, res) => {
       return res.status(404).json({ error: 'Dokumen tidak ditemukan' });
     }
 
-    // Hapus file dari sistem (jika ada)
     if (dokumen.LOKASIFILE && fs.existsSync(dokumen.LOKASIFILE)) {
       fs.unlinkSync(dokumen.LOKASIFILE);
     }
@@ -112,7 +107,7 @@ export const downloadDokumen = async (req, res) => {
       return res.status(404).json({ error: 'File tidak ditemukan' });
     }
 
-    res.download(filePath, filename); // ← Ini yang penting agar browser langsung download
+    res.download(filePath, filename); 
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -135,7 +130,7 @@ export const downloadById = async (req, res) => {
 
     res.download(fullPath, dokumen.NAMAFILE);
   } catch (err) {
-    console.error('Download error:', err); // ← Lihat detail errornya
+    console.error('Download error:', err); 
     res.status(500).json({ error: err.message });
   }
 };

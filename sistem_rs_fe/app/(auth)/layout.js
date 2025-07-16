@@ -1,4 +1,3 @@
-// app/(auth)/layout.js
 import React from "react";
 
 export const metadata = {

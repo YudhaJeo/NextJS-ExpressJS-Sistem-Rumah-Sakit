@@ -1,11 +1,5 @@
-// src/routes/bangsalRoutes.js
 import express from 'express';
-import {
-  getAllBangsal,
-  createBangsal,
-  updateBangsal,
-  deleteBangsal
-} from '../controllers/bangsalController.js';
+import { getAllBangsal, createBangsal, updateBangsal, deleteBangsal } from '../controllers/bangsalController.js';
 
 const router = express.Router();
 

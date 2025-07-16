@@ -1,6 +1,3 @@
-// sistem_rs_fe\layout\AppMenu.js
-/* eslint-disable @next/next/no-img-element */
-
 import React, { useContext } from "react";
 import AppMenuitem from "./AppMenuitem";
 import { LayoutContext } from "./context/layoutcontext";
@@ -38,6 +35,7 @@ const AppMenu = () => {
             { label: "Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/dokter" },
             { label: "Role", icon: "pi pi-fw pi-users", to: "/master/role" },
             { label: "Tenaga Medis", icon: "pi pi-fw pi-users", to: "/master/tenaga_medis" },
+            { label: "Tenaga Non Medis", icon: "pi pi-fw pi-users", to: "/master/tenaga_non_medis" },
           ],
         },
       ],

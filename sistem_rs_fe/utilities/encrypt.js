@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
 const algorithm = 'aes-256-cbc';
-const password = process.env.TOKEN_SECRET; // Kunci rahasia yang digunakan untuk enkripsi dan dekripsi
+const password = process.env.TOKEN_SECRET; 
 
 export function encrypt(text) {
     const iv = crypto.randomBytes(16);
@@ -11,7 +11,7 @@ export function encrypt(text) {
     let encrypted = cipher.update(text, 'utf8', 'hex');
     encrypted += cipher.final('hex');
     return {
-        iv: iv.toString('hex'), // Konversi IV ke string hex untuk penyimpanan
+        iv: iv.toString('hex'), 
         encryptedText: encrypted
     };
 }

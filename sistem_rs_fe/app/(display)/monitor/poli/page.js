@@ -1,4 +1,3 @@
-// sistem_rs_fe/app/(display)/monitor/poli/page.js
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";

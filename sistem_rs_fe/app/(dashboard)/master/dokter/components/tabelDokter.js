@@ -13,8 +13,6 @@ const TableDokter = ({ data, loading, onEdit, onDelete }) => {
   );
 };
 
-
-
   return (
     <DataTable
       value={data}

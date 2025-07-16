@@ -1,10 +1,9 @@
-// app\(dashboard)\antrian\printer\components\tabelPrinter.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import { Tag } from 'primereact/tag'; // ✅ Tambahkan import Tag
+import { Tag } from 'primereact/tag'; 
 import React from 'react';
 
 const TabelPrinter = ({ data, loading, onEdit, onDelete }) => {

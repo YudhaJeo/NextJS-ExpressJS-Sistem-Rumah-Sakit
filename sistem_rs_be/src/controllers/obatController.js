@@ -1,4 +1,3 @@
-// src/controllers/obatController.js
 import * as Obat from '../models/obatModel.js';
 
 export async function getAllObat(req, res) {
