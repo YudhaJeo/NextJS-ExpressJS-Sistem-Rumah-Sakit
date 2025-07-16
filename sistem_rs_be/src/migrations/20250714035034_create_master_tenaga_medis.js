@@ -13,29 +13,7 @@ export const up = function (knex) {
     table.string('NOHP', 20).nullable();
     table.string('EMAIL', 100).notNullable().unique();
     table.string('PASSWORD', 255).notNullable();
-    table.enu('JENISTENAGAMEDIS', [
-      'Dokter Umum',
-      'Dokter Spesialis',
-      'Dokter Gigi',
-      'Dokter Gigi Spesialis',
-      'Perawat',
-      'Bidan',
-      'Apoteker',
-      'Asisten Apoteker',
-      'Analis Laboratorium',
-      'Radiografer',
-      'Ahli Gizi',
-      'Fisioterapis',
-      'Terapis Wicara',
-      'Terapis Okupasi',
-      'Rekam Medis',
-      'Sanitarian',
-      'K3 Rumah Sakit',
-      'Psikolog Klinis',
-      'Manajemen Medis',
-      'IT Medis',
-      'Penyuluh Kesehatan'
-    ]).notNullable();
+    table.string('JENISTENAGAMEDIS', 50).notNullable();
     table.string('SPESIALISASI', 100).nullable();
     table.string('NOSTR', 50).nullable();
     table.datetime('TGLEXPSTR').nullable(); 

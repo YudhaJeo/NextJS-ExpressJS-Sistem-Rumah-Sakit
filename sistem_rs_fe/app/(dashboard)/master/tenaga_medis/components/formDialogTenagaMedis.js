@@ -15,30 +15,6 @@ const jenisKelaminOptions = [
   { label: "Perempuan", value: "P" },
 ];
 
-const jenisTenagaMedisOptions = [
-  { label: "Dokter Umum", value: "Dokter Umum" },
-  { label: "Dokter Spesialis", value: "Dokter Spesialis" },
-  { label: "Dokter Gigi", value: "Dokter Gigi" },
-  { label: "Dokter Gigi Spesialis", value: "Dokter Gigi Spesialis" },
-  { label: "Perawat", value: "Perawat" },
-  { label: "Bidan", value: "Bidan" },
-  { label: "Apoteker", value: "Apoteker" },
-  { label: "Asisten Apoteker", value: "Asisten Apoteker" },
-  { label: "Analis Laboratorium", value: "Analis Laboratorium" },
-  { label: "Radiografer", value: "Radiografer" },
-  { label: "Ahli Gizi", value: "Ahli Gizi" },
-  { label: "Fisioterapis", value: "Fisioterapis" },
-  { label: "Terapis Wicara", value: "Terapis Wicara" },
-  { label: "Terapis Okupasi", value: "Terapis Okupasi" },
-  { label: "Rekam Medis", value: "Rekam Medis" },
-  { label: "Sanitarian", value: "Sanitarian" },
-  { label: "K3 Rumah Sakit", value: "K3 Rumah Sakit" },
-  { label: "Psikolog Klinis", value: "Psikolog Klinis" },
-  { label: "Manajemen Medis", value: "Manajemen Medis" },
-  { label: "IT Medis", value: "IT Medis" },
-  { label: "Penyuluh Kesehatan", value: "Penyuluh Kesehatan" },
-];
-
 const statusKepegawaianOptions = [
   { label: "Tetap", value: "Tetap" },
   { label: "Kontrak", value: "Kontrak" },
@@ -80,7 +56,6 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
     if (!form.NAMALENGKAP) newErrors.NAMALENGKAP = "Nama wajib diisi";
     if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = "Jenis kelamin wajib dipilih";
     if (!form.TEMPATLAHIR) newErrors.TEMPATLAHIR = "Tempat lahir wajib diisi";
-    if (!form.TGLLAHIR) newErrors.TGLLAHIR = "Tanggal lahir wajib dipilih";
     if (!form.NOHP) newErrors.NOHP = "No. HP wajib diisi";
     if (!form.EMAIL) newErrors.EMAIL = "Email wajib diisi";
     if (!form.JENISTENAGAMEDIS) newErrors.JENISTENAGAMEDIS = "Jenis tenaga medis wajib dipilih";
@@ -94,12 +69,6 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
 
     if (!form.IDTENAGAMEDIS && !form.PASSWORD) {
       newErrors.PASSWORD = "Password wajib diisi";
-    }
-    if (!form.IDTENAGAMEDIS && !form.FOTOPROFIL) {
-      newErrors.FOTOPROFIL = "Foto profil wajib diupload";
-    }
-    if (!form.IDTENAGAMEDIS && !form.DOKUMENPENDUKUNG) {
-      newErrors.DOKUMENPENDUKUNG = "Dokumen pendukung wajib diupload";
     }
 
     setErrors(newErrors);
@@ -180,13 +149,13 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
         <div>
           <label className="font-medium">Tanggal Lahir</label>
           <Calendar
-            className={classNames("w-full mt-2", { "p-invalid": errors.TGLLAHIR })}
-            value={form.TGLLAHIR ? new Date(form.TGLLAHIR) : null}
-            onChange={(e) => setForm({ ...form, TGLLAHIR: e.value })}
+            className={classNames("w-full mt-2", { "p-invalid": errors.TANGGALLAHIR })}
+            value={form.TANGGALLAHIR ? new Date(form.TANGGALLAHIR) : null}
+            onChange={(e) => setForm({ ...form, TANGGALLAHIR: e.value })}
             showIcon
             dateFormat="dd-mm-yy"
           />
-          {errors.TGLLAHIR && <small className="p-error">{errors.TGLLAHIR}</small>}
+          {errors.TANGGALLAHIR && <small className="p-error">{errors.TANGGALLAHIR}</small>}
         </div>
 
         <div>
@@ -225,17 +194,78 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
 
         <div>
           <label className="font-medium">Jenis Tenaga Medis</label>
-          <Dropdown
+          <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.JENISTENAGAMEDIS })}
             value={form.JENISTENAGAMEDIS}
-            options={jenisTenagaMedisOptions}
             onChange={(e) => setForm({ ...form, JENISTENAGAMEDIS: e.value })}
-            placeholder="Pilih"
-            filter
           />
           {errors.JENISTENAGAMEDIS && (
             <small className="p-error">{errors.JENISTENAGAMEDIS}</small>
           )}
+        </div>
+
+        <div>
+          <label className="font-medium">Spesialisasi</label>
+          <InputText
+            className={classNames("w-full mt-2", { "p-invalid": errors.SPESIALISASI })}
+            value={form.SPESIALISASI || ""}
+            onChange={(e) => setForm({ ...form, SPESIALISASI: e.target.value })}
+          />
+          {errors.SPESIALISASI && <small className="p-error">{errors.SPESIALISASI}</small>}
+        </div>
+
+        <div>
+          <label className="font-medium">No. STR</label>
+          <InputText
+            className={classNames("w-full mt-2", { "p-invalid": errors.NOSTR })}
+            value={form.NOSTR || ""}
+            onChange={(e) => setForm({ ...form, NOSTR: e.target.value })}
+          />
+          {errors.NOSTR && <small className="p-error">{errors.NOSTR}</small>}
+        </div>
+
+        <div>
+          <label className="font-medium">Tgl Exp STR</label>
+          <Calendar
+            className={classNames("w-full mt-2", { "p-invalid": errors.TGLEXPSTR })}
+            value={form.TGLEXPSTR ? new Date(form.TGLEXPSTR) : null}
+            onChange={(e) => setForm({ ...form, TGLEXPSTR: e.value })}
+            dateFormat="yy-mm-dd"
+            showIcon
+          />
+          {errors.TGLEXPSTR && <small className="p-error">{errors.TGLEXPSTR}</small>}
+        </div>
+
+        <div>
+          <label className="font-medium">No. SIP</label>
+          <InputText
+            className={classNames("w-full mt-2", { "p-invalid": errors.NOSIP })}
+            value={form.NOSIP || ""}
+            onChange={(e) => setForm({ ...form, NOSIP: e.target.value })}
+          />
+          {errors.NOSIP && <small className="p-error">{errors.NOSIP}</small>}
+        </div>
+
+        <div>
+          <label className="font-medium">Tgl Exp SIP</label>
+          <Calendar
+            className={classNames("w-full mt-2", { "p-invalid": errors.TGLEXPSIP })}
+            value={form.TGLEXPSIP ? new Date(form.TGLEXPSIP) : null}
+            onChange={(e) => setForm({ ...form, TGLEXPSIP: e.value })}
+            dateFormat="yy-mm-dd"
+            showIcon
+          />
+          {errors.TGLEXPSIP && <small className="p-error">{errors.TGLEXPSIP}</small>}
+        </div>
+
+        <div>
+          <label className="font-medium">Unit Kerja</label>
+          <InputText
+            className={classNames("w-full mt-2", { "p-invalid": errors.UNITKERJA })}
+            value={form.UNITKERJA || ""}
+            onChange={(e) => setForm({ ...form, UNITKERJA: e.target.value })}
+          />
+          {errors.UNITKERJA && <small className="p-error">{errors.UNITKERJA}</small>}
         </div>
 
         <div>
@@ -251,77 +281,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
             <small className="p-error">{errors.STATUSKEPEGAWAIAN}</small>
           )}
         </div>
-
-        <div className="col-12">
-          <label htmlFor="SPESIALISASI" className="block mb-2">Spesialisasi</label>
-          <InputText
-            id="SPESIALISASI"
-            className={classNames("w-full", { "p-invalid": errors.SPESIALISASI })}
-            value={form.SPESIALISASI || ""}
-            onChange={(e) => setForm({ ...form, SPESIALISASI: e.target.value })}
-          />
-          {errors.SPESIALISASI && <small className="p-error">{errors.SPESIALISASI}</small>}
-        </div>
-
-        <div className="col-12 md:col-6">
-          <label htmlFor="NOSTR" className="block mb-2">No. STR</label>
-          <InputText
-            id="NOSTR"
-            className={classNames("w-full", { "p-invalid": errors.NOSTR })}
-            value={form.NOSTR || ""}
-            onChange={(e) => setForm({ ...form, NOSTR: e.target.value })}
-          />
-          {errors.NOSTR && <small className="p-error">{errors.NOSTR}</small>}
-        </div>
-
-        <div className="col-12 md:col-6">
-          <label htmlFor="TGLEXPSTR" className="block mb-2">Tgl Exp STR</label>
-          <Calendar
-            id="TGLEXPSTR"
-            className={classNames("w-full", { "p-invalid": errors.TGLEXPSTR })}
-            value={form.TGLEXPSTR ? new Date(form.TGLEXPSTR) : null}
-            onChange={(e) => setForm({ ...form, TGLEXPSTR: e.value })}
-            dateFormat="yy-mm-dd"
-            showIcon
-          />
-          {errors.TGLEXPSTR && <small className="p-error">{errors.TGLEXPSTR}</small>}
-        </div>
-
-        <div className="col-12 md:col-6">
-          <label htmlFor="NOSIP" className="block mb-2">No. SIP</label>
-          <InputText
-            id="NOSIP"
-            className={classNames("w-full", { "p-invalid": errors.NOSIP })}
-            value={form.NOSIP || ""}
-            onChange={(e) => setForm({ ...form, NOSIP: e.target.value })}
-          />
-          {errors.NOSIP && <small className="p-error">{errors.NOSIP}</small>}
-        </div>
-
-        <div className="col-12 md:col-6">
-          <label htmlFor="TGLEXPSIP" className="block mb-2">Tgl Exp SIP</label>
-          <Calendar
-            id="TGLEXPSIP"
-            className={classNames("w-full", { "p-invalid": errors.TGLEXPSIP })}
-            value={form.TGLEXPSIP ? new Date(form.TGLEXPSIP) : null}
-            onChange={(e) => setForm({ ...form, TGLEXPSIP: e.value })}
-            dateFormat="yy-mm-dd"
-            showIcon
-          />
-          {errors.TGLEXPSIP && <small className="p-error">{errors.TGLEXPSIP}</small>}
-        </div>
-
-        <div className="col-12">
-          <label htmlFor="UNITKERJA" className="block mb-2">Unit Kerja</label>
-          <InputText
-            id="UNITKERJA"
-            className={classNames("w-full", { "p-invalid": errors.UNITKERJA })}
-            value={form.UNITKERJA || ""}
-            onChange={(e) => setForm({ ...form, UNITKERJA: e.target.value })}
-          />
-          {errors.UNITKERJA && <small className="p-error">{errors.UNITKERJA}</small>}
-        </div>
-
+        
         <div>
           <label className="font-medium">Foto Profil</label>
           {previewImage && (

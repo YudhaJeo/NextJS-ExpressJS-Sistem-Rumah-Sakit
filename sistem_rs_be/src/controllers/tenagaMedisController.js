@@ -2,14 +2,12 @@ import * as TenagaMedis from '../models/tenagaMedisModel.js';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
 
-// 🔥 Format tanggal ke YYYY-MM-DD
 const formatDate = (dateStr) => {
   if (!dateStr) return null;
   const date = new Date(dateStr);
   return isNaN(date) ? null : date.toISOString().split('T')[0];
 };
 
-// 🔥 Format Date ke MySQL DATETIME (YYYY-MM-DD HH:mm:ss)
 const toMySQLDateTime = (date = new Date()) => {
   return date.toISOString().slice(0, 19).replace('T', ' ');
 };
