@@ -37,6 +37,7 @@ import tindakanRoutes from './routes/tindakanRoutes.js';
 import tenagaMedisRoutes from './routes/tenagaMedisRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import rawatInapRoutes from './routes/rawatInapRoutes.js';
 import tenagaNonMedisRoutes from './routes/tenagaNonMedisRoutes.js';
 
 const app = express();
@@ -75,7 +76,7 @@ app.use('/api/kamar', kamarRoutes);
 app.use('/api/bank_account', bankAccountRoutes);
 app.use('/api/metode_pembayaran', metodePembayaranRoutes);
 app.use('/api/bed', bedRoutes);
-app.use('/api/rawat_inap', dashboardRawatInapRoutes)
+app.use('/api/dashboard_rawat_inap', dashboardRawatInapRoutes)
 app.use('/api/jadwal_dokter', jadwaldokterRoutes);
 app.use('/api/dashboard_dokter', dashboardDokterRoutes);
 app.use('/api/obat', obatRoutes);
@@ -85,6 +86,7 @@ app.use('/api/tindakan_medis', tindakanRoutes);
 app.use('/api/riwayat_kunjungan', riwayatKunjunganRoutes);
 app.use('/api/komisi_dokter', komisidokterRoutes);
 app.use('/api/tenaga_medis', tenagaMedisRoutes);
+app.use('/api/rawat_inap', rawatInapRoutes);
 app.use('/api/tenaga_non_medis', tenagaNonMedisRoutes);
 app.use('/api/role', roleRoutes);
 app.use('/api/dashboard', dashboardRoutes);
