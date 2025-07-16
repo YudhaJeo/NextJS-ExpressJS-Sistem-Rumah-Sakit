@@ -58,7 +58,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
     if (!form.TEMPATLAHIR) newErrors.TEMPATLAHIR = "Tempat lahir wajib diisi";
     if (!form.NOHP) newErrors.NOHP = "No. HP wajib diisi";
     if (!form.EMAIL) newErrors.EMAIL = "Email wajib diisi";
-    if (!form.JENISTENAGAMEDIS) newErrors.JENISTENAGAMEDIS = "Jenis tenaga medis wajib dipilih";
+    if (!form.JENISTENAGAMEDIS) newErrors.JENISTENAGAMEDIS = "Jenis tenaga medis wajib diisi";
     if (!form.STATUSKEPEGAWAIAN) newErrors.STATUSKEPEGAWAIAN = "Status kepegawaian wajib dipilih";
     if (!form.SPESIALISASI) newErrors.SPESIALISASI = "Spesialisasi wajib diisi";
     if (!form.NOSTR) newErrors.NOSTR = "No. STR wajib diisi";
@@ -196,8 +196,8 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           <label className="font-medium">Jenis Tenaga Medis</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.JENISTENAGAMEDIS })}
-            value={form.JENISTENAGAMEDIS}
-            onChange={(e) => setForm({ ...form, JENISTENAGAMEDIS: e.value })}
+            value={form.JENISTENAGAMEDIS || ""}
+            onChange={(e) => setForm({ ...form, JENISTENAGAMEDIS: e.target.value })}
           />
           {errors.JENISTENAGAMEDIS && (
             <small className="p-error">{errors.JENISTENAGAMEDIS}</small>
@@ -281,7 +281,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
             <small className="p-error">{errors.STATUSKEPEGAWAIAN}</small>
           )}
         </div>
-        
+
         <div>
           <label className="font-medium">Foto Profil</label>
           {previewImage && (
