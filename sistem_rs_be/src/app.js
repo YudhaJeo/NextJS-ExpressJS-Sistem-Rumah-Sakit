@@ -24,11 +24,11 @@ import pembayaranRoutes from './routes/pembayaranRoutes.js';
 import kamarRoutes from './routes/kamarRoutes.js';
 import bankAccountRoutes from './routes/bankAccountRoutes.js';
 import metodePembayaranRoutes from './routes/metodePembayaranRoutes.js';
-import bedRoutes from './routes/bedRoutes.js'
+import bedRoutes from './routes/bedRoutes.js';
 import dashboardRawatInapRoutes from './routes/dashboardRawatInapRoutes.js';
 import jadwaldokterRoutes from './routes/jadwaldokterRoutes.js';
 import dashboardDokterRoutes from './routes/dashboardDokterRoutes.js';
-import obatRoutes from './routes/obatRoutes.js'
+import obatRoutes from './routes/obatRoutes.js';
 import riwayatpengobatanRoutes from './routes/riwayatpengobatanRoutes.js';
 import kalenderRoutes from './routes/kalenderRoutes.js';
 import riwayatKunjunganRoutes from './routes/riwayatKunjunganRoutes.js';
@@ -38,6 +38,7 @@ import tenagaMedisRoutes from './routes/tenagaMedisRoutes.js';
 import roleRoutes from './routes/roleRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import rawatInapRoutes from './routes/rawatInapRoutes.js';
+import tenagaNonMedisRoutes from './routes/tenagaNonMedisRoutes.js';
 
 const app = express();
 
@@ -59,8 +60,8 @@ app.use('/api/agama', agamaRoutes);
 app.use('/api/loket', loketRoutes);
 app.use('/api/antrian', antrianRoutes);
 app.use('/api/printer', printerRoutes);
-app.use('/api/poli', poliRoutes)
-app.use('/api/dokter', dokterRoutes)
+app.use('/api/poli', poliRoutes);
+app.use('/api/dokter', dokterRoutes);
 app.use('/api/jenis_bangsal', jenisBangsalRoutes);
 app.use('/api/profile', userRoutes);
 app.use('/api/poli', poliRoutes);
@@ -86,7 +87,9 @@ app.use('/api/riwayat_kunjungan', riwayatKunjunganRoutes);
 app.use('/api/komisi_dokter', komisidokterRoutes);
 app.use('/api/tenaga_medis', tenagaMedisRoutes);
 app.use('/api/rawat_inap', rawatInapRoutes);
+app.use('/api/tenaga_non_medis', tenagaNonMedisRoutes);
 app.use('/api/role', roleRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+
 
 export default app;
