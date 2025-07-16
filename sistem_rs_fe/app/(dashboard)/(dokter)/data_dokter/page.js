@@ -88,7 +88,7 @@ const DataDokterPage = () => {
       setData(originalData);
     } else {
       const filtered = originalData.filter((item) =>
-        item.EMAIL.toLowerCase().includes(keyword.toLowerCase())
+        item.NAMADOKTER.toLowerCase().includes(keyword.toLowerCase())
       );
       setData(filtered);
     }
@@ -177,7 +177,7 @@ const DataDokterPage = () => {
       <h3 className="text-xl font-semibold mb-3">Data Dokter</h3>
 
       <HeaderBar
-        placeholder="Cari Email Dokter..."
+        placeholder="Cari Nama Dokter..."
         onSearch={handleSearch}
         onAddClick={() => {
           resetForm();
