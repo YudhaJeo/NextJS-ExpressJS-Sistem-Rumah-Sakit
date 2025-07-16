@@ -14,6 +14,19 @@ export const getRolesTenagaMedis = async (req, res) => {
   }
 };
 
+export const getRolesTenagaNonMedis = async (req, res) => {
+  try {
+    const roles = await db('role')
+      .where('JENISROLE', 'Non Medis')
+      .select('NAMAROLE');
+
+    res.status(200).json({ success: true, data: roles });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Gagal mengambil role tenaga medis' });
+  }
+};
+
 export const getRoles = async (req, res) => {
   try {
     const roles = await RoleModel.getAllRoles();
