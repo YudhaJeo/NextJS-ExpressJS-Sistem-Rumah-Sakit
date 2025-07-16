@@ -3,6 +3,7 @@ import * as RoleController from '../controllers/roleController.js';
 
 const router = express.Router();
 
+router.get('/tenaga-medis', RoleController.getRolesTenagaMedis);
 router.get('/', RoleController.getRoles);
 router.get('/:id', RoleController.getRole);
 router.post('/', RoleController.create);

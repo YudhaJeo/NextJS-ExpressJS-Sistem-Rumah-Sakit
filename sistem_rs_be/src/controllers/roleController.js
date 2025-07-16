@@ -1,4 +1,18 @@
 import * as RoleModel from '../models/roleModel.js';
+import db from '../core/config/knex.js';
+
+export const getRolesTenagaMedis = async (req, res) => {
+  try {
+    const roles = await db('role')
+      .where('JENISROLE', 'Tenaga Medis')
+      .select('NAMAROLE');
+
+    res.status(200).json({ success: true, data: roles });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Gagal mengambil role tenaga medis' });
+  }
+};
 
 export const getRoles = async (req, res) => {
   try {

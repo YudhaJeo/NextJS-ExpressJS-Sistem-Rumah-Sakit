@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
@@ -25,6 +26,23 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
   const [errors, setErrors] = useState({});
   const [previewImage, setPreviewImage] = useState(null);
   const [previewDokumen, setPreviewDokumen] = useState(null);
+  const [roleOptions, setRoleOptions] = useState([]);
+
+useEffect(() => {
+  if (visible) {
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/role/tenaga-medis`)
+      .then((res) => {
+        const options = res.data.data.map((role) => ({
+          label: role.NAMAROLE,
+          value: role.NAMAROLE,
+        }));
+        setRoleOptions(options);
+      })
+      .catch((err) => {
+        console.error("Gagal mengambil role tenaga medis:", err);
+      });
+  }
+}, [visible]);
 
   useEffect(() => {
     if (!visible) {
@@ -192,17 +210,19 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.PASSWORD && <small className="p-error">{errors.PASSWORD}</small>}
         </div>
 
-        <div>
-          <label className="font-medium">Jenis Tenaga Medis</label>
-          <InputText
-            className={classNames("w-full mt-2", { "p-invalid": errors.JENISTENAGAMEDIS })}
-            value={form.JENISTENAGAMEDIS || ""}
-            onChange={(e) => setForm({ ...form, JENISTENAGAMEDIS: e.target.value })}
-          />
-          {errors.JENISTENAGAMEDIS && (
-            <small className="p-error">{errors.JENISTENAGAMEDIS}</small>
-          )}
-        </div>
+<div>
+  <label className="font-medium">Jenis Tenaga Medis</label>
+  <Dropdown
+    className={classNames("w-full mt-2", { "p-invalid": errors.JENISTENAGAMEDIS })}
+    value={form.JENISTENAGAMEDIS}
+    options={roleOptions}
+    onChange={(e) => setForm({ ...form, JENISTENAGAMEDIS: e.value })}
+    placeholder="Pilih Jenis Tenaga Medis"
+  />
+  {errors.JENISTENAGAMEDIS && (
+    <small className="p-error">{errors.JENISTENAGAMEDIS}</small>
+  )}
+</div>
 
         <div>
           <label className="font-medium">Spesialisasi</label>
