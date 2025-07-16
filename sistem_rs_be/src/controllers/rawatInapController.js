@@ -12,7 +12,6 @@ export async function getAllRawatInap(req, res) {
 
 export async function insertRawatInap(req, res) {
   try {
-    console.log('[INSERT] Rawat Inap payload:', req.body);
     const { IDPASIEN, IDBED, TANGGALMASUK, TANGGALKELUAR, STATUS, CATATAN } = req.body;
     await RawatInap.create({ IDPASIEN, IDBED, TANGGALMASUK, TANGGALKELUAR, STATUS, CATATAN });
     res.json({ message: 'Rawat inap berhasil ditambahkan' });
@@ -26,7 +25,7 @@ export async function updateRawatInap(req, res) {
   try {
     const id = req.params.id;
     const data = req.body;
-
+    
     const existing = await RawatInap.getById(id);
     if (!existing) return res.status(404).json({ error: 'Data tidak ditemukan' });
 

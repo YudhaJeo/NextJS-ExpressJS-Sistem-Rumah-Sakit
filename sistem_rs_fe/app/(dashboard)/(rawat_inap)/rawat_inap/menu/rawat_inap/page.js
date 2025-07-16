@@ -109,20 +109,30 @@ const Page = () => {
     const url = isEdit
       ? `${API_URL}/rawat_inap/${form.IDRAWATINAP}`
       : `${API_URL}/rawat_inap`;
-  
+
+      const {
+        IDRAWATINAP,
+        IDPASIEN,
+        IDBED,
+        TANGGALMASUK,
+        TANGGALKELUAR,
+        STATUS,
+        CATATAN
+      } = form;
+      
       const payload = {
-        ...form,
-        TANGGALMASUK: form.TANGGALMASUK
-          ? new Date(form.TANGGALMASUK).toISOString().slice(0, 19).replace("T", " ")
+        IDPASIEN,
+        IDBED,
+        TANGGALMASUK: TANGGALMASUK
+          ? new Date(TANGGALMASUK).toISOString().slice(0, 19).replace("T", " ")
           : null,
         TANGGALKELUAR:
-          form.TANGGALKELUAR && form.TANGGALKELUAR !== ''
-            ? new Date(form.TANGGALKELUAR).toISOString().slice(0, 19).replace("T", " ")
+          TANGGALKELUAR && TANGGALKELUAR !== ''
+            ? new Date(TANGGALKELUAR).toISOString().slice(0, 19).replace("T", " ")
             : null,
-        
-        CATATAN: form.CATATAN?.trim() || null,
-      };
-      
+        STATUS,
+        CATATAN: CATATAN?.trim() || null,
+      };      
   
     try {
       if (isEdit) {
