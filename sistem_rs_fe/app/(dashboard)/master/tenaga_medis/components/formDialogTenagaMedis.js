@@ -283,47 +283,19 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
         </div>
 
         <div>
-          <label className="font-medium">Foto Profil</label>
-          {previewImage && (
-            <div className="my-2">
-              <img
-                src={previewImage}
-                alt="Preview"
-                className="rounded-md w-32 h-32 object-cover border"
-              />
-            </div>
-          )}
-          <FileUpload
-            mode="basic"
-            name="FOTOPROFIL"
-            accept="image/*"
-            chooseLabel="Pilih Foto"
-            customUpload
-            uploadHandler={(e) => handleFileUpload("FOTOPROFIL", e)}
+          <label>Foto Profil</label>
+          <input
+            type="file"
+            onChange={(e) => setForm({ ...form, FOTOPROFIL: e.target.files[0] })}
           />
-          {errors.FOTOPROFIL && <small className="p-error">{errors.FOTOPROFIL}</small>}
         </div>
 
         <div>
-          <label className="font-medium">Dokumen Pendukung</label>
-          {previewDokumen && (
-            <div className="my-2">
-              <p className="text-sm text-gray-700">
-                Dokumen: <strong>{previewDokumen}</strong>
-              </p>
-            </div>
-          )}
-          <FileUpload
-            mode="basic"
-            name="DOKUMENPENDUKUNG"
-            accept=".pdf,.doc,.docx,.zip"
-            chooseLabel="Upload Dokumen"
-            customUpload
-            uploadHandler={(e) => handleFileUpload("DOKUMENPENDUKUNG", e)}
+          <label>Dokumen Pendukung</label>
+          <input
+            type="file"
+            onChange={(e) => setForm({ ...form, DOKUMENPENDUKUNG: e.target.files[0] })}
           />
-          {errors.DOKUMENPENDUKUNG && (
-            <small className="p-error">{errors.DOKUMENPENDUKUNG}</small>
-          )}
         </div>
 
         <div className="text-right pt-4">
