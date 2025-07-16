@@ -33,7 +33,7 @@ const Page = () => {
     TANGGALKELUAR: '',
     STATUS: 'AKTIF',
     CATATAN: ''
-  };
+  };  
   
   const [form, setForm] = useState(defaultForm);
 
@@ -154,9 +154,14 @@ const Page = () => {
   
 
   const handleEdit = (row) => {
-    setForm(row);
+    setForm({
+      ...row,
+      TANGGALKELUAR: row.TANGGALKELUAR || '',
+      CATATAN: row.CATATAN || ''
+    });
     setDialogVisible(true);
   };
+  
 
   const handleDelete = (row) => {
     confirmDialog({

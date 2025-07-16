@@ -35,7 +35,7 @@ const FormRawatInap = ({
           onSubmit();
         }}
       >
-        <div>
+        <div className="mt-2">
           <label>Pasien</label>
           <Dropdown
             className={inputClass('IDPASIEN')}
@@ -47,7 +47,7 @@ const FormRawatInap = ({
           {errors.IDPASIEN && <small className="text-red-500">{errors.IDPASIEN}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label>Bed</label>
           <Dropdown
             className={inputClass('IDBED')}
@@ -59,7 +59,7 @@ const FormRawatInap = ({
           {errors.IDBED && <small className="text-red-500">{errors.IDBED}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label>Tanggal Masuk</label>
           <Calendar
             className={inputClass('TANGGALMASUK')}
@@ -71,7 +71,18 @@ const FormRawatInap = ({
           {errors.TANGGALMASUK && <small className="text-red-500">{errors.TANGGALMASUK}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
+          <label>Tanggal Keluar</label>
+          <Calendar
+            className={inputClass('TANGGALKELUAR')}
+            value={form.TANGGALKELUAR || ''} 
+            onChange={(e) => setForm({ ...form, TANGGALKELUAR: e.value })}
+            showIcon
+          />
+          {errors.TANGGALKELUAR && <small className="text-red-500">{errors.TANGGALKELUAR}</small>}
+        </div>
+
+        <div className="mt-2">
           <label>Status</label>
           <Dropdown
             className={inputClass('STATUS')}
@@ -90,10 +101,11 @@ const FormRawatInap = ({
           <label>Catatat</label>
           <InputText
             className={inputClass('CATATAN')}
-            value={form.CATATAN}
+            value={form.CATATAN || ''} 
             onChange={(e) => setForm({ ...form, CATATAN: e.target.value })}
             placeholder="Masukkan catatan (Opsional)"
           />
+
         </div>
 
         <div className="text-right pt-3">
