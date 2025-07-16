@@ -6,7 +6,8 @@ import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import React from 'react';
-import { InputText } from 'primereact/inputtext';
+import { InputTextarea } from 'primereact/inputtextarea';
+        
 
 const FormRawatInap = ({ 
   visible, 
@@ -43,6 +44,9 @@ const FormRawatInap = ({
             options={pasienOptions}
             onChange={(e) => setForm({ ...form, IDPASIEN: e.target.value })}
             placeholder="Pilih Pasien"
+            filter
+            showClear
+            optionLabel="label"
           />
           {errors.IDPASIEN && <small className="text-red-500">{errors.IDPASIEN}</small>}
         </div>
@@ -55,6 +59,9 @@ const FormRawatInap = ({
             options={bedOptions}
             onChange={(e) => setForm({ ...form, IDBED: e.value })}
             placeholder="Pilih Bed"
+            filter
+            showClear
+            optionLabel="label"
           />
           {errors.IDBED && <small className="text-red-500">{errors.IDBED}</small>}
         </div>
@@ -99,7 +106,7 @@ const FormRawatInap = ({
 
         <div className="mt-2">
           <label>Catatat</label>
-          <InputText
+          <InputTextarea
             className={inputClass('CATATAN')}
             value={form.CATATAN || ''} 
             onChange={(e) => setForm({ ...form, CATATAN: e.target.value })}
