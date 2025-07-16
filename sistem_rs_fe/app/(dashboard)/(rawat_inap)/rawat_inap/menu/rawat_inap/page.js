@@ -118,30 +118,35 @@ const Page = () => {
         TANGGALMASUK: form.TANGGALMASUK
           ? new Date(form.TANGGALMASUK).toISOString().slice(0, 19).replace("T", " ")
           : null,
-        TANGGALKELUAR:
+          TANGGALKELUAR:
           form.TANGGALKELUAR && form.TANGGALKELUAR !== ''
             ? new Date(form.TANGGALKELUAR).toISOString().slice(0, 19).replace("T", " ")
-            : null,
+            : null,        
         CATATAN: form.CATATAN?.trim() || null,
       };
       
-  
-    try {
-      if (isEdit) {
-        await axios.put(url, payload);
-        toastRef.current?.showToast('00', 'Data berhasil diperbarui');
-      } else {
-        await axios.post(url, payload);
-        toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
-      }
-  
-      fetchData();
-      setDialogVisible(false);
-      resetForm();
-    } catch (err) {
-      console.error('Gagal simpan data:', err);
-      toastRef.current?.showToast('01', 'Gagal menyimpan data');
-    }
+      try {
+        let response;
+        if (isEdit) {
+          response = await axios.put(url, payload);
+        } else {
+          response = await axios.post(url, payload);
+        }
+      
+        // validasi apakah response sukses
+        if (response.status === 200 && response.data?.message) {
+          toastRef.current?.showToast('00', response.data.message);
+        } else {
+          throw new Error('Respons tidak valid');
+        }
+      
+        fetchData();
+        setDialogVisible(false);
+        resetForm();
+      } catch (err) {
+        console.error('Gagal simpan data:', err);
+        toastRef.current?.showToast('01', 'Gagal menyimpan data');
+      }      
   };
   
 

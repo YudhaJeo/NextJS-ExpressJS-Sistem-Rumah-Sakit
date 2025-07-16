@@ -86,7 +86,6 @@ const FormRawatInap = ({
             onChange={(e) => setForm({ ...form, TANGGALKELUAR: e.value })}
             showIcon
             dateFormat="yy-mm-dd"
-            showClear
           />
           {errors.TANGGALKELUAR && <small className="text-red-500">{errors.TANGGALKELUAR}</small>}
         </div>

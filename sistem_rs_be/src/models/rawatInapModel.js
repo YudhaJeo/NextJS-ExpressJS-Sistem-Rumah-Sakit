@@ -9,8 +9,7 @@ export const getAll = () =>
         'rawat_inap.*',
         'pasien.NAMALENGKAP',
         'bed.NOMORBED'
-      );
-  
+      );      
 
 export const getById = (id) =>
   db('rawat_inap').where({ IDRAWATINAP: id }).first();
@@ -25,3 +24,6 @@ export const update = (id, data) =>
 
 export const remove = (id) =>
   db('rawat_inap').where({ IDRAWATINAP: id }).delete();
+
+export const updateBedStatus = (id, status) =>
+  db('bed').where({ IDBED: id }).update({ STATUS: status });
