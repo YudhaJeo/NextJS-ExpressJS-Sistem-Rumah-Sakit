@@ -82,26 +82,13 @@ const FormRawatInap = ({
           <label>Tanggal Keluar</label>
           <Calendar
             className={inputClass('TANGGALKELUAR')}
-            value={form.TANGGALKELUAR || ''} 
+            value={form.TANGGALKELUAR ? new Date(form.TANGGALKELUAR) : null} 
             onChange={(e) => setForm({ ...form, TANGGALKELUAR: e.value })}
             showIcon
+            dateFormat="yy-mm-dd"
+            showClear
           />
           {errors.TANGGALKELUAR && <small className="text-red-500">{errors.TANGGALKELUAR}</small>}
-        </div>
-
-        <div className="mt-2">
-          <label>Status</label>
-          <Dropdown
-            className={inputClass('STATUS')}
-            value={form.STATUS}
-            options={[
-              { label: 'AKTIF', value: 'AKTIF' },
-              { label: 'SELESAI', value: 'SELESAI' },
-            ]}
-            onChange={(e) => setForm({ ...form, STATUS: e.value })}
-            placeholder="Pilih Status"
-          />
-          {errors.STATUS && <small className="text-red-500">{errors.STATUS}</small>}
         </div>
 
         <div className="mt-2">

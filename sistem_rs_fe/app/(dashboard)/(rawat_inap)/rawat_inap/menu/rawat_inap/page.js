@@ -109,30 +109,20 @@ const Page = () => {
     const url = isEdit
       ? `${API_URL}/rawat_inap/${form.IDRAWATINAP}`
       : `${API_URL}/rawat_inap`;
-
-      const {
-        IDRAWATINAP,
-        IDPASIEN,
-        IDBED,
-        TANGGALMASUK,
-        TANGGALKELUAR,
-        STATUS,
-        CATATAN
-      } = form;
-      
+  
       const payload = {
-        IDPASIEN,
-        IDBED,
-        TANGGALMASUK: TANGGALMASUK
-          ? new Date(TANGGALMASUK).toISOString().slice(0, 19).replace("T", " ")
+        ...form,
+        STATUS: form.TANGGALKELUAR ? 'SELESAI' : 'AKTIF',
+        TANGGALMASUK: form.TANGGALMASUK
+          ? new Date(form.TANGGALMASUK).toISOString().slice(0, 19).replace("T", " ")
           : null,
         TANGGALKELUAR:
-          TANGGALKELUAR && TANGGALKELUAR !== ''
-            ? new Date(TANGGALKELUAR).toISOString().slice(0, 19).replace("T", " ")
+          form.TANGGALKELUAR && form.TANGGALKELUAR !== ''
+            ? new Date(form.TANGGALKELUAR).toISOString().slice(0, 19).replace("T", " ")
             : null,
-        STATUS,
-        CATATAN: CATATAN?.trim() || null,
-      };      
+        CATATAN: form.CATATAN?.trim() || null,
+      };
+      
   
     try {
       if (isEdit) {
@@ -155,12 +145,16 @@ const Page = () => {
 
   const handleEdit = (row) => {
     setForm({
-      ...row,
+      IDRAWATINAP: row.IDRAWATINAP,
+      IDPASIEN: row.IDPASIEN,
+      IDBED: row.IDBED,
+      TANGGALMASUK: row.TANGGALMASUK,
       TANGGALKELUAR: row.TANGGALKELUAR || '',
       CATATAN: row.CATATAN || ''
     });
     setDialogVisible(true);
   };
+  
   
 
   const handleDelete = (row) => {
