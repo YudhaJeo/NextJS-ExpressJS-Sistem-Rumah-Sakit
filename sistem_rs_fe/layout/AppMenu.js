@@ -186,7 +186,13 @@ const AppMenu = () => {
           ],
         },
         { label: "Pembayaran Angsuran", icon: "pi pi-fw pi-credit-card", to: "/pembayaran_angsuran" },
-        { label: "Deposit Pembayaran", icon: "pi pi-fw pi-wallet", to: "/deposit" },
+        { label: "Deposit Pembayaran", 
+          icon: "pi pi-fw pi-wallet", 
+          items: [
+            { label: "Deposit", icon: "pi pi-fw pi-money-bill", to: "/deposit" },
+            { label: "Penggunaan Deposit", icon: "pi pi-fw pi-money-bill", to: "/penggunaan_deposit" },
+          ]
+        },
         { label: "Cetak Invoice & Kwitansi", icon: "pi pi-fw pi-print", to: "/cetak_invoice" },
         { label: "Produk & Layanan", icon: "pi pi-fw pi-tags", to: "/produkLayanan" },
         { label: "Jenis Produk & Layanan", icon: "pi pi-fw pi-th-large", to: "/jenis_produk" },
