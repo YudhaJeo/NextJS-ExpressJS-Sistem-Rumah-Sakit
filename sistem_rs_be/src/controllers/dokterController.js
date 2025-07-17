@@ -24,10 +24,10 @@ export async function getDokterById(req, res) {
 
 export async function createDokter(req, res) {
     try {
-        const { NAMADOKTER, IDPOLI, JADWAL } = req.body;
-        if (!NAMADOKTER) return res.status(400).json({ error: 'Nama Dokter wajib diisi' });
+        const { IDTENAGAMEDIS, IDPOLI, JADWAL } = req.body;
+        if (!IDTENAGAMEDIS) return res.status(400).json({ error: 'Nama Dokter wajib diisi' });
 
-        await DokterModel.createDokter({ NAMADOKTER, IDPOLI, JADWAL });
+        await DokterModel.createDokter({ IDTENAGAMEDIS, IDPOLI, JADWAL });
         res.json({ message: 'Dokter berhasil ditambahkan' });
     } catch (err) {
         console.error('Error:', err);
@@ -38,10 +38,10 @@ export async function createDokter(req, res) {
 export async function updateDokter(req, res) {
     try {
         const id = req.params.id;
-        const { NAMADOKTER, IDPOLI, JADWAL } = req.body;
-        if (!NAMADOKTER) return res.status(400).json({ error: 'Nama Dokter wajib diisi' });
+        const { IDTENAGAMEDIS, IDPOLI, JADWAL } = req.body;
+        if (!IDTENAGAMEDIS) return res.status(400).json({ error: 'Nama Dokter wajib diisi' });
 
-        await DokterModel.updateDokter(id, { NAMADOKTER, IDPOLI, JADWAL });
+        await DokterModel.updateDokter(id, { IDTENAGAMEDIS, IDPOLI, JADWAL });
         res.json({ message: 'Dokter berhasil diperbarui' });
     } catch (err) {
         console.error('Error:', err);

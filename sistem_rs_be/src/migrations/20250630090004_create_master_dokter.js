@@ -2,7 +2,8 @@
 export const up = function (knex) {
   return knex.schema.createTable('dokter', (table) => {
     table.increments('IDDOKTER').primary();
-    table.string('NAMADOKTER', 100).notNullable();
+    table.integer('IDTENAGAMEDIS').unsigned().notNullable()
+      .references('IDTENAGAMEDIS').inTable('master_tenaga_medis').onDelete('CASCADE');
     table
       .integer('IDPOLI')
       .unsigned()

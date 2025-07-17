@@ -20,7 +20,7 @@ const DokterPage = () => {
 
     const [formData, setFormData] = useState({
     IDDOKTER: 0,
-    NAMADOKTER: "",
+    IDTENAGAMEDIS: "",
     IDPOLI: "",
     JADWAL: [
         { HARI: "Senin", JAM_MULAI: "", JAM_SELESAI: "" },
@@ -32,6 +32,7 @@ const DokterPage = () => {
     });
 
     const [poliOptions, setPoliOptions] = useState([]);
+    const [tenagaOptions, setTenagaOptions] = useState([]);
 
     const toastRef = useRef(null);
     const router = useRouter();
@@ -45,6 +46,7 @@ const DokterPage = () => {
 
         fetchDokter();
         fetchPoli();
+        fetchTenaga();
     }, []);
 
     const fetchDokter = async () => {
@@ -74,19 +76,34 @@ const DokterPage = () => {
       }
     };
 
+    const fetchTenaga = async () => {
+         try {
+    const res = await axios.get(`${API_URL}/tenaga_medis`);
+    console.log('Data tenaga medis API:', res.data);
+    const options = res.data.data.map((master_tenaga_medis) => ({
+      label: `${master_tenaga_medis.NAMALENGKAP} - ${master_tenaga_medis.JENISTENAGAMEDIS}`,
+      value: master_tenaga_medis.IDTENAGAMEDIS,
+      }));
+
+    setTenagaOptions(options);
+      } catch (err) {
+    console.error('Gagal ambil data tenaga:', err);
+      }
+    };
+
     const handleSearch = (keyword) => {
         if (!keyword) {
             setData(originalData);
         } else {
             const filtered = originalData.filter((item) =>
-                item.NAMADOKTER.toLowerCase().includes(keyword.toLowerCase())
+                item.IDDOKTER.toLowerCase().includes(keyword.toLowerCase())
             );
             setData(filtered);
         }
     };
 
     const handleSubmit = async () => {
-    if (!formData.NAMADOKTER) {
+    if (!formData.IDTENAGAMEDIS) {
         toastRef.current?.showToast('01', 'Nama Dokter wajib diisi!');
         return;
     }
@@ -137,7 +154,7 @@ const handleEdit = (row) => {
 
     setFormData({
         IDDOKTER: row.IDDOKTER,
-        NAMADOKTER: row.NAMADOKTER,
+        IDTENAGAMEDIS: row.IDTENAGAMEDIS,
         IDPOLI: row.IDPOLI,
         JADWAL: jadwal
     });
@@ -147,7 +164,7 @@ const handleEdit = (row) => {
 
     const handleDelete = (row) => {
         confirmDialog({
-            message: `Apakah Anda yakin ingin menghapus Dokter ${row.NAMADOKTER}?`,
+            message: `Apakah Anda yakin ingin menghapus Dokter ${row.IDDOKTER}?`,
             header: 'Konfirmasi Hapus',
             icon: 'pi pi-exclamation-triangle',
             acceptLabel: 'Ya',
@@ -168,7 +185,7 @@ const handleEdit = (row) => {
     const resetForm = () => {
     setFormData({
         IDDOKTER: 0,
-        NAMADOKTER: "",
+        IDTENAGAMEDIS: "",
         IDPOLI: "",
         JADWAL: []
     });
@@ -208,6 +225,8 @@ const handleEdit = (row) => {
                 onSubmit={handleSubmit}
                 formData={formData}
                 poliOptions={poliOptions}
+                tenagaOptions={tenagaOptions}
+                
             />
         </div>
     );

@@ -7,7 +7,7 @@ import { Dropdown } from 'primereact/dropdown';
 
 const hariList = ['Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at"];
 
-const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit, poliOptions }) => {
+const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit, poliOptions, tenagaOptions }) => {
   const handleJadwalChange = (index, field, value) => {
     const updated = [...formData.JADWAL];
     updated[index][field] = value;
@@ -41,10 +41,14 @@ const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit, poliO
       >
         <div>
           <label>Nama Dokter</label>
-          <InputText
+          <Dropdown
             className="w-full mt-2"
-            value={formData.NAMADOKTER}
-            onChange={(e) => onChange({ ...formData, NAMADOKTER: e.target.value })}
+            options={tenagaOptions}
+            value={formData.IDTENAGAMEDIS}
+            onChange={(e) => onChange({ ...formData, IDTENAGAMEDIS: e.value })}
+            placeholder="Pilih Dokter"
+            filter
+            showClear
           />
         </div>
 
