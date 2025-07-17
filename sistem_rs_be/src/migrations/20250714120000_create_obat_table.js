@@ -2,7 +2,7 @@
 
 export const up = function (knex) {
     return knex.schema.createTable('obat', (table) => {
-      table.increments('IDOBAT').primary();
+      table.increments('IDOBAT').primary(); 
       table.string('NAMAOBAT', 100).notNullable().unique();
       
       table.enu('SATUAN', [
