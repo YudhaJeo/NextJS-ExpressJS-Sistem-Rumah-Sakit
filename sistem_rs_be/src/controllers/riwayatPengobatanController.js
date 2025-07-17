@@ -6,15 +6,18 @@ export async function getAllPengobatan(req, res) {
     const data = await PengobatanModel.getAllPengobatan();
     res.json({ data });
   } catch (err) {
+    console.error('🔥 ERROR GET /riwayat_pengobatan:', err);
     res.status(500).json({ error: err.message });
   }
 }
 
 export async function createPengobatan(req, res) {
   try {
-    const { IDPENDAFTARAN, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
+    const { IDPENDAFTARAN,IDDOKTER, IDPOLI, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
     await PengobatanModel.createPengobatan({
       IDPENDAFTARAN,
+      IDDOKTER,
+      IDPOLI,
       STATUSKUNJUNGAN,
       STATUSRAWAT,
       DIAGNOSA,
@@ -30,9 +33,11 @@ export async function createPengobatan(req, res) {
 export async function updatePengobatan(req, res) {
   try {
     const id = req.params.id;
-    const { STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
+    const { IDDOKTER, IDPOLI, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
 
     await PengobatanModel.updatePengobatan(id, {
+      IDDOKTER,
+      IDPOLI,
       STATUSKUNJUNGAN,
       STATUSRAWAT,
       DIAGNOSA,

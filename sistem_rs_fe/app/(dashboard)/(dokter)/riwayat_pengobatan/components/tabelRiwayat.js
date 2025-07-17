@@ -25,6 +25,7 @@ const TabelPengobatan = ({ data, loading, onEdit, onDelete }) => {
         body={(row) => formatTanggal(row.TANGGALKUNJUNGAN)} 
       />
       <Column field="KELUHAN" header="Keluhan" />
+      <Column field="NAMADOKTER" header="Dokter" />
       <Column field="POLI" header="Poli" />
       <Column field="STATUSKUNJUNGAN" header="Status Kunjungan" />
       <Column field="STATUSRAWAT" header="Status Rawat" />
