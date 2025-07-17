@@ -17,10 +17,12 @@ const RiwayatPengobatanPage = () => {
   const [form, setForm] = useState(initialForm());
   const [pendaftaranOptions, setPendaftaranOptions] = useState([]);
   const toastRef = useRef(null);
+  const [dokterOptions, setDokterOptions] = useState([]);
 
   useEffect(() => {
     fetchData();
     fetchPendaftaran();
+    fetchDokter();
   }, []);
 
   const fetchData = async () => {
@@ -45,13 +47,31 @@ const RiwayatPengobatanPage = () => {
         NAMALENGKAP: p.NAMALENGKAP,
         TANGGALKUNJUNGAN: p.TANGGALKUNJUNGAN?.split("T")[0] || "",
         KELUHAN: p.KELUHAN,
-        POLI: p.POLI,
       }));
       setPendaftaranOptions(options);
     } catch (err) {
       console.error("Gagal ambil data pendaftaran:", err);
     }
   };
+
+  const fetchDokter = async () => {
+         try {
+    const res = await axios.get(`${API_URL}/dokter`);
+    console.log('Data Dokter API:', res.data);
+    const options = res.data.map((dokter) => ({
+        label: dokter.NAMALENGKAP,
+        value: dokter.IDDOKTER,
+        IDTENAGAMEDIS: dokter.IDTENAGAMEDIS,
+        IDPOLI: dokter.IDPOLI,
+        POLI: dokter.NAMAPOLI,
+      }));
+
+
+    setDokterOptions(options);
+      } catch (err) {
+    console.error('Gagal ambil data Dokter:', err);
+      }
+    };
 
   const handleSubmit = async () => {
     const isEdit = !!form.IDPENGOBATAN;
@@ -61,6 +81,8 @@ const RiwayatPengobatanPage = () => {
 
     const payload = {
       IDPENDAFTARAN: form.IDPENDAFTARAN,
+      IDDOKTER: form.IDDOKTER,
+      IDPOLI: form.POLI,
       STATUSKUNJUNGAN: form.STATUSKUNJUNGAN,
       STATUSRAWAT: form.STATUSRAWAT,
       DIAGNOSA: form.DIAGNOSA,
@@ -143,6 +165,7 @@ const RiwayatPengobatanPage = () => {
         form={form}
         setForm={setForm}
         pendaftaranOptions={pendaftaranOptions}
+        dokterOptions={dokterOptions}
       />
     </div>
   );

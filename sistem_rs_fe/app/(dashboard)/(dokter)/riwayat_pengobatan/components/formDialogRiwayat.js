@@ -8,12 +8,13 @@ import { classNames } from 'primereact/utils';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 
-const FormDialogPengobatan = ({ visible, onHide, onSubmit, form, setForm, pendaftaranOptions }) => {
+const FormDialogPengobatan = ({ visible, onHide, onSubmit, form, setForm, pendaftaranOptions, dokterOptions }) => {
   const [errors, setErrors] = useState({});
 
   const validate = () => {
     const newErrors = {};
     if (!form.IDPENDAFTARAN) newErrors.IDPENDAFTARAN = 'Pendaftaran wajib dipilih';
+    if (!form.IDTENAGAMEDIS) newErrors.IDTENAGAMEDIS = 'Dokter wajib dipilih';
     if (!form.STATUSKUNJUNGAN) newErrors.STATUSKUNJUNGAN = 'Status Kunjungan wajib diisi';
     if (!form.STATUSRAWAT) newErrors.STATUSRAWAT = 'Status Rawat wajib diisi';
     if (!form.DIAGNOSA) newErrors.DIAGNOSA = 'Diagnosa wajib diisi';
@@ -55,7 +56,6 @@ const FormDialogPengobatan = ({ visible, onHide, onSubmit, form, setForm, pendaf
                 NAMALENGKAP: selected.NAMALENGKAP,
                 TANGGALKUNJUNGAN: selected.TANGGALKUNJUNGAN,
                 KELUHAN: selected.KELUHAN,
-                POLI: selected.POLI,
                 STATUSKUNJUNGAN: selected.STATUSKUNJUNGAN || 'Diperiksa',
               });
             }}
@@ -80,6 +80,30 @@ const FormDialogPengobatan = ({ visible, onHide, onSubmit, form, setForm, pendaf
           <label className="font-medium">Tanggal Kunjungan</label>
           <Calendar value={form.TANGGALKUNJUNGAN ? new Date(form.TANGGALKUNJUNGAN) : undefined} disabled showIcon className="w-full mt-2" />
         </div>
+
+        <div>
+          <label>Nama Dokter</label>
+          <Dropdown
+            className={classNames("w-full mt-2", { "p-invalid": errors.IDTENAGAMEDIS })}
+            options={dokterOptions}
+            value={form.IDTENAGAMEDIS}
+            onChange={(e) => {
+              const selected = dokterOptions.find((d) => d.value === e.value);
+              setForm({
+                ...form,
+                IDDOKTER: e.value,
+                IDTENAGAMEDIS: selected?.IDTENAGAMEDIS || "",
+                IDPOLI: selected?.IDPOLI || "",
+                POLI: selected?.POLI || "",
+              });
+            }}
+            placeholder="Pilih Dokter"
+            filter
+            showClear
+          />
+          {errors.IDTENAGAMEDIS && <small className="p-error">{errors.IDTENAGAMEDIS}</small>}
+        </div>
+
 
         <div>
           <label className="font-medium">Poli</label>
