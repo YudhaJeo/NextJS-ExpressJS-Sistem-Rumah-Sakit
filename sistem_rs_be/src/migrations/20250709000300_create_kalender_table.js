@@ -7,7 +7,7 @@ export const up = function (knex) {
   return knex.schema.createTable('kalender', (table) => {
     table.increments('ID').primary();
     table.integer('IDDOKTER').unsigned().notNullable()
-      .references('IDDOKTER').inTable('data_dokter').onDelete('CASCADE');
+      .references('IDDOKTER').inTable('dokter').onDelete('CASCADE');
     table.date('TANGGAL').notNullable().unique();
     table.enu('STATUS', ['libur', 'perjanjian']).notNullable();
     table.string('KETERANGAN', 100).notNullable();

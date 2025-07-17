@@ -94,7 +94,6 @@ const AppMenu = () => {
     {
       label: "Menu",
       items: [
-        { label: "Data Dokter", icon: "pi pi-fw pi-user", to: "/data_dokter" },
         { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
         { label: "Riwayat Pengobatan", icon: "pi pi-fw pi-folder-open", to: "/riwayat_pengobatan" },
         { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/manajemen_komisi" },
