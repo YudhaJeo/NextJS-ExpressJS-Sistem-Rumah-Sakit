@@ -89,13 +89,16 @@ const FormObatInap = ({
         </div>
 
         <div className="">
-          <label>Jumlah</label>
+          <label htmlFor="stok">Jumlah</label>
           <InputNumber
             inputId="stok"
             className="w-full mt-2"
             inputClassName={errors.JUMLAH ? 'p-invalid' : ''}
             value={form.JUMLAH}
-            onValueChange={(e) => setForm({ ...form, JUMLAH: e.value })}
+            onValueChange={(e) => {
+              setForm({ ...form, JUMLAH: e.value });
+            }}
+
           />
           {errors.JUMLAH && (
             <small className="text-red-500">{errors.JUMLAH}</small>

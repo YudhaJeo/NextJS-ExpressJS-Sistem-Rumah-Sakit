@@ -37,24 +37,28 @@ export async function insertObatInap(req, res) {
   }
   
 
-export async function updateObatInap(req, res) {
-  try {
-    const id = req.params.id;
-    const { JUMLAH } = req.body;
-
-    const existing = await ObatInap.getById(id);
-    if (!existing) return res.status(404).json({ error: 'Data tidak ditemukan' });
-
-    const HARGA = existing.HARGA;
-    const TOTAL_HARGA = HARGA * JUMLAH;
-
-    await ObatInap.update(id, { JUMLAH, TOTAL_HARGA });
-
-    res.json({ message: 'Data obat inap berhasil diperbarui' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  export async function updateObatInap(req, res) {
+    try {
+      const id = req.params.id;
+      const { JUMLAH } = req.body;
+  
+      const existing = await ObatInap.getById(id);
+      if (!existing) return res.status(404).json({ error: 'Data tidak ditemukan' });
+  
+      const HARGA = existing.HARGA;
+      const TOTAL = HARGA * JUMLAH;
+  
+      const data = { JUMLAH, TOTAL };
+  
+      await ObatInap.update(id, data); 
+  
+      res.json({ message: 'Data obat inap berhasil diperbarui' });
+    } catch (err) {
+      console.error('Update Error:', err);
+      res.status(500).json({ error: 'Terjadi kesalahan saat memperbarui data' });
+    }
   }
-}
+  
 
 export async function deleteObatInap(req, res) {
   try {

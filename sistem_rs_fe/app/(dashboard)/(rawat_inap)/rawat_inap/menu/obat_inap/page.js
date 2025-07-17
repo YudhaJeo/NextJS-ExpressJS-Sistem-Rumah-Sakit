@@ -109,13 +109,15 @@ const Page = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-  
+
     const isEdit = !!form.IDOBATINAP;
     const url = isEdit
       ? `${API_URL}/obat_inap/${form.IDOBATINAP}`
       : `${API_URL}/obat_inap`;
   
-    const harga = form.HARGA || 0;
+    // fix: pastikan ambil harga dari list jika form.HARGA hilang
+    const selectedObat = obatOptions.find((o) => o.value === form.IDOBAT);
+    const harga = selectedObat?.HARGA || form.HARGA || 0;
     const jumlah = form.JUMLAH || 0;
     const total = harga * jumlah;
   
@@ -131,6 +133,8 @@ const Page = () => {
       const response = isEdit
         ? await axios.put(url, payload)
         : await axios.post(url, payload);
+
+      // console.log('Payload gw:', payload)
   
       if (response.status === 200 && response.data?.message) {
         toastRef.current?.showToast('00', response.data.message);
@@ -161,9 +165,6 @@ const Page = () => {
     });
     setDialogVisible(true);
   };
-  
-  
-  
 
   const handleDelete = (row) => {
     confirmDialog({
