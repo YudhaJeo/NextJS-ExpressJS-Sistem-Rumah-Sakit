@@ -38,7 +38,7 @@ const TabelObatInap = ({ data, loading, onEdit, onDelete }) => {
           new Intl.NumberFormat('id-ID', {
             style: 'currency',
             currency: 'IDR',
-          }).format(rowData.HARGA_SATUAN || 0)
+          }).format(rowData.HARGA || 0)
         }
       />
       <Column field="JUMLAH" header="Jumlah" />

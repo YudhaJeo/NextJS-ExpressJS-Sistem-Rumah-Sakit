@@ -1,48 +1,46 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\obat_inap\components\formObatInap.js
+// app\(dashboard)\(rawat_inap)\rawat_inap\menu\rawat_inap\components\formTindakan.js
 'use client';
+
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
-import { InputNumber } from 'primereact/inputnumber';
 import React from 'react';
-import { Calendar } from 'primereact/calendar';
-import { InputTextarea } from 'primereact/inputtextarea';
+import { InputNumber } from 'primereact/inputnumber';
 
-const FormObatInap = ({
-  visible,
-  onHide,
-  onSubmit,
-  form,
+const FormObatInap = ({ 
+  visible, 
+  onHide, 
+  onSubmit, 
+  form, 
   setForm,
   errors,
-  rawatInapOptions,
+  pasienOptions,
   obatOptions
 }) => {
-  const inputClass = field =>
+  const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
-
   return (
     <Dialog
-      header={form.IDOBATINAP ? 'Edit Obat Inap' : 'Tambah Obat Inap'}
+      header={form.IDOBATINAP ? 'Edit Data Obat Pasien' : 'Tambah Obat Pasien'}
       visible={visible}
       onHide={onHide}
       style={{ width: '30vw' }}
     >
       <form
         className="space-y-3"
-        onSubmit={e => {
+        onSubmit={(e) => {
           e.preventDefault();
           onSubmit();
         }}
       >
-        <div>
-          <label>Rawat Inap</label>
+        <div className="mt-2">
+          <label>Pasien</label>
           <Dropdown
             className={inputClass('IDRAWATINAP')}
             value={form.IDRAWATINAP}
-            options={rawatInapOptions}
-            onChange={e => setForm({ ...form, IDRAWATINAP: e.value })}
-            placeholder="Pilih Pasien"
+            options={pasienOptions}
+            onChange={(e) => setForm({ ...form, IDRAWATINAP: e.target.value })}
+            placeholder="Pilih pasien yang sedang dirawat"
             filter
             showClear
             optionLabel="label"
@@ -50,54 +48,71 @@ const FormObatInap = ({
           {errors.IDRAWATINAP && <small className="text-red-500">{errors.IDRAWATINAP}</small>}
         </div>
 
-        <div>
-          <label>Obat</label>
+        <div className='mt-2'>
+          <label className="">Pilih Obat</label>
           <Dropdown
             className={inputClass('IDOBAT')}
             value={form.IDOBAT}
             options={obatOptions}
-            onChange={e => setForm({ ...form, IDOBAT: e.value })}
-            placeholder="Pilih Obat"
+            onChange={(e) => {
+              const selected = obatOptions.find((p) => p.value === e.value);
+              const harga = selected?.HARGA || 0;
+              const jumlah = form.JUMLAH || 0;
+            
+              setForm({
+                ...form,
+                IDOBAT: e.value,
+                HARGA: harga,
+                TOTAL: harga * jumlah, 
+              });
+            }}            
+            placeholder="Pilih obat yang diberikan ke pasien"
             filter
             showClear
             optionLabel="label"
           />
-          {errors.IDOBAT && <small className="text-red-500">{errors.IDOBAT}</small>}
+          {errors.JUMLAH && (
+            <small className="text-red-500">{errors.JUMLAH}</small>
+          )}
         </div>
 
-        <div>
+        <div className='mt-2'>
+          <label>Harga</label>
+          <InputNumber 
+            className="w-full mt-2" 
+            value={form.HARGA || ''} 
+            disabled
+            mode='currency'
+            currency='IDR'
+            locale='id-ID'
+          />
+        </div>
+
+        <div className="">
           <label>Jumlah</label>
           <InputNumber
-            className={inputClass('JUMLAH')}
+            inputId="stok"
+            className="w-full mt-2"
+            inputClassName={errors.JUMLAH ? 'p-invalid' : ''}
             value={form.JUMLAH}
-            onValueChange={e => setForm({ ...form, JUMLAH: e.value })}
-            min={1}
-            showButtons
-            mode="decimal"
+            onValueChange={(e) => setForm({ ...form, JUMLAH: e.value })}
           />
-          {errors.JUMLAH && <small className="text-red-500">{errors.JUMLAH}</small>}
+          {errors.JUMLAH && (
+            <small className="text-red-500">{errors.JUMLAH}</small>
+          )}
         </div>
 
-        <div>
-          <label>Tanggal Pemberian</label>
-          <Calendar
-            className={inputClass('DIBERIKANPADA')}
-            value={form.DIBERIKANPADA ? new Date(form.DIBERIKANPADA) : null}
-            onChange={e => setForm({ ...form, DIBERIKANPADA: e.value })}
-            showIcon
-            dateFormat="yy-mm-dd"
+        <div className='mt-2'>
+          <label>Total</label>
+          <InputNumber 
+            className="w-full mt-2" 
+            value={form.TOTAL || ''} 
+            disabled
+            mode='currency'
+            currency='IDR'
+            locale='id-ID'
           />
-        </div>
-
-        <div>
-          <label>Catatan</label>
-          <InputTextarea
-            className={inputClass('CATATAN')}
-            value={form.CATATAN || ''}
-            onChange={e => setForm({ ...form, CATATAN: e.target.value })}
-            rows={3}
-          />
-        </div>
+        </div>
 
         <div className="text-right pt-3">
           <Button type="submit" label="Simpan" icon="pi pi-save" />

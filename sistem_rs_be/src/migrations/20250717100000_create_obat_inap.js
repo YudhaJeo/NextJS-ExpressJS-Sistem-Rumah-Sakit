@@ -17,7 +17,7 @@ export const up = function (knex) {
       .inTable('obat')
       .onDelete('RESTRICT');    
     table.integer('JUMLAH').notNullable();
-    table.double('HARGA_SATUAN').notNullable();
+    table.double('HARGA').notNullable();
     table.double('TOTAL').notNullable();
     table.timestamps(true, true);
   });
