@@ -59,13 +59,12 @@ const RiwayatPengobatanPage = () => {
     const res = await axios.get(`${API_URL}/dokter`);
     console.log('Data Dokter API:', res.data);
     const options = res.data.map((dokter) => ({
-        label: dokter.NAMALENGKAP,
+        label: `${dokter.NAMALENGKAP} - ${dokter.NAMAPOLI}`,
         value: dokter.IDDOKTER,
         IDTENAGAMEDIS: dokter.IDTENAGAMEDIS,
         IDPOLI: dokter.IDPOLI,
         POLI: dokter.NAMAPOLI,
       }));
-
 
     setDokterOptions(options);
       } catch (err) {
