@@ -10,7 +10,7 @@ const AppMenu = () => {
     {
       label: "dashboard",
       items: [
-        { label: "Dashboard utama", icon: "pi pi-fw pi-chart-bar", to: "/"},
+        { label: "Dashboard Utama", icon: "pi pi-fw pi-chart-bar", to: "/"},
       ],
     },
     {
