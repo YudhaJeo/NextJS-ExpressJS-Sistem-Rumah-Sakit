@@ -18,6 +18,7 @@ const RiwayatPengobatanPage = () => {
   const [pendaftaranOptions, setPendaftaranOptions] = useState([]);
   const toastRef = useRef(null);
   const [dokterOptions, setDokterOptions] = useState([]);
+  const [allDokterOptions, setAllDokterOptions] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -47,6 +48,7 @@ const RiwayatPengobatanPage = () => {
         NAMALENGKAP: p.NAMALENGKAP,
         TANGGALKUNJUNGAN: p.TANGGALKUNJUNGAN?.split("T")[0] || "",
         KELUHAN: p.KELUHAN,
+        POLI: p.POLI,
       }));
       setPendaftaranOptions(options);
     } catch (err) {
@@ -55,22 +57,30 @@ const RiwayatPengobatanPage = () => {
   };
 
   const fetchDokter = async () => {
-         try {
-    const res = await axios.get(`${API_URL}/dokter`);
-    console.log('Data Dokter API:', res.data);
-    const options = res.data.map((dokter) => ({
+    try {
+      const res = await axios.get(`${API_URL}/dokter`);
+      console.log("Data Dokter API:", res.data);
+      const options = res.data.map((dokter) => ({
         label: `${dokter.NAMALENGKAP} - ${dokter.NAMAPOLI}`,
         value: dokter.IDDOKTER,
         IDTENAGAMEDIS: dokter.IDTENAGAMEDIS,
-        IDPOLI: dokter.IDPOLI,
         POLI: dokter.NAMAPOLI,
       }));
+      setAllDokterOptions(options);
+      setDokterOptions([]);
+    } catch (err) {
+      console.error("Gagal ambil data Dokter:", err);
+    }
+  };
 
-    setDokterOptions(options);
-      } catch (err) {
-    console.error('Gagal ambil data Dokter:', err);
-      }
-    };
+  useEffect(() => {
+    if (form.POLI) {
+      const filtered = allDokterOptions.filter((dokter) => dokter.POLI === form.POLI);
+      setDokterOptions(filtered);
+    } else {
+      setDokterOptions([]);
+    }
+  }, [form.POLI, allDokterOptions]);
 
   const handleSubmit = async () => {
     const isEdit = !!form.IDPENGOBATAN;

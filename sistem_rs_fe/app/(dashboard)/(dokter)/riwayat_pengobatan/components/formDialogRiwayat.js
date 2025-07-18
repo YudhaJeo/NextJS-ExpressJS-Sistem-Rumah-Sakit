@@ -8,8 +8,27 @@ import { classNames } from 'primereact/utils';
 import { Calendar } from 'primereact/calendar';
 import { Button } from 'primereact/button';
 
-const FormDialogPengobatan = ({ visible, onHide, onSubmit, form, setForm, pendaftaranOptions, dokterOptions }) => {
+const FormDialogPengobatan = ({
+  visible,
+  onHide,
+  onSubmit,
+  form,
+  setForm,
+  pendaftaranOptions,
+  dokterOptions
+}) => {
   const [errors, setErrors] = useState({});
+  const [filteredDokters, setFilteredDokters] = useState([]);
+
+  // Filter dokter berdasarkan POLI
+  useEffect(() => {
+    if (form.POLI) {
+      const filtered = dokterOptions.filter((d) => d.POLI === form.POLI);
+      setFilteredDokters(filtered);
+    } else {
+      setFilteredDokters([]);
+    }
+  }, [form.POLI, dokterOptions]);
 
   const validate = () => {
     const newErrors = {};
@@ -30,6 +49,33 @@ const FormDialogPengobatan = ({ visible, onHide, onSubmit, form, setForm, pendaf
     }
   };
 
+  const handlePendaftaranChange = (e) => {
+    const selected = pendaftaranOptions.find((p) => p.value === e.value);
+    const selectedPoli = selected?.POLI || '';
+
+    setForm({
+      ...form,
+      IDPENDAFTARAN: e.value,
+      NIK: selected.NIK,
+      NAMALENGKAP: selected.NAMALENGKAP,
+      TANGGALKUNJUNGAN: selected.TANGGALKUNJUNGAN,
+      KELUHAN: selected.KELUHAN,
+      STATUSKUNJUNGAN: selected.STATUSKUNJUNGAN || 'Diperiksa',
+      POLI: selectedPoli,
+      IDTENAGAMEDIS: '',
+      IDDOKTER: ''
+    });
+  };
+
+  const handleDokterChange = (e) => {
+    const selected = filteredDokters.find((d) => d.value === e.value);
+    setForm({
+      ...form,
+      IDDOKTER: e.value,
+      IDTENAGAMEDIS: selected?.IDTENAGAMEDIS || ''
+    });
+  };
+
   return (
     <Dialog
       header={form.IDPENGOBATAN ? 'Edit Riwayat Pengobatan' : 'Tambah Riwayat Pengobatan'}
@@ -47,18 +93,7 @@ const FormDialogPengobatan = ({ visible, onHide, onSubmit, form, setForm, pendaf
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDPENDAFTARAN })}
             value={form.IDPENDAFTARAN}
             options={pendaftaranOptions}
-            onChange={(e) => {
-              const selected = pendaftaranOptions.find((p) => p.value === e.value);
-              setForm({
-                ...form,
-                IDPENDAFTARAN: e.value,
-                NIK: selected.NIK,
-                NAMALENGKAP: selected.NAMALENGKAP,
-                TANGGALKUNJUNGAN: selected.TANGGALKUNJUNGAN,
-                KELUHAN: selected.KELUHAN,
-                STATUSKUNJUNGAN: selected.STATUSKUNJUNGAN || 'Diperiksa',
-              });
-            }}
+            onChange={handlePendaftaranChange}
             placeholder="Pilih pendaftaran"
             filter
             showClear
@@ -78,32 +113,28 @@ const FormDialogPengobatan = ({ visible, onHide, onSubmit, form, setForm, pendaf
 
         <div>
           <label className="font-medium">Tanggal Kunjungan</label>
-          <Calendar value={form.TANGGALKUNJUNGAN ? new Date(form.TANGGALKUNJUNGAN) : undefined} disabled showIcon className="w-full mt-2" />
+          <Calendar
+            value={form.TANGGALKUNJUNGAN ? new Date(form.TANGGALKUNJUNGAN) : null}
+            disabled
+            showIcon
+            className="w-full mt-2"
+          />
         </div>
 
         <div>
           <label>Nama Dokter</label>
           <Dropdown
             className={classNames("w-full mt-2", { "p-invalid": errors.IDTENAGAMEDIS })}
-            options={dokterOptions}
-            value={form.IDTENAGAMEDIS}
-            onChange={(e) => {
-              const selected = dokterOptions.find((d) => d.value === e.value);
-              setForm({
-                ...form,
-                IDDOKTER: e.value,
-                IDTENAGAMEDIS: selected?.IDTENAGAMEDIS || "",
-                IDPOLI: selected?.IDPOLI || "",
-                POLI: selected?.POLI || "",
-              });
-            }}
-            placeholder="Pilih Dokter"
+            options={filteredDokters}
+            value={form.IDDOKTER}
+            onChange={handleDokterChange}
+            placeholder={form.POLI ? `Pilih Dokter Poli ${form.POLI}` : 'Pilih Dokter'}
             filter
             showClear
+            disabled={!form.POLI}
           />
           {errors.IDTENAGAMEDIS && <small className="p-error">{errors.IDTENAGAMEDIS}</small>}
         </div>
-
 
         <div>
           <label className="font-medium">Poli</label>
