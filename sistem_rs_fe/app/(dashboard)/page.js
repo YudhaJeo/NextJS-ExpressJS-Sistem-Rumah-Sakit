@@ -9,7 +9,7 @@ import { Card } from 'primereact/card';
 import { Tag } from 'primereact/tag';
 import { LayoutContext } from '../../layout/context/layoutcontext';
 
-const URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Dashboard = () => {
   const { layoutConfig } = useContext(LayoutContext);
@@ -22,7 +22,7 @@ const Dashboard = () => {
     const token = Cookies.get('token');
     if (!token) return router.push('/login');
 
-    axios.get(`${URL}/dashboard`)
+    axios.get(`${API_URL}/dashboard`)
       .then(res => {
         setData(res.data); 
         setChartFromData(res.data.chart);
