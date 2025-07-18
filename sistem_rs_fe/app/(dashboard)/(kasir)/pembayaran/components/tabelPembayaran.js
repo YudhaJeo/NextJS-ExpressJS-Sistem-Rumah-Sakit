@@ -21,6 +21,10 @@ const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
     })}`;
   };
 
+  const keteranganBodyTemplate = (row) => {
+    return row.KETERANGAN && row.KETERANGAN.trim() !== '' ? row.KETERANGAN : '-';
+  };
+
   return (
     <DataTable
       value={data}
@@ -38,7 +42,7 @@ const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
       <Column field="METODEPEMBAYARAN" header="Metode" />
       <Column field="JUMLAHBAYAR" header="Jumlah Bayar" body={jumlahBodyTemplate} />
       <Column field="TANGGALBAYAR" header="Tanggal Bayar" body={tanggalBodyTemplate} />
-      <Column field="KETERANGAN" header="Keterangan" />
+      <Column field="KETERANGAN" header="Keterangan" body={keteranganBodyTemplate} />
       <Column
         header="Aksi"
         body={(row) => (

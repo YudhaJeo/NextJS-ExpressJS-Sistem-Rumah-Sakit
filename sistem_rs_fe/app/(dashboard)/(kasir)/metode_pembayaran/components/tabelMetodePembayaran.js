@@ -27,6 +27,10 @@ const TabelMetodePembayaran = ({ data, loading, onEdit, onDelete }) => {
     );
   };
 
+  const catatanBodyTemplate = (row) => {
+    return row.CATATAN && row.CATATAN.trim() !== '' ? row.CATATAN : '-';
+  };
+
   return (
     <DataTable
       value={data}
@@ -44,7 +48,7 @@ const TabelMetodePembayaran = ({ data, loading, onEdit, onDelete }) => {
         sortable
       />
       <Column field="STATUS" header="Status" body={statusBodyTemplate} />
-      <Column field="CATATAN" header="Catatan" />
+      <Column field="CATATAN" header="Catatan" body={catatanBodyTemplate} />
       <Column
         header="Aksi"
         body={(row) => (

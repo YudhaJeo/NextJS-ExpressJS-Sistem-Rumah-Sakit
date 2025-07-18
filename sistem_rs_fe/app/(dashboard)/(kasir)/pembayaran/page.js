@@ -101,7 +101,7 @@ const Page = () => {
 
   const fetchMetode = async () => {
     try {
-      const res = await axios.get(`${API_URL}/metodePembayaran/aktif`);
+      const res = await axios.get(`${API_URL}/metode_pembayaran/aktif`);
       const options = res.data.data.map((metode) => ({
         label: metode.NAMA,
         value: metode.NAMA,
