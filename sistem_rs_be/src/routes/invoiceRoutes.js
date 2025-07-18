@@ -5,6 +5,7 @@ import { verifyToken } from '../middlewares/jwt.js';
 const router = express.Router();
 
 router.get('/', InvoiceController.getAllInvoice);
+router.get('/options', InvoiceController.getInvoiceOptions);
 router.get('/:id', InvoiceController.getInvoiceById);
 router.post('/', InvoiceController.createInvoice);
 router.put('/:id', InvoiceController.updateInvoice);

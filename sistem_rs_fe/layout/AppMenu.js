@@ -190,7 +190,7 @@ const AppMenu = () => {
           icon: "pi pi-fw pi-wallet", 
           items: [
             { label: "Deposit", icon: "pi pi-fw pi-money-bill", to: "/deposit" },
-            { label: "Penggunaan Deposit", icon: "pi pi-fw pi-money-bill", to: "/penggunaan_deposit" },
+            { label: "Deposit Penggunaan", icon: "pi pi-fw pi-money-bill", to: "/deposit_penggunaan" },
           ]
         },
         { label: "Cetak Invoice & Kwitansi", icon: "pi pi-fw pi-print", to: "/cetak_invoice" },

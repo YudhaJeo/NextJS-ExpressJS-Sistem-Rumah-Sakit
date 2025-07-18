@@ -104,3 +104,21 @@ export async function deleteInvoice(req, res) {
     res.status(500).json({ success: false, message: err.message });
   }
 }
+
+export async function getInvoiceOptions(req, res) {
+  try {
+    const rows = await db('invoice')
+      .leftJoin('pasien', 'invoice.NIK', 'pasien.NIK') // ✅ Perbaikan di sini
+      .select(
+        'invoice.IDINVOICE as value',
+        db.raw('CONCAT("INV-", invoice.IDINVOICE) as label'),
+        'pasien.NIK',
+        'pasien.NAMALENGKAP as NAMAPASIEN'
+      );
+
+    res.status(200).json({ success: true, data: rows });
+  } catch (err) {
+    console.error('Error getInvoiceOptions:', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+}

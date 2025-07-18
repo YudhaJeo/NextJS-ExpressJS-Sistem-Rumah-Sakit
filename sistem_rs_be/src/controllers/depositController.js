@@ -108,3 +108,21 @@ export async function deleteDeposit(req, res) {
     res.status(500).json({ success: false, message: err.message });
   }
 }
+
+export async function getDepositOptions(req, res) {
+  try {
+    const rows = await db('deposit')
+      .leftJoin('pasien', 'deposit.NIK', 'pasien.NIK') // ✅ Perbaikan di sini
+      .select(
+        'deposit.IDDEPOSIT as value',
+        db.raw('CONCAT("DEP-", deposit.IDDEPOSIT) as label'),
+        'pasien.NIK',
+        'pasien.NAMALENGKAP as NAMAPASIEN'
+      );
+
+    res.status(200).json({ success: true, data: rows });
+  } catch (err) {
+    console.error('Error getDepositOptions:', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+}
