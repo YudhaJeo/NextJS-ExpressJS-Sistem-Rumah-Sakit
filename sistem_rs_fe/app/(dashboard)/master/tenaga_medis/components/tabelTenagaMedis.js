@@ -4,7 +4,23 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 
+const statusSeverity = {
+  TETAP: "success",
+  KONTRAK: "info",
+  HONORER: "warning",
+};
+
 const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
+  const statusKepegawaianBody = (row) => {
+    const status = (row.STATUSKEPEGAWAIAN || "").toUpperCase();
+    return (
+      <Tag
+        value={row.STATUSKEPEGAWAIAN || "-"}
+        severity={statusSeverity[status] || "secondary"}
+      />
+    );
+  };
+  
   return (
     <DataTable
       value={data}
@@ -60,7 +76,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
         sortable
       />
       <Column field="UNITKERJA" header="Unit Kerja" sortable />
-      <Column field="STATUSKEPEGAWAIAN" header="Status Kepegawaian" sortable />
+      <Column field="STATUSKEPEGAWAIAN" header="Status Kepegawaian" body={statusKepegawaianBody} sortable />
       <Column
         field="FOTOPROFIL"
         header="Foto Profil"
