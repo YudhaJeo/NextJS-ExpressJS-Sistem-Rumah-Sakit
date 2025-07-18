@@ -61,6 +61,13 @@ export default function TabelKalender({
       }}
       displayEventTime={false}
       height="auto"
+      dayCellDidMount={(info) => {
+        const date = info.date;
+        if (date.getDay() === 0) {
+          info.el.style.backgroundColor = '#ffe4e6'; // warna background hari Minggu
+          info.el.style.color = '#dc2626'; // warna teks hari Minggu
+        }
+      }}
     />
   );
 }
