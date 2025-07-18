@@ -4,17 +4,18 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import TabelAntrian from './components/tabelAntrian';
 import { Toast } from 'primereact/toast';
+import { io } from 'socket.io-client';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || API_URL.replace("http", "ws");
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 function DataAntrian() {
   const [data, setData] = useState([]);
   const [loketList, setLoketList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentId, setCurrentId] = useState(null);
-
   const toastRef = useRef(null);
+  const socketRef = useRef(null);
 
   useEffect(() => {
     fetchData();
@@ -23,28 +24,24 @@ function DataAntrian() {
     const savedId = localStorage.getItem('currentAntrianId');
     if (savedId) setCurrentId(parseInt(savedId));
 
-    const socket = new WebSocket(`${WS_URL}/api/ws`);
+    const socket = io(SOCKET_URL);
+    socketRef.current = socket;
 
-    socket.onopen = () => {
-      console.log("WebSocket tersambung");
+    socket.on('connect', () => {
+      console.log('🧠 Socket.IO tersambung');
+    });
+
+    socket.on('antrian-update', () => {
+      fetchData();
+    });
+
+    socket.on('disconnect', () => {
+      console.warn('⚠️ Socket.IO terputus');
+    });
+
+    return () => {
+      socket.disconnect();
     };
-
-    socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      if (message.type === 'update') {
-        fetchData();
-      }
-    };
-
-    socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
-
-    socket.onclose = () => {
-      console.warn("WebSocket terputus");
-    };
-
-    return () => socket.close();
   }, []);
 
   const fetchData = async () => {
@@ -84,13 +81,10 @@ function DataAntrian() {
 
       setCurrentId(panggilan.ID);
       localStorage.setItem('currentAntrianId', panggilan.ID);
-
       localStorage.setItem('lastPanggilan', JSON.stringify({
         no: panggilan.NO_ANTRIAN,
         loket: panggilan.LOKET,
       }));
-
-      fetchData();
     } catch (err) {
       console.error('Gagal memanggil:', err);
       toastRef.current.show({
@@ -110,8 +104,6 @@ function DataAntrian() {
         summary: 'Reset berhasil',
         detail: `Antrian di loket ${loketName} telah direset.`,
       });
-
-      fetchData();
     } catch (err) {
       console.error('Gagal reset antrian:', err);
       toastRef.current.show({

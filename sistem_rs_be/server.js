@@ -1,38 +1,28 @@
-import app from './src/app.js';
 import { config } from 'dotenv';
 import { createServer } from 'http';
-import WebSocket, { WebSocketServer } from 'ws'; 
+import { Server } from 'socket.io';
+import app from './src/app.js';
 
 config();
 
 const port = 4000;
 const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
+});
 
-const wss = new WebSocketServer({ server, path: '/api/ws' });
-
-wss.on('connection', (ws) => {
-  console.log('🔌 Klien WebSocket tersambung');
-
-  ws.on('message', (message) => {
-    console.log('📩 Pesan diterima:', message.toString());
-  });
-
-  ws.on('close', () => {
-    console.log('❌ Koneksi WebSocket ditutup');
-  });
+io.on('connection', (socket) => {
+  socket.on('disconnect', () => {});
 });
 
 function broadcastUpdate() {
-  console.log('📡 Broadcasting update ke', wss.clients.size, 'klien...');
-  wss.clients.forEach((client) => {
-    if (client.readyState === WebSocket.OPEN) { 
-      client.send(JSON.stringify({ type: 'update' }));
-    }
-  });
+  io.emit('antrian-update');
 }
-
 app.set('broadcastUpdate', broadcastUpdate);
 
 server.listen(port, () => {
-  console.log(`🚀 Server berjalan pada http://localhost:${port}`);
+  console.log(`🚀 Server berjalan di http://localhost:${port}`);
 });

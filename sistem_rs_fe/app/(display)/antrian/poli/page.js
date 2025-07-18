@@ -84,6 +84,12 @@ function DisplayAntrianPoli() {
     };
   }, []);
 
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
   useEffect(() => {
     if (typeof window !== 'undefined' && window.qz) {
       window.qz.websocket.connect().catch(err => {
@@ -357,6 +363,7 @@ function DisplayAntrianPoli() {
           />
         </span>
 
+      {hydrated && (
         <div className="font-bold text-sm text-right">
           {time?.toLocaleString('id-ID', {
             weekday: 'long',
@@ -368,6 +375,7 @@ function DisplayAntrianPoli() {
             second: '2-digit'
           })}
         </div>
+      )}
       </div>
 
       <div className={`px-[${config.containerPadding}] pb-2 shrink-0`} />
