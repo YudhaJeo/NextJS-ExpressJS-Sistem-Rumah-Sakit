@@ -31,15 +31,14 @@ const TabelTenagaNonMedis = ({ data, loading, onEdit, onDelete }) => {
       size="small"
       scrollable
     >
-      <Column field="KODETENAGANONMEDIS" header="Kode Tenaga Non Medis" sortable />
-      <Column field="NAMALENGKAP" header="Nama Lengkap" sortable />
+      <Column field="KODETENAGANONMEDIS" header="Kode"  />
+      <Column field="NAMALENGKAP" header="Nama"  />
       <Column
         field="JENISKELAMIN"
         header="Jenis Kelamin"
         body={(row) => (row.JENISKELAMIN === "L" ? "Laki-laki" : "Perempuan")}
-        sortable
       />
-      <Column field="TEMPATLAHIR" header="Tempat Lahir" sortable />
+      <Column field="TEMPATLAHIR" header="Tempat Lahir"  />
       <Column
         field="TANGGALLAHIR"
         header="Tanggal Lahir"
@@ -48,14 +47,14 @@ const TabelTenagaNonMedis = ({ data, loading, onEdit, onDelete }) => {
             ? new Date(row.TANGGALLAHIR).toLocaleDateString("id-ID")
             : ""
         }
-        sortable
+        
       />
-      <Column field="NOHP" header="No HP" sortable />
-      <Column field="EMAIL" header="Email" sortable />
-      <Column field="JENISTENAGANONMEDIS" header="Jenis Tenaga Non Medis" sortable />
-      <Column field="SPESIALISASI" header="Spesialisasi" sortable />
-      <Column field="UNITKERJA" header="Unit Kerja" sortable />
-      <Column field="STATUSKEPEGAWAIAN" header="Status Kepegawaian" body={statusKepegawaianBody} sortable />
+      <Column field="NOHP" header="No HP"  />
+      <Column field="EMAIL" header="Email"  />
+      <Column field="JENISTENAGANONMEDIS" header="Jenis Tenaga Non Medis"  />
+      <Column field="SPESIALISASI" header="Spesialisasi"  />
+      <Column field="UNITKERJA" header="Unit Kerja"  />
+      <Column field="STATUSKEPEGAWAIAN" header="Status Kepegawaian" body={statusKepegawaianBody}  />
       <Column
         field="FOTOPROFIL"
         header="Foto Profil"

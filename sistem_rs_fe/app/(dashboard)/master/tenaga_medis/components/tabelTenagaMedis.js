@@ -31,15 +31,14 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
       size="small"
       scrollable
     >
-      <Column field="KODETENAGAMEDIS" header="Kode Tenaga Medis" sortable />
-      <Column field="NAMALENGKAP" header="Nama Lengkap" sortable />
+      <Column field="KODETENAGAMEDIS" header="Kode" />
+      <Column field="NAMALENGKAP" header="Nama" />
       <Column
         field="JENISKELAMIN"
         header="Jenis Kelamin"
         body={(row) => (row.JENISKELAMIN === "L" ? "Laki-laki" : "Perempuan")}
-        sortable
       />
-      <Column field="TEMPATLAHIR" header="Tempat Lahir" sortable />
+      <Column field="TEMPATLAHIR" header="Tempat Lahir" />
       <Column
         field="TANGGALLAHIR"
         header="Tanggal Lahir"
@@ -48,13 +47,13 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
             ? new Date(row.TANGGALLAHIR).toLocaleDateString("id-ID")
             : ""
         }
-        sortable
+      
       />
-      <Column field="NOHP" header="No HP" sortable />
-      <Column field="EMAIL" header="Email" sortable />
-      <Column field="JENISTENAGAMEDIS" header="Jenis Tenaga Medis" sortable />
-      <Column field="SPESIALISASI" header="Spesialisasi" sortable />
-      <Column field="NOSTR" header="No STR" sortable />
+      <Column field="NOHP" header="No HP" />
+      <Column field="EMAIL" header="Email" />
+      <Column field="JENISTENAGAMEDIS" header="Jenis Tenaga Medis" />
+      <Column field="SPESIALISASI" header="Spesialisasi" />
+      <Column field="NOSTR" header="No STR" />
       <Column
         field="TGLEXPSTR"
         header="Tgl Exp STR"
@@ -63,9 +62,9 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
             ? new Date(row.TGLEXPSTR).toLocaleDateString("id-ID")
             : ""
         }
-        sortable
+      
       />
-      <Column field="NOSIP" header="No SIP" sortable />
+      <Column field="NOSIP" header="No SIP" />
       <Column
         field="TGLEXPSIP"
         header="Tgl Exp SIP"
@@ -74,10 +73,10 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
             ? new Date(row.TGLEXPSIP).toLocaleDateString("id-ID")
             : ""
         }
-        sortable
+      
       />
-      <Column field="UNITKERJA" header="Unit Kerja" sortable />
-      <Column field="STATUSKEPEGAWAIAN" header="Status Kepegawaian" body={statusKepegawaianBody} sortable />
+      <Column field="UNITKERJA" header="Unit Kerja" />
+      <Column field="STATUSKEPEGAWAIAN" header="Status Kepegawaian" body={statusKepegawaianBody} />
       <Column
         field="FOTOPROFIL"
         header="Foto Profil"
