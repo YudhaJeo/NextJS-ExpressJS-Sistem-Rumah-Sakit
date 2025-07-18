@@ -1,63 +1,66 @@
-// src\controllers\rawatInapController.js
+// src/controllers/rawatInapController.js
 import * as RawatInap from '../models/rawatInapModel.js';
-import * as Bed from '../models/bedModel.js';
 
-export async function getAllRawatInap(req, res) {
+const getAll = async (req, res) => {
   try {
     const data = await RawatInap.getAll();
-    res.json({ data });
+    res.status(200).json({ data });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error getAll:', err);
+    res.status(500).json({ message: 'Gagal mengambil data rawat inap' });
   }
-}
+};
 
-export async function insertRawatInap(req, res) {
+const getById = async (req, res) => {
+  const { id } = req.params;
   try {
-    const { IDPASIEN, IDBED, TANGGALMASUK, TANGGALKELUAR, STATUS, CATATAN } = req.body;
-
-    await RawatInap.create({ IDPASIEN, IDBED, TANGGALMASUK, TANGGALKELUAR, STATUS, CATATAN });
-    await RawatInap.updateBedStatus(IDBED, 'TERISI');
-
-    res.json({ message: 'Rawat inap berhasil ditambahkan' });
+    const data = await RawatInap.getById(id);
+    if (!data) {
+      return res.status(404).json({ message: 'Data tidak ditemukan' });
+    }
+    res.status(200).json({ data });
   } catch (err) {
-    console.error('Kirim data gagal:', err)
-    res.status(500).json({ error: err.message });
+    console.error('Error getById:', err);
+    res.status(500).json({ message: 'Gagal mengambil detail rawat inap' });
   }
-}
+};
 
-export async function updateRawatInap(req, res) {
+const create = async (req, res) => {
   try {
-    const id = req.params.id;
-    const data = req.body;
-
-    const existing = await RawatInap.getById(id);
-    if (!existing) return res.status(404).json({ error: 'Data tidak ditemukan' });
-
-    await RawatInap.update(id, {
-      ...data,
-      TANGGALKELUAR: data.TANGGALKELUAR || null,
-    });    
-
-    const statusBed = data.TANGGALKELUAR ? 'TERSEDIA' : 'TERISI';
-    await RawatInap.updateBedStatus(data.IDBED, statusBed);
-
-    res.json({ message: 'Rawat inap berhasil diperbarui' });
+    const inserted = await RawatInap.create(req.body);
+    res.status(200).json({ message: 'Data rawat inap berhasil ditambahkan', data: inserted });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error create:', err);
+    res.status(500).json({ message: 'Gagal menambahkan data rawat inap' });
   }
-}
+};
 
-export async function deleteRawatInap(req, res) {
+const update = async (req, res) => {
+  const { id } = req.params;
   try {
-    const id = req.params.id;
+    const updated = await RawatInap.update(id, req.body);
+    res.status(200).json({ message: 'Data rawat inap berhasil diperbarui', data: updated });
+  } catch (err) {
+    console.error('Error update:', err);
+    res.status(500).json({ message: 'Gagal memperbarui data rawat inap' });
+  }
+};
 
-    const existing = await RawatInap.getById(id);
-    if (!existing) return res.status(404).json({ error: 'Data tidak ditemukan' });
-
+const remove = async (req, res) => {
+  const { id } = req.params;
+  try {
     await RawatInap.remove(id);
-    await RawatInap.updateBedStatus(existing.IDBED, 'TERSEDIA');
-    res.json({ message: 'Data berhasil dihapus' });
+    res.status(200).json({ message: 'Data rawat inap berhasil dihapus' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Error delete:', err);
+    res.status(500).json({ message: 'Gagal menghapus data rawat inap' });
   }
-}
+};
+
+export default {
+  getAll,
+  getById,
+  create,
+  update,
+  delete: remove
+};

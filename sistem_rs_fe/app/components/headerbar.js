@@ -1,3 +1,4 @@
+// sistem_rs_fe\app\components\headerbar.js
 "use client";
 
 import { InputText } from "primereact/inputtext";
@@ -16,10 +17,14 @@ const HeaderBar = ({ title, placeholder, onSearch, onAddClick }) => {
             onChange={(e) => onSearch(e.target.value.toLowerCase())}
           />
         </span>
-        <Button label="Tambah" icon="pi pi-plus" onClick={onAddClick} />
+
+        {onAddClick && (
+          <Button label="Tambah" icon="pi pi-plus" onClick={onAddClick} />
+        )}
       </div>
     </div>
   );
 };
+
 
 export default HeaderBar;

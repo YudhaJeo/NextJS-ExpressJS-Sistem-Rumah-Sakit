@@ -50,21 +50,29 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete }) => {
             switch (status) {
               case "AKTIF":
                 return "success";
-              case "SELESAI":
-                return "danger"; 
-              default:
-                return "info"; 
-            }
-          };
-
-          return <Tag 
-          value={status.toLowerCase().replace(/^\w/, c => c.toUpperCase())} 
-          severity={severity()} 
-        />
-        ;
-        }}
+                case "SELESAI":
+                  return "danger"; 
+                  default:
+                    return "info"; 
+                  }
+                };
+                
+                return <Tag 
+                value={status.toLowerCase().replace(/^\w/, c => c.toUpperCase())} 
+                severity={severity()} 
+                />
+                ;
+              }}
       />
       <Column field="CATATAN" header="Catatan" />
+      <Column
+        field="TOTAL_HARGA_KAMAR" 
+        header="Total Biaya Kamar" 
+        body={(row) => row.TOTAL_HARGA_KAMAR?.toLocaleString('id-ID', {
+          style: 'currency',
+          currency: 'IDR',
+        })}
+      />
       <Column
         header="Aksi"
         body={(row) => (

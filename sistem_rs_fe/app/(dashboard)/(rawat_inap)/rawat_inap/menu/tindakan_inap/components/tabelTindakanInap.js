@@ -1,4 +1,4 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\obat_inap\components\tabelObat.js
+// app\(dashboard)\(rawat_inap)\rawat_inap\menu\tindakan_inap\components\tabelTindakan.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
@@ -6,7 +6,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import React from 'react';
 
-const TabelObatInap = ({ data, loading, onEdit, onDelete }) => {
+const TabelTindakanInap = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
       <Column
@@ -19,9 +19,9 @@ const TabelObatInap = ({ data, loading, onEdit, onDelete }) => {
         header="Bed"
         body={(row) => row.NOMORBED}
       />
-      <Column field="NAMAOBAT" header="Nama Obat" />
+      <Column field="NAMATINDAKAN" header="Nama Tindakan" />
       <Column
-        header="Harga Satuan"
+        header="Biaya"
         body={(rowData) =>
           new Intl.NumberFormat('id-ID', {
             style: 'currency',
@@ -65,4 +65,4 @@ const TabelObatInap = ({ data, loading, onEdit, onDelete }) => {
   );
 };
 
-export default TabelObatInap;
+export default TabelTindakanInap;

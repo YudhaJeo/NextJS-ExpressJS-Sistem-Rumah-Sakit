@@ -40,6 +40,8 @@ import tenagaNonMedisRoutes from './routes/tenagaNonMedisRoutes.js';
 import depositRoutes from './routes/depositRoutes.js';
 import depositPenggunaanRoutes from './routes/depositPenggunaanRoutes.js';
 import obatInapRoutes from './routes/obatInapRoutes.js';
+import tindakanInapRoutes from './routes/tindakanInapRoutes.js';
+import tagihanSementaraRoutes from './routes/tagihanSementaraRoutes.js';
 
 const app = express();
 
@@ -92,5 +94,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/deposit', depositRoutes);
 app.use('/api/deposit_penggunaan', depositPenggunaanRoutes);
 app.use('/api/obat_inap', obatInapRoutes);
+app.use('/api/tindakan_inap', tindakanInapRoutes);
+app.use('/api/tagihan_sementara', tagihanSementaraRoutes);
 
 export default app;
