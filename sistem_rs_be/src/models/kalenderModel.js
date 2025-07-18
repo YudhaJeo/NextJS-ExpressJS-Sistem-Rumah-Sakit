@@ -1,10 +1,15 @@
 import db from '../core/config/knex.js';
 
-export const getAll = () =>{
+export const getAll = () => {
   return db('kalender')
-    .join('data_dokter', 'kalender.IDDOKTER', 'data_dokter.IDDOKTER')
-    .select('kalender.*', 'data_dokter.IDDOKTER');
-}
+    .join('dokter', 'kalender.IDDOKTER', 'dokter.IDDOKTER')
+    .join('master_tenaga_medis', 'dokter.IDTENAGAMEDIS', 'master_tenaga_medis.IDTENAGAMEDIS')
+    .select(
+      'kalender.*',
+      'dokter.IDDOKTER',
+      'master_tenaga_medis.NAMALENGKAP as NAMA_DOKTER'
+    );
+};
 
 export const create = (data) => {
   return db('kalender').insert(data);
@@ -19,5 +24,14 @@ export const remove = (id) => {
 };
 
 export const getById = (id) => {
-  return db('kalender').where('ID', id).first();
+  return db('kalender')
+    .join('dokter', 'kalender.IDDOKTER', 'dokter.IDDOKTER')
+    .join('master_tenaga_medis', 'dokter.IDTENAGAMEDIS', 'master_tenaga_medis.IDTENAGAMEDIS')
+    .select(
+      'kalender.*',
+      'dokter.IDDOKTER',
+      'master_tenaga_medis.NAMALENGKAP as NAMA_DOKTER'
+    )
+    .where('kalender.ID', id)
+    .first();
 };

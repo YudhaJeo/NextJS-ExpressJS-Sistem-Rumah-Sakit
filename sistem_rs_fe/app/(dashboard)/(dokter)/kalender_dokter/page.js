@@ -57,10 +57,10 @@ const KalenderPage = () => {
 
   const fetchDokter = async () => {
     try {
-      const res = await axios.get(`${API_URL}/data_dokter`);
-      const options = res.data.map((data_dokter) => ({
-        label: `${data_dokter.NAMADOKTER}`,
-        value: data_dokter.IDDOKTER,
+      const res = await axios.get(`${API_URL}/dokter`);
+      const options = res.data.map((dokter) => ({
+        label: dokter.NAMALENGKAP,
+        value: dokter.IDDOKTER,
       }));
       setDokterOptions(options);
       setAllDokterOptions(options);
@@ -71,13 +71,14 @@ const KalenderPage = () => {
 
   const handleSubmit = async () => {
     const { ID, IDDOKTER, KETERANGAN, TANGGAL, STATUS } = formData;
+    console.log('Form Data:', formData);
 
     if (!IDDOKTER || !KETERANGAN || !TANGGAL || !STATUS) {
       toastRef.current?.showToast('01', 'Semua field wajib diisi!');
       return;
     }
 
-    const formattedTanggal = TANGGAL?.slice(0, 10); // pastikan format yyyy-mm-dd
+    const formattedTanggal = TANGGAL?.slice(0, 10);
 
     const payload = {
       IDDOKTER,
@@ -165,13 +166,13 @@ const KalenderPage = () => {
       <h3 className="text-xl font-semibold mb-3">Kalender Dokter</h3>
 
       <HeaderBar
-        placeholder="Cari Dokter atau Tanggal..."
+        placeholder="Cari Nama Dokter atau Tanggal..."
         onSearch={(keyword) => {
           if (!keyword) {
             setData(originalData);
           } else {
             const filtered = originalData.filter((item) =>
-              item.IDDOKTER.toLowerCase().includes(keyword.toLowerCase()) ||
+              item.NAMA_DOKTER?.toLowerCase().includes(keyword.toLowerCase()) ||
               item.TANGGAL.includes(keyword)
             );
             setData(filtered);

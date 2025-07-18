@@ -5,7 +5,6 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
-import { useEffect } from 'react';
 
 const FormDialogKalender = ({
   visible,
@@ -13,28 +12,13 @@ const FormDialogKalender = ({
   onHide,
   onChange,
   onSubmit,
-  onDelete, // ← Tambahan
+  onDelete,
   dokterOptions,
-  allDokterOptions,
 }) => {
   const statusOptions = [
     { label: 'Libur', value: 'libur' },
     { label: 'Perjanjian', value: 'perjanjian' },
   ];
-
-  useEffect(() => {
-    if (formData.IDDOKTER) {
-      const selectedDokter = allDokterOptions.find(
-        (dokter) => dokter.value === formData.IDDOKTER
-      );
-      if (selectedDokter) {
-        onChange((prev) => ({
-          ...prev,
-          HARI: selectedDokter.jadwal || '',
-        }));
-      }
-    }
-  }, [formData.IDDOKTER]);
 
   const handleDateChange = (e) => {
     const selectedDate = e.value;
@@ -68,6 +52,7 @@ const FormDialogKalender = ({
             value={formData.IDDOKTER}
             onChange={(e) => onChange({ ...formData, IDDOKTER: e.value })}
             placeholder="Pilih Dokter"
+            optionLabel="label"
           />
         </div>
 
@@ -110,7 +95,7 @@ const FormDialogKalender = ({
               label="Hapus"
               icon="pi pi-trash"
               className="p-button-danger"
-              onClick={() => onDelete(formData)} // ← Tombol Hapus
+              onClick={() => onDelete(formData)}
             />
           )}
           <Button type="submit" label="Simpan" icon="pi pi-save" />
