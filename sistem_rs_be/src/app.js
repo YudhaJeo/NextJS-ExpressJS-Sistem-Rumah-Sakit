@@ -38,6 +38,7 @@ import dashboardRoutes from './routes/dashboardRoutes.js';
 import rawatInapRoutes from './routes/rawatInapRoutes.js';
 import tenagaNonMedisRoutes from './routes/tenagaNonMedisRoutes.js';
 import obatInapRoutes from './routes/obatInapRoutes.js';
+import tindakanInapRoutes from './routes/tindakanInapRoutes.js';
 
 const app = express();
 
@@ -88,5 +89,6 @@ app.use('/api/tenaga_non_medis', tenagaNonMedisRoutes);
 app.use('/api/role', roleRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/obat_inap', obatInapRoutes);
+app.use('/api/tindakan_inap', tindakanInapRoutes);
 
 export default app;
