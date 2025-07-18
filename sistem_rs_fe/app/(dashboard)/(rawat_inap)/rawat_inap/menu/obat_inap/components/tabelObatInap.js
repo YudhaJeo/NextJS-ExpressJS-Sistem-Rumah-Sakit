@@ -5,20 +5,8 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import React from 'react';
-import { Tag } from 'primereact/tag';
 
 const TabelObatInap = ({ data, loading, onEdit, onDelete }) => {
-
-  const formatTanggal = (tanggal) => {
-    if (!tanggal) return "-";
-    const tgl = new Date(tanggal);
-    return tgl.toLocaleDateString('id-ID', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
-  };
-
   return (
     <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
       <Column
