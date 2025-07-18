@@ -4,6 +4,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
+import { Calendar } from 'primereact/calendar';
 
 const hariList = ['Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at"];
 
@@ -79,18 +80,30 @@ const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit, poliO
 
                   return (
                     <div key={i} className="flex items-center gap-2 mt-2">
-                      <input
-                        type="time"
-                        className="w-28 p-2 border rounded"
-                        value={shift.JAM_MULAI}
-                        onChange={(e) => handleJadwalChange(globalIndex + i, 'JAM_MULAI', e.target.value)}
+                      <Calendar
+                        value={shift.JAM_MULAI ? new Date(`1970-01-01T${shift.JAM_MULAI}`) : null}
+                        onChange={(e) =>
+                          handleJadwalChange(globalIndex + i, 'JAM_MULAI',
+                            e.value?.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+                          )
+                        }
+                        timeOnly
+                        showIcon
+                        hourFormat="24"
+                        className="w-28"
                       />
                       <span>-</span>
-                      <input
-                        type="time"
-                        className="w-28 p-2 border rounded"
-                        value={shift.JAM_SELESAI}
-                        onChange={(e) => handleJadwalChange(globalIndex + i, 'JAM_SELESAI', e.target.value)}
+                      <Calendar
+                        value={shift.JAM_SELESAI ? new Date(`1970-01-01T${shift.JAM_SELESAI}`) : null}
+                        onChange={(e) =>
+                          handleJadwalChange(globalIndex + i, 'JAM_SELESAI',
+                            e.value?.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+                          )
+                        }
+                        timeOnly
+                        showIcon
+                        hourFormat="24"
+                        className="w-28"
                       />
                       <Button
                         type="button"
