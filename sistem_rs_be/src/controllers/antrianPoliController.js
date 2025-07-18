@@ -46,6 +46,11 @@ export const createAntrianPoli = async (req, res) => {
 
     await AntrianPoli.createAntrianPoli(newAntrian);
 
+    const broadcastUpdate = req.app.get('broadcastUpdate');
+    if (broadcastUpdate) {
+      broadcastUpdate();
+    }
+
     res.json({ success: true, message: 'Antrian poli berhasil ditambahkan', data: newAntrian });
   } catch (err) {
     console.error("❌ Error createAntrianPoli:", err);
@@ -58,13 +63,18 @@ export const panggilAntrianPoli = async (req, res) => {
   try {
     await AntrianPoli.updateStatusAntrianPoli(id);
 
-    const broadcastUpdate = req.app.get('broadcastUpdate');
-    if (broadcastUpdate) {
-      broadcastUpdate(); 
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('updateAntrianPoli'); // emit socket event ke semua client
     }
+
     res.json({ success: true, message: 'Antrian poli berhasil dipanggil' });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Gagal memanggil antrian poli', error: err.message });
+    res.status(500).json({
+      success: false,
+      message: 'Gagal memanggil antrian poli',
+      error: err.message,
+    });
   }
 };
 
@@ -86,9 +96,9 @@ export const resetByPoli = async (req, res) => {
       .where('POLI_ID', poliData.IDPOLI)
       .del();
 
-    const broadcastUpdate = req.app.get('broadcastUpdate');
-    if (broadcastUpdate) {
-      broadcastUpdate();
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('updateAntrianPoli'); // emit event real-time
     }
 
     return res.json({ message: `Antrian poli ${poli} berhasil direset.` });

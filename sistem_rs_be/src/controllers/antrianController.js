@@ -1,22 +1,31 @@
 import * as Antrian from '../models/antrianModel.js';
 import db from '../core/config/knex.js';
 
+// Ambil semua antrian
 export const getAllAntrian = async (req, res) => {
   try {
     const data = await Antrian.findAllAntrian();
     res.json({ success: true, data });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Gagal mengambil data antrian', error: err.message });
+    res.status(500).json({
+      success: false,
+      message: 'Gagal mengambil data antrian',
+      error: err.message,
+    });
   }
 };
 
+// Tambah antrian baru
 export const createAntrian = async (req, res) => {
   try {
     const { LOKET } = req.body;
     const loket = await db('loket').where({ NAMALOKET: LOKET }).first();
 
     if (!loket) {
-      return res.status(404).json({ success: false, message: 'Loket tidak ditemukan' });
+      return res.status(404).json({
+        success: false,
+        message: 'Loket tidak ditemukan',
+      });
     }
 
     const last = await db('antrian')
@@ -26,7 +35,7 @@ export const createAntrian = async (req, res) => {
       .first();
 
     let lastNo = 0;
-    if (last && last.NO_ANTRIAN) {
+    if (last?.NO_ANTRIAN) {
       const match = last.NO_ANTRIAN.match(/\d+$/);
       if (match) {
         lastNo = parseInt(match[0], 10);
@@ -40,32 +49,53 @@ export const createAntrian = async (req, res) => {
     const newAntrian = {
       NO_ANTRIAN,
       LOKET_ID: loket.NO,
-      STATUS: 'Belum'
+      STATUS: 'Belum',
     };
 
     await Antrian.createAntrian(newAntrian);
 
-    res.json({ success: true, message: 'Antrian berhasil ditambahkan', data: newAntrian });
+    // 🔔 Trigger real-time update
+    const broadcastUpdate = req.app.get('broadcastUpdate');
+    if (broadcastUpdate) broadcastUpdate();
+
+    res.json({
+      success: true,
+      message: 'Antrian berhasil ditambahkan',
+      data: newAntrian,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: 'Gagal membuat antrian', error: err.message });
+    res.status(500).json({
+      success: false,
+      message: 'Gagal membuat antrian',
+      error: err.message,
+    });
   }
 };
 
+// Panggil antrian tertentu
 export const panggilAntrian = async (req, res) => {
   const { id } = req.params;
   try {
     await Antrian.updateStatusAntrian(id);
+
     const broadcastUpdate = req.app.get('broadcastUpdate');
-    if (broadcastUpdate) {
-      broadcastUpdate();
-    }
-    res.json({ success: true, message: 'Antrian berhasil dipanggil' });
+    if (broadcastUpdate) broadcastUpdate();
+
+    res.json({
+      success: true,
+      message: 'Antrian berhasil dipanggil',
+    });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Gagal memanggil antrian', error: err.message });
+    res.status(500).json({
+      success: false,
+      message: 'Gagal memanggil antrian',
+      error: err.message,
+    });
   }
 };
 
+// Reset antrian berdasarkan loket
 export const resetByLoket = async (req, res) => {
   const { loket } = req.body;
 
@@ -85,13 +115,13 @@ export const resetByLoket = async (req, res) => {
       .del();
 
     const broadcastUpdate = req.app.get('broadcastUpdate');
-    if (broadcastUpdate) {
-      broadcastUpdate();
-    }
+    if (broadcastUpdate) broadcastUpdate();
 
-    return res.json({ message: `Antrian di Loket ${loket} berhasil direset dan akan mulai dari awal saat ditambah lagi.` });
+    res.json({
+      message: `Antrian di Loket ${loket} berhasil direset dan akan mulai dari awal saat ditambah lagi.`,
+    });
   } catch (error) {
     console.error('Gagal reset antrian:', error);
-    return res.status(500).json({ message: 'Gagal reset antrian' });
+    res.status(500).json({ message: 'Gagal reset antrian' });
   }
 };

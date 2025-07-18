@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { Toast } from 'primereact/toast';
+import { io } from 'socket.io-client'; 
 import TabelAntrianPoli from './components/tabelAntrianPoli';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL || API_URL.replace(/^http/, 'ws');
+const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 function DataAntrianPoli() {
   const [data, setData] = useState([]);
@@ -17,7 +18,6 @@ function DataAntrianPoli() {
 
   const toastRef = useRef(null);
   const socketRef = useRef(null);
-  const reconnectRef = useRef(null);
 
   useEffect(() => {
     fetchData();
@@ -26,38 +26,27 @@ function DataAntrianPoli() {
     const savedId = localStorage.getItem('currentAntrianPoliId');
     if (savedId) setCurrentId(parseInt(savedId));
 
-    function connectSocket() {
-      socketRef.current = new WebSocket(`${WS_URL}`);
+    // Ganti WebSocket → Socket.IO
+    const socket = io(SOCKET_URL);
+    socketRef.current = socket;
 
-      socketRef.current.onopen = () => {
-        console.log('🔌 WebSocket Poli tersambung');
-      };
+    socket.on('connect', () => {
+      console.log('🔌 Socket.IO tersambung:', socket.id);
+    });
 
-      socketRef.current.onmessage = (event) => {
-        const message = JSON.parse(event.data);
-        if (message.type === 'update') {
-          fetchData();
-        }
-      };
+    socket.on('antrian-update', () => {
+      console.log('📥 Update antrian diterima');
+      fetchData();
+    });
 
-      socketRef.current.onerror = (err) => {
-        console.error('❌ WebSocket Poli error:', err);
-      };
-
-      socketRef.current.onclose = () => {
-        console.warn('❌ WebSocket Poli ditutup');
-        reconnectRef.current = setTimeout(connectSocket, 1000);
-      };
-    }
-
-    connectSocket();
+    socket.on('disconnect', () => {
+      console.warn('❌ Socket.IO terputus');
+    });
 
     return () => {
-      if (socketRef.current) {
-        socketRef.current.onclose = null;
-        socketRef.current.close();
+      if (socket) {
+        socket.disconnect();
       }
-      clearTimeout(reconnectRef.current);
     };
   }, []);
 
