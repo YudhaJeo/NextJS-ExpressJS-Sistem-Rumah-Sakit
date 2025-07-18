@@ -74,8 +74,8 @@ const Page = () => {
   const fetchDepositOptions = async () => {
     const res = await axios.get(`${API_URL}/deposit`);
     setDepositOptions(res.data.data.map(item => ({
-      value: item.value,
-      label: `${item.label} | ${item.NAMAPASIEN}`,
+      value: item.IDDEPOSIT,
+      label: `${item.NODEPOSIT} | ${item.NAMAPASIEN}`,
       nik: item.NIK,
       NAMAPASIEN: item.NAMAPASIEN, 
     })));
@@ -84,8 +84,8 @@ const Page = () => {
   const fetchInvoiceOptions = async () => {
     const res = await axios.get(`${API_URL}/invoice`);
     setInvoiceOptions(res.data.data.map(item => ({
-      value: item.value,
-      label: `${item.label} | ${item.NAMAPASIEN}`,
+      value: item.IDINVOICE,
+      label: `${item.NOINVOICE} | ${item.NAMAPASIEN}`,
       nik: item.NIK,
       NAMAPASIEN: item.NAMAPASIEN, 
     })));
@@ -146,7 +146,7 @@ const Page = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Hapus Penggunaan ${row.NOPENGGUNAAN}?`,
+      message: `Hapus Penggunaan ${row.NODEPOSIT}?`,
       header: 'Konfirmasi Hapus',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Ya',

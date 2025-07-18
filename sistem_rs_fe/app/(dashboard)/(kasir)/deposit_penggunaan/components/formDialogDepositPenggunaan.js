@@ -44,7 +44,7 @@ const FormDialogDepositPenggunaan = ({
       ...form,
       IDDEPOSIT: e.value,
       NIK: selected?.nik || '',
-      NAMAPASIEN: selected?.nama || '', 
+      NAMAPASIEN: selected?.NAMAPASIEN || '', 
     });
   };
 
@@ -54,7 +54,7 @@ const FormDialogDepositPenggunaan = ({
       ...form,
       IDINVOICE: e.value,
       NIK: selected?.nik || '',
-      NAMAPASIEN: selected?.nama || '', 
+      NAMAPASIEN: selected?.NAMAPASIEN || '', 
     });
   };
 
