@@ -1,37 +1,23 @@
-"use client";
+'use client';
 
-import { DataTable } from "primereact/datatable";
-import { Column } from "primereact/column";
-import { Button } from "primereact/button";
-import { formatTanggal } from "@/types/dateformat";
-
-const layananTemplate = (rowData) => {
-  return formatTanggal(rowData.TANGGAL_LAYANAN);
-};
-
-const pembayaranTemplate = (rowData) => {
-  return formatTanggal(rowData.TANGGAL_PEMBAYARAN);
-};
+import { Button } from 'primereact/button';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { formatTanggal } from '@/types/dateformat';
 
 const formatRupiah = (value) => {
-  if (value == null) return "-";
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
+  if (value == null) return '-';
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
     minimumFractionDigits: 0,
   }).format(value);
 };
 
-const formatPersentase = (value) => {
-  if (value == null) return "-";
-  return `${value}%`;
-};
+export const TabelKomisiDokter = ({ data, loading, onEdit, onDelete }) => {
+  const tanggalTemplate = (rowData) => formatTanggal(rowData.TANGGALKUNJUNGAN);
+  const komisiTemplate = (rowData) => formatRupiah(rowData.NILAIKOMISI);
 
-const biayaTemplate = (rowData) => formatRupiah(rowData.BIAYA_LAYANAN);
-const komisiTemplate = (rowData) => formatRupiah(rowData.NILAI_KOMISI);
-const persentaseTemplate = (rowData) => formatPersentase(rowData.PERSENTASE_KOMISI);
-
-const TabelKomisiDokter = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable
       value={data}
@@ -42,34 +28,20 @@ const TabelKomisiDokter = ({ data, loading, onEdit, onDelete }) => {
       scrollable
     >
       <Column field="NAMADOKTER" header="Nama Dokter" />
+      <Column field="NAMAPASIEN" header="Nama Pasien" />
+      <Column field="NIK" header="NIK" />
       <Column
-        field="TANGGAL_LAYANAN"
-        header="Tanggal Layanan"
-        body={layananTemplate}
-      />
-      <Column field="NAMA_LAYANAN" header="Nama Layanan" />
-      <Column
-        field="BIAYA_LAYANAN"
-        header="Biaya Layanan"
-        body={biayaTemplate}
+        field="TANGGAL"
+        header="Tanggal Kunjungan"
+        body={tanggalTemplate}
       />
       <Column
-        field="PERSENTASE_KOMISI"
-        header="Persentase"
-        body={persentaseTemplate}
-      />
-      <Column
-        field="NILAI_KOMISI"
+        field="NILAIKOMISI"
         header="Nilai Komisi"
         body={komisiTemplate}
       />
       <Column field="STATUS" header="Status" />
-      <Column
-        field="TANGGAL_PEMBAYARAN"
-        header="Tanggal Pembayaran"
-        body={pembayaranTemplate}
-      />
-      <Column field="KETERANGAN" header="Keluhan" />
+      <Column field="KETERANGAN" header="Keterangan" />
       <Column
         header="Aksi"
         body={(row) => (
