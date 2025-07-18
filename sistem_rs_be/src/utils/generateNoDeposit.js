@@ -7,7 +7,7 @@ export async function generateNoDeposit(tanggalDeposit, trx) {
   const lastDeposit = await trx('deposit')
     .where('NODEPOSIT', 'like', `${prefix}%`)
     .orderBy('NODEPOSIT', 'desc')
-    .forUpdate() // lock row biar aman di transaksi
+    .forUpdate() 
     .first();
 
   let nextNumber = 1;

@@ -77,7 +77,7 @@ const Page = () => {
       value: item.value,
       label: `${item.label} | ${item.NAMAPASIEN}`,
       nik: item.NIK,
-      NAMAPASIEN: item.NAMAPASIEN, // PENTING: bawa ke state
+      NAMAPASIEN: item.NAMAPASIEN, 
     })));
   };
 
@@ -87,7 +87,7 @@ const Page = () => {
       value: item.value,
       label: `${item.label} | ${item.NAMAPASIEN}`,
       nik: item.NIK,
-      NAMAPASIEN: item.NAMAPASIEN, // PENTING: bawa ke state
+      NAMAPASIEN: item.NAMAPASIEN, 
     })));
   };
 

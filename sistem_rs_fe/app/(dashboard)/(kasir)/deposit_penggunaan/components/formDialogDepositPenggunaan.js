@@ -44,7 +44,7 @@ const FormDialogDepositPenggunaan = ({
       ...form,
       IDDEPOSIT: e.value,
       NIK: selected?.nik || '',
-      NAMAPASIEN: selected?.nama || '', // WAJIB DISET!
+      NAMAPASIEN: selected?.nama || '', 
     });
   };
 
@@ -54,7 +54,7 @@ const FormDialogDepositPenggunaan = ({
       ...form,
       IDINVOICE: e.value,
       NIK: selected?.nik || '',
-      NAMAPASIEN: selected?.nama || '', // WAJIB DISET!
+      NAMAPASIEN: selected?.nama || '', 
     });
   };
 
@@ -69,7 +69,6 @@ const FormDialogDepositPenggunaan = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
-        {/* Deposit */}
         <div>
           <label className="font-medium">No Deposit</label>
           <Dropdown
@@ -84,7 +83,6 @@ const FormDialogDepositPenggunaan = ({
           {errors.IDDEPOSIT && <small className="p-error">{errors.IDDEPOSIT}</small>}
         </div>
 
-        {/* Invoice */}
         <div>
           <label className="font-medium">No Invoice</label>
           <Dropdown
@@ -99,19 +97,16 @@ const FormDialogDepositPenggunaan = ({
           {errors.IDINVOICE && <small className="p-error">{errors.IDINVOICE}</small>}
         </div>
 
-        {/* NIK */}
         <div>
           <label className="font-medium">NIK</label>
           <InputText className="w-full mt-2" value={form.NIK || ''} readOnly />
         </div>
 
-        {/* Nama Pasien */}
         <div>
           <label className="font-medium">Nama Pasien</label>
           <InputText className="w-full mt-2" value={form.NAMAPASIEN || ''} readOnly />
         </div>
 
-        {/* Tanggal Pemakaian */}
         <div>
           <label className="font-medium">Tanggal Pemakaian</label>
           <Calendar
@@ -133,7 +128,6 @@ const FormDialogDepositPenggunaan = ({
           )}
         </div>
 
-        {/* Jumlah Pemakaian */}
         <div>
           <label className="font-medium">Jumlah Pemakaian</label>
           <InputNumber

@@ -63,7 +63,7 @@ export async function createInvoice(req, res) {
 export async function updateInvoice(req, res) {
   try {
     const { id } = req.params;
-    const { NIK, TANGGALINVOICE, TOTALTAGIHAN, STATUS } = req.body; // ⏮️ Hapus NOINVOICE
+    const { NIK, TANGGALINVOICE, TOTALTAGIHAN, STATUS } = req.body; 
 
     const pasien = await db('pasien').where('NIK', NIK).first();
     if (!pasien) {
@@ -108,7 +108,7 @@ export async function deleteInvoice(req, res) {
 export async function getInvoiceOptions(req, res) {
   try {
     const rows = await db('invoice')
-      .leftJoin('pasien', 'invoice.NIK', 'pasien.NIK') // ✅ Perbaikan di sini
+      .leftJoin('pasien', 'invoice.NIK', 'pasien.NIK') 
       .select(
         'invoice.IDINVOICE as value',
         db.raw('CONCAT("INV-", invoice.IDINVOICE) as label'),

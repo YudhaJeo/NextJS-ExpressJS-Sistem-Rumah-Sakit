@@ -4,7 +4,7 @@ export const getAll = () => {
   return db('deposit_penggunaan')
     .join('deposit', 'deposit_penggunaan.IDDEPOSIT', 'deposit.IDDEPOSIT')
     .join('invoice', 'deposit_penggunaan.IDINVOICE', 'invoice.IDINVOICE')
-    .join('pasien', 'deposit.NIK', 'pasien.NIK') // ✅ Perbaikan di sini
+    .join('pasien', 'deposit.NIK', 'pasien.NIK') 
     .select(
       'deposit_penggunaan.*',
       'deposit.NODEPOSIT',
@@ -18,7 +18,7 @@ export const getById = (id) => {
   return db('deposit_penggunaan')
     .join('deposit', 'deposit_penggunaan.IDDEPOSIT', 'deposit.IDDEPOSIT')
     .join('invoice', 'deposit_penggunaan.IDINVOICE', 'invoice.IDINVOICE')
-    .join('pasien', 'deposit.NIK', 'pasien.NIK') // ✅ Perbaikan di sini juga
+    .join('pasien', 'deposit.NIK', 'pasien.NIK') 
     .select(
       'deposit_penggunaan.*',
       'deposit.NODEPOSIT',

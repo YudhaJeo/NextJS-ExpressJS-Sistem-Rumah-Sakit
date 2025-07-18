@@ -112,7 +112,7 @@ export async function deleteDeposit(req, res) {
 export async function getDepositOptions(req, res) {
   try {
     const rows = await db('deposit')
-      .leftJoin('pasien', 'deposit.NIK', 'pasien.NIK') // ✅ Perbaikan di sini
+      .leftJoin('pasien', 'deposit.NIK', 'pasien.NIK') 
       .select(
         'deposit.IDDEPOSIT as value',
         db.raw('CONCAT("DEP-", deposit.IDDEPOSIT) as label'),

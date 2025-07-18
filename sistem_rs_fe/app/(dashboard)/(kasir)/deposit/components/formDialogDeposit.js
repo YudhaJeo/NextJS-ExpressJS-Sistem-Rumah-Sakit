@@ -56,7 +56,6 @@ const FormDialogDeposit = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
-         {/* No Deposit */}
         <div>
           <label className="font-medium">No Deposit</label>
           <InputText
@@ -65,7 +64,7 @@ const FormDialogDeposit = ({
             readOnly
           />
         </div>
-        {/* NIK Pasien */}
+
         <div>
           <label className="font-medium">NIK Pasien</label>
           <Dropdown
@@ -87,7 +86,6 @@ const FormDialogDeposit = ({
           {errors.NIK && <small className="p-error">{errors.NIK}</small>}
         </div>
 
-        {/* Nama Pasien */}
         <div>
           <label className="font-medium">Nama Pasien</label>
           <InputText
@@ -97,7 +95,6 @@ const FormDialogDeposit = ({
           />
         </div>
 
-        {/* Tanggal Deposit */}
         <div>
           <label className="font-medium">Tanggal Deposit</label>
           <Calendar
@@ -117,7 +114,6 @@ const FormDialogDeposit = ({
           {errors.TANGGALDEPOSIT && <small className="p-error">{errors.TANGGALDEPOSIT}</small>}
         </div>
 
-        {/* Nominal */}
         <div>
           <label className="font-medium">Nominal</label>
           <InputNumber
@@ -127,7 +123,7 @@ const FormDialogDeposit = ({
               setForm({
                 ...form,
                 NOMINAL: e.value,
-                SALDO_SISA: e.value, // default saldo sisa sama dengan nominal
+                SALDO_SISA: e.value, 
               })
             }
             mode="currency"
@@ -137,7 +133,6 @@ const FormDialogDeposit = ({
           {errors.NOMINAL && <small className="p-error">{errors.NOMINAL}</small>}
         </div>
 
-        {/* Metode Pembayaran */}
         <div>
           <label className="font-medium">Metode Pembayaran</label>
           <Dropdown
@@ -150,7 +145,6 @@ const FormDialogDeposit = ({
           {errors.METODE && <small className="p-error">{errors.METODE}</small>}
         </div>
 
-        {/* Saldo Sisa */}
         <div>
           <label className="font-medium">Saldo Sisa</label>
           <InputNumber
@@ -163,7 +157,6 @@ const FormDialogDeposit = ({
           />
         </div>
 
-        {/* Status */}
         <div>
           <label className="font-medium">Status</label>
           <Dropdown
@@ -176,7 +169,6 @@ const FormDialogDeposit = ({
           {errors.STATUS && <small className="p-error">{errors.STATUS}</small>}
         </div>
 
-        {/* Keterangan */}
         <div>
           <label className="font-medium">Keterangan</label>
           <InputText
