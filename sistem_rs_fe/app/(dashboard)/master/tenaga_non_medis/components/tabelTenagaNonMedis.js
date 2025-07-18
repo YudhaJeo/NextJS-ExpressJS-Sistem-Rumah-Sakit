@@ -3,6 +3,7 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
+import { Tag } from "primereact/tag";
 
 const statusSeverity = {
   TETAP: "success",
