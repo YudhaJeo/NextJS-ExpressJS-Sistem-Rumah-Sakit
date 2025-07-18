@@ -15,3 +15,7 @@ export const update = (id, data) => {
 export const remove = (id) => {
   return db('bank_account').where('IDBANK', id).del();
 };
+
+export const getActive = () => {
+  return db('bank_account').where('STATUS', 'AKTIF').select('*');
+};

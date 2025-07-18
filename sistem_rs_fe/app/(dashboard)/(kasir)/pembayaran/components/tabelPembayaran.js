@@ -3,6 +3,20 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { Tag } from 'primereact/tag';
+
+const asuransiSeverity = {
+  UMUM: 'info',      
+  BPJS: 'success',   
+  DEFAULT: 'warning' 
+};
+
+const metodeSeverity = {
+  'Cash': 'success',
+  'Transfer Bank': 'info',
+  'QRIS': 'warning',
+  DEFAULT: 'secondary',
+};
 
 const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
   const tanggalBodyTemplate = (row) => {
@@ -25,6 +39,29 @@ const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
     return row.KETERANGAN && row.KETERANGAN.trim() !== '' ? row.KETERANGAN : '-';
   };
 
+  const metodeBodyTemplate = (row) => (
+    <Tag
+        value={row.METODEPEMBAYARAN}
+        severity={metodeSeverity[row.METODEPEMBAYARAN] || metodeSeverity.DEFAULT}
+      />
+  );
+
+  const bankBodyTemplate = (row) => {
+    return row.NAMA_BANK && row.NAMA_BANK.trim() !== '' ? row.NAMA_BANK : '-';
+  };
+
+  const asuransiBodyTemplate = (row) => {
+      const severity =
+        asuransiSeverity[row.ASURANSI?.toUpperCase()] || asuransiSeverity.DEFAULT;
+  
+      return (
+        <Tag
+          value={row.ASURANSI}
+          severity={severity}
+        />
+      );
+    };
+
   return (
     <DataTable
       value={data}
@@ -38,8 +75,9 @@ const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
       <Column field="NOINVOICE" header="No Invoice" />
       <Column field="NIK" header="NIK" />
       <Column field="NAMAPASIEN" header="Nama Pasien" />
-      <Column field="ASURANSI" header="Asuransi" />
-      <Column field="METODEPEMBAYARAN" header="Metode" />
+      <Column field="ASURANSI" header="Asuransi" body={asuransiBodyTemplate} />
+      <Column field="METODEPEMBAYARAN" header="Metode" body={metodeBodyTemplate} />
+      <Column field="NAMA_BANK" header="Bank" body={bankBodyTemplate}/>
       <Column field="JUMLAHBAYAR" header="Jumlah Bayar" body={jumlahBodyTemplate} />
       <Column field="TANGGALBAYAR" header="Tanggal Bayar" body={tanggalBodyTemplate} />
       <Column field="KETERANGAN" header="Keterangan" body={keteranganBodyTemplate} />

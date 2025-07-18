@@ -5,11 +5,13 @@ export const getAll = () => {
     .join('invoice', 'pembayaran.IDINVOICE', 'invoice.IDINVOICE')
     .join('pasien', 'pembayaran.NIK', 'pasien.NIK')
     .leftJoin('asuransi', 'pembayaran.IDASURANSI', 'asuransi.IDASURANSI')
+    .leftJoin('bank_account', 'pembayaran.IDBANK', 'bank_account.IDBANK')
     .select(
       'pembayaran.*',
       'invoice.NOINVOICE',
       'pasien.NAMALENGKAP as NAMAPASIEN',
-      'asuransi.NAMAASURANSI as ASURANSI'
+      'asuransi.NAMAASURANSI as ASURANSI',
+      'bank_account.NAMA_BANK'
     );
 };
 
@@ -18,11 +20,13 @@ export const getById = (id) => {
     .join('invoice', 'pembayaran.IDINVOICE', 'invoice.IDINVOICE')
     .join('pasien', 'pembayaran.NIK', 'pasien.NIK')
     .leftJoin('asuransi', 'pembayaran.IDASURANSI', 'asuransi.IDASURANSI')
+    .leftJoin('bank_account', 'pembayaran.IDBANK', 'bank_account.IDBANK')
     .select(
       'pembayaran.*',
       'invoice.NOINVOICE',
       'pasien.NAMALENGKAP as NAMAPASIEN',
-      'asuransi.NAMAASURANSI as ASURANSI'
+      'asuransi.NAMAASURANSI as ASURANSI',
+      'bank_account.NAMA_BANK'
     )
     .where('pembayaran.IDPEMBAYARAN', id)
     .first();

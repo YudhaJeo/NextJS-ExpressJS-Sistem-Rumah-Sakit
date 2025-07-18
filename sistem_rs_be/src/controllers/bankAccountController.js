@@ -67,3 +67,12 @@ export async function deleteBank(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
+
+export async function getActiveBank(req, res) {
+  try {
+    const data = await BankModel.getActive();
+    res.json({ data });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}

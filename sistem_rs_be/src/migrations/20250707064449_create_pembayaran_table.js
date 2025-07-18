@@ -14,6 +14,8 @@ export const up = function (knex) {
       .references('IDASURANSI').inTable('asuransi').onDelete('SET NULL');
     table.datetime('TANGGALBAYAR').notNullable().defaultTo(knex.fn.now());
     table.string('METODEPEMBAYARAN', 50).notNullable();
+    table.integer('IDBANK').unsigned()
+      .references('IDBANK').inTable('bank_account').onDelete('SET NULL');
     table.double('JUMLAHBAYAR', 15, 2).notNullable();
     table.text('KETERANGAN');
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
@@ -26,5 +28,7 @@ export const up = function (knex) {
  * @returns { Promise<void> }
  */
 export const down = function (knex) {
-  return knex.schema.dropTable('pembayaran');
+  return knex.schema.table('pembayaran', (table) => {
+    table.dropColumn('IDBANK');
+  });
 };

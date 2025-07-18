@@ -37,6 +37,7 @@ export async function createPembayaran(req, res) {
       IDASURANSI,
       TANGGALBAYAR,
       METODEPEMBAYARAN,
+      IDBANK,
       JUMLAHBAYAR,
       KETERANGAN
     } = req.body;
@@ -60,6 +61,13 @@ export async function createPembayaran(req, res) {
       trx
     );
 
+    const idBankFinal = METODEPEMBAYARAN === 'Transfer Bank' ? IDBANK : null;
+
+    if (METODEPEMBAYARAN === 'Transfer Bank' && !IDBANK) {
+      await trx.rollback();
+      return res.status(400).json({ success: false, message: 'Bank wajib dipilih untuk Transfer Bank' });
+    }
+
     await PembayaranModel.create(
       {
         NOPEMBAYARAN,
@@ -68,6 +76,7 @@ export async function createPembayaran(req, res) {
         IDASURANSI: idAsuransi,
         TANGGALBAYAR: TANGGALBAYAR || db.fn.now(),
         METODEPEMBAYARAN,
+        IDBANK: idBankFinal,
         JUMLAHBAYAR,
         KETERANGAN
       },
@@ -96,6 +105,7 @@ export async function updatePembayaran(req, res) {
       IDASURANSI,
       TANGGALBAYAR,
       METODEPEMBAYARAN,
+      IDBANK,
       JUMLAHBAYAR,
       KETERANGAN
     } = req.body;
@@ -110,6 +120,8 @@ export async function updatePembayaran(req, res) {
       return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan' });
     }
 
+    const idBankFinal = METODEPEMBAYARAN === 'Transfer Bank' ? IDBANK : null;
+    
     let idAsuransi = IDASURANSI || pasien.IDASURANSI;
 
     const updated = await PembayaranModel.update(id, {
@@ -118,6 +130,7 @@ export async function updatePembayaran(req, res) {
       IDASURANSI: idAsuransi,
       TANGGALBAYAR: TANGGALBAYAR || db.fn.now(),
       METODEPEMBAYARAN,
+      IDBANK: idBankFinal,
       JUMLAHBAYAR,
       KETERANGAN
     });

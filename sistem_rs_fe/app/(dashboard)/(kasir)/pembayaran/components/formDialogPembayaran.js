@@ -19,6 +19,7 @@ const FormDialogPembayaran = ({
   invoiceOptions,
   pasienOptions,
   metodeOptions,
+  bankOptions,
 }) => {
   const [errors, setErrors] = useState({});
 
@@ -159,13 +160,36 @@ const FormDialogPembayaran = ({
             className={classNames('w-full mt-2', { 'p-invalid': errors.METODEPEMBAYARAN })}
             options={metodeOptions}
             value={form.METODEPEMBAYARAN}
-            onChange={(e) => setForm({ ...form, METODEPEMBAYARAN: e.value })}
+            onChange={(e) => {
+              if (e.value !== 'Transfer Bank') {
+                setForm({ ...form, METODEPEMBAYARAN: e.value, IDBANK: null });
+              } else {
+                setForm({ ...form, METODEPEMBAYARAN: e.value });
+              }
+            }}
             placeholder="Pilih Metode"
           />
           {errors.METODEPEMBAYARAN && (
             <small className="p-error">{errors.METODEPEMBAYARAN}</small>
           )}
         </div>
+
+        {form.METODEPEMBAYARAN === 'Transfer Bank' && (
+          <div>
+            <label className="font-medium">Pilih Rekening Bank</label>
+            <Dropdown
+              className="w-full mt-2"
+              options={bankOptions}
+              value={form.IDBANK || ''}
+              onChange={(e) => setForm({ ...form, IDBANK: e.value })}
+              placeholder="Pilih Bank"
+              optionLabel="label"
+              optionValue="value"
+              filter
+              showClear
+            />
+          </div>
+        )}
 
         <div>
           <label className="font-medium">Jumlah Bayar</label>

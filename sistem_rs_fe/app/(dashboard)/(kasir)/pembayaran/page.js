@@ -24,6 +24,7 @@ const Page = () => {
   const [invoiceOptions, setInvoiceOptions] = useState([]);
   const [pasienOptions, setPasienOptions] = useState([]);
   const [metodeOptions, setMetodeOptions] = useState([]);
+  const [bankOptions, setBankOptions] = useState([]);
 
   const [form, setForm] = useState({
     IDPEMBAYARAN: 0,
@@ -52,6 +53,7 @@ const Page = () => {
     fetchInvoices();
     fetchPasien();
     fetchMetode(); 
+    fetchBanks();
   }, []);
 
   const fetchData = async () => {
@@ -110,6 +112,17 @@ const Page = () => {
     } catch (err) {
       console.error('Gagal ambil metode pembayaran:', err);
     }
+  };
+
+  const fetchBanks = async () => {
+    const res = await axios.get(`${API_URL}/bank_account`);
+    const options = res.data.data
+      .filter((b) => b.STATUS === 'AKTIF')
+      .map((b) => ({
+        label: `${b.NAMA_BANK} - ${b.NO_REKENING} a.n ${b.ATAS_NAMA}`,
+        value: b.IDBANK,
+      }));
+    setBankOptions(options);
   };
 
   const handleSearch = (keyword) => {
@@ -260,6 +273,7 @@ const Page = () => {
         invoiceOptions={invoiceOptions}
         pasienOptions={pasienOptions}
         metodeOptions={metodeOptions} 
+        bankOptions={bankOptions}
       />
     </div>
   );
