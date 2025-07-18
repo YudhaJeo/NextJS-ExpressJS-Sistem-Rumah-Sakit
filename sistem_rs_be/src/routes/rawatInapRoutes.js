@@ -1,18 +1,13 @@
 // src\routes\rawatInapRoute.js
 import express from 'express';
-
-import {
-  getAllRawatInap,
-  insertRawatInap,
-  updateRawatInap,
-  deleteRawatInap
-} from '../controllers/rawatInapController.js';
+import RawatInapController from '../controllers/rawatInapController.js';
 
 const router = express.Router();
 
-router.get('/', getAllRawatInap);
-router.post('/', insertRawatInap);
-router.put('/:id', updateRawatInap);
-router.delete('/:id', deleteRawatInap);
+router.get('/', RawatInapController.getAll);
+router.get('/:id', RawatInapController.getById);
+router.post('/', RawatInapController.create);
+router.put('/:id', RawatInapController.update);
+router.delete('/:id', RawatInapController.delete);
 
 export default router;
