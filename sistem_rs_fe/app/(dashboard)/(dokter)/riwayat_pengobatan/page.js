@@ -81,7 +81,7 @@ const RiwayatPengobatanPage = () => {
     const payload = {
       IDPENDAFTARAN: form.IDPENDAFTARAN,
       IDDOKTER: form.IDDOKTER,
-      IDPOLI: form.POLI,
+      IDPOLI: form.IDPOLI,
       STATUSKUNJUNGAN: form.STATUSKUNJUNGAN,
       STATUSRAWAT: form.STATUSRAWAT,
       DIAGNOSA: form.DIAGNOSA,

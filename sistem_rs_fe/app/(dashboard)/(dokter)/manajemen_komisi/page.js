@@ -17,21 +17,20 @@ const KomisiPage = () => {
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [allDokterOptions, setAllDokterOptions] = useState([]);
+  const [allRiwayatOptions, setAllRiwayatOptions] = useState([]);
   const [formData, setFormData] = useState({
     IDKOMISI: 0,
-    IDDOKTER: "",
-    TANGGAL_LAYANAN: "",
-    NAMA_LAYANAN:"",
-    BIAYA_LAYANAN:"",
-    PERSENTASE_KOMISI:"",
-    NILAI_KOMISI:"",
+    IDPENGOBATAN: "",
+    NIK: "",
+    NAMAPASIEN: "",
+    NAMADOKTER: "",
+    TANGGAL: "",
+    NILAIKOMISI: "",
     STATUS: "",
-    TANGGAL_PEMBAYARAN: "",
-    KETERANGAN:"",
+    KETERANGAN: "",
   });
 
-  const [dokterOptions, setDokterOptions] = useState([]);
+  const [riwayatOptions, setRiwayatOptions] = useState([]);
   const toastRef = useRef(null);
   const router = useRouter();
 
@@ -42,46 +41,75 @@ const KomisiPage = () => {
       return;
     }
     fetchData();
-    fetchDokter();
+    fetchRiwayat();
   }, []);
+
+  useEffect(() => {
+  if (formData.IDPENGOBATAN && allRiwayatOptions.length > 0) {
+    const selected = allRiwayatOptions.find(
+      (opt) => String(opt.value) === String(formData.IDPENGOBATAN)
+    );
+    if (selected) {
+      setFormData((prev) => ({
+        ...prev,
+        NIK: selected.NIK,
+        NAMAPASIEN: selected.NAMAPASIEN,
+        NAMADOKTER: selected.NAMADOKTER,
+        TANGGAL: selected.TANGGAL,
+      }));
+    }
+  }
+}, [formData.IDPENGOBATAN, allRiwayatOptions]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
       const res = await axios.get(`${API_URL}/komisi_dokter`);
+      console.log("komisi_dokter:", res.data);
       setData(res.data);
       setOriginalData(res.data);
     } catch (err) {
-      console.error('Gagal ambil data:', err);
+      console.error("Gagal ambil data:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchDokter = async () => {
-  try {
-    const res = await axios.get(`${API_URL}/dokter`);
-    console.log('Data poli API:', res.data);
+  const formatTanggal = (dateStr) => {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+  }).format(date);
+  };
 
-    const options = res.data.map((dokter) => ({
-      label: `${dokter.NAMADOKTER}`,
-      value: dokter.IDDOKTER,
-    }));
-
-    setDokterOptions(options);
-    setAllDokterOptions(options);
-  } catch (err) {
-    console.error('Gagal ambil data Dokter:', err);
-  }
-};
+  const fetchRiwayat = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
+      console.log("riwayat_pengobatan:", res.data);
+      const options = res.data.data.map((item) => ({
+        label: `${item.NAMADOKTER} - ${item.NAMALENGKAP} (${formatTanggal(item.TANGGALKUNJUNGAN)})`,
+        value: item.IDPENGOBATAN,
+        NIK: item.NIK,
+        NAMAPASIEN: item.NAMALENGKAP,
+        NAMADOKTER: item.NAMADOKTER,
+        TANGGAL: formatTanggal(item.TANGGALKUNJUNGAN),
+      }));
+      setRiwayatOptions(options);
+      setAllRiwayatOptions(options);
+    } catch (err) {
+      console.error("Gagal ambil data Riwayat:", err);
+    }
+  };
 
   const handleSearch = (keyword) => {
     if (!keyword) {
       setData(originalData);
     } else {
       const filtered = originalData.filter((item) =>
-        item.NAMADOKTER.toLowerCase().includes(keyword.toLowerCase())
-
+        item.NAMAPASIEN?.toLowerCase().includes(keyword.toLowerCase())
       );
       setData(filtered);
     }
@@ -89,18 +117,13 @@ const KomisiPage = () => {
 
   const handleSubmit = async () => {
     const {
-        IDDOKTER,
-        TANGGAL_LAYANAN,
-        NAMA_LAYANAN,
-        BIAYA_LAYANAN,
-        PERSENTASE_KOMISI,
-        NILAI_KOMISI,
-        STATUS,
-        TANGGAL_PEMBAYARAN,
-        KETERANGAN,
+      IDPENGOBATAN,
+      NILAIKOMISI,
+      STATUS,
+      KETERANGAN,
     } = formData;
 
-    if (!IDDOKTER || !TANGGAL_LAYANAN || !NAMA_LAYANAN || !BIAYA_LAYANAN || !PERSENTASE_KOMISI || !NILAI_KOMISI || !STATUS || !TANGGAL_PEMBAYARAN || !KETERANGAN) {
+    if (!IDPENGOBATAN || !NILAIKOMISI || !STATUS || !KETERANGAN) {
       toastRef.current?.showToast("01", "Field wajib tidak boleh kosong!");
       return;
     }
@@ -128,20 +151,33 @@ const KomisiPage = () => {
   };
 
   const handleEdit = (row) => {
-    setFormData(row);
+    const selected = allRiwayatOptions.find(
+    (opt) => String(opt.value) === String(row.IDPENGOBATAN)
+  );
+    setFormData({
+    IDKOMISI: row.IDKOMISI,
+    IDPENGOBATAN: row.IDPENGOBATAN,
+    NIK: selected?.NIK || row.NIK || "",
+    NAMAPASIEN: selected?.NAMAPASIEN || row.NAMAPASIEN || "",
+    NAMADOKTER: selected?.NAMADOKTER || row.NAMADOKTER || "",
+    TANGGAL: selected?.TANGGAL || row.TANGGAL || "",
+    NILAIKOMISI: row.NILAIKOMISI,
+    STATUS: row.STATUS,
+    KETERANGAN: row.KETERANGAN,
+  });
     setDialogVisible(true);
   };
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Hapus Data Dokter dengan email ${row.EMAIL}?`,
+      message: `Hapus data komisi untuk pasien ${row.NAMAPASIEN}?`,
       header: "Konfirmasi Hapus",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Ya",
       rejectLabel: "Batal",
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/data_dokter/${row.IDDATA}`);
+          await axios.delete(`${API_URL}/komisi_dokter/${row.IDKOMISI}`);
           fetchData();
           toastRef.current?.showToast("00", "Berhasil dihapus");
         } catch (err) {
@@ -154,16 +190,15 @@ const KomisiPage = () => {
 
   const resetForm = () => {
     setFormData({
-        IDKOMISI: 0,
-        IDDOKTER: "",
-        TANGGAL_LAYANAN: "",
-        NAMA_LAYANAN:"",
-        BIAYA_LAYANAN:"",
-        PERSENTASE_KOMISI:"",
-        NILAI_KOMISI:"",
-        STATUS: "",
-        TANGGAL_PEMBAYARAN: "",
-        KETERANGAN:"",
+      IDKOMISI: 0,
+      IDPENGOBATAN: "",
+      NIK: "",
+      NAMAPASIEN: "",
+      NAMADOKTER: "",
+      TANGGAL: "",
+      NILAIKOMISI: "",
+      STATUS: "",
+      KETERANGAN: "",
     });
   };
 
@@ -171,10 +206,10 @@ const KomisiPage = () => {
     <div className="card">
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
-      <h3 className="text-xl font-semibold mb-3">Manajemen Komisi</h3>
+      <h3 className="text-xl font-semibold mb-3">Manajemen Komisi Dokter</h3>
 
       <HeaderBar
-        placeholder="Cari Email Dokter..."
+        placeholder="Cari nama pasien..."
         onSearch={handleSearch}
         onAddClick={() => {
           resetForm();
@@ -198,9 +233,8 @@ const KomisiPage = () => {
         onChange={setFormData}
         onSubmit={handleSubmit}
         formData={formData}
-        dokterOptions={dokterOptions}
-        setDokterOptions={setDokterOptions}
-        allDokterOptions={allDokterOptions}
+        riwayatOptions={riwayatOptions}
+        allRiwayatOptions={allRiwayatOptions}
       />
     </div>
   );

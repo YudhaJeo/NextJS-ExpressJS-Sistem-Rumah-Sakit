@@ -4,13 +4,22 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 import { Button } from 'primereact/button';
-import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 
 const statusOptions = [
   { label: 'Belum Dibayar', value: 'Belum Dibayar' },
   { label: 'Sudah Dibayar', value: 'Sudah Dibayar' },
 ];
+
+const formatTanggal = (dateStr) => {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+  }).format(date);
+};
 
 const FormDialogKomisi = ({
   visible,
@@ -19,8 +28,10 @@ const FormDialogKomisi = ({
   onChange,
   onSubmit,
   onDelete,
-  dokterOptions,
+  riwayatOptions,
+  allRiwayatOptions,
 }) => {
+
   return (
     <Dialog
       header={formData.IDKOMISI ? 'Edit Komisi' : 'Tambah Komisi'}
@@ -35,73 +46,53 @@ const FormDialogKomisi = ({
           onSubmit();
         }}
       >
-        {/* Dokter */}
+        {/* Pilih Riwayat Pengobatan */}
         <div>
-          <label>Nama Dokter</label>
+          <label>Riwayat Pengobatan</label>
           <Dropdown
             className="w-full mt-1"
-            options={dokterOptions}
-            value={formData.IDDOKTER}
-            onChange={(e) => onChange({ ...formData, IDDOKTER: e.value })}
-            placeholder="Pilih Dokter"
-          />
-        </div>
-
-        {/* Tanggal Layanan */}
-        <div>
-          <label>Tanggal Layanan</label>
-          <Calendar
-            value={formData.TANGGAL_LAYANAN ? new Date(formData.TANGGAL_LAYANAN) : null}
-            onChange={(e) =>
+            options={riwayatOptions}
+            value={formData.IDPENGOBATAN}
+            onChange={(e) => {
+              const selected = allRiwayatOptions.find((opt) => opt.value === e.value);
               onChange({
-                ...formData,
-                TANGGAL_LAYANAN: e.value.toISOString(),
-              })
-            }
-            dateFormat="yy-mm-dd"
-            showIcon
-            className="w-full"
+              ...formData,
+              IDPENGOBATAN: e.value,
+              NIK: selected ? selected.NIK : formData.NIK,
+              NAMAPASIEN: selected ? selected.NAMAPASIEN : formData.NAMAPASIEN,
+              NAMADOKTER: selected ? selected.NAMADOKTER : formData.NAMADOKTER,
+              TANGGAL: selected ? selected.TANGGAL : formData.TANGGAL,
+            });
+
+            }}
+            placeholder="Pilih Dokter / Pasien / Tanggal"
+            filter
+            showClear
           />
         </div>
 
-        {/* Nama Layanan */}
-        <div>
-          <label>Nama Layanan</label>
-          <InputText
-            className="w-full"
-            value={formData.NAMA_LAYANAN}
-            onChange={(e) => onChange({ ...formData, NAMA_LAYANAN: e.target.value })}
-            placeholder="Tulis nama layanan"
-          />
-        </div>
-
-        {/* Biaya Layanan */}
-        <div>
-          <label>Biaya Layanan</label>
-          <InputNumber
-            className="w-full"
-            value={formData.BIAYA_LAYANAN}
-            onValueChange={(e) => onChange({ ...formData, BIAYA_LAYANAN: e.value })}
-            mode="currency"
-            currency="IDR"
-            locale="id-ID"
-          />
-        </div>
-
-        {/* Persentase Komisi */}
-        <div>
-          <label>Persentase Komisi (%)</label>
-          <InputNumber
-            className="w-full"
-            value={formData.PERSENTASE_KOMISI}
-            onValueChange={(e) =>
-              onChange({ ...formData, PERSENTASE_KOMISI: e.value })
-            }
-            suffix="%"
-            min={0}
-            max={100}
-            maxFractionDigits={2}
-          />
+        {/* Info Tambahan Otomatis */}
+        <div className="grid-cols-2 gap-3 text-sm text-gray-700">
+          <div>
+            <label>NIK</label>
+            <InputText value={formData.NIK || ''} disabled className="w-full" />
+          </div>
+          <div>
+            <label>Nama Pasien</label>
+            <InputText value={formData.NAMAPASIEN || ''} disabled className="w-full" />
+          </div>
+          <div>
+            <label>Nama Dokter</label>
+            <InputText value={formData.NAMADOKTER || ''} disabled className="w-full" />
+          </div>
+          <div>
+            <label>Tanggal</label>
+            <InputText
+              value={formatTanggal(formData.TANGGAL)}
+              disabled
+              className="w-full"
+            />
+          </div>
         </div>
 
         {/* Nilai Komisi */}
@@ -109,9 +100,9 @@ const FormDialogKomisi = ({
           <label>Nilai Komisi</label>
           <InputNumber
             className="w-full"
-            value={formData.NILAI_KOMISI}
+            value={formData.NILAIKOMISI}
             onValueChange={(e) =>
-              onChange({ ...formData, NILAI_KOMISI: e.value })
+              onChange({ ...formData, NILAIKOMISI: e.value })
             }
             mode="currency"
             currency="IDR"
@@ -131,32 +122,11 @@ const FormDialogKomisi = ({
           />
         </div>
 
-        {/* Tanggal Pembayaran */}
-        <div>
-          <label>Tanggal Pembayaran</label>
-          <Calendar
-            value={
-              formData.TANGGAL_PEMBAYARAN
-                ? new Date(formData.TANGGAL_PEMBAYARAN)
-                : null
-            }
-            onChange={(e) =>
-              onChange({
-                ...formData,
-                TANGGAL_PEMBAYARAN: e.value?.toISOString() || null,
-              })
-            }
-            dateFormat="yy-mm-dd"
-            showIcon
-            className="w-full"
-          />
-        </div>
-
         {/* Keterangan */}
         <div>
           <label>Keterangan</label>
           <InputText
-            value={formData.KETERANGAN}
+            value={formData.KETERANGAN || ''}
             placeholder="Tulis keterangan tambahan"
             className="w-full"
             onChange={(e) =>

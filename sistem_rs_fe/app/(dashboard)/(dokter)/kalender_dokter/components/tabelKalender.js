@@ -1,4 +1,3 @@
-// tabelkalender
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -22,33 +21,20 @@ export default function TabelKalender({
 
   const fetchKalender = async () => {
     try {
-      const [kalenderRes, dokterRes] = await Promise.all([
-        axios.get(`${API_URL}/kalender`),
-        axios.get(`${API_URL}/data_dokter`),
-      ]);
+      const kalenderRes = await axios.get(`${API_URL}/kalender`);
 
-      const dokterMap = dokterRes.data.reduce((acc, dokter) => {
-        acc[dokter.ID] = dokter;
-        return acc;
-      }, {});
-
-      const data = kalenderRes.data.map((item) => {
-        const dokter = dokterMap[item.IDDOKTER];
-        const namaDokter = dokter?.NAMADOKTER || '';
-
-        return {
-          id: item.ID,
-          title: `${item.STATUS === 'libur' ? 'Libur' : 'Perjanjian'} - ${namaDokter} (${item.KETERANGAN || '-'})`,
-          start: item.TANGGAL,
-          extendedProps: {
-            IDDOKTER: item.IDDOKTER,
-            STATUS: item.STATUS,
-            KETERANGAN: item.KETERANGAN,
-            NAMA_DOKTER: namaDokter,
-          },
-          color: item.STATUS === 'libur' ? '#f87171' : '#60a5fa',
-        };
-      });
+      const data = kalenderRes.data.map((item) => ({
+        id: item.ID,
+        title: `${item.STATUS === 'libur' ? 'Libur' : 'Perjanjian'} - ${item.NAMA_DOKTER} (${item.KETERANGAN || '-'})`,
+        start: item.TANGGAL,
+        extendedProps: {
+          IDDOKTER: item.IDDOKTER,
+          STATUS: item.STATUS,
+          KETERANGAN: item.KETERANGAN,
+          NAMA_DOKTER: item.NAMA_DOKTER,
+        },
+        color: item.STATUS === 'libur' ? '#f87171' : '#60a5fa',
+      }));
 
       setEvents(data);
     } catch (err) {
@@ -70,7 +56,7 @@ export default function TabelKalender({
           STATUS: event.extendedProps.STATUS,
           KETERANGAN: event.extendedProps.KETERANGAN,
           TANGGAL: event.startStr,
-          NAMADOKTER: event.extendedProps.NAMADOKTER,
+          NAMA_DOKTER: event.extendedProps.NAMA_DOKTER,
         });
       }}
       displayEventTime={false}
