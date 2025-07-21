@@ -6,6 +6,7 @@ import FormDialogPengobatan from "./components/formDialogRiwayat";
 import TabelPengobatan from "./components/tabelRiwayat";
 import HeaderBar from "@/app/components/headerbar";
 import ToastNotifier from "@/app/components/toastNotifier";
+import FilterTanggal from '@/app/components/filterTanggal';
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -14,9 +15,12 @@ const RiwayatPengobatanPage = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [originalData, setOriginalData] = useState([]);  
   const [form, setForm] = useState(initialForm());
   const [pendaftaranOptions, setPendaftaranOptions] = useState([]);
   const toastRef = useRef(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);  
   const [dokterOptions, setDokterOptions] = useState([]);
   const [allDokterOptions, setAllDokterOptions] = useState([]);
 
@@ -31,6 +35,7 @@ const RiwayatPengobatanPage = () => {
     try {
       const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
       setData(res.data.data);
+      setOriginalData(res.data.data);
     } catch (err) {
       console.error("Gagal ambil data riwayat:", err);
     } finally {
@@ -81,6 +86,12 @@ const RiwayatPengobatanPage = () => {
       setDokterOptions([]);
     }
   }, [form.POLI, allDokterOptions]);
+
+  const resetFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setData(originalData);
+  };  
 
   const handleSubmit = async () => {
     const isEdit = !!form.IDPENGOBATAN;
@@ -144,18 +155,39 @@ const RiwayatPengobatanPage = () => {
     setForm(initialForm());
   };
 
+  const handleDateFilter = () => {
+    if (!startDate && !endDate) return setData(originalData);
+    const filtered = originalData.filter((item) => {
+      const visitDate = new Date(item.TANGGALKUNJUNGAN);
+      const from = startDate ? new Date(startDate.setHours(0, 0, 0, 0)) : null;
+      const to = endDate ? new Date(endDate.setHours(23, 59, 59, 999)) : null;
+      return (!from || visitDate >= from) && (!to || visitDate <= to);
+    });
+    setData(filtered);
+  };
+
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
       <h3 className="text-xl font-semibold mb-3">Riwayat Pengobatan</h3>
 
-      <HeaderBar
-        onAddClick={() => {
-          resetForm();
-          setDialogVisible(true);
-        }}
-      />
+      <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
+        <FilterTanggal
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          handleDateFilter={handleDateFilter}
+          resetFilter={resetFilter}
+        />      
+        <HeaderBar
+          onAddClick={() => {
+            resetForm();
+            setDialogVisible(true);
+          }}
+        />
+      </div>
 
       <TabelPengobatan
         data={data}
