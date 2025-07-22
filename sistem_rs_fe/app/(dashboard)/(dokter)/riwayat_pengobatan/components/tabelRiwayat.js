@@ -2,8 +2,9 @@
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { Button } from 'primereact/button';
 
-const TabelPengobatan = ({ data, loading }) => {
+const TabelPengobatan = ({ data, loading, onEdit, onDelete }) => {
   const formatTanggal = (tanggal) => {
     if (!tanggal) return "-";
     const tgl = new Date(tanggal);
@@ -26,6 +27,29 @@ const TabelPengobatan = ({ data, loading }) => {
       <Column field="KELUHAN" header="Keluhan" />
       <Column field="POLI" header="Poli" />
       <Column field="STATUSKUNJUNGAN" header="Status Kunjungan" />
+      <Column field="STATUSRAWAT" header="Status Rawat" />
+      <Column field="DIAGNOSA" header="Diagnosa" />
+      <Column field="OBAT" header="Obat" />
+      <Column
+        header="Aksi"
+        body={(row) => (
+          <div className="flex gap-2">
+            <Button
+              icon="pi pi-pencil"
+              size="small"
+              severity="warning"
+              onClick={() => onEdit(row)}
+            />
+            <Button
+              icon="pi pi-trash"
+              size="small"
+              severity="danger"
+              onClick={() => onDelete(row)}
+            />
+          </div>
+        )}
+        style={{ width: "200px" }}
+      />
     </DataTable>
   );
 };

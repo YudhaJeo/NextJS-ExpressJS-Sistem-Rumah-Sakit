@@ -1,22 +1,24 @@
-'use client';
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import FormDialogPengobatan from "./components/formDialogRiwayat";
+import TabelPengobatan from "./components/tabelRiwayat";
 import ToastNotifier from "@/app/components/toastNotifier";
-import HeaderBar from "@/app/components/headerbar";
 import FilterTanggal from "@/app/components/filterTanggal";
-import { ConfirmDialog } from "primereact/confirmdialog";
-import TabelPengobatan from "./components/tabelRiwayat"; 
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const RiwayatFromPendaftaranPage = () => {
+const RiwayatPengobatanPage = () => {
   const [data, setData] = useState([]);
-  const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [originalData, setOriginalData] = useState([]);
+  const [form, setForm] = useState(initialForm());
+  const toastRef = useRef(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const toastRef = useRef(null);
 
   useEffect(() => {
     fetchData();
@@ -29,19 +31,81 @@ const RiwayatFromPendaftaranPage = () => {
       setData(res.data.data);
       setOriginalData(res.data.data);
     } catch (err) {
-      console.error("Gagal ambil data pendaftaran:", err);
+      console.error("Gagal ambil data monitoring:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSearch = (keyword) => {
-    if (!keyword) return setData(originalData);
-    const filtered = originalData.filter((item) =>
-      item.NAMALENGKAP.toLowerCase().includes(keyword.toLowerCase()) ||
-      item.NIK.toLowerCase().includes(keyword.toLowerCase())
-    );
-    setData(filtered);
+  const resetFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setData(originalData);
+  };
+
+  const handleSubmit = async () => {
+    if (!form.IDPENGOBATAN) {
+      toastRef.current?.showToast("01", "Tidak dapat menyimpan data baru dari monitoring.");
+      return;
+    }
+
+    const payload = {
+      STATUSKUNJUNGAN: form.STATUSKUNJUNGAN,
+      STATUSRAWAT: form.STATUSRAWAT,
+      DIAGNOSA: form.DIAGNOSA,
+      OBAT: form.OBAT,
+    };
+
+    try {
+      await axios.put(`${API_URL}/riwayat_pengobatan/${form.IDPENGOBATAN}`, payload);
+      toastRef.current?.showToast("00", "Data berhasil diperbarui");
+      fetchData();
+      setDialogVisible(false);
+      resetForm();
+    } catch (err) {
+      console.error("Gagal update data:", err);
+      toastRef.current?.showToast("01", "Gagal memperbarui data");
+    }
+  };
+
+  const handleEdit = (row) => {
+    setForm({
+      IDPENGOBATAN: row.IDPENGOBATAN,
+      STATUSKUNJUNGAN: row.STATUSKUNJUNGAN || "Diperiksa",
+      STATUSRAWAT: row.STATUSRAWAT || "",
+      DIAGNOSA: row.DIAGNOSA || "",
+      OBAT: row.OBAT || "",
+    });
+    setDialogVisible(true);
+  };
+
+  const handleDelete = (row) => {
+    if (!row.IDPENGOBATAN) {
+      toastRef.current?.showToast("01", "Tidak ada data pengobatan untuk dihapus.");
+      return;
+    }
+
+    confirmDialog({
+      message: `Hapus data pengobatan untuk ${row.NAMALENGKAP}?`,
+      header: "Konfirmasi Hapus",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: "Ya",
+      rejectLabel: "Batal",
+      accept: async () => {
+        try {
+          await axios.delete(`${API_URL}/riwayat_pengobatan/${row.IDPENGOBATAN}`);
+          toastRef.current?.showToast("00", "Data berhasil dihapus");
+          fetchData();
+        } catch (err) {
+          console.error("Gagal hapus data:", err);
+          toastRef.current?.showToast("01", "Gagal menghapus data");
+        }
+      },
+    });
+  };
+
+  const resetForm = () => {
+    setForm(initialForm());
   };
 
   const handleDateFilter = () => {
@@ -55,20 +119,13 @@ const RiwayatFromPendaftaranPage = () => {
     setData(filtered);
   };
 
-  const resetFilter = () => {
-    setStartDate(null);
-    setEndDate(null);
-    setData(originalData);
-  };
-
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
+      <h3 className="text-xl font-semibold mb-3">Monitoring Riwayat Pengobatan</h3>
 
-      <h3 className="text-xl font-semibold mb-3">Monitoring Riwayat dari Pendaftaran</h3>
-
-      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
         <FilterTanggal
           startDate={startDate}
           endDate={endDate}
@@ -77,17 +134,35 @@ const RiwayatFromPendaftaranPage = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
-        <HeaderBar
-          title=""
-          placeholder="Cari nama atau NIK..."
-          onSearch={handleSearch}
-          hideAddButton
-        />
       </div>
 
-      <TabelPengobatan data={data} loading={loading} />
+      <TabelPengobatan
+        data={data}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+
+      <FormDialogPengobatan
+        visible={dialogVisible}
+        onHide={() => {
+          setDialogVisible(false);
+          resetForm();
+        }}
+        onSubmit={handleSubmit}
+        form={form}
+        setForm={setForm}
+      />
     </div>
   );
 };
 
-export default RiwayatFromPendaftaranPage;
+const initialForm = () => ({
+  IDPENGOBATAN: "",
+  STATUSKUNJUNGAN: "Diperiksa",
+  STATUSRAWAT: "",
+  DIAGNOSA: "",
+  OBAT: "",
+});
+
+export default RiwayatPengobatanPage;
