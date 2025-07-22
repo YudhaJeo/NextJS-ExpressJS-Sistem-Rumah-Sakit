@@ -7,13 +7,15 @@ export async function createPendaftaran(req, res) {
   try {
     const { NIK, TANGGALKUNJUNGAN, IDPOLI, KELUHAN, STATUSKUNJUNGAN } = req.body;
 
-    const [idPendaftaran] = await trx('pendaftaran').insert({
-      NIK,
-      TANGGALKUNJUNGAN,
-      IDPOLI,
-      KELUHAN,
-      STATUSKUNJUNGAN,
-    }).returning('IDPENDAFTARAN');
+const insertResult = await trx('pendaftaran').insert({
+  NIK,
+  TANGGALKUNJUNGAN,
+  IDPOLI,
+  KELUHAN,
+  STATUSKUNJUNGAN,
+});
+
+const idPendaftaran = insertResult[0]; 
 
     const dokter = await trx('dokter')
       .where('IDPOLI', IDPOLI)
