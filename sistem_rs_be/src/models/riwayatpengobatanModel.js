@@ -1,6 +1,5 @@
 import db from '../core/config/knex.js';
 
-// Ambil IDPENDAFTARAN dari riwayat pengobatan
 export const getPendaftaranIdByPengobatanId = async (id) => {
   const row = await db('riwayat_pengobatan')
     .select('IDPENDAFTARAN')
@@ -10,12 +9,17 @@ export const getPendaftaranIdByPengobatanId = async (id) => {
   return row?.IDPENDAFTARAN;
 };
 
-// Ambil data pendaftaran lengkap berdasarkan ID
+export const getDokterByPoli = async (IDPOLI) => {
+  return db('dokter')
+    .where('IDPOLI', IDPOLI)
+    .orderBy('IDDOKTER', 'asc') 
+    .first();
+};
+
 export const getPendaftaranById = (id) => {
   return db('pendaftaran').where('IDPENDAFTARAN', id).first();
 };
 
-// Ambil semua riwayat pengobatan
 export const getAllPengobatan = () => {
   return db('riwayat_pengobatan as r')
     .join('pendaftaran as p', 'r.IDPENDAFTARAN', 'p.IDPENDAFTARAN')
@@ -50,11 +54,10 @@ export const createPengobatan = async ({
   STATUSRAWAT,
   DIAGNOSA,
   OBAT
-}) => {
+}, trx = db) => {
   // Ambil data pendaftaran
-  const pendaftaran = await db('pendaftaran')
+  const pendaftaran = await trx('pendaftaran')
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
-    .join('poli', 'pendaftaran.IDPOLI', 'poli.IDPOLI')
     .select(
       'pendaftaran.NIK',
       'pendaftaran.TANGGALKUNJUNGAN',
@@ -64,19 +67,14 @@ export const createPengobatan = async ({
     .where('pendaftaran.IDPENDAFTARAN', IDPENDAFTARAN)
     .first();
 
-  if (!pendaftaran) {
-    throw new Error('Data pendaftaran tidak ditemukan');
-  }
+  if (!pendaftaran) throw new Error('Data pendaftaran tidak ditemukan');
 
-  // Ambil data dokter
-  const dokter = await db('dokter')
+  const dokter = await trx('dokter')
     .select('IDTENAGAMEDIS', 'IDPOLI')
     .where('IDDOKTER', IDDOKTER)
     .first();
 
-  if (!dokter) {
-    throw new Error('Data dokter tidak ditemukan');
-  }
+  if (!dokter) throw new Error('Data dokter tidak ditemukan');
 
   const data = {
     IDPENDAFTARAN,
@@ -91,18 +89,15 @@ export const createPengobatan = async ({
     OBAT
   };
 
-  return db('riwayat_pengobatan').insert(data);
+  return trx('riwayat_pengobatan').insert(data);
 };
 
-
-// Update riwayat pengobatan
 export const updatePengobatan = (id, data) => {
   return db('riwayat_pengobatan')
     .where('IDPENGOBATAN', id)
     .update({ ...data, UPDATED_AT: db.fn.now() });
 };
 
-// Hapus riwayat pengobatan
 export const deletePengobatan = (id) => {
   return db('riwayat_pengobatan').where('IDPENGOBATAN', id).del();
 };
