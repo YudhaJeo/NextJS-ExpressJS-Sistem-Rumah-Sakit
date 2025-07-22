@@ -3,11 +3,10 @@ import * as PengobatanModel from '../models/riwayatpengobatanModel.js';
 import db from '../core/config/knex.js';
 
 export async function createPendaftaran(req, res) {
-  const trx = await db.transaction(); // gunakan transaksi biar aman
+  const trx = await db.transaction();
   try {
     const { NIK, TANGGALKUNJUNGAN, IDPOLI, KELUHAN, STATUSKUNJUNGAN } = req.body;
 
-    // 1. Simpan ke tabel pendaftaran
     const [idPendaftaran] = await trx('pendaftaran').insert({
       NIK,
       TANGGALKUNJUNGAN,
@@ -16,10 +15,9 @@ export async function createPendaftaran(req, res) {
       STATUSKUNJUNGAN,
     }).returning('IDPENDAFTARAN');
 
-    // 2. Cari dokter pertama (atau logika pemilihan dokter lainnya) berdasarkan IDPOLI
     const dokter = await trx('dokter')
       .where('IDPOLI', IDPOLI)
-      .orderBy('IDDOKTER') // bisa sesuaikan dengan urutan antrian
+      .orderBy('IDDOKTER') 
       .first();
 
       if (!dokter) {
@@ -35,7 +33,6 @@ export async function createPendaftaran(req, res) {
         }, trx);
       }
 
-    // 3. Simpan entri awal riwayat pengobatan (diagnosa dan obat dikosongkan dulu)
     await PengobatanModel.createPengobatan({
       IDPENDAFTARAN: idPendaftaran,
       IDDOKTER: dokter.IDDOKTER,
@@ -43,7 +40,7 @@ export async function createPendaftaran(req, res) {
       STATUSRAWAT: 'Rawat Jalan',
       DIAGNOSA: '',
       OBAT: '',
-    }, trx); // pakai trx supaya dalam 1 transaksi
+    }, trx); 
 
     await trx.commit();
     res.json({ message: 'Pendaftaran & riwayat awal berhasil dibuat' });
@@ -63,16 +60,6 @@ export async function getAllPendaftaran(req, res) {
     res.status(500).json({ error: err.message });
   }
 }
-
-// export async function createPendaftaran(req, res) {
-//   try {
-//     const { NIK, TANGGALKUNJUNGAN, IDPOLI, KELUHAN, STATUSKUNJUNGAN } = req.body;
-//     await PendaftaranModel.create({ NIK, TANGGALKUNJUNGAN, IDPOLI, KELUHAN, STATUSKUNJUNGAN });
-//     res.json({ message: 'Pendaftaran berhasil ditambahkan' });
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// }
 
 export async function updatePendaftaran(req, res) {
   try {
