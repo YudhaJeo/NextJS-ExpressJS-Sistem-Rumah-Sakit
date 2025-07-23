@@ -12,3 +12,15 @@ export async function getAllRiwayatInap(req, res) {
     });
   }
 }
+
+export async function getRiwayatInapById(req, res) {
+  const { id } = req.params;
+  try {
+    const data = await RiwayatRawatInap.getRiwayatInapById(id); 
+    console.log(data)
+    res.json({ data });
+  } catch (err) {
+    console.error('[GET] /riwayat_inap/:id gagal:', err);
+    res.status(500).json({ error: 'Gagal ambil data' });
+  }
+}

@@ -31,7 +31,7 @@ const TabelRiwayatInap = ({ data, loading }) => {
       label="Lihat"
       icon="pi pi-eye"
       className="p-button-sm"
-      onClick={() => router.push(`/rawat_inap/invoice/${rowData.IDRAWATINAP}`)}
+      onClick={() => router.push(`/rawat_inap/menu/riwayat_inap/${rowData.IDRAWATINAP}`)}
     />
   );
 
