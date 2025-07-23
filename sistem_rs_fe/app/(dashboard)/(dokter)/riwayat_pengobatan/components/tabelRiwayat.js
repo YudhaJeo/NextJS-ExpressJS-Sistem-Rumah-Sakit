@@ -16,29 +16,39 @@ const TabelPengobatan = ({ data, loading, onEdit, onDelete }) => {
   };
 
   return (
-    <DataTable value={data} paginator rows={10} loading={loading}>
+    <DataTable value={data} paginator rows={10} loading={loading} stripedRows>
       <Column field="NAMALENGKAP" header="Nama Pasien" />
       <Column field="NIK" header="NIK" />
-      <Column 
-        field="TANGGALKUNJUNGAN" 
-        header="Tgl Kunjungan" 
-        body={(row) => formatTanggal(row.TANGGALKUNJUNGAN)} 
+      <Column
+        field="TANGGALKUNJUNGAN"
+        header="Tgl Kunjungan"
+        body={(row) => formatTanggal(row.TANGGALKUNJUNGAN)}
       />
       <Column field="KELUHAN" header="Keluhan" />
-      <Column field="NAMADOKTER" header="Dokter" />
       <Column field="POLI" header="Poli" />
       <Column field="STATUSKUNJUNGAN" header="Status Kunjungan" />
       <Column field="STATUSRAWAT" header="Status Rawat" />
       <Column field="DIAGNOSA" header="Diagnosa" />
       <Column field="OBAT" header="Obat" />
-      <Column 
+      <Column
         header="Aksi"
         body={(row) => (
           <div className="flex gap-2">
-            <Button icon="pi pi-pencil" size="small" severity="warning" onClick={() => onEdit(row)} />
-            <Button icon="pi pi-trash" size="small" severity="danger" onClick={() => onDelete(row)} />
+            <Button
+              icon="pi pi-pencil"
+              size="small"
+              severity="warning"
+              onClick={() => onEdit(row)}
+            />
+            <Button
+              icon="pi pi-trash"
+              size="small"
+              severity="danger"
+              onClick={() => onDelete(row)}
+            />
           </div>
-        )} 
+        )}
+        style={{ width: "200px" }}
       />
     </DataTable>
   );

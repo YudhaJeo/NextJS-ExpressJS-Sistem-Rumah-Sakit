@@ -23,6 +23,7 @@ const Page = () => {
   const [endDate, setEndDate] = useState(null);
   const [pasienOptions, setPasienOptions] = useState([]);
   const [metodeOptions, setMetodeOptions] = useState([]);
+  const [bankOptions, setBankOptions] = useState([]);
 
   const [form, setForm] = useState({
     IDDEPOSIT: 0,
@@ -30,7 +31,11 @@ const Page = () => {
     NIK: '',
     NAMAPASIEN: '',
     TANGGALDEPOSIT: '',
-    JUMLAHDEPOSIT: 0,
+    METODE: '',
+    IDBANK: '',
+    NOMINAL: 0,
+    SALDO_SISA: 0,
+    STATUS: 'AKTIF',
     KETERANGAN: '',
   });
 
@@ -46,6 +51,7 @@ const Page = () => {
     fetchData();
     fetchPasien();
     fetchMetodePembayaran();
+    fetchBanks();
   }, []);
 
   const fetchData = async () => {
@@ -91,6 +97,17 @@ const Page = () => {
     }
   };
 
+  const fetchBanks = async () => {
+    const res = await axios.get(`${API_URL}/bank_account`);
+    const options = res.data.data
+      .filter((b) => b.STATUS === 'AKTIF')
+      .map((b) => ({
+        label: `${b.NAMA_BANK} - ${b.NO_REKENING} a.n ${b.ATAS_NAMA}`,
+        value: b.IDBANK,
+      }));
+    setBankOptions(options);
+  };
+
   const handleSearch = (keyword) => {
     if (!keyword) return setData(originalData);
     const filtered = originalData.filter(
@@ -124,15 +141,22 @@ const Page = () => {
       ? `${API_URL}/deposit/${form.IDDEPOSIT}`
       : `${API_URL}/deposit`;
 
+    // Buat salinan form yang benar-benar fix statusnya:
+    const body = { ...form };
+    if (body.SALDO_SISA === 0) {
+      body.STATUS = 'HABIS';
+    }
+
     try {
       if (isEdit) {
-        const { NODEPOSIT, NAMAPASIEN, ASURANSI, ...body } = form;
-        await axios.put(url, body);
+        const { NODEPOSIT, NAMAPASIEN, ...payload } = body;
+        await axios.put(url, payload);
         toastRef.current?.showToast('00', 'Data berhasil diperbarui');
       } else {
-        await axios.post(url, form);
+        await axios.post(url, body);
         toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
       }
+
       fetchData();
       setDialogVisible(false);
       resetForm();
@@ -177,7 +201,11 @@ const Page = () => {
       NIK: '',
       NAMAPASIEN: '',
       TANGGALDEPOSIT: '',
-      JUMLAHDEPOSIT: 0,
+      METODE: '',
+      IDBANK: '',
+      NOMINAL: 0,
+      SALDO_SISA: 0,
+      STATUS: 'AKTIF',
       KETERANGAN: '',
     });
   };
@@ -228,6 +256,7 @@ const Page = () => {
         setForm={setForm}
         pasienOptions={pasienOptions}
         metodeOptions={metodeOptions}
+        bankOptions={bankOptions}
       />
     </div>
   );

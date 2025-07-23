@@ -18,24 +18,28 @@ const statusSeverity = {
 };
 
 const metodeSeverity = {
-  CASH: 'success',
-  TRANSFER: 'info',
-  KARTU: 'warning',
+  'Cash': 'success',
+  'Transfer Bank': 'info',
+  'QRIS': 'warning',
+  DEFAULT: 'secondary',
 };
 
 const TabelDeposit = ({ data, loading, onEdit, onDelete }) => {
-  const statusBodyTemplate = (row) => (
-    <Tag
-      value={statusLabels[row.STATUS] || row.STATUS}
-      severity={statusSeverity[row.STATUS] || 'info'}
-    />
-  );
+  const statusBodyTemplate = (row) => {
+    const effectiveStatus = Number(row.SALDO_SISA) === 0 ? 'HABIS' : row.STATUS;
+    return (
+      <Tag
+        value={statusLabels[effectiveStatus] || effectiveStatus}
+        severity={statusSeverity[effectiveStatus] || 'info'}
+      />
+    );
+  };
 
   const metodeBodyTemplate = (row) => (
     <Tag
-      value={row.METODE}
-      severity={metodeSeverity[row.METODE] || 'secondary'}
-    />
+        value={row.METODE}
+        severity={metodeSeverity[row.METODE] || metodeSeverity.DEFAULT}
+      />
   );
 
   const nominalBodyTemplate = (row) =>
@@ -52,6 +56,10 @@ const TabelDeposit = ({ data, loading, onEdit, onDelete }) => {
 
   const keteranganBodyTemplate = (row) => row.KETERANGAN?.trim() ? row.KETERANGAN : '-';
 
+  const bankBodyTemplate = (row) => {
+    return row.NAMA_BANK && row.NAMA_BANK.trim() !== '' ? row.NAMA_BANK : '-';
+  };
+
   return (
     <DataTable
       value={data}
@@ -66,6 +74,7 @@ const TabelDeposit = ({ data, loading, onEdit, onDelete }) => {
       <Column field="NIK" header="NIK" />
       <Column field="NOMINAL" header="Nominal" body={nominalBodyTemplate} />
       <Column field="METODE" header="Metode" body={metodeBodyTemplate} />
+      <Column field="NAMA_BANK" header="Bank" body={bankBodyTemplate}/>
       <Column field="SALDO_SISA" header="Saldo Sisa" body={saldoSisaBodyTemplate} />
       <Column field="STATUS" header="Status" body={statusBodyTemplate} />
       <Column field="KETERANGAN" header="Keterangan" body={keteranganBodyTemplate} />

@@ -14,8 +14,8 @@ export const getAll = () =>{
         'poli.NAMAPOLI as POLI');
 }
 
-export const create = (data) => {
-  return db('pendaftaran').insert(data);
+export const create = (data, trx = db) => {
+  return trx('pendaftaran').insert(data).returning('IDPENDAFTARAN');
 }
 
 export const update = (id, data) => {
@@ -25,3 +25,7 @@ export const update = (id, data) => {
 export const remove = (id) => {
   return db('pendaftaran').where('IDPENDAFTARAN', id).del();
 }
+
+export const startTransaction = () => {
+  return db.transaction();
+};

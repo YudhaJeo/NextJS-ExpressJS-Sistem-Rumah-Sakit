@@ -6,12 +6,14 @@ export const getAll = async () => {
     .join('poli', 'reservasi.IDPOLI', 'poli.IDPOLI')
     .join('dokter', 'reservasi.IDDOKTER', 'dokter.IDDOKTER')
     .leftJoin('jadwal_dokter', 'dokter.IDDOKTER', 'jadwal_dokter.IDDOKTER')
+    .leftJoin('master_tenaga_medis', 'dokter.IDTENAGAMEDIS', 'master_tenaga_medis.IDTENAGAMEDIS')
     .select(
       'reservasi.*',
       'pasien.NAMALENGKAP',
       'poli.NAMAPOLI',
-      'dokter.NAMADOKTER',
-      'jadwal_dokter.HARI',
+      'dokter.IDDOKTER',
+      'master_tenaga_medis.NAMALENGKAP as NAMADOKTER',
+      'jadwal_dokter.HARI', 
       'jadwal_dokter.JAM_MULAI',
       'jadwal_dokter.JAM_SELESAI'
     );

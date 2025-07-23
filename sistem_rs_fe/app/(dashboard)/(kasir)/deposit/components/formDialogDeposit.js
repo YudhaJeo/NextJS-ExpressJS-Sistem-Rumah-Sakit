@@ -17,6 +17,7 @@ const FormDialogDeposit = ({
   setForm,
   pasienOptions,
   metodeOptions,
+  bankOptions,
 }) => {
   const [errors, setErrors] = useState({});
 
@@ -33,6 +34,9 @@ const FormDialogDeposit = ({
     if (!form.NOMINAL || form.NOMINAL <= 0)
       newErrors.NOMINAL = 'Nominal harus lebih dari 0';
     if (!form.METODE) newErrors.METODE = 'Metode pembayaran wajib dipilih';
+    if (form.METODE === 'Transfer Bank' && !form.IDBANK) {
+      newErrors.IDBANK = 'Rekening bank wajib dipilih untuk Transfer Bank';
+    }
     if (!form.STATUS) newErrors.STATUS = 'Status wajib dipilih';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -119,13 +123,24 @@ const FormDialogDeposit = ({
           <InputNumber
             className={classNames('w-full mt-2', { 'p-invalid': errors.NOMINAL })}
             value={form.NOMINAL}
-            onValueChange={(e) =>
+            onValueChange={(e) => {
+              const nominal = e.value || 0;
+              const saldoSisa = nominal;
+
+              let status = form.STATUS;
+              if (saldoSisa === 0) {
+                status = 'HABIS';
+              } else if (status === 'HABIS') {
+                status = 'AKTIF';
+              }
+
               setForm({
                 ...form,
-                NOMINAL: e.value,
-                SALDO_SISA: e.value, 
-              })
-            }
+                NOMINAL: nominal,
+                SALDO_SISA: saldoSisa,
+                STATUS: status,
+              });
+            }}
             mode="currency"
             currency="IDR"
             locale="id-ID"
@@ -139,11 +154,35 @@ const FormDialogDeposit = ({
             className={classNames('w-full mt-2', { 'p-invalid': errors.METODE })}
             options={metodeOptions}
             value={form.METODE}
-            onChange={(e) => setForm({ ...form, METODE: e.value })}
+            onChange={(e) => {
+              if (e.value !== 'Transfer Bank') {
+                setForm({ ...form, METODE: e.value, IDBANK: null });
+              } else {
+                setForm({ ...form, METODE: e.value });
+              }
+            }}
             placeholder="Pilih Metode"
           />
           {errors.METODE && <small className="p-error">{errors.METODE}</small>}
         </div>
+
+        {form.METODE === 'Transfer Bank' && (
+          <div>
+            <label className="font-medium">Pilih Rekening Bank</label>
+            <Dropdown
+              className={classNames('w-full mt-2', { 'p-invalid': errors.IDBANK })}
+              options={bankOptions}
+              value={form.IDBANK || ''}
+              onChange={(e) => setForm({ ...form, IDBANK: e.value })}
+              placeholder="Pilih Bank"
+              optionLabel="label"
+              optionValue="value"
+              filter
+              showClear
+            />
+            {errors.IDBANK && <small className="p-error">{errors.IDBANK}</small>}
+          </div>
+        )}
 
         <div>
           <label className="font-medium">Saldo Sisa</label>
@@ -162,9 +201,10 @@ const FormDialogDeposit = ({
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUS })}
             options={statusOptions}
-            value={form.STATUS}
+            value={form.SALDO_SISA === 0 ? 'HABIS' : form.STATUS}  // ✅ fix force status
             onChange={(e) => setForm({ ...form, STATUS: e.value })}
             placeholder="Pilih Status"
+            disabled={form.SALDO_SISA === 0}
           />
           {errors.STATUS && <small className="p-error">{errors.STATUS}</small>}
         </div>
