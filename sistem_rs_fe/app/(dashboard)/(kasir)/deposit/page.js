@@ -141,15 +141,22 @@ const Page = () => {
       ? `${API_URL}/deposit/${form.IDDEPOSIT}`
       : `${API_URL}/deposit`;
 
+    // Buat salinan form yang benar-benar fix statusnya:
+    const body = { ...form };
+    if (body.SALDO_SISA === 0) {
+      body.STATUS = 'HABIS';
+    }
+
     try {
       if (isEdit) {
-        const { NODEPOSIT, NAMAPASIEN, ...body } = form;
-        await axios.put(url, body);
+        const { NODEPOSIT, NAMAPASIEN, ...payload } = body;
+        await axios.put(url, payload);
         toastRef.current?.showToast('00', 'Data berhasil diperbarui');
       } else {
-        await axios.post(url, form);
+        await axios.post(url, body);
         toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
       }
+
       fetchData();
       setDialogVisible(false);
       resetForm();

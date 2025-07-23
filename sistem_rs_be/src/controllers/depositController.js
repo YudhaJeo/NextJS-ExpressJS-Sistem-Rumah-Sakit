@@ -49,6 +49,9 @@ export async function createDeposit(req, res) {
     const tanggalDeposit = TANGGALDEPOSIT || new Date().toISOString().split('T')[0];
     const NODEPOSIT = await generateNoDeposit(tanggalDeposit, trx);
 
+    const saldoSisa = NOMINAL || 0;
+    const statusFinal = saldoSisa === 0 ? 'HABIS' : STATUS;
+
     await trx('deposit').insert({
       NODEPOSIT,
       NIK,
@@ -56,8 +59,8 @@ export async function createDeposit(req, res) {
       NOMINAL,
       METODE,
       IDBANK: idBankFinal,
-      SALDO_SISA: NOMINAL, // default
-      STATUS,
+      SALDO_SISA: saldoSisa,
+      STATUS: statusFinal,
       KETERANGAN
     });
 
@@ -86,6 +89,8 @@ export async function updateDeposit(req, res) {
 
     const idBankFinal = METODE === 'Transfer Bank' ? IDBANK : null;
 
+    const statusFinal = (SALDO_SISA === 0) ? 'HABIS' : STATUS;
+
     const updated = await DepositModel.update(id, {
       NIK,
       TANGGALDEPOSIT: TANGGALDEPOSIT || db.fn.now(),
@@ -93,7 +98,7 @@ export async function updateDeposit(req, res) {
       METODE,
       IDBANK: idBankFinal,
       SALDO_SISA,
-      STATUS,
+      STATUS: statusFinal,
       KETERANGAN
     });
 

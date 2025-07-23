@@ -25,12 +25,15 @@ const metodeSeverity = {
 };
 
 const TabelDeposit = ({ data, loading, onEdit, onDelete }) => {
-  const statusBodyTemplate = (row) => (
-    <Tag
-      value={statusLabels[row.STATUS] || row.STATUS}
-      severity={statusSeverity[row.STATUS] || 'info'}
-    />
-  );
+  const statusBodyTemplate = (row) => {
+    const effectiveStatus = Number(row.SALDO_SISA) === 0 ? 'HABIS' : row.STATUS;
+    return (
+      <Tag
+        value={statusLabels[effectiveStatus] || effectiveStatus}
+        severity={statusSeverity[effectiveStatus] || 'info'}
+      />
+    );
+  };
 
   const metodeBodyTemplate = (row) => (
     <Tag

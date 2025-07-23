@@ -123,13 +123,24 @@ const FormDialogDeposit = ({
           <InputNumber
             className={classNames('w-full mt-2', { 'p-invalid': errors.NOMINAL })}
             value={form.NOMINAL}
-            onValueChange={(e) =>
+            onValueChange={(e) => {
+              const nominal = e.value || 0;
+              const saldoSisa = nominal;
+
+              let status = form.STATUS;
+              if (saldoSisa === 0) {
+                status = 'HABIS';
+              } else if (status === 'HABIS') {
+                status = 'AKTIF';
+              }
+
               setForm({
                 ...form,
-                NOMINAL: e.value,
-                SALDO_SISA: e.value, 
-              })
-            }
+                NOMINAL: nominal,
+                SALDO_SISA: saldoSisa,
+                STATUS: status,
+              });
+            }}
             mode="currency"
             currency="IDR"
             locale="id-ID"
@@ -154,7 +165,7 @@ const FormDialogDeposit = ({
           />
           {errors.METODE && <small className="p-error">{errors.METODE}</small>}
         </div>
-        
+
         {form.METODE === 'Transfer Bank' && (
           <div>
             <label className="font-medium">Pilih Rekening Bank</label>
@@ -190,9 +201,10 @@ const FormDialogDeposit = ({
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUS })}
             options={statusOptions}
-            value={form.STATUS}
+            value={form.SALDO_SISA === 0 ? 'HABIS' : form.STATUS}  // ✅ fix force status
             onChange={(e) => setForm({ ...form, STATUS: e.value })}
             placeholder="Pilih Status"
+            disabled={form.SALDO_SISA === 0}
           />
           {errors.STATUS && <small className="p-error">{errors.STATUS}</small>}
         </div>
