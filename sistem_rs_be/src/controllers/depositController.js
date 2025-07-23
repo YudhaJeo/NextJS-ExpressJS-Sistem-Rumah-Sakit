@@ -31,13 +31,20 @@ export async function getDepositById(req, res) {
 export async function createDeposit(req, res) {
   const trx = await db.transaction();
   try {
-    const { NIK, TANGGALDEPOSIT, NOMINAL, METODE, STATUS, KETERANGAN } = req.body;
+    const { NIK, TANGGALDEPOSIT, NOMINAL, METODE, STATUS, KETERANGAN, IDBANK } = req.body;
 
     const pasien = await trx('pasien').where('NIK', NIK).first();
     if (!pasien) {
       await trx.rollback();
       return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan' });
     }
+
+    if (METODE === 'Transfer Bank' && !IDBANK) {
+      await trx.rollback();
+      return res.status(400).json({ success: false, message: 'Bank wajib dipilih untuk Transfer Bank' });
+    }
+
+    const idBankFinal = METODE === 'Transfer Bank' ? IDBANK : null;
 
     const tanggalDeposit = TANGGALDEPOSIT || new Date().toISOString().split('T')[0];
     const NODEPOSIT = await generateNoDeposit(tanggalDeposit, trx);
@@ -48,6 +55,7 @@ export async function createDeposit(req, res) {
       TANGGALDEPOSIT: tanggalDeposit,
       NOMINAL,
       METODE,
+      IDBANK: idBankFinal,
       SALDO_SISA: NOMINAL, // default
       STATUS,
       KETERANGAN
@@ -65,18 +73,25 @@ export async function createDeposit(req, res) {
 export async function updateDeposit(req, res) {
   try {
     const { id } = req.params;
-    const { NIK, TANGGALDEPOSIT, NOMINAL, METODE, SALDO_SISA, STATUS, KETERANGAN } = req.body;
+    const { NIK, TANGGALDEPOSIT, NOMINAL, METODE, SALDO_SISA, STATUS, KETERANGAN, IDBANK } = req.body;
 
     const pasien = await db('pasien').where('NIK', NIK).first();
     if (!pasien) {
       return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan' });
     }
 
+    if (METODE === 'Transfer Bank' && !IDBANK) {
+      return res.status(400).json({ success: false, message: 'Bank wajib dipilih untuk Transfer Bank' });
+    }
+
+    const idBankFinal = METODE === 'Transfer Bank' ? IDBANK : null;
+
     const updated = await DepositModel.update(id, {
       NIK,
       TANGGALDEPOSIT: TANGGALDEPOSIT || db.fn.now(),
       NOMINAL,
       METODE,
+      IDBANK: idBankFinal,
       SALDO_SISA,
       STATUS,
       KETERANGAN
@@ -112,7 +127,7 @@ export async function deleteDeposit(req, res) {
 export async function getDepositOptions(req, res) {
   try {
     const rows = await db('deposit')
-      .leftJoin('pasien', 'deposit.NIK', 'pasien.NIK') 
+      .leftJoin('pasien', 'deposit.NIK', 'pasien.NIK')
       .select(
         'deposit.IDDEPOSIT as value',
         db.raw('CONCAT("DEP-", deposit.IDDEPOSIT) as label'),

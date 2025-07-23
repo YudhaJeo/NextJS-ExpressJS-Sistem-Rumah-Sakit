@@ -3,18 +3,22 @@ import db from '../core/config/knex.js';
 export const getAll = () => {
   return db('deposit')
     .join('pasien', 'deposit.NIK', 'pasien.NIK')
+    .leftJoin('bank_account', 'deposit.IDBANK', 'bank_account.IDBANK')
     .select(
       'deposit.*',
-      'pasien.NAMALENGKAP as NAMAPASIEN'
+      'pasien.NAMALENGKAP as NAMAPASIEN',
+      'bank_account.NAMA_BANK'
     );
 };
 
 export const getById = (id) => {
   return db('deposit')
     .join('pasien', 'deposit.NIK', 'pasien.NIK')
+    .leftJoin('bank_account', 'deposit.IDBANK', 'bank_account.IDBANK')
     .select(
       'deposit.*',
-      'pasien.NAMALENGKAP as NAMAPASIEN'
+      'pasien.NAMALENGKAP as NAMAPASIEN',
+      'bank_account.NAMA_BANK'
     )
     .where('deposit.IDDEPOSIT', id)
     .first();

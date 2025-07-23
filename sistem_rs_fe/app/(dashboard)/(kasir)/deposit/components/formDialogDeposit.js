@@ -17,6 +17,7 @@ const FormDialogDeposit = ({
   setForm,
   pasienOptions,
   metodeOptions,
+  bankOptions,
 }) => {
   const [errors, setErrors] = useState({});
 
@@ -33,6 +34,9 @@ const FormDialogDeposit = ({
     if (!form.NOMINAL || form.NOMINAL <= 0)
       newErrors.NOMINAL = 'Nominal harus lebih dari 0';
     if (!form.METODE) newErrors.METODE = 'Metode pembayaran wajib dipilih';
+    if (form.METODE === 'Transfer Bank' && !form.IDBANK) {
+      newErrors.IDBANK = 'Rekening bank wajib dipilih untuk Transfer Bank';
+    }
     if (!form.STATUS) newErrors.STATUS = 'Status wajib dipilih';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -139,11 +143,35 @@ const FormDialogDeposit = ({
             className={classNames('w-full mt-2', { 'p-invalid': errors.METODE })}
             options={metodeOptions}
             value={form.METODE}
-            onChange={(e) => setForm({ ...form, METODE: e.value })}
+            onChange={(e) => {
+              if (e.value !== 'Transfer Bank') {
+                setForm({ ...form, METODE: e.value, IDBANK: null });
+              } else {
+                setForm({ ...form, METODE: e.value });
+              }
+            }}
             placeholder="Pilih Metode"
           />
           {errors.METODE && <small className="p-error">{errors.METODE}</small>}
         </div>
+        
+        {form.METODE === 'Transfer Bank' && (
+          <div>
+            <label className="font-medium">Pilih Rekening Bank</label>
+            <Dropdown
+              className={classNames('w-full mt-2', { 'p-invalid': errors.IDBANK })}
+              options={bankOptions}
+              value={form.IDBANK || ''}
+              onChange={(e) => setForm({ ...form, IDBANK: e.value })}
+              placeholder="Pilih Bank"
+              optionLabel="label"
+              optionValue="value"
+              filter
+              showClear
+            />
+            {errors.IDBANK && <small className="p-error">{errors.IDBANK}</small>}
+          </div>
+        )}
 
         <div>
           <label className="font-medium">Saldo Sisa</label>

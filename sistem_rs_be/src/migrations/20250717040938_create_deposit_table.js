@@ -11,7 +11,8 @@ export const up = function (knex) {
     table.datetime('TANGGALDEPOSIT').notNullable().defaultTo(knex.fn.now());
     table.double('NOMINAL', 15, 2).notNullable();
     table.string('METODE', 50).notNullable();
-    table.string('BANK', 50);
+    table.integer('IDBANK').unsigned()
+      .references('IDBANK').inTable('bank_account').onDelete('SET NULL');
     table.double('SALDO_SISA', 15, 2).notNullable();
     table.enu('STATUS', ['AKTIF', 'HABIS', 'REFUND']).defaultTo('AKTIF');
     table.string('KETERANGAN', 255);
@@ -25,5 +26,7 @@ export const up = function (knex) {
  * @returns { Promise<void> }
  */
 export const down = function (knex) {
-  return knex.schema.dropTable('deposit');
+  return knex.schema.table('deposit', (table) => {
+    table.dropColumn('IDBANK');
+  });
 };
