@@ -26,14 +26,15 @@ const TabelRiwayatInap = ({ data, loading }) => {
       currency: 'IDR',
     }).format(value || 0);
 
-  const actionBody = (rowData) => (
-    <Button
-      label="Lihat"
-      icon="pi pi-eye"
-      className="p-button-sm"
-      onClick={() => router.push(`/rawat_inap/menu/riwayat_inap/${rowData.IDRAWATINAP}`)}
-    />
-  );
+    const actionBody = (rowData) => (
+      <Button
+        label="Lihat"
+        icon="pi pi-eye"
+        className="p-button-sm"
+        onClick={() => window.open(`/rawat_inap/menu/riwayat_inap/${rowData.IDRAWATINAP}`, '_blank')}
+      />
+    );
+    
 
   return (
     <DataTable

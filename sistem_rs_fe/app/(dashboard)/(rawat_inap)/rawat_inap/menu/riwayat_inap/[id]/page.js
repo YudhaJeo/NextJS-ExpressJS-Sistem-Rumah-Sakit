@@ -4,6 +4,17 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+
+// PrimeReact Components
+import { Card } from 'primereact/card';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { Tag } from 'primereact/tag';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import { Message } from 'primereact/message';
+import { Divider } from 'primereact/divider';
+import { Panel } from 'primereact/panel';
+
 import ToastNotifier from '@/app/components/toastNotifier';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -11,6 +22,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function DetailRiwayatInapPage() {
   const [detail, setDetail] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState([]);
   const router = useRouter();
   const { id } = useParams();
   const toastRef = useRef(null);
@@ -27,6 +39,50 @@ export default function DetailRiwayatInapPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDetail(res.data.data);
+      
+      // Prepare services data for DataTable
+      const servicesData = [];
+      
+      // Add room service
+      servicesData.push({
+        id: 1,
+        layanan: `Biaya Kamar Rawat Inap (Bed ${res.data.data.NOMORBED})`,
+        qty: 1,
+        jenis: 'Kamar',
+        hargaSatuan: res.data.data.TOTALKAMAR,
+        total: res.data.data.TOTALKAMAR,
+        type: 'kamar'
+      });
+
+      // Add medicines
+      res.data.data.obat?.forEach((obat, index) => {
+        servicesData.push({
+          id: index + 2,
+          layanan: obat.NAMAOBAT,
+          satuan: obat.SATUAN,
+          qty: obat.JUMLAH,
+          jenis: 'Obat',
+          hargaSatuan: obat.HARGA,
+          total: obat.TOTAL,
+          type: 'obat'
+        });
+      });
+
+      // Add procedures
+      res.data.data.tindakan?.forEach((tindakan, index) => {
+        servicesData.push({
+          id: (res.data.data.obat?.length || 0) + index + 2,
+          layanan: tindakan.NAMATINDAKAN,
+          kategori: tindakan.KATEGORI,
+          qty: tindakan.JUMLAH,
+          jenis: 'Tindakan',
+          hargaSatuan: tindakan.HARGA,
+          total: tindakan.TOTAL,
+          type: 'tindakan'
+        });
+      });
+
+      setServices(servicesData);
     } catch (err) {
       console.error('Gagal ambil detail:', err);
       toastRef.current?.showToast('01', 'Gagal mengambil detail rawat inap');
@@ -34,24 +90,6 @@ export default function DetailRiwayatInapPage() {
       setLoading(false);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
-  if (!detail) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-sm text-center">
-          <p className="text-gray-500">Tidak ada data ditemukan.</p>
-        </div>
-      </div>
-    );
-  }
 
   const formatTanggal = (tanggal) => {
     if (!tanggal) return "-";
@@ -69,173 +107,203 @@ export default function DetailRiwayatInapPage() {
       currency: 'IDR',
     }).format(value || 0);
 
-  const hitungSubTotal = () => {
-    const totalObat = detail.OBAT?.reduce((sum, obat) => sum + (obat.HARGA || 0), 0) || 0;
-    const totalTindakan = detail.TINDAKAN?.reduce((sum, tindakan) => sum + (tindakan.TARIF || 0), 0) || 0;
-    return totalObat + totalTindakan;
+  // Column templates
+  const noBodyTemplate = (rowData, { rowIndex }) => {
+    return rowIndex + 1;
   };
 
-  const subTotal = hitungSubTotal();
-  const totalKamar = detail.TOTAL_HARGA_KAMAR || 0;
-  const grandTotal = subTotal + totalKamar;
+  const layananBodyTemplate = (rowData) => {
+    return (
+      <div>
+        <div className="font-medium">{rowData.layanan}</div>
+        {rowData.satuan && <div className="text-sm text-gray-500">{rowData.satuan}</div>}
+        {rowData.kategori && <div className="text-sm text-gray-500">{rowData.kategori}</div>}
+      </div>
+    );
+  };
+
+  const jenisBodyTemplate = (rowData) => {
+    let severity = 'success';
+    if (rowData.type === 'obat') severity = 'info';
+    if (rowData.type === 'tindakan') severity = 'warning';
+    
+    return <Tag value={rowData.jenis} severity={severity} />;
+  };
+
+  const hargaBodyTemplate = (rowData) => {
+    return <div className="text-right font-medium">{formatRupiah(rowData.hargaSatuan)}</div>;
+  };
+
+  const totalBodyTemplate = (rowData) => {
+    return <div className="text-right font-medium">{formatRupiah(rowData.total)}</div>;
+  };
+
+  const qtyBodyTemplate = (rowData) => {
+    return <div className="text-center">{rowData.qty}</div>;
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-content-center align-items-center" style={{ minHeight: '50vh' }}>
+        <ProgressSpinner />
+      </div>
+    );
+  }
+
+  if (!detail) {
+    return (
+      <div className="flex justify-content-center align-items-center" style={{ minHeight: '50vh' }}>
+        <Message severity="warn" text="Tidak ada data ditemukan." />
+      </div>
+    );
+  }
+
+  // Header template untuk card
+  const headerTemplate = (
+    <div className="bg-primary text-white p-4 text-center">
+      <h1 className="text-2xl font-bold m-0">Detail Rawat Inap</h1>
+      <p className="m-1 opacity-90">ID Transaksi: #{detail?.IDRAWATINAP || id}</p>
+    </div>
+  );
 
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
       
-      <div className="">
-        {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="max-w-6xl mx-auto">
+        <Card className="shadow-3">
+          {/* Custom Header */}
+          {headerTemplate}
           
-          {/* Invoice Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-8">
-            <div className="flex justify-between">
-              <div className="text-white">
-                <h1 className="text-2xl font-bold">Detail Rawat Inap</h1>
-                <p className="text-blue-100">ID Transaksi: ID{id}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Patient Info */}
-          <div className="px-8 py-6 border-b border-gray-200">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide">
-                  Informasi Pasien
-                </h3>
-                <div className="mt-3">
-                  <p className="text-lg font-semibold text-gray-900">{detail.NAMALENGKAP}</p>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide">
-                  Periode Rawat Inap
-                </h3>
-                <div className="mt-3 space-y-1">
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium">Masuk:</span> {formatTanggal(detail.TANGGALMASUK)}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium">Keluar:</span> {formatTanggal(detail.TANGGALKELUAR)}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Services Table */}
-          <div className="px-8 py-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Rincian Layanan</h3>
-            
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      #
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Layanan
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Jenis
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Biaya
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {/* Kamar */}
-                  <tr className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      Biaya Kamar Rawat Inap
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                        Kamar
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-medium">
-                      {formatRupiah(totalKamar)}
-                    </td>
-                  </tr>
-
-                  {/* Obat */}
-                  {detail.OBAT?.map((obat, index) => (
-                    <tr key={`obat-${index}`} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{index + 2}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {obat.NAMAOBAT}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                          Obat
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-medium">
-                        {formatRupiah(obat.HARGA)}
-                      </td>
-                    </tr>
-                  ))}
-
-                  {/* Tindakan */}
-                  {detail.TINDAKAN?.map((tindakan, index) => (
-                    <tr key={`tindakan-${index}`} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {(detail.OBAT?.length || 0) + index + 2}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {tindakan.NAMATINDAKAN}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
-                          Tindakan
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-right font-medium">
-                        {formatRupiah(tindakan.TARIF)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Total Section */}
-          <div className="px-8 py-6 bg-gray-50 border-t border-gray-200">
-            <div className="flex justify-end">
-              <div className="w-full max-w-sm">
-                <div className="space-y-3">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Sub Total Layanan:</span>
-                    <span className="font-medium">{formatRupiah(subTotal)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Biaya Kamar:</span>
-                    <span className="font-medium">{formatRupiah(totalKamar)}</span>
-                  </div>
-                  <div className="border-t border-gray-300 pt-3">
-                    <div className="flex justify-between text-lg font-semibold">
-                      <span className="text-gray-900">Total:</span>
-                      <span className="text-blue-600">{formatRupiah(grandTotal)}</span>
+          {/* Patient Information */}
+          <div className="p-4">
+            <div className="grid">
+              <div className="col-12 md:col-4">
+                <Panel header="Informasi Pasien" className="h-full">
+                  <div className="pt-2">
+                    <div className="text-lg font-semibold text-900 mb-2">{detail.NAMALENGKAP}</div>
+                    <div className="text-sm text-600">
+                      <strong>No. Bed:</strong> {detail.NOMORBED}
                     </div>
                   </div>
-                </div>
+                </Panel>
+              </div>
+
+              <div className="col-12 md:col-4">
+                <Panel header="Periode Rawat Inap" className="h-full">
+                  <div className="pt-2">
+                    <div className="text-sm text-600 mb-2">
+                      <strong>Masuk:</strong> {formatTanggal(detail.TANGGALMASUK)}
+                    </div>
+                    <div className="text-sm text-600">
+                      <strong>Keluar:</strong> {formatTanggal(detail.TANGGALKELUAR)}
+                    </div>
+                  </div>
+                </Panel>
+              </div>
+
+              <div className="col-12 md:col-4">
+                <Panel header="ID Rawat Inap" className="h-full">
+                  <div className="pt-2">
+                    <div className="text-lg font-semibold text-900">#{detail.IDRAWATINAP}</div>
+                  </div>
+                </Panel>
               </div>
             </div>
-          </div>
 
-          {/* Footer */}
-          <div className="px-8 py-4 bg-white border-t border-gray-200">
-            <div className="text-center text-sm text-gray-500">
-              <p>Terima kasih atas kepercayaan Anda menggunakan layanan kami</p>
+            <Divider />
+
+            {/* Services Table */}
+            <div className="mb-4">
+              <h3 className="text-xl font-semibold text-900 mb-3">Rincian Layanan</h3>
+              
+              <DataTable 
+                value={services} 
+                stripedRows 
+                showGridlines
+                responsiveLayout="scroll"
+                className="p-datatable-customers"
+              >
+                <Column 
+                  field="id" 
+                  header="#" 
+                  body={noBodyTemplate}
+                  style={{ width: '60px' }}
+                />
+                <Column 
+                  field="layanan"
+                  header="Layanan"
+                  body={layananBodyTemplate}
+                  style={{ minWidth: '200px' }}
+                />
+                <Column 
+                  field="qty"
+                  header="Qty"
+                  body={qtyBodyTemplate}
+                  style={{ width: '80px' }}
+                />
+                <Column 
+                  field="jenis"
+                  header="Jenis"
+                  body={jenisBodyTemplate}
+                  style={{ width: '120px' }}
+                />
+                <Column 
+                  field="hargaSatuan"
+                  header="Harga Satuan"
+                  body={hargaBodyTemplate}
+                  style={{ width: '150px' }}
+                />
+                <Column 
+                  field="total"
+                  header="Total"
+                  body={totalBodyTemplate}
+                  style={{ width: '150px' }}
+                />
+              </DataTable>
+            </div>
+
+            <Divider />
+
+            {/* Total Section */}
+            <div className="grid">
+              <div className="col-12 md:col-6 md:col-offset-6">
+                <Panel header="Ringkasan Biaya" className="bg-gray-50">
+                  <div className="pt-2">
+                    <div className="flex justify-content-between mb-2">
+                      <span className="text-600">Biaya Kamar:</span>
+                      <span className="font-medium">{formatRupiah(detail.TOTALKAMAR)}</span>
+                    </div>
+                    
+                    <div className="flex justify-content-between mb-2">
+                      <span className="text-600">Total Obat:</span>
+                      <span className="font-medium">{formatRupiah(detail.TOTALOBAT)}</span>
+                    </div>
+                    
+                    <div className="flex justify-content-between mb-3">
+                      <span className="text-600">Total Tindakan:</span>
+                      <span className="font-medium">{formatRupiah(detail.TOTALTINDAKAN)}</span>
+                    </div>
+                    
+                    <Divider />
+                    
+                    <div className="flex justify-content-between">
+                      <span className="text-lg font-semibold text-900">Total Biaya:</span>
+                      <span className="text-lg font-semibold text-primary">{formatRupiah(detail.TOTALBIAYA)}</span>
+                    </div>
+                  </div>
+                </Panel>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="text-center mt-4 p-3 bg-gray-50 border-round">
+              <p className="text-sm text-600 m-0">
+                Terima kasih atas kepercayaan anda menggunakan layanan kami
+              </p>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );
