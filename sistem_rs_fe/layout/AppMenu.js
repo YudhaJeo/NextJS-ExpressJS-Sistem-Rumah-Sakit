@@ -159,7 +159,7 @@ const AppMenu = () => {
         { label: "Obat Inap", icon: "pi pi-fw pi-briefcase", to: "/rawat_inap/menu/obat_inap" },
         { label: "Tindakan Medis Inap", icon: "pi pi-fw pi-link", to: "/rawat_inap/menu/tindakan_inap" },
         { label: "Tagihan Sementara", icon: "pi pi-fw pi-money-bill", to: "/rawat_inap/menu/tagihan_sementara" },
-        { label: "Riwayat Pasien", icon: "pi pi-fw pi-users", to: "/rawat_inap/menu/riwayat_pasien" },
+        { label: "Riwayat Rawat Inap", icon: "pi pi-fw pi-users", to: "/rawat_inap/menu/riwayat_inap" },
       ],
     },
   ],

@@ -42,6 +42,7 @@ import depositPenggunaanRoutes from './routes/depositPenggunaanRoutes.js';
 import obatInapRoutes from './routes/obatInapRoutes.js';
 import tindakanInapRoutes from './routes/tindakanInapRoutes.js';
 import tagihanSementaraRoutes from './routes/tagihanSementaraRoutes.js';
+import riwayatInapRoutes from './routes/riwayatInapRoutes.js';
 
 const app = express();
 
@@ -96,5 +97,6 @@ app.use('/api/deposit_penggunaan', depositPenggunaanRoutes);
 app.use('/api/obat_inap', obatInapRoutes);
 app.use('/api/tindakan_inap', tindakanInapRoutes);
 app.use('/api/tagihan_sementara', tagihanSementaraRoutes);
+app.use('/api/riwayat_inap', riwayatInapRoutes);
 
 export default app;
