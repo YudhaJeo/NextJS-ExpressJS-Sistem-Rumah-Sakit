@@ -29,13 +29,13 @@ export async function getRiwayatInapById(req, res) {
     const daftarObat = await RiwayatRawatInap.getRiwayatObatByIdRiwayat(id);
     const daftarTindakan = await RiwayatRawatInap.getRiwayatTindakanByIdRiwayat(id);
 
-    const responseData = {
+    res.status(200).json({
       data: {
         ...dataUtama,
         obat: daftarObat,
         tindakan: daftarTindakan,
       }
-    };
+    });
 
     // console.log(`[GET] /riwayat_inap/${id} response:\n`, JSON.stringify(responseData, null, 2));
     return res.status(200).json(responseData); 
