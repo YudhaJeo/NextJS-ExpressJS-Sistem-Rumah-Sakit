@@ -10,7 +10,7 @@ export const verifyToken = async (req, res, next) => {
     if (!header || !header.startsWith("Bearer ")) {
       return res.status(401).json({
         status: status.BAD_REQUEST,
-        message: "Token tidak ditemukan",
+        message: "No token provided",
         datetime: datetime(),
       });
     }
