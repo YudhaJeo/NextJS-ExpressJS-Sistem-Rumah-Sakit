@@ -1,3 +1,4 @@
+// sistem_rs_be\src\middlewares\jwt.js
 import "dotenv/config";
 import * as jose from "jose";
 import { datetime, status } from "../utils/general.js";
@@ -5,26 +6,26 @@ import { datetime, status } from "../utils/general.js";
 export const verifyToken = async (req, res, next) => {
   try {
     const header = req.headers["authorization"];
-    const token = header && header.split(" ")[1];
 
-    if (!token) {
+    if (!header || !header.startsWith("Bearer ")) {
       return res.status(401).json({
-        status: status.BAD_REQUEST,
-        message: "No token provided",
+        status: status.GAGAL,
+        message: "Token tidak valid",
         datetime: datetime(),
       });
     }
 
+    const token = header.split(" ")[1];
     const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
 
     const { payload } = await jose.jwtVerify(token, secretKey, {
-      algorithms: ["HS512"],
+      algorithms: ["HS512"], 
     });
 
     req.user = payload;
     next();
   } catch (err) {
-    console.error(err);
+    console.error("JWT error:", err);
 
     if (err.code === "ERR_JWT_EXPIRED") {
       return res.status(401).json({
@@ -37,7 +38,7 @@ export const verifyToken = async (req, res, next) => {
     if (err.code === "ERR_JWS_INVALID") {
       return res.status(401).json({
         status: status.GAGAL,
-        message: "Invalid token",
+        message: "Token tidak valid",
         datetime: datetime(),
       });
     }

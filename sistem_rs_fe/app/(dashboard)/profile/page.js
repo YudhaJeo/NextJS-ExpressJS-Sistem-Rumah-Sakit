@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import FormDialogProfile from './components/formDialogProfile';
 import ToastNotifier from '@/app/components/toastNotifier';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -41,8 +42,27 @@ export default function ProfilePage() {
   };
 
   const handleLogout = () => {
-    Cookies.remove('token');
-    router.push('/login');
+    confirmDialog({
+      message: `Apakah anda yakin ingin logout?`,
+      header: 'Konfirmasi Logout',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Ya',
+      rejectLabel: 'Batal',
+      accept: async () => {
+        try {
+          toastRef.current?.showToast('00', 'Anda telah logout, silakan login kembali.');
+          Cookies.remove('token');
+          Cookies.remove('username');
+
+          setTimeout(() => {
+            router.push('/login');
+          }, 500);
+        } catch (err) {
+          console.error('Gagal Logout:', err);
+          toastRef.current?.showToast('01', 'Gagal Logout');
+        }
+      },
+    });
   };
 
   const handleSave = async (newData) => {
@@ -64,6 +84,7 @@ export default function ProfilePage() {
   return (
   <div>
     <ToastNotifier ref={toastRef} />
+    <ConfirmDialog />
 
     <div className="card">
       <h3 className="text-xl font-semibold">Profil Pengguna</h3>
