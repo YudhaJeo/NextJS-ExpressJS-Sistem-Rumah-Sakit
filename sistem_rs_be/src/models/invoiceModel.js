@@ -11,10 +11,6 @@ export const getAll = () => {
     );
 };
 
-export const create = (data) => {
-  return db('invoice').insert(data);
-};
-
 export const update = (id, data) => {
   return db('invoice').where('IDINVOICE', id).update(data);
 };
