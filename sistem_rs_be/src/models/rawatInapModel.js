@@ -80,7 +80,7 @@ export const update = async (id, data) => {
     status = 'SELESAI';
   }
 
-  return db('rawat_inap')
+  await db('rawat_inap')
     .where({ IDRAWATINAP: id })
     .update({
       TANGGALMASUK: tanggalMasuk,
@@ -88,8 +88,12 @@ export const update = async (id, data) => {
       STATUS: status,
       TOTAL_HARGA_KAMAR: totalHarga,
       CATATAN,
-      UPDATED_AT: db.fn.now()
+      UPDATED_AT: db.fn.now(),
     });
+
+  // ambil data setelah update
+  const updatedRawat = await db('rawat_inap').where({ IDRAWATINAP: id }).first();
+  return updatedRawat;
 };
 
 
@@ -98,3 +102,17 @@ export const remove = (id) =>
 
 export const updateBedStatus = (id, status) =>
   db('bed').where({ IDBED: id }).update({ STATUS: status });
+
+export const getTotalObatInap = async (IDRAWATINAP) => {
+  const result = await db('riwayat_obat_inap')
+    .where({ IDRIWAYATINAP: IDRAWATINAP })
+    .sum('TOTAL as total');
+  return result[0];
+};
+
+export const getTotalTindakanInap = async (IDRAWATINAP) => {
+  const result = await db('riwayat_tindakan_inap')
+    .where({ IDRIWAYATINAP: IDRAWATINAP })
+    .sum('TOTAL as total');
+  return result[0];
+};

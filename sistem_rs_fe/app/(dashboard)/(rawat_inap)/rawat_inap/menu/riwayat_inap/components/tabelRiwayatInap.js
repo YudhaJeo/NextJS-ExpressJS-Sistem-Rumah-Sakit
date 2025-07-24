@@ -27,14 +27,19 @@ const TabelRiwayatInap = ({ data, loading }) => {
     }).format(value || 0);
 
     const actionBody = (rowData) => (
-      <Button
-        label="Lihat"
-        icon="pi pi-eye"
-        className="p-button-sm"
-        onClick={() => window.open(`/rawat_inap/menu/riwayat_inap/${rowData.IDRAWATINAP}`, '_blank')}
-      />
-    );
-    
+      <a
+        href={`/rawat_inap/menu/riwayat_inap/${rowData.IDRIWAYATINAP}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Button
+          label="Lihat"
+          icon="pi pi-eye"
+          className="p-button-sm"
+        />
+      </a>
+    );    
+  
 
   return (
     <DataTable
@@ -64,9 +69,9 @@ const TabelRiwayatInap = ({ data, loading }) => {
         body={(row) => formatRupiah(row.TOTALTINDAKAN)} 
       />
       <Column 
-        field="TOTALKAMAR" 
+        field="TOTAL_HARGA_KAMAR" 
         header="Total Kamar" 
-        body={(row) => formatRupiah(row.TOTALKAMAR)} 
+        body={(row) => formatRupiah(row.TOTAL_HARGA_KAMAR)} 
       />
       <Column 
         field="TOTALBIAYA" 
