@@ -11,7 +11,7 @@ export const up = function (knex) {
     table.string('KELUHAN', 255).nullable();
     table.integer('IDPOLI').unsigned().notNullable()
       .references('IDPOLI').inTable('poli').onDelete('CASCADE');
-    table.enu('STATUSKUNJUNGAN', ['Diperiksa', 'Batal', 'Selesai']).defaultTo('Diperiksa');
+    table.enu('STATUSKUNJUNGAN', ['Diperiksa', 'Batal', 'Selesai', 'Dalam Antrian']).defaultTo('Dalam Antrian');
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now()).notNullable();
     table.timestamp('UPDATED_AT').defaultTo(knex.fn.now()).notNullable();
   });

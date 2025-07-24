@@ -30,7 +30,7 @@ const Page = () => {
     TANGGALKUNJUNGAN: '',
     KELUHAN: '',
     IDPOLI: '',
-    STATUSKUNJUNGAN: 'Diperiksa',
+    STATUSKUNJUNGAN: 'Dalam Antrian',
   });
 
   const toastRef = useRef(null);
@@ -178,7 +178,7 @@ const Page = () => {
       TANGGALKUNJUNGAN: today,
       KELUHAN: '',
       IDPOLI: '',
-      STATUSKUNJUNGAN: 'Diperiksa',
+      STATUSKUNJUNGAN: 'Dalam Antrian',
     });
   };
 

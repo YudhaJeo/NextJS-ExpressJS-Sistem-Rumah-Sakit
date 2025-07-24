@@ -12,6 +12,7 @@ const statusKunjunganOptions = [
   { label: 'Diperiksa', value: 'Diperiksa' },
   { label: 'Selesai', value: 'Selesai' },
   { label: 'Batal', value: 'Batal' },
+  { label: 'Dalam Antrian', value: 'Dalam Antrian' },
 ];
 
 const statusRawatOptions = [
@@ -26,7 +27,7 @@ const FormDialogPengobatan = ({
   form,
   setForm,
   dokterOptions,
-  pendaftaranOptions, // ✅ Tambahan props baru
+  pendaftaranOptions, 
 }) => {
   const [errors, setErrors] = useState({});
 
@@ -37,7 +38,7 @@ const FormDialogPengobatan = ({
   const validate = () => {
     const newErrors = {};
     if (!form.IDDOKTER) newErrors.IDDOKTER = 'Dokter wajib dipilih';
-    if (!form.IDPENDAFTARAN) newErrors.IDPENDAFTARAN = 'Pendaftaran wajib dipilih'; // ✅ Validasi tambahan
+    if (!form.IDPENDAFTARAN) newErrors.IDPENDAFTARAN = 'Pendaftaran wajib dipilih';
     if (!form.STATUSKUNJUNGAN) newErrors.STATUSKUNJUNGAN = 'Status kunjungan wajib diisi';
     if (!form.STATUSRAWAT) newErrors.STATUSRAWAT = 'Status rawat wajib diisi';
     if (!form.DIAGNOSA || form.DIAGNOSA.trim() === '') newErrors.DIAGNOSA = 'Diagnosa wajib diisi';
@@ -68,7 +69,6 @@ const FormDialogPengobatan = ({
       draggable={false}
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* ✅ Dropdown Pendaftaran */}
         <div>
           <label className="font-medium">Pendaftaran</label>
           <Dropdown

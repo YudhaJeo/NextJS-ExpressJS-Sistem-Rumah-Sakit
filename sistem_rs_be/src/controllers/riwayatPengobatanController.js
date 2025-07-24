@@ -67,7 +67,7 @@ export async function deletePengobatan(req, res) {
 
 export const getMonitoringPengobatan = async (req, res) => {
   try {
-    const data = await pengobatanModel.getAllPengobatan(); // JOIN ke semua tabel
+    const data = await PengobatanModel.getAllPengobatan(); 
     res.json(data);
   } catch (error) {
     console.error('Error getMonitoringPengobatan:', error);

@@ -14,7 +14,7 @@ const initialForm = () => ({
   IDPENGOBATAN: "",
   IDDOKTER: "",
   IDPENDAFTARAN: "",
-  STATUSKUNJUNGAN: "Diperiksa",
+  STATUSKUNJUNGAN: "Dalam Antrian",
   STATUSRAWAT: "Rawat Jalan",
   DIAGNOSA: "",
   OBAT: "",
@@ -45,7 +45,6 @@ const RiwayatPengobatanPage = () => {
     setData(list);
     setOriginalData(list);
 
-    // Dropdown Pendaftaran (ambil dari /pendaftaran)
     const daftarRes = await axios.get(`${API_URL}/pendaftaran`);
     const options = daftarRes.data.data.map((item) => {
       const d = new Date(item.TANGGALKUNJUNGAN);
@@ -132,7 +131,7 @@ const RiwayatPengobatanPage = () => {
       IDPENGOBATAN: row.IDPENGOBATAN,
       IDDOKTER: row.IDDOKTER || "",
       IDPENDAFTARAN: row.IDPENDAFTARAN || "",
-      STATUSKUNJUNGAN: row.STATUSKUNJUNGAN || "Diperiksa",
+      STATUSKUNJUNGAN: row.STATUSKUNJUNGAN || "Dalam Antrian",
       STATUSRAWAT: row.STATUSRAWAT || "Rawat Jalan",
       DIAGNOSA: row.DIAGNOSA || "",
       OBAT: row.OBAT || "",
