@@ -28,38 +28,6 @@ export async function getInvoiceById(req, res) {
   }
 }
 
-export async function createInvoice(req, res) {
-  const trx = await db.transaction();
-  try {
-    const { NIK, TANGGALINVOICE, TOTALTAGIHAN, STATUS } = req.body;
-
-    const pasien = await trx('pasien').where('NIK', NIK).first();
-    if (!pasien) {
-      await trx.rollback();
-      return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan' });
-    }
-
-    const invoiceDate = TANGGALINVOICE || new Date().toISOString().split('T')[0];
-    const NOINVOICE = await generateNoInvoice(invoiceDate, trx); // Pass trx here
-
-    await trx('invoice').insert({
-      NOINVOICE,
-      NIK,
-      IDASURANSI: pasien.IDASURANSI,
-      TANGGALINVOICE: invoiceDate,
-      TOTALTAGIHAN,
-      STATUS: STATUS || 'BELUM_LUNAS'
-    });
-
-    await trx.commit();
-    res.status(201).json({ success: true, message: 'Invoice berhasil ditambahkan', NOINVOICE });
-  } catch (err) {
-    await trx.rollback();
-    console.error('Create Error:', err);
-    res.status(500).json({ success: false, message: err.message });
-  }
-}
-
 export async function updateInvoice(req, res) {
   try {
     const { id } = req.params;
@@ -108,7 +76,8 @@ export async function deleteInvoice(req, res) {
 export async function getInvoiceOptions(req, res) {
   try {
     const rows = await db('invoice')
-      .leftJoin('pasien', 'invoice.NIK', 'pasien.NIK') 
+      .leftJoin('pasien', 'invoice.NIK', 'pasien.NIK')
+      .where('invoice.STATUS', 'BELUM_LUNAS')
       .select(
         'invoice.IDINVOICE as value',
         db.raw('CONCAT("INV-", invoice.IDINVOICE) as label'),

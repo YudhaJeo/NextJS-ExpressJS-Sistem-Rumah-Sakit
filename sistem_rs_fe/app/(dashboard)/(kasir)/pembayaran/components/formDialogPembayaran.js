@@ -28,6 +28,7 @@ const FormDialogPembayaran = ({
     if (!form.IDINVOICE) newErrors.IDINVOICE = 'Invoice wajib dipilih';
     if (!form.NIK) newErrors.NIK = 'NIK wajib ada';
     if (!form.NAMAPASIEN) newErrors.NAMAPASIEN = 'Nama Pasien wajib ada';
+    if (!form.ASURANSI) newErrors.ASURANSI = 'Asuransi wajib ada';
     if (!form.METODEPEMBAYARAN) newErrors.METODEPEMBAYARAN = 'Metode wajib dipilih';
     if (!form.JUMLAHBAYAR || form.JUMLAHBAYAR <= 0)
       newErrors.JUMLAHBAYAR = 'Jumlah bayar harus lebih dari 0';
@@ -129,10 +130,11 @@ const FormDialogPembayaran = ({
         <div>
           <label className="font-medium">Asuransi</label>
           <InputText
-            className="w-full mt-2"
+            className={classNames('w-full mt-2', { 'p-invalid': errors.ASURANSI })}
             value={form.ASURANSI}
             readOnly
           />
+          {errors.ASURANSI && <small className="p-error">{errors.ASURANSI}</small>}
         </div>
 
         <div>

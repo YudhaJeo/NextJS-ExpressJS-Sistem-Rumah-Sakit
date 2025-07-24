@@ -9,8 +9,8 @@ export const verifyToken = async (req, res, next) => {
 
     if (!header || !header.startsWith("Bearer ")) {
       return res.status(401).json({
-        status: status.GAGAL,
-        message: "Token tidak valid",
+        status: status.BAD_REQUEST,
+        message: "No token provided",
         datetime: datetime(),
       });
     }
@@ -21,21 +21,22 @@ export const verifyToken = async (req, res, next) => {
     const { payload } = await jose.jwtVerify(token, secretKey, {
       algorithms: ["HS512"], 
     });
+    console.log('✅ JWT Payload:', payload);
 
     req.user = payload;
     next();
   } catch (err) {
     console.error("JWT error:", err);
 
-    if (err.code === "ERR_JWT_EXPIRED") {
+    if (err.name === "JWTExpired") {
       return res.status(401).json({
         status: status.GAGAL,
-        message: "Token expired, silahkan login kembali",
+        message: "Token expired, silakan login kembali",
         datetime: datetime(),
       });
     }
 
-    if (err.code === "ERR_JWS_INVALID") {
+    if (err.name === "JWTInvalid" || err.name === "JWSInvalid") {
       return res.status(401).json({
         status: status.GAGAL,
         message: "Token tidak valid",

@@ -26,27 +26,40 @@ export const getAllPengobatan = () => {
     .join('pasien as ps', 'p.NIK', 'ps.NIK')
     .join('dokter as d', 'r.IDDOKTER', 'd.IDDOKTER')
     .join('master_tenaga_medis as tm', 'd.IDTENAGAMEDIS', 'tm.IDTENAGAMEDIS')
-    .join('poli as pl', 'd.IDPOLI', 'pl.IDPOLI')
+    .join('poli as pl', 'p.IDPOLI', 'pl.IDPOLI')
     .select(
-      'r.IDPENGOBATAN',
       'r.IDPENDAFTARAN',
-      'p.NIK',
-      'ps.NAMALENGKAP',
-      'r.TANGGALKUNJUNGAN',
-      'r.KELUHAN',
-      'd.IDTENAGAMEDIS',
-      'd.IDPOLI',
-      'tm.NAMALENGKAP as NAMADOKTER',
-      'pl.NAMAPOLI as POLI', 
+      db.raw('MAX(r.IDPENGOBATAN) as IDPENGOBATAN'),
       'r.IDDOKTER',
+      'ps.NAMALENGKAP',
+      'ps.NIK',
+      'p.TANGGALKUNJUNGAN',
+      'p.KELUHAN',
+      'pl.NAMAPOLI as POLI',
       'r.STATUSKUNJUNGAN',
       'r.STATUSRAWAT',
       'r.DIAGNOSA',
-      'r.OBAT'
+      'r.OBAT',
+      'tm.NAMALENGKAP as NAMADOKTER'
+    )
+    .groupBy(
+      'r.IDPENDAFTARAN',
+      'r.IDDOKTER',
+      'ps.NAMALENGKAP',
+      'ps.NIK',
+      'p.TANGGALKUNJUNGAN',
+      'p.KELUHAN',
+      'pl.NAMAPOLI',
+      'r.STATUSKUNJUNGAN',
+      'r.STATUSRAWAT',
+      'r.DIAGNOSA',
+      'r.OBAT',
+      'tm.NAMALENGKAP'
     );
-
 };
 
+
+// ✅ Menyimpan data pengobatan baru
 export const createPengobatan = async ({
   IDPENDAFTARAN,
   IDDOKTER,
@@ -55,22 +68,18 @@ export const createPengobatan = async ({
   DIAGNOSA,
   OBAT
 }, trx = db) => {
-  // Ambil data pendaftaran
+  // Cek pendaftaran
   const pendaftaran = await trx('pendaftaran')
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
-    .select(
-      'pendaftaran.NIK',
-      'pendaftaran.TANGGALKUNJUNGAN',
-      'pendaftaran.KELUHAN',
-      'pendaftaran.STATUSKUNJUNGAN'
-    )
+    .select('pendaftaran.STATUSKUNJUNGAN')
     .where('pendaftaran.IDPENDAFTARAN', IDPENDAFTARAN)
     .first();
 
   if (!pendaftaran) throw new Error('Data pendaftaran tidak ditemukan');
 
+  // Ambil info dokter
   const dokter = await trx('dokter')
-    .select('IDTENAGAMEDIS', 'IDPOLI')
+    .select('IDDOKTER')
     .where('IDDOKTER', IDDOKTER)
     .first();
 
@@ -78,11 +87,7 @@ export const createPengobatan = async ({
 
   const data = {
     IDPENDAFTARAN,
-    NIK: pendaftaran.NIK,
-    TANGGALKUNJUNGAN: pendaftaran.TANGGALKUNJUNGAN,
-    KELUHAN: pendaftaran.KELUHAN,
-    IDDOKTER: dokter.IDTENAGAMEDIS,
-    IDPOLI: dokter.IDPOLI,
+    IDDOKTER: dokter.IDDOKTER,
     STATUSKUNJUNGAN: STATUSKUNJUNGAN || pendaftaran.STATUSKUNJUNGAN,
     STATUSRAWAT,
     DIAGNOSA,
@@ -99,5 +104,8 @@ export const updatePengobatan = (id, data) => {
 };
 
 export const deletePengobatan = (id) => {
-  return db('riwayat_pengobatan').where('IDPENGOBATAN', id).del();
+  return db('riwayat_pengobatan')
+    .where('IDPENGOBATAN', id)
+    .del();
 };
+

@@ -44,7 +44,7 @@ const FormDialogInvoice = ({
 
   return (
     <Dialog
-      header={form.IDINVOICE ? 'Edit Invoice' : 'Tambah Invoice'}
+      header="Edit Invoice"
       visible={visible}
       onHide={() => {
         setErrors({});
@@ -138,14 +138,16 @@ const FormDialogInvoice = ({
           {errors.STATUS && <small className="p-error">{errors.STATUS}</small>}
         </div>
 
-        <div className="text-right pt-3">
-          <Button
-            type="submit"
-            label="Simpan"
-            icon="pi pi-save"
-            className="p-button-primary"
-          />
-        </div>
+        {form.IDINVOICE > 0 && (
+          <div className="text-right pt-3">
+            <Button
+              type="submit"
+              label="Simpan"
+              icon="pi pi-save"
+              className="p-button-primary"
+            />
+          </div>
+        )}
       </form>
     </Dialog>
   );

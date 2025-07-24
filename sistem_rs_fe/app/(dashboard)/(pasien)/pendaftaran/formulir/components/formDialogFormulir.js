@@ -123,7 +123,7 @@ const FormDialogPendaftaran = ({
           <label className="font-medium">Status Kunjungan</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUSKUNJUNGAN })}
-            options={['Diperiksa', 'Batal', 'Selesai'].map((val) => ({
+            options={['Diperiksa', 'Batal', 'Selesai', 'Dalam Antrian'].map((val) => ({
               label: val,
               value: val,
             }))}

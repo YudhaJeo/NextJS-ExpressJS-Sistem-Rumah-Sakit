@@ -1,11 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import { Button } from 'primereact/button';
+
+
+const statusKunjunganOptions = [
+  { label: 'Diperiksa', value: 'Diperiksa' },
+  { label: 'Selesai', value: 'Selesai' },
+  { label: 'Batal', value: 'Batal' },
+  { label: 'Dalam Antrian', value: 'Dalam Antrian' },
+];
+
+const statusRawatOptions = [
+  { label: 'Rawat Jalan', value: 'Rawat Jalan' },
+  { label: 'Rawat Inap', value: 'Rawat Inap' },
+];
 
 const FormDialogPengobatan = ({
   visible,
@@ -13,15 +26,23 @@ const FormDialogPengobatan = ({
   onSubmit,
   form,
   setForm,
+  dokterOptions,
+  pendaftaranOptions, 
 }) => {
   const [errors, setErrors] = useState({});
 
+  useEffect(() => {
+    if (!visible) setErrors({});
+  }, [visible]);
+
   const validate = () => {
     const newErrors = {};
-    if (!form.STATUSKUNJUNGAN) newErrors.STATUSKUNJUNGAN = 'Status Kunjungan wajib diisi';
-    if (!form.STATUSRAWAT) newErrors.STATUSRAWAT = 'Status Rawat wajib diisi';
-    if (!form.DIAGNOSA) newErrors.DIAGNOSA = 'Diagnosa wajib diisi';
-    if (!form.OBAT) newErrors.OBAT = 'Obat wajib diisi';
+    if (!form.IDDOKTER) newErrors.IDDOKTER = 'Dokter wajib dipilih';
+    if (!form.IDPENDAFTARAN) newErrors.IDPENDAFTARAN = 'Pendaftaran wajib dipilih';
+    if (!form.STATUSKUNJUNGAN) newErrors.STATUSKUNJUNGAN = 'Status kunjungan wajib diisi';
+    if (!form.STATUSRAWAT) newErrors.STATUSRAWAT = 'Status rawat wajib diisi';
+    if (!form.DIAGNOSA || form.DIAGNOSA.trim() === '') newErrors.DIAGNOSA = 'Diagnosa wajib diisi';
+    if (!form.OBAT || form.OBAT.trim() === '') newErrors.OBAT = 'Obat wajib diisi';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -33,24 +54,51 @@ const FormDialogPengobatan = ({
     }
   };
 
+  const handleHide = () => {
+    setErrors({});
+    onHide();
+  };
+
   return (
     <Dialog
       header="Edit Riwayat Pengobatan"
       visible={visible}
-      onHide={() => {
-        setErrors({});
-        onHide();
-      }}
+      onHide={handleHide}
       style={{ width: '40vw' }}
       modal
+      draggable={false}
     >
-      <form className="space-y-3" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="font-medium">Pendaftaran</label>
+          <Dropdown
+            className={classNames('w-full mt-2', { 'p-invalid': errors.IDPENDAFTARAN })}
+            value={form.IDPENDAFTARAN}
+            options={pendaftaranOptions}
+            onChange={(e) => setForm({ ...form, IDPENDAFTARAN: e.value })}
+            placeholder="Pilih Pendaftaran"
+          />
+          {errors.IDPENDAFTARAN && <small className="p-error">{errors.IDPENDAFTARAN}</small>}
+        </div>
+
+        <div>
+          <label className="font-medium">Nama Dokter</label>
+          <Dropdown
+            className={classNames('w-full mt-2', { 'p-invalid': errors.IDDOKTER })}
+            value={form.IDDOKTER}
+            options={dokterOptions}
+            onChange={(e) => setForm({ ...form, IDDOKTER: e.value })}
+            placeholder="Pilih Dokter"
+          />
+          {errors.IDDOKTER && <small className="p-error">{errors.IDDOKTER}</small>}
+        </div>
+
         <div>
           <label className="font-medium">Status Kunjungan</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUSKUNJUNGAN })}
             value={form.STATUSKUNJUNGAN}
-            options={['Diperiksa', 'Selesai', 'Batal'].map((val) => ({ label: val, value: val }))}
+            options={statusKunjunganOptions}
             onChange={(e) => setForm({ ...form, STATUSKUNJUNGAN: e.value })}
             placeholder="Pilih Status"
           />
@@ -62,7 +110,7 @@ const FormDialogPengobatan = ({
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUSRAWAT })}
             value={form.STATUSRAWAT}
-            options={['Rawat Jalan', 'Rawat Inap'].map((val) => ({ label: val, value: val }))}
+            options={statusRawatOptions}
             onChange={(e) => setForm({ ...form, STATUSRAWAT: e.value })}
             placeholder="Pilih Status Rawat"
           />
@@ -86,13 +134,18 @@ const FormDialogPengobatan = ({
             className={classNames('w-full mt-2', { 'p-invalid': errors.OBAT })}
             value={form.OBAT || ''}
             onChange={(e) => setForm({ ...form, OBAT: e.target.value })}
-            placeholder="Masukkan obat"
+            placeholder="Masukkan nama obat"
           />
           {errors.OBAT && <small className="p-error">{errors.OBAT}</small>}
         </div>
 
-        <div className="text-right pt-3">
-          <Button type="submit" label="Simpan" icon="pi pi-save" className="p-button-primary" />
+        <div className="text-right pt-4">
+          <Button
+            type="submit"
+            label="Simpan"
+            icon="pi pi-save"
+            className="p-button-primary"
+          />
         </div>
       </form>
     </Dialog>

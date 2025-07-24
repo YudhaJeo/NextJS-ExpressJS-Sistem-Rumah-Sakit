@@ -83,6 +83,10 @@ export async function createPembayaran(req, res) {
       trx 
     );
 
+    await trx('invoice')
+      .where('IDINVOICE', IDINVOICE)
+      .update({ STATUS: 'LUNAS' });
+
     await trx.commit();
     res.status(201).json({
       success: true,
