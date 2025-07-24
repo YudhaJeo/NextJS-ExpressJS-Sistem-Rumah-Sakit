@@ -29,16 +29,15 @@ export async function getRiwayatInapById(req, res) {
     const daftarObat = await RiwayatRawatInap.getRiwayatObatByIdRiwayat(id);
     const daftarTindakan = await RiwayatRawatInap.getRiwayatTindakanByIdRiwayat(id);
 
-    res.status(200).json({
-      data: {
-        ...dataUtama,
-        obat: daftarObat,
-        tindakan: daftarTindakan,
-      }
-    });
+    const responseData = {
+      ...dataUtama,
+      obat: daftarObat,
+      tindakan: daftarTindakan,
+    };
 
     // console.log(`[GET] /riwayat_inap/${id} response:\n`, JSON.stringify(responseData, null, 2));
-    return res.status(200).json(responseData); 
+    
+    return res.status(200).json({ data: responseData });
   } catch (err) {
     console.error(`[GET] /riwayat_inap/${id} gagal:`, err);
     return res.status(500).json({ message: 'Gagal mengambil detail riwayat rawat inap' });
