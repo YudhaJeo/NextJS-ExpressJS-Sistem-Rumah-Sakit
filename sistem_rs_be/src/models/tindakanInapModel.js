@@ -19,6 +19,10 @@ export const getById = (id) =>
     .where({ IDTINDAKANINAP: id })
     .first();
 
+export const getByRawatInapId = (idRawatInap) =>
+  db('tindakan_inap')
+    .where({ IDRAWATINAP: idRawatInap });
+
 export const create = (data) =>
   db('tindakan_inap').insert(data);
 
