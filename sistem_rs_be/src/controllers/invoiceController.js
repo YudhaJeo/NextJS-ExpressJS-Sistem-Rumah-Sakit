@@ -76,7 +76,8 @@ export async function deleteInvoice(req, res) {
 export async function getInvoiceOptions(req, res) {
   try {
     const rows = await db('invoice')
-      .leftJoin('pasien', 'invoice.NIK', 'pasien.NIK') 
+      .leftJoin('pasien', 'invoice.NIK', 'pasien.NIK')
+      .where('invoice.STATUS', 'BELUM_LUNAS')
       .select(
         'invoice.IDINVOICE as value',
         db.raw('CONCAT("INV-", invoice.IDINVOICE) as label'),

@@ -72,14 +72,16 @@ const Page = () => {
   const fetchInvoices = async () => {
     try {
       const res = await axios.get(`${API_URL}/invoice`);
-      const options = res.data.data.map((inv) => ({
-        label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN}`,
-        value: inv.IDINVOICE,
-        NIK: inv.NIK,
-        NAMAPASIEN: inv.NAMAPASIEN,
-        NAMAASURANSI: inv.NAMAASURANSI,
-        JUMLAHBAYAR: inv.TOTALTAGIHAN,
-      }));
+      const options = res.data.data
+        .filter((inv) => inv.STATUS !== 'LUNAS') // ← FILTER DI SINI
+        .map((inv) => ({
+          label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN}`,
+          value: inv.IDINVOICE,
+          NIK: inv.NIK,
+          NAMAPASIEN: inv.NAMAPASIEN,
+          NAMAASURANSI: inv.NAMAASURANSI,
+          JUMLAHBAYAR: inv.TOTALTAGIHAN,
+        }));
       setInvoiceOptions(options);
     } catch (err) {
       console.error('Gagal ambil data invoice:', err);
