@@ -10,32 +10,70 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+const initialForm = () => ({
+  IDPENGOBATAN: "",
+  IDDOKTER: "",
+  IDPENDAFTARAN: "",
+  STATUSKUNJUNGAN: "Diperiksa",
+  STATUSRAWAT: "Rawat Jalan",
+  DIAGNOSA: "",
+  OBAT: "",
+});
+
 const RiwayatPengobatanPage = () => {
   const [data, setData] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [originalData, setOriginalData] = useState([]);
   const [form, setForm] = useState(initialForm());
   const toastRef = useRef(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [dokterOptions, setDokterOptions] = useState([]);
+  const [pendaftaranOptions, setPendaftaranOptions] = useState([]);
 
   useEffect(() => {
     fetchData();
+    fetchDokter();
   }, []);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/pendaftaran`);
-      setData(res.data.data);
-      setOriginalData(res.data.data);
+      const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
+      const list = res.data.data || [];
+      setData(list);
+      setOriginalData(list);
+
+      // Dropdown Pendaftaran (masih ambil dari /pendaftaran)
+      const daftarRes = await axios.get(`${API_URL}/pendaftaran`);
+      const options = daftarRes.data.data.map((item) => ({
+        label: `${item.NAMALENGKAP} - ${item.TANGGALKUNJUNGAN}`,
+        value: item.IDPENDAFTARAN,
+      }));
+      setPendaftaranOptions(options);
     } catch (err) {
       console.error("Gagal ambil data monitoring:", err);
+      toastRef.current?.showToast("01", "Gagal mengambil data dari server");
     } finally {
       setLoading(false);
     }
   };
+
+  const fetchDokter = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/dokter`);
+      const options = res.data.map((dokter) => ({
+        label: dokter.NAMALENGKAP,
+        value: dokter.IDDOKTER,
+      }));
+      setDokterOptions(options);
+    } catch (err) {
+      console.error("Gagal ambil data Dokter:", err);
+    }
+  };
+
+  const resetForm = () => setForm(initialForm());
 
   const resetFilter = () => {
     setStartDate(null);
@@ -43,13 +81,23 @@ const RiwayatPengobatanPage = () => {
     setData(originalData);
   };
 
-  const handleSubmit = async () => {
-    if (!form.IDPENGOBATAN) {
-      toastRef.current?.showToast("01", "Tidak dapat menyimpan data baru dari monitoring.");
-      return;
-    }
+  const handleDateFilter = () => {
+    if (!startDate && !endDate) return setData(originalData);
 
+    const filtered = originalData.filter((item) => {
+      const visitDate = new Date(item.TANGGALKUNJUNGAN);
+      const from = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+      const to = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+      return (!from || visitDate >= from) && (!to || visitDate <= to);
+    });
+
+    setData(filtered);
+  };
+
+  const handleSubmit = async () => {
     const payload = {
+      IDDOKTER: form.IDDOKTER,
+      IDPENDAFTARAN: form.IDPENDAFTARAN,
       STATUSKUNJUNGAN: form.STATUSKUNJUNGAN,
       STATUSRAWAT: form.STATUSRAWAT,
       DIAGNOSA: form.DIAGNOSA,
@@ -57,22 +105,27 @@ const RiwayatPengobatanPage = () => {
     };
 
     try {
-      await axios.put(`${API_URL}/riwayat_pengobatan/${form.IDPENGOBATAN}`, payload);
-      toastRef.current?.showToast("00", "Data berhasil diperbarui");
+      if (form.IDPENGOBATAN) {
+        await axios.put(`${API_URL}/riwayat_pengobatan/${form.IDPENGOBATAN}`, payload);
+        toastRef.current?.showToast("00", "Data berhasil diperbarui");
+      }
+
       fetchData();
       setDialogVisible(false);
       resetForm();
     } catch (err) {
-      console.error("Gagal update data:", err);
-      toastRef.current?.showToast("01", "Gagal memperbarui data");
+      console.error("Gagal simpan data:", err);
+      toastRef.current?.showToast("01", "Gagal menyimpan data");
     }
   };
 
   const handleEdit = (row) => {
     setForm({
       IDPENGOBATAN: row.IDPENGOBATAN,
+      IDDOKTER: row.IDDOKTER || "",
+      IDPENDAFTARAN: row.IDPENDAFTARAN || "",
       STATUSKUNJUNGAN: row.STATUSKUNJUNGAN || "Diperiksa",
-      STATUSRAWAT: row.STATUSRAWAT || "",
+      STATUSRAWAT: row.STATUSRAWAT || "Rawat Jalan",
       DIAGNOSA: row.DIAGNOSA || "",
       OBAT: row.OBAT || "",
     });
@@ -80,13 +133,13 @@ const RiwayatPengobatanPage = () => {
   };
 
   const handleDelete = (row) => {
-    if (!row.IDPENGOBATAN) {
-      toastRef.current?.showToast("01", "Tidak ada data pengobatan untuk dihapus.");
+    if (!row.IDPENGOBATAN || !row.IDPENDAFTARAN) {
+      toastRef.current?.showToast("01", "Data tidak valid untuk dihapus");
       return;
     }
 
     confirmDialog({
-      message: `Hapus data pengobatan untuk ${row.NAMALENGKAP}?`,
+      message: `Hapus data pengobatan dan pendaftaran untuk ${row.IDPENGOBATAN}?`,
       header: "Konfirmasi Hapus",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Ya",
@@ -94,6 +147,7 @@ const RiwayatPengobatanPage = () => {
       accept: async () => {
         try {
           await axios.delete(`${API_URL}/riwayat_pengobatan/${row.IDPENGOBATAN}`);
+          await axios.delete(`${API_URL}/pendaftaran/${row.IDPENDAFTARAN}`);
           toastRef.current?.showToast("00", "Data berhasil dihapus");
           fetchData();
         } catch (err) {
@@ -104,28 +158,14 @@ const RiwayatPengobatanPage = () => {
     });
   };
 
-  const resetForm = () => {
-    setForm(initialForm());
-  };
-
-  const handleDateFilter = () => {
-    if (!startDate && !endDate) return setData(originalData);
-    const filtered = originalData.filter((item) => {
-      const visitDate = new Date(item.TANGGALKUNJUNGAN);
-      const from = startDate ? new Date(startDate.setHours(0, 0, 0, 0)) : null;
-      const to = endDate ? new Date(endDate.setHours(23, 59, 59, 999)) : null;
-      return (!from || visitDate >= from) && (!to || visitDate <= to);
-    });
-    setData(filtered);
-  };
-
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
+
       <h3 className="text-xl font-semibold mb-3">Monitoring Riwayat Pengobatan</h3>
 
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
         <FilterTanggal
           startDate={startDate}
           endDate={endDate}
@@ -152,17 +192,11 @@ const RiwayatPengobatanPage = () => {
         onSubmit={handleSubmit}
         form={form}
         setForm={setForm}
+        dokterOptions={dokterOptions}
+        pendaftaranOptions={pendaftaranOptions}
       />
     </div>
   );
 };
-
-const initialForm = () => ({
-  IDPENGOBATAN: "",
-  STATUSKUNJUNGAN: "Diperiksa",
-  STATUSRAWAT: "",
-  DIAGNOSA: "",
-  OBAT: "",
-});
 
 export default RiwayatPengobatanPage;
