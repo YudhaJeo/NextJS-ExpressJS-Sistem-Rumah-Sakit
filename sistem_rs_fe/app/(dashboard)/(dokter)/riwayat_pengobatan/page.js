@@ -38,27 +38,35 @@ const RiwayatPengobatanPage = () => {
   }, []);
 
   const fetchData = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
-      const list = res.data.data || [];
-      setData(list);
-      setOriginalData(list);
+  setLoading(true);
+  try {
+    const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
+    const list = res.data.data || [];
+    setData(list);
+    setOriginalData(list);
 
-      // Dropdown Pendaftaran (masih ambil dari /pendaftaran)
-      const daftarRes = await axios.get(`${API_URL}/pendaftaran`);
-      const options = daftarRes.data.data.map((item) => ({
-        label: `${item.NAMALENGKAP} - ${item.TANGGALKUNJUNGAN}`,
+    // Dropdown Pendaftaran (ambil dari /pendaftaran)
+    const daftarRes = await axios.get(`${API_URL}/pendaftaran`);
+    const options = daftarRes.data.data.map((item) => {
+      const d = new Date(item.TANGGALKUNJUNGAN);
+      const tanggalFormatted = `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${d.getFullYear()}`;
+
+      return {
+        label: `${item.NAMALENGKAP} - ${tanggalFormatted}`,
         value: item.IDPENDAFTARAN,
-      }));
-      setPendaftaranOptions(options);
-    } catch (err) {
-      console.error("Gagal ambil data monitoring:", err);
-      toastRef.current?.showToast("01", "Gagal mengambil data dari server");
-    } finally {
-      setLoading(false);
-    }
-  };
+      };
+    });
+    setPendaftaranOptions(options);
+  } catch (err) {
+    console.error("Gagal ambil data monitoring:", err);
+    toastRef.current?.showToast("01", "Gagal mengambil data dari server");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const fetchDokter = async () => {
     try {
