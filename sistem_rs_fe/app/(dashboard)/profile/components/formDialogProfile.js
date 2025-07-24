@@ -14,7 +14,6 @@ export default function FormDialogProfile({
     const newErrors = {};
     if (!form.username.trim()) newErrors.username = 'Nama wajib diisi';
     if (!form.email.trim()) newErrors.email = 'Email wajib diisi';
-    // if (!form.role.trim()) newErrors.role = 'Role wajib dipilih';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };

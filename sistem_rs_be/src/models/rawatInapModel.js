@@ -63,8 +63,8 @@ export const update = async (id, data) => {
   const tanggalMasuk = new Date(TANGGALMASUK || rawat.TANGGALMASUK);
   const tanggalKeluar = TANGGALKELUAR ? new Date(TANGGALKELUAR) : null;
 
-  let totalHarga = rawat.TOTAL_HARGA_KAMAR;
-  let status = rawat.STATUS;
+  let totalHarga = null;
+  let status = 'AKTIF';
 
   if (tanggalKeluar) {
     const harga = await db('bed')
@@ -91,6 +91,7 @@ export const update = async (id, data) => {
       UPDATED_AT: db.fn.now()
     });
 };
+
 
 export const remove = (id) =>
   db('rawat_inap').where({ IDRAWATINAP: id }).delete();

@@ -102,27 +102,20 @@ const Page = () => {
   };
 
   const handleSubmit = async () => {
-  const isEdit = !!form.IDINVOICE;
-  const url = isEdit
-    ? `${API_URL}/invoice/${form.IDINVOICE}`
-    : `${API_URL}/invoice`;
+    if (!form.IDINVOICE) return;
 
-  try {
-    if (isEdit) {
-      const { NOINVOICE, NAMAPASIEN, ASURANSI, ...body } = form; 
+    const url = `${API_URL}/invoice/${form.IDINVOICE}`;
+    try {
+      const { NOINVOICE, NAMAPASIEN, ASURANSI, ...body } = form;
       await axios.put(url, body);
       toastRef.current?.showToast('00', 'Data berhasil diperbarui');
-    } else {
-      await axios.post(url, form);
-      toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
+      fetchData();
+      setDialogVisible(false);
+      resetForm();
+    } catch (err) {
+      console.error('Gagal simpan data invoice:', err);
+      toastRef.current?.showToast('01', 'Gagal menyimpan data');
     }
-    fetchData();
-    setDialogVisible(false);
-    resetForm();
-  } catch (err) {
-    console.error('Gagal simpan data invoice:', err);
-    toastRef.current?.showToast('01', 'Gagal menyimpan data');
-  }
   };
 
   const handleEdit = (row) => {
@@ -183,16 +176,7 @@ const Page = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
-        
-        <HeaderBar
-          title=""
-          placeholder="Cari no invoice atau nama pasien..."
-          onSearch={handleSearch}
-          onAddClick={() => {
-            resetForm();
-            setDialogVisible(true);
-          }}
-        />
+
       </div>
 
       <TabelInvoice

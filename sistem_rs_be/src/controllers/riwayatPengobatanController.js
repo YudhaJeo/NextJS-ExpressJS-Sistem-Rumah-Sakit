@@ -13,11 +13,10 @@ export async function getAllPengobatan(req, res) {
 
 export async function createPengobatan(req, res) {
   try {
-    const { IDPENDAFTARAN,IDDOKTER, IDPOLI, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
+    const { IDPENDAFTARAN, IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
     await PengobatanModel.createPengobatan({
       IDPENDAFTARAN,
       IDDOKTER,
-      IDPOLI,
       STATUSKUNJUNGAN,
       STATUSRAWAT,
       DIAGNOSA,
@@ -33,11 +32,10 @@ export async function createPengobatan(req, res) {
 export async function updatePengobatan(req, res) {
   try {
     const id = req.params.id;
-    const { IDDOKTER, IDPOLI, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
+    const { IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
 
     await PengobatanModel.updatePengobatan(id, {
       IDDOKTER,
-      IDPOLI,
       STATUSKUNJUNGAN,
       STATUSRAWAT,
       DIAGNOSA,
@@ -64,5 +62,15 @@ export async function deletePengobatan(req, res) {
     res.json({ message: 'Pengobatan berhasil dihapus' });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+}
+
+export const getMonitoringPengobatan = async (req, res) => {
+  try {
+    const data = await pengobatanModel.getAllPengobatan(); // JOIN ke semua tabel
+    res.json(data);
+  } catch (error) {
+    console.error('Error getMonitoringPengobatan:', error);
+    res.status(500).json({ message: 'Gagal mengambil data monitoring pengobatan' });
   }
 }
