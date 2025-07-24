@@ -193,6 +193,8 @@ const AppMenu = () => {
           ]
         },
         { label: "Cetak Invoice & Kwitansi", icon: "pi pi-fw pi-print", to: "/cetak_invoice" },
+        { label: "Produk & Layanan", icon: "pi pi-fw pi-tags", to: "/produkLayanan" },
+        { label: "Jenis Produk & Layanan", icon: "pi pi-fw pi-th-large", to: "/jenis_produk" },
         { label: "Laporan Pembayaran", icon: "pi pi-fw pi-chart-bar", to: "/laporan_pembayaran" },
       ],
     },
