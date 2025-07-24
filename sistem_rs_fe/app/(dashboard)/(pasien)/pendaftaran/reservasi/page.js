@@ -123,7 +123,7 @@ const fetchDokter = async () => {
     console.log('Data poli API:', res.data);
 
     const options = res.data.map((dokter) => ({
-      label: `${dokter.NAMADOKTER} (${dokter.JADWALPRAKTEK || 'Jadwal tidak tersedia' })`,
+      label: `${dokter.NAMALENGKAP} (${dokter.JADWALPRAKTEK || 'Jadwal tidak tersedia' })`,
       value: dokter.IDDOKTER,
       IDPOLI: dokter.IDPOLI,
     }));

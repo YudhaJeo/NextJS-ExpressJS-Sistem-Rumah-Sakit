@@ -2,6 +2,13 @@ import db from '../core/config/knex.js';
 
 const TABLE = 'master_tenaga_non_medis';
 
+export const findByEmail = (email) => {
+  return db(TABLE)
+    .join('role', `${TABLE}.JENISTENAGANONMEDIS`, '=', 'role.IDROLE')
+    .where(`${TABLE}.EMAIL`, email)
+    .first(`${TABLE}.*`, 'role.NAMAROLE');
+};
+
 export const getAll = () => {
   return db(TABLE).select('*');
 };
