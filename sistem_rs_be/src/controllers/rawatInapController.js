@@ -1,5 +1,5 @@
-// src/controllers/rawatInapController.js
 import * as RawatInap from '../models/rawatInapModel.js';
+import * as RiwayatRawatInap from '../models/riwayatInapModel.js';
 
 const getAll = async (req, res) => {
   try {
@@ -37,14 +37,55 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   const { id } = req.params;
+  const keluarSekarang = req.body.TANGGALKELUAR ?? null;
+
   try {
-    const updated = await RawatInap.update(id, req.body);
-    res.status(200).json({ message: 'Data rawat inap berhasil diperbarui', data: updated });
+    const existing = await RawatInap.getById(id);
+    if (!existing) {
+      return res.status(404).json({ message: 'Data tidak ditemukan' });
+    }
+
+    await RawatInap.update(id, {
+      TANGGALKELUAR: keluarSekarang,
+      STATUS: 'SELESAI',
+    });
+    
+    const updated = await RawatInap.getById(id); 
+    
+    if (keluarSekarang && !existing.TANGGALKELUAR) {
+      // Hitung total obat dan tindakan
+      const obat = await RawatInap.getTotalObatInap(updated.IDRAWATINAP);
+      const tindakan = await RawatInap.getTotalTindakanInap(updated.IDRAWATINAP);
+
+      const TOTALOBAT = Number(obat.total) || 0;
+      const TOTALTINDAKAN = Number(tindakan.total) || 0;
+      const TOTALBIAYA = (updated.TOTAL_HARGA_KAMAR || 0) + TOTALOBAT + TOTALTINDAKAN;
+
+      const dataRiwayat = {
+        IDRAWATINAP: updated.IDRAWATINAP,
+        TANGGALMASUK: updated.TANGGALMASUK,
+        TANGGALKELUAR: updated.TANGGALKELUAR,
+        STATUS: updated.STATUS,
+        TOTAL_HARGA_KAMAR: updated.TOTAL_HARGA_KAMAR || 0,
+        TOTALOBAT,
+        TOTALTINDAKAN,
+        TOTALBIAYA,
+        CATATAN: updated.CATATAN || null
+      };
+
+      await RiwayatRawatInap.insertFromRawatInap(dataRiwayat);
+    }    
+
+    res.status(200).json({
+      message: 'Data rawat inap berhasil diperbarui',
+      data: updated
+    });
   } catch (err) {
     console.error('Error update:', err);
     res.status(500).json({ message: 'Gagal memperbarui data rawat inap' });
   }
 };
+
 
 const remove = async (req, res) => {
   const { id } = req.params;
