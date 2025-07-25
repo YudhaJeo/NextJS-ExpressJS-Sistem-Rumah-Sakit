@@ -84,7 +84,7 @@ const Page = () => {
       const res = await axios.get(`${API_URL}/deposit/options`);
       setDepositOptions(res.data.data.map(item => ({
         value: item.value, 
-        label: `${item.NODEPOSIT} | ${item.NAMAPASIEN} | Sisa: ${formatRupiah(item.SALDO_SISA)}`,
+        label: `${item.label} | ${item.NAMAPASIEN} | Sisa: ${formatRupiah(item.SALDO_SISA)}`,
         nik: item.NIK,
         NAMAPASIEN: item.NAMAPASIEN,
       })));

@@ -23,7 +23,6 @@ const FormDialogDeposit = ({
 
   const statusOptions = [
     { label: 'Aktif', value: 'AKTIF' },
-    { label: 'Habis', value: 'HABIS' },
     { label: 'Refund', value: 'REFUND' },
   ];
 
@@ -201,7 +200,7 @@ const FormDialogDeposit = ({
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUS })}
             options={statusOptions}
-            value={form.SALDO_SISA === 0 ? 'HABIS' : form.STATUS}  // ✅ fix force status
+            value={form.SALDO_SISA === 0 ? 'HABIS' : form.STATUS} 
             onChange={(e) => setForm({ ...form, STATUS: e.value })}
             placeholder="Pilih Status"
             disabled={form.SALDO_SISA === 0}
@@ -217,7 +216,7 @@ const FormDialogDeposit = ({
             onChange={(e) =>
               setForm({ ...form, KETERANGAN: e.target.value })
             }
-            placeholder="Isi jika ada keterangan tambahan"
+            placeholder="Opsional"
           />
         </div>
 
