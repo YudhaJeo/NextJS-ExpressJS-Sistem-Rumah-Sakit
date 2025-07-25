@@ -54,6 +54,7 @@ export async function getRiwayatTindakanByIdRiwayat(id) {
 export async function insertFromRawatInap(rawatInap) {
   const {
     IDRAWATINAP,
+    TANGGALMASUK,
     TANGGALKELUAR,
     NOMORBED,
     TOTALKAMAR,
@@ -65,6 +66,7 @@ export async function insertFromRawatInap(rawatInap) {
   // Insert ke riwayat_rawat_inap
   const [insertedRiwayat] = await db('riwayat_rawat_inap').insert({
     IDRAWATINAP,
+    TANGGALMASUK,
     TANGGALKELUAR,
     NOMORBED,
     TOTALKAMAR,
@@ -73,33 +75,36 @@ export async function insertFromRawatInap(rawatInap) {
     TOTALBIAYA,
   });
 
-  // ambil semua data obat_inap berdasarkan IDRAWATINAP
-  const obatInap = await db('obat_inap').where({ IDRAWATINAP });
+  const IDRIWAYATINAP = insertedRiwayat ?? await db('riwayat_rawat_inap')
+    .where({ IDRAWATINAP })
+    .select('IDRIWAYATINAP')
+    .first()
+    .then((row) => row?.IDRIWAYATINAP);
 
-  // ambil semua data tindakan_inap berdasarkan IDRAWATINAP
+  const obatInap = await db('obat_inap').where({ IDRAWATINAP });
   const tindakanInap = await db('tindakan_inap').where({ IDRAWATINAP });
 
-  // log buat debugging
   console.log('>> Data Obat Inap yang Akan Disalin ke Riwayat:', obatInap);
   console.log('>> Data Tindakan Inap yang Akan Disalin ke Riwayat:', tindakanInap);
 
-  // salin ke riwayat_obat_inap
   if (obatInap.length > 0) {
     const obatRiwayat = obatInap.map((obat) => ({
-      IDRAWATINAP: obat.IDRAWATINAP,
+      IDRIWAYATINAP,
       IDOBAT: obat.IDOBAT,
       JUMLAH: obat.JUMLAH,
+      HARGA: obat.HARGA,
       TOTAL: obat.TOTAL,
     }));
     await db('riwayat_obat_inap').insert(obatRiwayat);
   }
 
-  // salin ke riwayat_tindakan_inap
   if (tindakanInap.length > 0) {
     const tindakanRiwayat = tindakanInap.map((tindakan) => ({
-      IDRAWATINAP: tindakan.IDRAWATINAP,
+      IDRIWAYATINAP,
       IDTINDAKAN: tindakan.IDTINDAKAN,
+      JUMLAH: tindakan.JUMLAH,
       HARGA: tindakan.HARGA,
+      TOTAL: tindakan.TOTAL,
     }));
     await db('riwayat_tindakan_inap').insert(tindakanRiwayat);
   }
