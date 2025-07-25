@@ -80,12 +80,14 @@ const Page = () => {
   const fetchBed = async () => {
     try {
       const res = await axios.get(`${API_URL}/bed`);
-      const options = res.data.data.map((item) => ({
-        label: `${item.NOMORBED} - ${item.NAMAKAMAR} - ${item.NAMABANGSAL}`,
-        value: item.IDBED,
-        NAMAKAMAR: item.NAMAKAMAR, 
-        NAMABANGSAL: item.NAMABANGSAL,
-      }));
+      const options = res.data.data
+        .filter((item) => item.STATUS === 'TERSEDIA')
+        .map((item) => ({
+          label: `${item.NOMORBED} - ${item.NAMAKAMAR} - ${item.NAMABANGSAL}`,
+          value: item.IDBED,
+          NAMAKAMAR: item.NAMAKAMAR, 
+          NAMABANGSAL: item.NAMABANGSAL,
+        }));
       setBedOptions(options);
     } catch (err) {
       console.error('Gagal ambil bed:', err);
