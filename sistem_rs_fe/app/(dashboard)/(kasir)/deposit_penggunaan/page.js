@@ -71,14 +71,26 @@ const Page = () => {
     setData(filtered);
   };
 
+  const formatRupiah = (number) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(number);
+  };
+  
   const fetchDepositOptions = async () => {
-    const res = await axios.get(`${API_URL}/deposit`);
-    setDepositOptions(res.data.data.map(item => ({
-      value: item.IDDEPOSIT,
-      label: `${item.NODEPOSIT} | ${item.NAMAPASIEN}`,
-      nik: item.NIK,
-      NAMAPASIEN: item.NAMAPASIEN, 
-    })));
+    try {
+      const res = await axios.get(`${API_URL}/deposit/options`);
+      setDepositOptions(res.data.data.map(item => ({
+        value: item.value, 
+        label: `${item.NODEPOSIT} | ${item.NAMAPASIEN} | Sisa: ${formatRupiah(item.SALDO_SISA)}`,
+        nik: item.NIK,
+        NAMAPASIEN: item.NAMAPASIEN,
+      })));
+    } catch (err) {
+      console.error('Gagal ambil daftar deposit:', err);
+    }
   };
 
   const fetchInvoiceOptions = async () => {

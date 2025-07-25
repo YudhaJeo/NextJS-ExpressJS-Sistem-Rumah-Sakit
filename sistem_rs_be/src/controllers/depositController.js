@@ -133,9 +133,11 @@ export async function getDepositOptions(req, res) {
   try {
     const rows = await db('deposit')
       .leftJoin('pasien', 'deposit.NIK', 'pasien.NIK')
+      .where('deposit.STATUS', 'AKTIF')
       .select(
         'deposit.IDDEPOSIT as value',
-        db.raw('CONCAT("DEP-", deposit.IDDEPOSIT) as label'),
+        'deposit.NODEPOSIT as label',
+        'deposit.SALDO_SISA',
         'pasien.NIK',
         'pasien.NAMALENGKAP as NAMAPASIEN'
       );
