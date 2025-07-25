@@ -10,7 +10,8 @@ export const up = function (knex) {
       table.integer('JUMLAH').notNullable();
       table.double('HARGA').notNullable();
       table.double('TOTAL').notNullable();
-      table.timestamps(true, true);
+      table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
+      table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());
     });
   };
   

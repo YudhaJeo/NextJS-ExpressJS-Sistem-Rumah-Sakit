@@ -34,9 +34,9 @@ const TabelTagihanSementara = ({ data, loading }) => {
         body={(row) => formatRupiah(row.TOTAL_TINDAKAN)}
       />
       <Column
-        field="TOTAL_HARGA_KAMAR"
+        field="TOTALKAMAR"
         header="Total Kamar"
-        body={(row) => formatRupiah(row.TOTAL_HARGA_KAMAR)}
+        body={(row) => formatRupiah(row.TOTALKAMAR)}
       />
       <Column
         field="TOTAL_SEMENTARA"

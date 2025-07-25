@@ -50,7 +50,7 @@ export const create = async (data) => {
     TANGGALMASUK,
     TANGGALKELUAR,
     STATUS: status,
-    TOTAL_HARGA_KAMAR: totalHarga,
+    TOTALKAMAR: totalHarga,
     CATATAN
   });
 };
@@ -86,7 +86,7 @@ export const update = async (id, data) => {
       TANGGALMASUK: tanggalMasuk,
       TANGGALKELUAR: tanggalKeluar,
       STATUS: status,
-      TOTAL_HARGA_KAMAR: totalHarga,
+      TOTALKAMAR: totalHarga,
       CATATAN,
       UPDATED_AT: db.fn.now(),
     });

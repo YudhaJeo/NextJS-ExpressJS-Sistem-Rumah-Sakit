@@ -69,9 +69,9 @@ const TabelRiwayatInap = ({ data, loading }) => {
         body={(row) => formatRupiah(row.TOTALTINDAKAN)} 
       />
       <Column 
-        field="TOTAL_HARGA_KAMAR" 
+        field="TOTALKAMAR" 
         header="Total Kamar" 
-        body={(row) => formatRupiah(row.TOTAL_HARGA_KAMAR)} 
+        body={(row) => formatRupiah(row.TOTALKAMAR)} 
       />
       <Column 
         field="TOTALBIAYA" 

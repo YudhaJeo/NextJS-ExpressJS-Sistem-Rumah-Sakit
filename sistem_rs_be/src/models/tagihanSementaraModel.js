@@ -30,10 +30,10 @@ export const getAllTagihanSementara = async () => {
         'rawat_inap.IDRAWATINAP',
         'pasien.NAMALENGKAP',
         'bed.NOMORBED',
-        'rawat_inap.TOTAL_HARGA_KAMAR',
+        'rawat_inap.TOTALKAMAR',
         db.raw('COALESCE(obat_total.TOTAL_OBAT, 0) AS TOTAL_OBAT'),
         db.raw('COALESCE(tindakan_total.TOTAL_TINDAKAN, 0) AS TOTAL_TINDAKAN'),
-        db.raw(`(rawat_inap.TOTAL_HARGA_KAMAR 
+        db.raw(`(rawat_inap.TOTALKAMAR 
                 + COALESCE(obat_total.TOTAL_OBAT, 0) 
                 + COALESCE(tindakan_total.TOTAL_TINDAKAN, 0)) 
                 AS TOTAL_SEMENTARA`)

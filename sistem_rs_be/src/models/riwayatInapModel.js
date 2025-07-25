@@ -12,7 +12,7 @@ export async function getAllRiwayatInap() {
       'riwayat_rawat_inap.TANGGALKELUAR',
       'pasien.NAMALENGKAP',
       'bed.NOMORBED',
-      'riwayat_rawat_inap.TOTAL_HARGA_KAMAR',
+      'riwayat_rawat_inap.TOTALKAMAR',
       'riwayat_rawat_inap.TOTALOBAT',
       'riwayat_rawat_inap.TOTALTINDAKAN',
       'riwayat_rawat_inap.TOTALBIAYA',
@@ -31,7 +31,7 @@ export async function getRiwayatInapById(id) {
       'riwayat_rawat_inap.*',
       'pasien.NAMALENGKAP',
       'bed.NOMORBED',
-      'riwayat_rawat_inap.TOTAL_HARGA_KAMAR'
+      'riwayat_rawat_inap.TOTALKAMAR'
     )
     .where('riwayat_rawat_inap.IDRIWAYATINAP', id)
     .first();
@@ -54,30 +54,53 @@ export async function getRiwayatTindakanByIdRiwayat(id) {
 export async function insertFromRawatInap(rawatInap) {
   const {
     IDRAWATINAP,
-    TANGGALMASUK,
     TANGGALKELUAR,
-    STATUS,
-    TOTAL_HARGA_KAMAR,
-    CATATAN
-  } = rawatInap;
-
-  // ambil total dari tabel obat_inap dan tindakan_inap
-  const obat = await db('obat_inap').where({ IDRAWATINAP }).sum('TOTAL as total').first();
-  const tindakan = await db('tindakan_inap').where({ IDRAWATINAP }).sum('TOTAL as total').first();
-
-  const TOTALOBAT = Number(obat.total) || 0;
-  const TOTALTINDAKAN = Number(tindakan.total) || 0;
-  const TOTALBIAYA = (TOTAL_HARGA_KAMAR || 0) + TOTALOBAT + TOTALTINDAKAN;
-
-  return await db('riwayat_rawat_inap').insert({
-    IDRAWATINAP,
-    TANGGALMASUK,
-    TANGGALKELUAR,
-    STATUS,
-    TOTAL_HARGA_KAMAR,
+    NOMORBED,
+    TOTALKAMAR,
     TOTALOBAT,
     TOTALTINDAKAN,
     TOTALBIAYA,
-    CATATAN
+  } = rawatInap;
+
+  // Insert ke riwayat_rawat_inap
+  const [insertedRiwayat] = await db('riwayat_rawat_inap').insert({
+    IDRAWATINAP,
+    TANGGALKELUAR,
+    NOMORBED,
+    TOTALKAMAR,
+    TOTALOBAT,
+    TOTALTINDAKAN,
+    TOTALBIAYA,
   });
+
+  // ambil semua data obat_inap berdasarkan IDRAWATINAP
+  const obatInap = await db('obat_inap').where({ IDRAWATINAP });
+
+  // ambil semua data tindakan_inap berdasarkan IDRAWATINAP
+  const tindakanInap = await db('tindakan_inap').where({ IDRAWATINAP });
+
+  // log buat debugging
+  console.log('>> Data Obat Inap yang Akan Disalin ke Riwayat:', obatInap);
+  console.log('>> Data Tindakan Inap yang Akan Disalin ke Riwayat:', tindakanInap);
+
+  // salin ke riwayat_obat_inap
+  if (obatInap.length > 0) {
+    const obatRiwayat = obatInap.map((obat) => ({
+      IDRAWATINAP: obat.IDRAWATINAP,
+      IDOBAT: obat.IDOBAT,
+      JUMLAH: obat.JUMLAH,
+      TOTAL: obat.TOTAL,
+    }));
+    await db('riwayat_obat_inap').insert(obatRiwayat);
+  }
+
+  // salin ke riwayat_tindakan_inap
+  if (tindakanInap.length > 0) {
+    const tindakanRiwayat = tindakanInap.map((tindakan) => ({
+      IDRAWATINAP: tindakan.IDRAWATINAP,
+      IDTINDAKAN: tindakan.IDTINDAKAN,
+      HARGA: tindakan.HARGA,
+    }));
+    await db('riwayat_tindakan_inap').insert(tindakanRiwayat);
+  }
 }

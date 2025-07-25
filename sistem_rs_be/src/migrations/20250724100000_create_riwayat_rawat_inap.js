@@ -7,12 +7,14 @@ export const up = function (knex) {
     table.integer('IDRAWATINAP').unsigned().notNullable()
       .references('IDRAWATINAP').inTable('rawat_inap').onDelete('CASCADE');
 
+    table.string('NOMORBED', 20);
+
     table.date('TANGGALMASUK').notNullable();
     table.date('TANGGALKELUAR');
 
     table.enu('STATUS', ['AKTIF', 'SELESAI']).notNullable().defaultTo('AKTIF');
 
-    table.double('TOTAL_HARGA_KAMAR').defaultTo(0);
+    table.double('TOTALKAMAR').defaultTo(0);
     table.double('TOTALOBAT').defaultTo(0);
     table.double('TOTALTINDAKAN').defaultTo(0);
     table.double('TOTALBIAYA').defaultTo(0);
