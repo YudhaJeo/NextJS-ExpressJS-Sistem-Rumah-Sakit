@@ -79,26 +79,39 @@ const FormRawatInap = ({
         </div>
 
         <div className="mt-2">
-          <label>Tanggal Keluar</label>
-          <Calendar
-            className={inputClass('TANGGALKELUAR')}
-            value={form.TANGGALKELUAR ? new Date(form.TANGGALKELUAR) : null} 
-            onChange={(e) => setForm({ ...form, TANGGALKELUAR: e.value })}
-            showIcon
-            dateFormat="yy-mm-dd"
-          />
-          {errors.TANGGALKELUAR && <small className="text-red-500">{errors.TANGGALKELUAR}</small>}
+          <label className="mb-1">Tanggal Keluar</label>
+          <div className="flex items-center gap-2">
+            <Calendar
+              className={inputClass('TANGGALKELUAR')}
+              value={form.TANGGALKELUAR ? new Date(form.TANGGALKELUAR) : null}
+              onChange={(e) => setForm({ ...form, TANGGALKELUAR: e.value })}
+              showIcon
+              dateFormat="yy-mm-dd"
+            />
+            {form.TANGGALKELUAR && (
+              <Button
+                type="button"
+                icon="pi pi-times"
+                className="p-button-text p-button-danger"
+                tooltip="Hapus Tanggal"
+                onClick={() => setForm({ ...form, TANGGALKELUAR: null })}
+              />
+            )}
+          </div>
+          {errors.TANGGALKELUAR && (
+            <small className="text-red-500">{errors.TANGGALKELUAR}</small>
+          )}
         </div>
 
+
         <div className="mt-2">
-          <label>Catatat</label>
+          <label>Catatan</label>
           <InputTextarea
             className={inputClass('CATATAN')}
             value={form.CATATAN || ''} 
             onChange={(e) => setForm({ ...form, CATATAN: e.target.value })}
             placeholder="Masukkan catatan (Opsional)"
           />
-
         </div>
 
         <div className="text-right pt-3">
