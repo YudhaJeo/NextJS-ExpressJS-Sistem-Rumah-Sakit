@@ -10,7 +10,7 @@ export const up = function (knex) {
     table.date('TANGGALMASUK').notNullable();
     table.date('TANGGALKELUAR');
     table.enu('STATUS', ['AKTIF', 'SELESAI']).notNullable().defaultTo('AKTIF');
-    table.double('TOTAL_HARGA_KAMAR').defaultTo(0);
+    table.double('TOTALKAMAR').defaultTo(0);
     table.text('CATATAN');
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
     table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());

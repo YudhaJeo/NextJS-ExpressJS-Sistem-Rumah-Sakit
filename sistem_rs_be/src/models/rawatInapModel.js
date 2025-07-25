@@ -20,40 +20,44 @@ export const getById = (id) =>
     .where({ IDRAWATINAP: id })
     .first();
 
-export const create = async (data) => {
-  const { IDPASIEN, IDBED, TANGGALMASUK, TANGGALKELUAR, CATATAN } = data;
-
-  // ambil harga_per_hari dari jenis_bangsal
-  const harga = await db('bed')
-    .join('kamar', 'bed.IDKAMAR', 'kamar.IDKAMAR')
-    .join('bangsal', 'kamar.IDBANGSAL', 'bangsal.IDBANGSAL')
-    .join('jenis_bangsal', 'bangsal.IDJENISBANGSAL', 'jenis_bangsal.IDJENISBANGSAL')
-    .where('bed.IDBED', IDBED)
-    .select('jenis_bangsal.HARGA_PER_HARI')
-    .first();
-
-  const tanggalMasuk = new Date(TANGGALMASUK);
-  const tanggalKeluar = TANGGALKELUAR ? new Date(TANGGALKELUAR) : null;
-
-  let totalHarga = null;
-  let status = 'AKTIF';
-
-  if (tanggalKeluar) {
-    const durasi = Math.max(1, Math.ceil((tanggalKeluar - tanggalMasuk) / (1000 * 60 * 60 * 24)));
-    totalHarga = harga.HARGA_PER_HARI * durasi;
-    status = 'SELESAI';
-  }
-
-  return db('rawat_inap').insert({
-    IDPASIEN,
-    IDBED,
-    TANGGALMASUK,
-    TANGGALKELUAR,
-    STATUS: status,
-    TOTAL_HARGA_KAMAR: totalHarga,
-    CATATAN
-  });
-};
+    export const create = async (data) => {
+      const { IDPASIEN, IDBED, TANGGALMASUK, TANGGALKELUAR, CATATAN } = data;
+    
+      const harga = await db('bed')
+        .join('kamar', 'bed.IDKAMAR', 'kamar.IDKAMAR')
+        .join('bangsal', 'kamar.IDBANGSAL', 'bangsal.IDBANGSAL')
+        .join('jenis_bangsal', 'bangsal.IDJENISBANGSAL', 'jenis_bangsal.IDJENISBANGSAL')
+        .where('bed.IDBED', IDBED)
+        .select('jenis_bangsal.HARGA_PER_HARI')
+        .first();
+    
+      const tanggalMasuk = new Date(TANGGALMASUK);
+      const tanggalKeluar = TANGGALKELUAR ? new Date(TANGGALKELUAR) : null;
+    
+      let totalHarga = null;
+      let status = 'AKTIF';
+    
+      if (tanggalKeluar) {
+        const durasi = Math.max(1, Math.ceil((tanggalKeluar - tanggalMasuk) / (1000 * 60 * 60 * 24)));
+        totalHarga = harga.HARGA_PER_HARI * durasi;
+        status = 'SELESAI';
+      }
+    
+      await db('rawat_inap').insert({
+        IDPASIEN,
+        IDBED,
+        TANGGALMASUK,
+        TANGGALKELUAR,
+        STATUS: status,
+        TOTALKAMAR: totalHarga,
+        CATATAN
+      });
+    
+      await db('bed').where({ IDBED }).update({ STATUS: 'TERISI' });
+    
+      return true;
+    };
+    
 
 export const update = async (id, data) => {
   const { TANGGALMASUK, TANGGALKELUAR, IDBED, CATATAN } = data;
@@ -86,19 +90,31 @@ export const update = async (id, data) => {
       TANGGALMASUK: tanggalMasuk,
       TANGGALKELUAR: tanggalKeluar,
       STATUS: status,
-      TOTAL_HARGA_KAMAR: totalHarga,
+      TOTALKAMAR: totalHarga,
       CATATAN,
       UPDATED_AT: db.fn.now(),
     });
 
   // ambil data setelah update
   const updatedRawat = await db('rawat_inap').where({ IDRAWATINAP: id }).first();
+
+  if (status === 'SELESAI') {
+    await db('bed').where({ IDBED: bed }).update({ STATUS: 'TERSEDIA' });
+  } else {
+    await db('bed').where({ IDBED: bed }).update({ STATUS: 'TERISI' });
+  }
+
   return updatedRawat;
 };
 
 
-export const remove = (id) =>
-  db('rawat_inap').where({ IDRAWATINAP: id }).delete();
+export const remove = async (id) => {
+  const rawat = await db('rawat_inap').where({ IDRAWATINAP: id }).first();
+  if (rawat?.IDBED) {
+    await db('bed').where({ IDBED: rawat.IDBED }).update({ STATUS: 'TERSEDIA' });
+  }
+  return db('rawat_inap').where({ IDRAWATINAP: id }).delete();
+};
 
 export const updateBedStatus = (id, status) =>
   db('bed').where({ IDBED: id }).update({ STATUS: status });

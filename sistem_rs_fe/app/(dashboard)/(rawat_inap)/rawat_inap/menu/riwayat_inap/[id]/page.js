@@ -50,8 +50,8 @@ export default function DetailRiwayatInapPage() {
         layanan: `Biaya Kamar Rawat Inap (Bed ${res.data.data.NOMORBED})`,
         qty: 1,
         jenis: 'Kamar',
-        hargaSatuan: res.data.data.TOTAL_HARGA_KAMAR,
-        total: res.data.data.TOTAL_HARGA_KAMAR,
+        hargaSatuan: res.data.data.TOTALKAMAR,
+        total: res.data.data.TOTALKAMAR,
         type: 'kamar'
       });
 
@@ -273,7 +273,7 @@ export default function DetailRiwayatInapPage() {
                   <div className="pt-2">
                     <div className="flex justify-content-between mb-2">
                       <span className="text-600">Biaya Kamar:</span>
-                      <span className="font-medium">{formatRupiah(detail.TOTAL_HARGA_KAMAR)}</span>
+                      <span className="font-medium">{formatRupiah(detail.TOTALKAMAR)}</span>
                     </div>
                     
                     <div className="flex justify-content-between mb-2">

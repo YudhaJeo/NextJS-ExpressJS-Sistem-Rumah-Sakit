@@ -66,9 +66,9 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete }) => {
       />
       <Column field="CATATAN" header="Catatan" />
       <Column
-        field="TOTAL_HARGA_KAMAR" 
+        field="TOTALKAMAR" 
         header="Total Biaya Kamar" 
-        body={(row) => row.TOTAL_HARGA_KAMAR?.toLocaleString('id-ID', {
+        body={(row) => row.TOTALKAMAR?.toLocaleString('id-ID', {
           style: 'currency',
           currency: 'IDR',
         })}
