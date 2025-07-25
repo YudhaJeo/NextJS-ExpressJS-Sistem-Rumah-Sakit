@@ -63,7 +63,6 @@ export async function insertFromRawatInap(rawatInap) {
     TOTALBIAYA,
   } = rawatInap;
 
-  // Insert ke riwayat_rawat_inap
   const [insertedRiwayat] = await db('riwayat_rawat_inap').insert({
     IDRAWATINAP,
     TANGGALMASUK,
@@ -83,9 +82,6 @@ export async function insertFromRawatInap(rawatInap) {
 
   const obatInap = await db('obat_inap').where({ IDRAWATINAP });
   const tindakanInap = await db('tindakan_inap').where({ IDRAWATINAP });
-
-  console.log('>> Data Obat Inap yang Akan Disalin ke Riwayat:', obatInap);
-  console.log('>> Data Tindakan Inap yang Akan Disalin ke Riwayat:', tindakanInap);
 
   if (obatInap.length > 0) {
     const obatRiwayat = obatInap.map((obat) => ({
@@ -107,5 +103,10 @@ export async function insertFromRawatInap(rawatInap) {
       TOTAL: tindakan.TOTAL,
     }));
     await db('riwayat_tindakan_inap').insert(tindakanRiwayat);
+  }
+
+  const rawatData = await db('rawat_inap').where({ IDRAWATINAP }).first();
+  if (rawatData?.IDBED) {
+    await db('bed').where({ IDBED: rawatData.IDBED }).update({ STATUS: 'TERSEDIA' });
   }
 }
