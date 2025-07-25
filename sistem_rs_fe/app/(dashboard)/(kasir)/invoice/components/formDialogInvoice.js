@@ -19,18 +19,12 @@ const FormDialogInvoice = ({
 }) => {
   const [errors, setErrors] = useState({});
 
-  const statusOptions = [
-    { label: 'Belum Dibayar', value: 'BELUM_LUNAS' },
-    { label: 'Sudah Dibayar', value: 'LUNAS' },
-  ];
-
   const validate = () => {
     const newErrors = {};
     if (!form.NIK) newErrors.NIK = 'NIK pasien wajib dipilih';
     if (!form.TANGGALINVOICE) newErrors.TANGGALINVOICE = 'Tanggal Invoice wajib diisi';
     if (!form.TOTALTAGIHAN || form.TOTALTAGIHAN <= 0)
       newErrors.TOTALTAGIHAN = 'Total tagihan harus lebih dari 0';
-    if (!form.STATUS) newErrors.STATUS = 'Status wajib dipilih';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -128,14 +122,11 @@ const FormDialogInvoice = ({
 
         <div>
           <label className="font-medium">Status</label>
-          <Dropdown
-            className={classNames('w-full mt-2', { 'p-invalid': errors.STATUS })}
-            options={statusOptions}
-            value={form.STATUS}
-            onChange={(e) => setForm({ ...form, STATUS: e.value })}
-            placeholder="Pilih Status"
+          <InputText
+            className="w-full mt-2"
+            value={form.STATUS === 'LUNAS' ? 'Sudah Dibayar' : 'Belum Dibayar'}
+            readOnly
           />
-          {errors.STATUS && <small className="p-error">{errors.STATUS}</small>}
         </div>
 
         {form.IDINVOICE > 0 && (
