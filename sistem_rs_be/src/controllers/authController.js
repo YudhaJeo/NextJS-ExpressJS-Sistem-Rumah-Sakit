@@ -18,9 +18,10 @@ export const login = async (req, res) => {
     }
 
     const token = await generateToken({
-      id: user.ID,
+      id: user.IDTENAGAMEDIS || user.IDTENAGANONMEDIS, 
       role: user.ROLE,
-      email: user.EMAIL
+      email: user.EMAIL,
+      sumber: user.IDTENAGAMEDIS ? 'medis' : 'non_medis' 
     });
 
     res.status(200).json({

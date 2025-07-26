@@ -49,4 +49,11 @@ export const verifyToken = async (req, res, next) => {
       datetime: datetime(),
     });
   }
+
+//   const token = await generateToken({
+//   id: user.ID,
+//   role: user.ROLE,
+//   email: user.EMAIL
+// });
+
 };
