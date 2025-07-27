@@ -21,6 +21,6 @@ export const findUserByEmail = async (email) => {
     if (tenagaNonMedis) return {
   ...tenagaNonMedis,
   ID: tenagaNonMedis.IDTENAGANONMEDIS,
-  USERNAME: tenagaNonMedis.NAMA,
+  USERNAME: tenagaNonMedis.NAMALENGKAP,
 };
 };
