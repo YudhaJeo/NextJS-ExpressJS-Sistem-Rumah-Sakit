@@ -1,6 +1,7 @@
 import { findUserByEmail } from '../models/authModel.js';
 import { generateToken } from '../utils/jwt.js';
 import { loginSchema } from '../schemas/authSchema.js';
+import bcrypt from 'bcrypt';
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
@@ -12,8 +13,9 @@ export const login = async (req, res) => {
 
   try {
     const user = await findUserByEmail(email.trim());
+    const passwordMatch = await bcrypt.compare(password.trim(), user.PASSWORD);
 
-    if (!user || user.PASSWORD !== password.trim()) {
+    if (!user || !passwordMatch) {
       return res.status(401).json({ error: 'Email atau password salah' });
     }
 
