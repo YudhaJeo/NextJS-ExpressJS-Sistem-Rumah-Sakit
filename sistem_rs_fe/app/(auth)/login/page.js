@@ -48,8 +48,10 @@ switch (res.data.role) {
   case "superadmin":
     router.push("/");
     break;
+  case "kasir":
+    router.push("/dashboard_kasir");
   default:
-    router.push("/dashboard");
+    router.push("/");
 }
 
       // setTimeout(() => {

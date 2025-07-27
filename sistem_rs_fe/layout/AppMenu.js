@@ -234,6 +234,46 @@ const AppMenu = () => {
         ],
       },
     ];
+  } else if (userRole === "Kasir") {
+    model = [
+    {
+        label: "Fitur Kasir & Sales",
+        items: [
+          { label: "Dashboard Kasir", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_kasir" },
+          {
+            label: "Master",
+            items: [
+              { label: "Bank Account", icon: "pi pi-fw pi-building", to: "/bank_account" },
+              { label: "Metode Pembayaran", icon: "pi pi-fw pi-credit-card", to: "/metode_pembayaran" },
+            ],
+          },
+          {
+            label: "Menu",
+            items: [
+              {
+                label: "Invoice & Pembayaran",
+                icon: "pi pi-fw pi-wallet",
+                items: [
+                  { label: "Invoice", icon: "pi pi-fw pi-receipt", to: "/invoice" },
+                  { label: "Pembayaran", icon: "pi pi-fw pi-money-bill", to: "/pembayaran" },
+                ],
+              },
+              { label: "Pembayaran Angsuran", icon: "pi pi-fw pi-credit-card", to: "/pembayaran_angsuran" },
+              {
+                label: "Deposit Pembayaran",
+                icon: "pi pi-fw pi-wallet",
+                items: [
+                  { label: "Deposit", icon: "pi pi-fw pi-money-bill", to: "/deposit" },
+                  { label: "Deposit Penggunaan", icon: "pi pi-fw pi-money-bill", to: "/deposit_penggunaan" },
+                ],
+              },
+              { label: "Cetak Invoice & Kwitansi", icon: "pi pi-fw pi-print", to: "/cetak_invoice" },
+              { label: "Laporan Pembayaran", icon: "pi pi-fw pi-chart-bar", to: "/laporan_pembayaran" },
+            ],
+          },
+        ],
+      },
+    ];
   }
 
   return (
