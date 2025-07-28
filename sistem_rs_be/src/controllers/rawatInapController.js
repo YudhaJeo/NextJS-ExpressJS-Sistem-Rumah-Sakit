@@ -55,14 +55,13 @@ const update = async (req, res) => {
     const updated = await RawatInap.getById(id); 
     
     if (keluarSekarang && !existing.TANGGALKELUAR) {
-      // Hitung total obat dan tindakan
       const obat = await RawatInap.getTotalObatInap(updated.IDRAWATINAP);
       const tindakan = await RawatInap.getTotalTindakanInap(updated.IDRAWATINAP);
-
+    
       const TOTALOBAT = Number(obat.total) || 0;
       const TOTALTINDAKAN = Number(tindakan.total) || 0;
       const TOTALBIAYA = (updated.TOTALKAMAR || 0) + TOTALOBAT + TOTALTINDAKAN;
-
+    
       const dataRiwayat = {
         IDRAWATINAP: updated.IDRAWATINAP,
         TANGGALMASUK: updated.TANGGALMASUK,
@@ -73,9 +72,9 @@ const update = async (req, res) => {
         TOTALTINDAKAN,
         TOTALBIAYA,
       };
-
+    
       await RiwayatRawatInap.insertFromRawatInap(dataRiwayat);
-    }    
+    }        
 
     res.status(200).json({
       message: 'Data rawat inap berhasil diperbarui',

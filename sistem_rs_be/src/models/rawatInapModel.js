@@ -124,15 +124,15 @@ export const updateBedStatus = (id, status) =>
   db('bed').where({ IDBED: id }).update({ STATUS: status });
 
 export const getTotalObatInap = async (IDRAWATINAP) => {
-  const result = await db('riwayat_obat_inap')
-    .where({ IDRIWAYATINAP: IDRAWATINAP })
+  const result = await db('obat_inap')
+    .where({ IDRAWATINAP })
     .sum('TOTAL as total');
   return result[0];
 };
 
 export const getTotalTindakanInap = async (IDRAWATINAP) => {
-  const result = await db('riwayat_tindakan_inap')
-    .where({ IDRIWAYATINAP: IDRAWATINAP })
+  const result = await db('tindakan_inap')
+    .where({ IDRAWATINAP })
     .sum('TOTAL as total');
   return result[0];
 };
