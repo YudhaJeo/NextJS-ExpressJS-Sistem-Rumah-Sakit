@@ -13,7 +13,8 @@ export async function getUser(req, res) {
       data: {
         username: user.USERNAME,
         email: user.EMAIL,
-        role: user.ROLE
+        role: user.ROLE,
+        profile: user.FOTOPROFIL ? `http://localhost:4000${user.FOTOPROFIL}` : null
       }
     });
   } catch (err) {
@@ -25,18 +26,23 @@ export async function getUser(req, res) {
 export async function updateUser(req, res) {
   try {
     const id = req.user.id;
-    const sumber = req.user.sumber; 
+    const sumber = req.user.sumber;
     const { username, email } = req.body;
+    const file = req.file;
 
     if (!username || !email) {
       return res.status(400).json({ error: 'Semua field wajib diisi' });
     }
 
-    await UserModel.updateProfile(id, sumber, { username, email });
+    const data = { username, email };
+    if (file) {
+      data.fotoprofil = `/uploads/${sumber === 'medis' ? 'tenaga_medis' : 'tenaga_non_medis'}/${file.filename}`;
+    }
 
+    await UserModel.updateProfile(id, sumber, data);
     res.json({ message: 'Profil berhasil diperbarui' });
   } catch (err) {
-    console.error(err); 
+    console.error(err);
     res.status(500).json({ error: 'Gagal memperbarui profil' });
   }
 }
