@@ -16,6 +16,8 @@ const Page = () => {
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [unitKerjaType, setUnitKerjaType] = useState("Poli");
+  const [listPoli, setListPoli] = useState([]); // ✅ TAMBAH INI
   const [errors, setErrors] = useState({});
   const toastRef = useRef(null);
   const router = useRouter();
@@ -44,6 +46,8 @@ const Page = () => {
 
   useEffect(() => {
     fetchData();
+    fetchPoli(); // ✅ PANGGIL DI SINI
+
     const token = Cookies.get("token");
     if (!token) {
       router.push("/login");
@@ -57,6 +61,17 @@ const Page = () => {
       setOriginalData(res.data.data);
     } catch (err) {
       console.error("Gagal mengambil data tenaga medis:", err);
+    }
+  };
+
+  // ✅ TAMBAHKAN INI UNTUK AMBIL DAFTAR POLI
+  const fetchPoli = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/poli`);
+      const options = res.data.map((poli) => poli.NAMAPOLI);
+      setListPoli(options);
+    } catch (err) {
+      console.error("Gagal mengambil data poli:", err);
     }
   };
 
@@ -121,6 +136,13 @@ const Page = () => {
       DOKUMENPENDUKUNG: undefined,
       PASSWORD: "",
     });
+
+    if (listPoli.includes(row.UNITKERJA)) {
+      setUnitKerjaType("Poli");
+    } else {
+      setUnitKerjaType("Non Poli");
+    }
+
     setDialogVisible(true);
   };
 
