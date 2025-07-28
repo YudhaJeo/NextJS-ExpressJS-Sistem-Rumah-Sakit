@@ -184,6 +184,7 @@ const Page = () => {
       FOTOPROFIL: undefined,
       DOKUMENPENDUKUNG: undefined,
     });
+    setUnitKerjaType("Poli");
     setErrors({});
   };
 

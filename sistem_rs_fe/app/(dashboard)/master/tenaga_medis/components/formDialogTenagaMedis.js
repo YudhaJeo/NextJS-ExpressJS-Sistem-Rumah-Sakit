@@ -27,9 +27,23 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
   const [previewImage, setPreviewImage] = useState(null);
   const [previewDokumen, setPreviewDokumen] = useState(null);
   const [roleOptions, setRoleOptions] = useState([]);
+  const [unitKerjaType, setUnitKerjaType] = useState("Poli");
+  const [listPoli, setListPoli] = useState([]);
 
 useEffect(() => {
   if (visible) {
+    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/poli`)
+      .then((res) => {
+        const options = res.data.map((poli) => ({
+          label: poli.NAMAPOLI,
+          value: poli.NAMAPOLI,
+        }));
+        setListPoli(options);
+      })
+      .catch((err) => {
+        console.error("Gagal mengambil data poli:", err);
+      });
+
     axios.get(`${process.env.NEXT_PUBLIC_API_URL}/role/tenaga-medis`)
       .then((res) => {
         const options = res.data.data.map((role) => ({
@@ -210,19 +224,19 @@ useEffect(() => {
           {errors.PASSWORD && <small className="p-error">{errors.PASSWORD}</small>}
         </div>
 
-<div>
-  <label className="font-medium">Jenis Tenaga Medis</label>
-  <Dropdown
-    className={classNames("w-full mt-2", { "p-invalid": errors.JENISTENAGAMEDIS })}
-    value={form.JENISTENAGAMEDIS}
-    options={roleOptions}
-    onChange={(e) => setForm({ ...form, JENISTENAGAMEDIS: e.value })}
-    placeholder="Pilih Jenis Tenaga Medis"
-  />
-  {errors.JENISTENAGAMEDIS && (
-    <small className="p-error">{errors.JENISTENAGAMEDIS}</small>
-  )}
-</div>
+        <div>
+          <label className="font-medium">Jenis Tenaga Medis</label>
+          <Dropdown
+            className={classNames("w-full mt-2", { "p-invalid": errors.JENISTENAGAMEDIS })}
+            value={form.JENISTENAGAMEDIS}
+            options={roleOptions}
+            onChange={(e) => setForm({ ...form, JENISTENAGAMEDIS: e.value })}
+            placeholder="Pilih Jenis Tenaga Medis"
+          />
+          {errors.JENISTENAGAMEDIS && (
+            <small className="p-error">{errors.JENISTENAGAMEDIS}</small>
+          )}
+        </div>
 
         <div>
           <label className="font-medium">Spesialisasi</label>
@@ -279,14 +293,46 @@ useEffect(() => {
         </div>
 
         <div>
-          <label className="font-medium">Unit Kerja</label>
-          <InputText
-            className={classNames("w-full mt-2", { "p-invalid": errors.UNITKERJA })}
-            value={form.UNITKERJA || ""}
-            onChange={(e) => setForm({ ...form, UNITKERJA: e.target.value })}
+          <label className="font-medium">Tipe Unit Kerja</label>
+          <Dropdown
+            className="w-full mt-2"
+            value={unitKerjaType}
+            options={[
+              { label: "Poli", value: "Poli" },
+              { label: "Non Poli", value: "Non Poli" },
+            ]}
+            onChange={(e) => {
+              setUnitKerjaType(e.value);
+              setForm({ ...form, UNITKERJA: "" });
+            }}
+            placeholder="Pilih tipe unit kerja"
           />
-          {errors.UNITKERJA && <small className="p-error">{errors.UNITKERJA}</small>}
         </div>
+
+        {unitKerjaType === "Poli" ? (
+          <div>
+            <label className="font-medium">Pilih Poli</label>
+            <Dropdown
+              className={classNames("w-full mt-2", { "p-invalid": errors.UNITKERJA })}
+              value={form.UNITKERJA}
+              options={listPoli}
+              onChange={(e) => setForm({ ...form, UNITKERJA: e.value })}
+              placeholder="Pilih poli"
+            />
+            {errors.UNITKERJA && <small className="p-error">{errors.UNITKERJA}</small>}
+          </div>
+        ) : (
+          <div>
+            <label className="font-medium">Nama Unit Kerja (Manual)</label>
+            <InputText
+              className={classNames("w-full mt-2", { "p-invalid": errors.UNITKERJA })}
+              value={form.UNITKERJA}
+              onChange={(e) => setForm({ ...form, UNITKERJA: e.target.value })}
+              placeholder="Isi nama unit kerja non-poli"
+            />
+            {errors.UNITKERJA && <small className="p-error">{errors.UNITKERJA}</small>}
+          </div>
+        )}
 
         <div>
           <label className="font-medium">Status Kepegawaian</label>
