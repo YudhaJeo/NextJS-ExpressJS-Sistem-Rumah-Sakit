@@ -31,7 +31,14 @@ export async function getInvoiceById(req, res) {
 export async function updateInvoice(req, res) {
   try {
     const { id } = req.params;
-    const { NIK, TANGGALINVOICE, TOTALTAGIHAN, STATUS } = req.body; 
+    const {
+      NIK,
+      TANGGALINVOICE,
+      TOTALTAGIHAN,
+      TOTALDEPOSIT,
+      TOTALANGSURAN,
+      STATUS
+    } = req.body;
 
     const pasien = await db('pasien').where('NIK', NIK).first();
     if (!pasien) {
@@ -43,7 +50,10 @@ export async function updateInvoice(req, res) {
       IDASURANSI: pasien.IDASURANSI,
       TANGGALINVOICE: TANGGALINVOICE || db.fn.now(),
       TOTALTAGIHAN,
-      STATUS
+      TOTALDEPOSIT,
+      TOTALANGSURAN,
+      STATUS,
+      UPDATED_AT: db.fn.now()
     });
 
     if (!updated) {

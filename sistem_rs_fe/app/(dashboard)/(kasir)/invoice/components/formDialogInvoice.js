@@ -25,6 +25,9 @@ const FormDialogInvoice = ({
     if (!form.TANGGALINVOICE) newErrors.TANGGALINVOICE = 'Tanggal Invoice wajib diisi';
     if (!form.TOTALTAGIHAN || form.TOTALTAGIHAN <= 0)
       newErrors.TOTALTAGIHAN = 'Total tagihan harus lebih dari 0';
+    if (form.TOTALDEPOSIT < 0) newErrors.TOTALDEPOSIT = 'Deposit tidak boleh negatif';
+    if (form.TOTALANGSURAN < 0) newErrors.TOTALANGSURAN = 'Angsuran tidak boleh negatif';
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -118,6 +121,32 @@ const FormDialogInvoice = ({
             locale="id-ID"
           />
           {errors.TOTALTAGIHAN && <small className="p-error">{errors.TOTALTAGIHAN}</small>}
+        </div>
+
+        <div>
+          <label className="font-medium">Total Deposit</label>
+          <InputNumber
+            className="w-full mt-2"
+            value={form.TOTALDEPOSIT}
+            onValueChange={(e) => setForm({ ...form, TOTALDEPOSIT: e.value })}
+            mode="currency"
+            currency="IDR"
+            locale="id-ID"
+            readOnly
+          />
+        </div>
+
+        <div>
+          <label className="font-medium">Total Angsuran</label>
+          <InputNumber
+            className="w-full mt-2"
+            value={form.TOTALANGSURAN}
+            onValueChange={(e) => setForm({ ...form, TOTALANGSURAN: e.value })}
+            mode="currency"
+            currency="IDR"
+            locale="id-ID"
+            readOnly
+          />
         </div>
 
         <div>

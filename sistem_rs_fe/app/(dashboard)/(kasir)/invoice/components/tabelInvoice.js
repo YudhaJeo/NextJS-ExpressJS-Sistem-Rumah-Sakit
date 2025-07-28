@@ -80,6 +80,26 @@ const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
           })}`
         }
       />
+      <Column
+        field="TOTALDEPOSIT"
+        header="Total Deposit"
+        body={(row) =>
+          `Rp ${Number(row.TOTALDEPOSIT).toLocaleString('id-ID', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          })}`
+        }
+      />
+      <Column
+        field="TOTALANGSURAN"
+        header="Total Angsuran"
+        body={(row) =>
+          `Rp ${Number(row.TOTALANGSURAN).toLocaleString('id-ID', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          })}`
+        }
+      />
       <Column field="STATUS" header="Status" body={statusBodyTemplate} />
       <Column
         header="Aksi"

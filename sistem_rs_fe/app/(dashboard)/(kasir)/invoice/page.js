@@ -30,6 +30,8 @@ const Page = () => {
     NAMAPASIEN: '',
     TANGGALINVOICE: '',
     TOTALTAGIHAN: 0,
+    TOTALDEPOSIT: 0,
+    TOTALANGSURAN: 0,
     STATUS: 'BELUM_LUNAS',
   });
 
@@ -122,6 +124,8 @@ const Page = () => {
     setForm({
       ...row,
       TANGGALINVOICE: row.TANGGALINVOICE?.split('T')[0] || '',
+      TOTALDEPOSIT: row.TOTALDEPOSIT || 0,
+      TOTALANGSURAN: row.TOTALANGSURAN || 0,
     });
     setDialogVisible(true);
   };

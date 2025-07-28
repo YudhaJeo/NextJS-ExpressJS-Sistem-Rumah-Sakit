@@ -205,7 +205,7 @@ const Page = () => {
 
       <h3 className="text-xl font-semibold mb-3">Manajemen Pembayaran Angsuran</h3>
 
-      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
         <FilterTanggal
           startDate={startDate}
           endDate={endDate}
