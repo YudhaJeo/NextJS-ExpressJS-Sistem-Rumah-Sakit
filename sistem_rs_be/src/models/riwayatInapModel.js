@@ -16,7 +16,6 @@ export async function getAllRiwayatInap() {
       'riwayat_rawat_inap.TOTALOBAT',
       'riwayat_rawat_inap.TOTALTINDAKAN',
       'riwayat_rawat_inap.TOTALBIAYA',
-      'riwayat_rawat_inap.STATUS',
       'riwayat_rawat_inap.CATATAN'
     )    
     .orderBy('riwayat_rawat_inap.IDRIWAYATINAP', 'desc');

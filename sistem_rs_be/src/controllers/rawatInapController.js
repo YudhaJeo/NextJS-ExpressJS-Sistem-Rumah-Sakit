@@ -65,7 +65,7 @@ const update = async (req, res) => {
         IDRAWATINAP: updated.IDRAWATINAP,
         TANGGALMASUK: updated.TANGGALMASUK,
         TANGGALKELUAR: updated.TANGGALKELUAR,
-        STATUS: updated.STATUS,
+        NOMORBED: updated.NOMORBED,
         TOTALKAMAR: updated.TOTALKAMAR || 0,
         TOTALOBAT,
         TOTALTINDAKAN,

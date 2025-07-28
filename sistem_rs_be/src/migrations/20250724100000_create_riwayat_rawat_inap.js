@@ -12,8 +12,6 @@ export const up = function (knex) {
     table.date('TANGGALMASUK').notNullable();
     table.date('TANGGALKELUAR');
 
-    table.enu('STATUS', ['AKTIF', 'SELESAI']).notNullable().defaultTo('AKTIF');
-
     table.double('TOTALKAMAR').defaultTo(0);
     table.double('TOTALOBAT').defaultTo(0);
     table.double('TOTALTINDAKAN').defaultTo(0);
