@@ -31,19 +31,19 @@ export async function getInvoiceById(req, res) {
 export async function updateInvoice(req, res) {
   try {
     const { id } = req.params;
-    const { NIK, TANGGALINVOICE, STATUS } = req.body;
+    const { NIK, TANGGALINVOICE, TOTALTAGIHAN, STATUS } = req.body; 
 
     const pasien = await db('pasien').where('NIK', NIK).first();
     if (!pasien) {
-      return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan' });
+      return res.status(400).json({ success: false, message: 'Pasien dengan NIK ini tidak ditemukan' });
     }
 
     const updated = await InvoiceModel.update(id, {
       NIK,
       IDASURANSI: pasien.IDASURANSI,
       TANGGALINVOICE: TANGGALINVOICE || db.fn.now(),
-      STATUS,
-      UPDATED_AT: db.fn.now(),
+      TOTALTAGIHAN,
+      STATUS
     });
 
     if (!updated) {
@@ -58,33 +58,16 @@ export async function updateInvoice(req, res) {
 }
 
 export async function deleteInvoice(req, res) {
-  const trx = await db.transaction();
   try {
     const { id } = req.params;
-
-    const penggunaanAda = await trx('deposit_penggunaan')
-      .where('IDINVOICE', id)
-      .first();
-
-    if (penggunaanAda) {
-      await trx.rollback();
-      return res.status(400).json({
-        success: false,
-        message: 'Tidak dapat menghapus invoice yang memiliki penggunaan deposit',
-      });
-    }
-
-    const deleted = await InvoiceModel.remove(id, trx);
+    const deleted = await InvoiceModel.remove(id);
 
     if (!deleted) {
-      await trx.rollback();
       return res.status(404).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    await trx.commit();
     res.status(200).json({ success: true, message: 'Invoice berhasil dihapus' });
   } catch (err) {
-    await trx.rollback();
     console.error('Delete Error:', err);
     res.status(500).json({ success: false, message: err.message });
   }

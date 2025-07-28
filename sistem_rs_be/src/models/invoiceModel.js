@@ -11,19 +11,6 @@ export const getAll = () => {
     );
 };
 
-export const getById = (id) => {
-  return db('invoice')
-    .join('pasien', 'invoice.NIK', 'pasien.NIK')
-    .leftJoin('asuransi', 'pasien.IDASURANSI', 'asuransi.IDASURANSI')
-    .select(
-      'invoice.*',
-      'pasien.NAMALENGKAP as NAMAPASIEN',
-      'asuransi.NAMAASURANSI as ASURANSI'
-    )
-    .where('invoice.IDINVOICE', id)
-    .first();
-};
-
 export const update = (id, data) => {
   return db('invoice').where('IDINVOICE', id).update(data);
 };

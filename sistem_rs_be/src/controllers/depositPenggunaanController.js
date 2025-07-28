@@ -45,10 +45,15 @@ export async function createPenggunaan(req, res) {
 
     const newSaldo = deposit.SALDO_SISA - JUMLAH_PEMAKAIAN;
 
-    await trx('deposit').where('IDDEPOSIT', IDDEPOSIT).update({
-      SALDO_SISA: newSaldo,
-      STATUS: newSaldo === 0 ? 'HABIS' : 'AKTIF',
-    });
+    await trx('deposit')
+      .where('IDDEPOSIT', IDDEPOSIT)
+      .update({ SALDO_SISA: newSaldo });
+
+    if (newSaldo === 0) {
+      await trx('deposit')
+        .where('IDDEPOSIT', IDDEPOSIT)
+        .update({ STATUS: 'HABIS' });
+    }
 
     await PenggunaanModel.create({
       IDDEPOSIT,
@@ -56,17 +61,6 @@ export async function createPenggunaan(req, res) {
       TANGGALPEMAKAIAN: TANGGALPEMAKAIAN || db.fn.now(),
       JUMLAH_PEMAKAIAN,
     }, trx);
-
-    await trx('invoice')
-      .where('IDINVOICE', IDINVOICE)
-      .decrement('TOTALTAGIHAN', JUMLAH_PEMAKAIAN)
-      .update({ UPDATED_AT: db.fn.now() });
-
-    const invoiceCheck = await trx('invoice').where('IDINVOICE', IDINVOICE).first();
-    if (invoiceCheck.TOTALTAGIHAN < 0) {
-      await trx.rollback();
-      return res.status(400).json({ success: false, message: 'Total tagihan invoice tidak boleh negatif' });
-    }
 
     await trx.commit();
     res.status(201).json({ success: true, message: 'Penggunaan deposit berhasil dicatat' });
@@ -89,19 +83,16 @@ export async function updatePenggunaan(req, res) {
       return res.status(404).json({ success: false, message: 'Data penggunaan tidak ditemukan' });
     }
 
-    const depositLama = await trx('deposit').where('IDDEPOSIT', penggunaanLama.IDDEPOSIT).first();
-    if (!depositLama) {
+    const deposit = await trx('deposit').where('IDDEPOSIT', penggunaanLama.IDDEPOSIT).first();
+    if (!deposit) {
       await trx.rollback();
-      return res.status(400).json({ success: false, message: 'Deposit lama tidak ditemukan' });
+      return res.status(400).json({ success: false, message: 'Deposit tidak ditemukan' });
     }
 
-    let saldoRollback = depositLama.SALDO_SISA + penggunaanLama.JUMLAH_PEMAKAIAN;
+    let saldoRollback = deposit.SALDO_SISA + penggunaanLama.JUMLAH_PEMAKAIAN;
 
     if (penggunaanLama.IDDEPOSIT !== IDDEPOSIT) {
-      await trx('deposit').where('IDDEPOSIT', penggunaanLama.IDDEPOSIT).update({
-        SALDO_SISA: saldoRollback,
-        STATUS: 'AKTIF',
-      });
+      await trx('deposit').where('IDDEPOSIT', penggunaanLama.IDDEPOSIT).update({ SALDO_SISA: saldoRollback });
 
       const depositBaru = await trx('deposit').where('IDDEPOSIT', IDDEPOSIT).first();
       if (!depositBaru) {
@@ -122,31 +113,18 @@ export async function updatePenggunaan(req, res) {
       STATUS: saldoAkhir === 0 ? 'HABIS' : 'AKTIF',
     });
 
-    await trx('invoice')
-      .where('IDINVOICE', penggunaanLama.IDINVOICE)
-      .increment('TOTALTAGIHAN', penggunaanLama.JUMLAH_PEMAKAIAN);
-
-    if (penggunaanLama.IDINVOICE !== IDINVOICE) {
-      await trx('invoice').where('IDINVOICE', IDINVOICE)
-        .decrement('TOTALTAGIHAN', JUMLAH_PEMAKAIAN);
-    } else {
-      await trx('invoice').where('IDINVOICE', IDINVOICE)
-        .decrement('TOTALTAGIHAN', JUMLAH_PEMAKAIAN);
-    }
-
-    const invoiceCheck = await trx('invoice').where('IDINVOICE', IDINVOICE).first();
-    if (invoiceCheck.TOTALTAGIHAN < 0) {
-      await trx.rollback();
-      return res.status(400).json({ success: false, message: 'Total tagihan invoice tidak boleh negatif' });
-    }
-
-    await PenggunaanModel.update(id, {
+    const updated = await PenggunaanModel.update(id, {
       IDDEPOSIT,
       IDINVOICE,
       TANGGALPEMAKAIAN,
       JUMLAH_PEMAKAIAN,
       UPDATED_AT: db.fn.now(),
     }, trx);
+
+    if (!updated) {
+      await trx.rollback();
+      return res.status(404).json({ success: false, message: 'Data penggunaan tidak ditemukan' });
+    }
 
     await trx.commit();
     res.status(200).json({ success: true, message: 'Data penggunaan berhasil diperbarui' });
@@ -181,12 +159,11 @@ export async function deletePenggunaan(req, res) {
       STATUS: 'AKTIF',
     });
 
-    await trx('invoice')
-      .where('IDINVOICE', penggunaan.IDINVOICE)
-      .increment('TOTALTAGIHAN', penggunaan.JUMLAH_PEMAKAIAN)
-      .update({ UPDATED_AT: db.fn.now() });
-
-    await PenggunaanModel.remove(id, trx);
+    const deleted = await PenggunaanModel.remove(id, trx);
+    if (!deleted) {
+      await trx.rollback();
+      return res.status(404).json({ success: false, message: 'Data penggunaan tidak ditemukan' });
+    }
 
     await trx.commit();
     res.status(200).json({ success: true, message: 'Data penggunaan berhasil dihapus' });
