@@ -1,3 +1,4 @@
+// sistem_rs_be\src\controllers\rawatInapController.js
 import * as RawatInap from '../models/rawatInapModel.js';
 import * as RiwayatRawatInap from '../models/riwayatInapModel.js';
 
