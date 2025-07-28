@@ -45,6 +45,7 @@ import tindakanInapRoutes from './routes/tindakanInapRoutes.js';
 import tagihanSementaraRoutes from './routes/tagihanSementaraRoutes.js';
 import riwayatInapRoutes from './routes/riwayatInapRoutes.js';
 import dashboardKasirRoutes from './routes/dashboardKasirRoutes.js';
+import angsuranRoutes from './routes/angsuranRoutes.js';
 
 const app = express();
 
@@ -99,5 +100,6 @@ app.use('/api/tindakan_inap', tindakanInapRoutes);
 app.use('/api/tagihan_sementara', tagihanSementaraRoutes);
 app.use('/api/riwayat_inap', riwayatInapRoutes);
 app.use('/api/dashboard_kasir', dashboardKasirRoutes);
+app.use('/api/angsuran', angsuranRoutes);
 
 export default app;
