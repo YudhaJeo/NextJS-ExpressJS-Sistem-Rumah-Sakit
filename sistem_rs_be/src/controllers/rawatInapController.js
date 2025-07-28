@@ -49,7 +49,8 @@ const update = async (req, res) => {
     await RawatInap.update(id, {
       TANGGALKELUAR: keluarSekarang,
       STATUS: 'SELESAI',
-    });
+      CATATAN: req.body.CATATAN ?? null
+    });    
     
     const updated = await RawatInap.getById(id); 
     
@@ -71,7 +72,6 @@ const update = async (req, res) => {
         TOTALOBAT,
         TOTALTINDAKAN,
         TOTALBIAYA,
-        CATATAN: updated.CATATAN || null
       };
 
       await RiwayatRawatInap.insertFromRawatInap(dataRiwayat);

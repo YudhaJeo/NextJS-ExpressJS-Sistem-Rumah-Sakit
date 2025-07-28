@@ -16,9 +16,6 @@ export const up = function (knex) {
     table.double('TOTALOBAT').defaultTo(0);
     table.double('TOTALTINDAKAN').defaultTo(0);
     table.double('TOTALBIAYA').defaultTo(0);
-
-    table.text('CATATAN');
-
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
     table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());
   });
