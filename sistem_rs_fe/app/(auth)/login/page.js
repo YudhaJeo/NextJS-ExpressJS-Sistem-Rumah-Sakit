@@ -30,29 +30,30 @@ function LoginPage() {
       Cookies.set("token", res.data.token);
       Cookies.set("username", res.data.username);
       Cookies.set("role", res.data.role, { expires: 1 });
+      Cookies.set("profile", res.data.profile, { expires: 1 });
 
       if (toastRef.current) {
         toastRef.current.showToast("00", "Login berhasil!");
       }
 
-switch (res.data.role) {
-  case "dokter":
-    router.push("/dashboard_dokter");
-    break;
-  case "perawat":
-    router.push("/dashboard_perawat");
-    break;
-  case "admin":
-    router.push("/dashboard_admin");
-    break;
-  case "superadmin":
-    router.push("/");
-    break;
-  case "kasir":
-    router.push("/dashboard_kasir");
-  default:
-    router.push("/");
-}
+      switch (res.data.role) {
+        case "dokter":
+          router.push("/dashboard_dokter");
+          break;
+        case "perawat":
+          router.push("/dashboard_perawat");
+          break;
+        case "admin":
+          router.push("/dashboard_admin");
+          break;
+        case "superadmin":
+          router.push("/");
+          break;
+        case "kasir":
+          router.push("/dashboard_kasir");
+        default:
+          router.push("/");
+      }
 
       // setTimeout(() => {
       //   router.push("/");

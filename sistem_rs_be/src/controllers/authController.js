@@ -30,7 +30,8 @@ export const login = async (req, res) => {
       token,
       username: user.USERNAME,
       email: user.EMAIL,
-      role: user.ROLE
+      role: user.ROLE,
+      profile: user.FOTOPROFIL ? `http://localhost:4000${user.FOTOPROFIL}` : null
     });
     
   } catch (err) {
