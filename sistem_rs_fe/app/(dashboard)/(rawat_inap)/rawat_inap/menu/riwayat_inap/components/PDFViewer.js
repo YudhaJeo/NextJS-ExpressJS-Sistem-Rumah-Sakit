@@ -1,6 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
-import { Button } from 'primereact/button';
+// app/(dashboard)/(rawat_inap)/rawat_inap/menu/riwayat_inap/components/PDFViewer.js
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import { Document, Page, pdfjs } from 'react-pdf'
+import { Button } from 'primereact/button'
+
+// worker harus pakai file .js
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url,
+).toString()
 
 function PDFViewer({ pdfUrl, paperSize, fileName }) {
     const [numPages, setNumPages] = useState(null);

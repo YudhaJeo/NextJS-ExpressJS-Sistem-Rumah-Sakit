@@ -22,7 +22,6 @@
     "next": "^15.3.4",
     "next-auth": "^4.24.11",
     "next-nprogress-bar": "^2.4.7",
-    "pdfjs-dist": "^5.4.54",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primereact": "^10.9.6",
