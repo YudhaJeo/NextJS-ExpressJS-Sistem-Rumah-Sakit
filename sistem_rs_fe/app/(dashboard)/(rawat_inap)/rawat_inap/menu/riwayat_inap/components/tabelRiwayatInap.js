@@ -8,6 +8,8 @@ import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import AdjustPrintMarginLaporan from './adjustPrintMarginLaporan'
 import dynamic from 'next/dynamic'
+import axios from 'axios'
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 const TabelRiwayatInap = ({ data, loading }) => {
   const [adjustDialog, setAdjustDialog] = useState(false)
@@ -38,26 +40,20 @@ const TabelRiwayatInap = ({ data, loading }) => {
     setAdjustDialog(true)
   }
 
-  const handleAdjust = (adjustConfig) => {
-    // buat url pdf sesuai row
-    const dummyPDF = `/pdfs/laporan-${selectedRow?.IDRIWAYATINAP || 'preview'}.pdf`
-    setPdfUrl(dummyPDF)
-    setFileName(`Laporan_RawatInap_${selectedRow?.IDRIWAYATINAP || 'preview'}`)
-
-    // simpan juga paperSize hasil pilihan user di selectedRow
+  const handleAdjust = async (adjustConfig) => {
+    if (!selectedRow?.IDRIWAYATINAP) return
+  
+    // langsung buat url ke backend
+    const pdfLink = `${API_URL}/riwayat_inap/${selectedRow.IDRIWAYATINAP}/pdf`
+  
+    setPdfUrl(pdfLink)
+    setFileName(`Laporan_RawatInap_${selectedRow.IDRIWAYATINAP}`)
     setSelectedRow({
       ...selectedRow,
       paperSize: adjustConfig.paperSize
     })
-
-    // buka modal PDFViewer
-    setJsPdfPreviewOpen(true)
-  }
-
-  const btnPrint = (row) => {
-    setSelectedRow(row)
-    setPdfUrl(`/pdfs/laporan-${row.IDRIWAYATINAP}.pdf`)
-    setFileName(`Laporan_RawatInap_${row.IDRIWAYATINAP}`)
+  
+    setAdjustDialog(false)
     setJsPdfPreviewOpen(true)
   }
 

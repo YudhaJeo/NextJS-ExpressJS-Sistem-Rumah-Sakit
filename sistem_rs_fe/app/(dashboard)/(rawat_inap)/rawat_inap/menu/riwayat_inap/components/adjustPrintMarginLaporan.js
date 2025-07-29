@@ -1,10 +1,10 @@
 // sistem_rs_fe\app\(dashboard)\(rawat_inap)\rawat_inap\menu\riwayat_inap\components\adjustPrintMarginLaporan.js
+import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
 import { Toolbar } from 'primereact/toolbar';
-import React, { useState } from 'react';
 
 export default function AdjustPrintMarginLaporan({ adjustDialog, setAdjustDialog, handleAdjust, excel }) {
     const [dataAdjust, setDataAdjust] = useState({
@@ -18,6 +18,8 @@ export default function AdjustPrintMarginLaporan({ adjustDialog, setAdjustDialog
         paperSize: 'A4',
         orientation: 'portrait'
     });
+
+    const [loadingExport, setLoadingExport] = useState(false);
 
     const paperSizes = [
         { name: 'A4', value: 'A4' },
@@ -40,11 +42,13 @@ export default function AdjustPrintMarginLaporan({ adjustDialog, setAdjustDialog
         setDataAdjust((prev) => ({ ...prev, [name]: val }));
     };
 
-    const exportPdf = () => {
-        // kirim semua pengaturan (margin, size, orientation) ke parent
-        handleAdjust(dataAdjust)
-        // tutup dialog
-        setAdjustDialog(false)
+    const exportPdf = async () => {
+        try {
+            setLoadingExport(true);
+            await handleAdjust(dataAdjust);
+        } finally {
+            setLoadingExport(false);
+        }
     };
 
     const footernya = () => (
@@ -55,12 +59,15 @@ export default function AdjustPrintMarginLaporan({ adjustDialog, setAdjustDialog
                     icon="pi pi-file"
                     className="p-button-danger mr-2"
                     onClick={exportPdf}
+                    loading={loadingExport}
+                    disabled={loadingExport}
                 />
                 <Button
                     label="Export Excel"
                     icon="pi pi-file"
                     className="p-button-success mr-2"
                     onClick={excel}
+                    disabled={loadingExport}
                 />
             </div>
         </div>
@@ -68,7 +75,7 @@ export default function AdjustPrintMarginLaporan({ adjustDialog, setAdjustDialog
 
     return (
         <div className="crud-demo">
-            <Dialog
+             <Dialog
                 visible={adjustDialog}
                 onHide={() => setAdjustDialog(false)}
                 header="Adjust Print Margin"
@@ -130,7 +137,7 @@ export default function AdjustPrintMarginLaporan({ adjustDialog, setAdjustDialog
                         </div>
                     </div>
                 </div>
-
+                {/* isi form */}
                 <Toolbar className="py-2 justify-content-end" end={footernya} />
             </Dialog>
         </div>

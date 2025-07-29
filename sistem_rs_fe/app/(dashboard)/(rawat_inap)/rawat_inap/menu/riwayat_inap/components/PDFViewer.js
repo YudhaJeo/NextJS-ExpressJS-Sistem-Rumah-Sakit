@@ -18,8 +18,6 @@ function PDFViewer({ pdfUrl, paperSize, fileName }) {
     const [pageHeight, setPageHeight] = useState(0);
     const [scale, setScale] = useState(1);
 
-    pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-
     const handleFirstPage = () => {
         if (currentPage !== 1) {
             setCurrentPage(1);
