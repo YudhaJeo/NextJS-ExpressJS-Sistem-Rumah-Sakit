@@ -1,10 +1,11 @@
 'use client';
 
+import React from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 
-const TabelPengobatan = ({ data, loading, onEdit, onDelete }) => {
+const TabelPengobatan = ({ data, loading, onEdit, onDelete, onUploadFoto }) => {
   const formatTanggal = (tanggal) => {
     if (!tanggal) return "-";
     const tgl = new Date(tanggal);
@@ -16,8 +17,28 @@ const TabelPengobatan = ({ data, loading, onEdit, onDelete }) => {
     });
   };
 
+  const fotoBodyTemplate = (rowData) => {
+    return rowData.FOTOPROFIL ? (
+      <img 
+        src={`http://localhost:4000/uploads/riwayat_pengobatan/${rowData.FOTOPROFIL}`} 
+        alt="foto" 
+        width="100" 
+        style={{ borderRadius: '5px' }} 
+      />
+    ) : (
+      <span className="text-gray-400">Belum ada foto</span>
+    );
+  };
+
   const actionBody = (row) => (
     <div className="flex gap-2">
+      <Button
+        icon="pi pi-upload"
+        size="small"
+        severity="success"
+        tooltip="Upload Foto"
+        onClick={() => onUploadFoto(row)}
+      />
       <Button
         icon="pi pi-pencil"
         size="small"
@@ -46,10 +67,10 @@ const TabelPengobatan = ({ data, loading, onEdit, onDelete }) => {
     >
       <Column field="NAMALENGKAP" header="Nama Pasien" />
       <Column field="NIK" header="NIK" />
-      <Column
-        field="TANGGALKUNJUNGAN"
-        header="Tgl Kunjungan"
-        body={(row) => formatTanggal(row.TANGGALKUNJUNGAN)}
+      <Column 
+        field="TANGGALKUNJUNGAN" 
+        header="Tgl Kunjungan" 
+        body={(row) => formatTanggal(row.TANGGALKUNJUNGAN)} 
       />
       <Column field="KELUHAN" header="Keluhan" />
       <Column field="POLI" header="Poli" />
@@ -58,7 +79,8 @@ const TabelPengobatan = ({ data, loading, onEdit, onDelete }) => {
       <Column field="STATUSRAWAT" header="Status Rawat" />
       <Column field="DIAGNOSA" header="Diagnosa" />
       <Column field="OBAT" header="Obat" />
-      <Column header="Aksi" body={actionBody} style={{ width: "180px" }} />
+      <Column header="Foto Profil" body={fotoBodyTemplate} style={{ width: "120px" }} />
+      <Column header="Aksi" body={actionBody} style={{ width: "220px" }} />
     </DataTable>
   );
 };

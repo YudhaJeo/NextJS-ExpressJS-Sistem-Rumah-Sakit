@@ -13,14 +13,15 @@ export async function getAllPengobatan(req, res) {
 
 export async function createPengobatan(req, res) {
   try {
-    const { IDPENDAFTARAN, IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
+    const { IDPENDAFTARAN, IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT, FOTOPROFIL } = req.body;
     await PengobatanModel.createPengobatan({
       IDPENDAFTARAN,
       IDDOKTER,
       STATUSKUNJUNGAN,
       STATUSRAWAT,
       DIAGNOSA,
-      OBAT
+      OBAT,
+      FOTOPROFIL
     });
     res.json({ message: 'Pengobatan berhasil ditambahkan' });
   } catch (err) {
@@ -32,14 +33,15 @@ export async function createPengobatan(req, res) {
 export async function updatePengobatan(req, res) {
   try {
     const id = req.params.id;
-    const { IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
+    const { IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT, FOTOPROFIL } = req.body;
 
     await PengobatanModel.updatePengobatan(id, {
       IDDOKTER,
       STATUSKUNJUNGAN,
       STATUSRAWAT,
       DIAGNOSA,
-      OBAT
+      OBAT,
+      FOTOPROFIL
     });
 
     const IDPENDAFTARAN = await PengobatanModel.getPendaftaranIdByPengobatanId(id);
@@ -74,3 +76,16 @@ export const getMonitoringPengobatan = async (req, res) => {
     res.status(500).json({ message: 'Gagal mengambil data monitoring pengobatan' });
   }
 }
+
+export const uploadFoto = async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ message: 'Tidak ada file yang diupload' });
+
+    await PengobatanModel.updateFotoProfil(req.params.id, req.file.filename);
+
+    res.json({ message: 'Foto berhasil diupload', filename: req.file.filename });
+  } catch (err) {
+    console.error('Upload error:', err);
+    res.status(500).json({ message: 'Gagal upload foto' });
+  }
+};

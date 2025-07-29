@@ -40,6 +40,7 @@ export const getAllPengobatan = () => {
       'r.STATUSRAWAT',
       'r.DIAGNOSA',
       'r.OBAT',
+      'r.FOTOPROFIL',
       'tm.NAMALENGKAP as NAMADOKTER'
     )
     .groupBy(
@@ -54,19 +55,20 @@ export const getAllPengobatan = () => {
       'r.STATUSRAWAT',
       'r.DIAGNOSA',
       'r.OBAT',
+      'r.FOTOPROFIL',
       'tm.NAMALENGKAP'
     );
 };
 
 
-// ✅ Menyimpan data pengobatan baru
 export const createPengobatan = async ({
   IDPENDAFTARAN,
   IDDOKTER,
   STATUSKUNJUNGAN,
   STATUSRAWAT,
   DIAGNOSA,
-  OBAT
+  OBAT,
+  FOTOPROFIL
 }, trx = db) => {
   // Cek pendaftaran
   const pendaftaran = await trx('pendaftaran')
@@ -91,7 +93,8 @@ export const createPengobatan = async ({
     STATUSKUNJUNGAN: STATUSKUNJUNGAN || pendaftaran.STATUSKUNJUNGAN,
     STATUSRAWAT,
     DIAGNOSA,
-    OBAT
+    OBAT,
+    FOTOPROFIL
   };
 
   return trx('riwayat_pengobatan').insert(data);
@@ -107,5 +110,15 @@ export const deletePengobatan = (id) => {
   return db('riwayat_pengobatan')
     .where('IDPENGOBATAN', id)
     .del();
+};
+
+export const updateFotoProfil = async (id, filename) => {
+  return await db('riwayat_pengobatan')
+    .where('IDPENGOBATAN', id)
+    .update({ FOTOPROFIL: filename, UPDATED_AT: db.fn.now() });
+};
+
+export const getRiwayatById = async (id) => {
+  return await db('riwayat_pengobatan').where('IDPENGOBATAN', id).first();
 };
 

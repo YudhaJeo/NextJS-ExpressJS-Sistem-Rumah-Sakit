@@ -2,11 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import FormDialogPengobatan from "./components/formDialogRiwayat";
-import TabelPengobatan from "./components/tabelRiwayat";
+import { Dialog } from "primereact/dialog";
+import { Button } from "primereact/button";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import ToastNotifier from "@/app/components/toastNotifier";
 import FilterTanggal from "@/app/components/filterTanggal";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import FormDialogPengobatan from "./components/formDialogRiwayat";
+import TabelPengobatan from "./components/tabelRiwayat";
+import { Toast } from "primereact/toast";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -26,11 +29,18 @@ const RiwayatPengobatanPage = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [form, setForm] = useState(initialForm());
-  const toastRef = useRef(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [dokterOptions, setDokterOptions] = useState([]);
   const [pendaftaranOptions, setPendaftaranOptions] = useState([]);
+
+  // Upload Foto State
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [visibleUpload, setVisibleUpload] = useState(false);
+  const [file, setFile] = useState(null);
+
+  const toastRef = useRef(null);
+  const toastUpload = useRef(null);
 
   useEffect(() => {
     fetchData();
@@ -38,34 +48,32 @@ const RiwayatPengobatanPage = () => {
   }, []);
 
   const fetchData = async () => {
-  setLoading(true);
-  try {
-    const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
-    const list = res.data.data || [];
-    setData(list);
-    setOriginalData(list);
+    setLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
+      const list = res.data.data || [];
+      setData(list);
+      setOriginalData(list);
 
-    const daftarRes = await axios.get(`${API_URL}/pendaftaran`);
-    const options = daftarRes.data.data.map((item) => {
-      const d = new Date(item.TANGGALKUNJUNGAN);
-      const tanggalFormatted = `${d.getDate().toString().padStart(2, '0')}-${(d.getMonth() + 1)
-        .toString()
-        .padStart(2, '0')}-${d.getFullYear()}`;
-
-      return {
-        label: `${item.NAMALENGKAP} - ${tanggalFormatted}`,
-        value: item.IDPENDAFTARAN,
-      };
-    });
-    setPendaftaranOptions(options);
-  } catch (err) {
-    console.error("Gagal ambil data monitoring:", err);
-    toastRef.current?.showToast("01", "Gagal mengambil data dari server");
-  } finally {
-    setLoading(false);
-  }
-};
-
+      const daftarRes = await axios.get(`${API_URL}/pendaftaran`);
+      const options = daftarRes.data.data.map((item) => {
+        const d = new Date(item.TANGGALKUNJUNGAN);
+        const tanggalFormatted = `${d.getDate().toString().padStart(2, "0")}-${(d.getMonth() + 1)
+          .toString()
+          .padStart(2, "0")}-${d.getFullYear()}`;
+        return {
+          label: `${item.NAMALENGKAP} - ${tanggalFormatted}`,
+          value: item.IDPENDAFTARAN,
+        };
+      });
+      setPendaftaranOptions(options);
+    } catch (err) {
+      console.error("Gagal ambil data monitoring:", err);
+      toastRef.current?.showToast("01", "Gagal mengambil data dari server");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchDokter = async () => {
     try {
@@ -90,14 +98,12 @@ const RiwayatPengobatanPage = () => {
 
   const handleDateFilter = () => {
     if (!startDate && !endDate) return setData(originalData);
-
     const filtered = originalData.filter((item) => {
       const visitDate = new Date(item.TANGGALKUNJUNGAN);
       const from = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
       const to = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
       return (!from || visitDate >= from) && (!to || visitDate <= to);
     });
-
     setData(filtered);
   };
 
@@ -116,7 +122,6 @@ const RiwayatPengobatanPage = () => {
         await axios.put(`${API_URL}/riwayat_pengobatan/${form.IDPENGOBATAN}`, payload);
         toastRef.current?.showToast("00", "Data berhasil diperbarui");
       }
-
       fetchData();
       setDialogVisible(false);
       resetForm();
@@ -140,13 +145,8 @@ const RiwayatPengobatanPage = () => {
   };
 
   const handleDelete = (row) => {
-    if (!row.IDPENGOBATAN || !row.IDPENDAFTARAN) {
-      toastRef.current?.showToast("01", "Data tidak valid untuk dihapus");
-      return;
-    }
-
     confirmDialog({
-      message: `Hapus data pengobatan dan pendaftaran untuk ${row.IDPENGOBATAN}?`,
+      message: `Hapus data pengobatan untuk ${row.IDPENGOBATAN}?`,
       header: "Konfirmasi Hapus",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Ya",
@@ -165,9 +165,35 @@ const RiwayatPengobatanPage = () => {
     });
   };
 
+  const handleUploadFoto = (row) => {
+    setSelectedRow(row);
+    setVisibleUpload(true);
+  };
+
+  const handleSubmitUpload = async () => {
+    if (!file) {
+      toastUpload.current.show({ severity: "warn", summary: "Warning", detail: "Pilih file terlebih dahulu!" });
+      return;
+    }
+    const formData = new FormData();
+    formData.append("foto", file);
+    try {
+      await axios.put(`${API_URL}/riwayat_pengobatan/${selectedRow.IDPENGOBATAN}/upload`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      toastUpload.current.show({ severity: "success", summary: "Sukses", detail: "Foto berhasil diupload!" });
+      setVisibleUpload(false);
+      setFile(null);
+      fetchData();
+    } catch (error) {
+      toastUpload.current.show({ severity: "error", summary: "Error", detail: "Gagal upload foto!" });
+    }
+  };
+
   return (
-    <div className="card">
+    <div className="card p-4">
       <ToastNotifier ref={toastRef} />
+      <Toast ref={toastUpload} />
       <ConfirmDialog />
 
       <h3 className="text-xl font-semibold mb-3">Monitoring Riwayat Pengobatan</h3>
@@ -188,6 +214,7 @@ const RiwayatPengobatanPage = () => {
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onUploadFoto={handleUploadFoto}
       />
 
       <FormDialogPengobatan
@@ -202,6 +229,14 @@ const RiwayatPengobatanPage = () => {
         dokterOptions={dokterOptions}
         pendaftaranOptions={pendaftaranOptions}
       />
+
+      <Dialog header="Upload Foto" visible={visibleUpload} style={{ width: "30vw" }} onHide={() => setVisibleUpload(false)}>
+        <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
+        <div className="flex justify-end gap-2 mt-3">
+          <Button label="Batal" icon="pi pi-times" className="p-button-text" onClick={() => setVisibleUpload(false)} />
+          <Button label="Upload" icon="pi pi-check" className="p-button-success" onClick={handleSubmitUpload} />
+        </div>
+      </Dialog>
     </div>
   );
 };
