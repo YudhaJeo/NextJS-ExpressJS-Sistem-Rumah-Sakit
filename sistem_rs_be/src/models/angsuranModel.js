@@ -3,11 +3,16 @@ import db from '../core/config/knex.js';
 export const getAll = () => {
   return db('angsuran')
     .join('invoice', 'angsuran.IDINVOICE', 'invoice.IDINVOICE')
+    .join('pasien', 'invoice.NIK', 'pasien.NIK')
+    .leftJoin('asuransi', 'pasien.IDASURANSI', 'asuransi.IDASURANSI')
     .leftJoin('bank_account', 'angsuran.IDBANK', 'bank_account.IDBANK')
     .select(
       'angsuran.*',
       'invoice.NOINVOICE',
-      'bank_account.NAMA_BANK'
+      'bank_account.NAMA_BANK',
+      'pasien.NIK',
+      'pasien.NAMALENGKAP',
+      'asuransi.NAMAASURANSI'
     )
     .orderBy('angsuran.TANGGALBAYAR', 'asc');
 };

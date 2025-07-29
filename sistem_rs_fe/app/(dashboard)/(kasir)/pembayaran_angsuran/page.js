@@ -24,6 +24,10 @@ const Page = () => {
 
   const [form, setForm] = useState({
     IDANGSURAN: 0,
+    NOANGSURAN: '',
+    NIK: '',
+    NAMALENGKAP: '',
+    NAMAASURANSI: '',
     IDINVOICE: '',
     NOMINAL: 0,
     TANGGAL: '',
@@ -140,6 +144,7 @@ const Page = () => {
       const body = { ...form };
       delete body.NOINVOICE;
       delete body.NAMAPASIEN;
+      if (!isEdit) delete body.IDANGSURAN;
 
       if (isEdit) {
         await axios.put(url, body);
@@ -189,6 +194,10 @@ const Page = () => {
   const resetForm = () => {
     setForm({
       IDANGSURAN: 0,
+      NOANGSURAN: '',
+      NIK: '',
+      NAMALENGKAP: '',
+      NAMAASURANSI: '',
       IDINVOICE: '',
       NOMINAL: 0,
       TANGGAL: '',

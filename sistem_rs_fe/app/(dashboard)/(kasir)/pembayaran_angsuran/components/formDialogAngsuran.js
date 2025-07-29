@@ -5,7 +5,7 @@ import { Dialog } from 'primereact/dialog';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
-import { InputTextarea } from 'primereact/inputtextarea';
+import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { classNames } from 'primereact/utils';
 
@@ -45,12 +45,18 @@ const FormDialogAngsuran = ({
         ...form,
         IDINVOICE: selectedInvoice.value,
         NOINVOICE: selectedInvoice.label,
+        NIK: selectedInvoice.NIK || '',
+        NAMAPASIEN: selectedInvoice.NAMAPASIEN || '',
+        NAMA_ASURANSI: selectedInvoice.NAMA_ASURANSI || '',
       });
     } else {
       setForm({
         ...form,
         IDINVOICE: '',
         NOINVOICE: '',
+        NIK: '',
+        NAMAPASIEN: '',
+        NAMA_ASURANSI: '',
       });
     }
   };
@@ -67,6 +73,15 @@ const FormDialogAngsuran = ({
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
         <div>
+          <label className="font-medium">No Angsuran</label>
+          <InputText
+            className="w-full mt-2"
+            value={form.NOANGSURAN || 'Otomatis'}
+            readOnly
+          />
+        </div>
+
+        <div>
           <label className="font-medium">No Invoice</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDINVOICE })}
@@ -80,6 +95,33 @@ const FormDialogAngsuran = ({
             showClear
           />
           {errors.IDINVOICE && <small className="p-error">{errors.IDINVOICE}</small>}
+        </div>
+
+        <div>
+          <label className="font-medium">NIK</label>
+          <InputText
+            className="w-full mt-2"
+            value={form.NIK}
+            readOnly
+          />
+        </div>
+
+        <div>
+          <label className="font-medium">Nama Pasien</label>
+          <InputText
+            className="w-full mt-2"
+            value={form.NAMAPASIEN}
+            readOnly
+          />
+        </div>
+
+        <div>
+          <label className="font-medium">Asuransi</label>
+          <InputText
+            className="w-full mt-2"
+            value={form.NAMA_ASURANSI}
+            readOnly
+          />
         </div>
 
         <div>
@@ -142,7 +184,7 @@ const FormDialogAngsuran = ({
 
         <div>
           <label className="font-medium">Keterangan</label>
-          <InputTextarea
+          <InputText
             className="w-full mt-2"
             value={form.KETERANGAN}
             onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}

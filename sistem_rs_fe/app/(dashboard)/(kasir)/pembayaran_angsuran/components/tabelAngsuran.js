@@ -12,6 +12,12 @@ const metodeSeverity = {
   DEFAULT: 'secondary',
 };
 
+const asuransiSeverity = {
+  UMUM: 'info',      
+  BPJS: 'success',   
+  DEFAULT: 'warning' 
+};
+
 const TabelAngsuran = ({ data, loading, onEdit, onDelete }) => {
   const tanggalBodyTemplate = (row) => {
     const tgl = new Date(row.TANGGALBAYAR);
@@ -44,6 +50,18 @@ const TabelAngsuran = ({ data, loading, onEdit, onDelete }) => {
     return row?.KETERANGAN?.trim() ? row.KETERANGAN : '-';
   };
 
+  const asuransiBodyTemplate = (row) => {
+    const severity =
+      asuransiSeverity[row.NAMAASURANSI?.toUpperCase()] || asuransiSeverity.DEFAULT;
+    
+    return (
+      <Tag
+        value={row.NAMAASURANSI}
+        severity={severity}
+      />
+    );
+  };
+
   return (
     <DataTable
       value={data || []}
@@ -53,8 +71,11 @@ const TabelAngsuran = ({ data, loading, onEdit, onDelete }) => {
       size="small"
       scrollable
     >
-      <Column field="IDANGSURAN" header="ID Angsuran" />
+      <Column field="NOANGSURAN" header="No Angsuran" />
       <Column field="NOINVOICE" header="No Invoice" />
+      <Column field="NIK" header="NIK" />
+      <Column field="NAMALENGKAP" header="Nama Pasien" />
+      <Column field="NAMAASURANSI" header="Asuransi" body={asuransiBodyTemplate} />
       <Column field="NOMINAL" header="Nominal" body={nominalBodyTemplate} />
       <Column field="TANGGALBAYAR" header="Tanggal Bayar" body={tanggalBodyTemplate} />
       <Column field="METODE" header="Metode" body={metodeBodyTemplate} />

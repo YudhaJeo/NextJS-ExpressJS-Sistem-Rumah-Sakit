@@ -1,5 +1,6 @@
 import * as AngsuranModel from '../models/angsuranModel.js';
 import db from '../core/config/knex.js';
+import { generateNoAngsuran } from '../utils/generateNoAngsuran.js';
 
 export async function getAllAngsuran(req, res) {
   try {
@@ -48,7 +49,6 @@ export async function createAngsuran(req, res) {
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    // Hitung total angsuran yang sudah dibayar
     const totalBayarSebelumnya = await trx('angsuran')
       .where('IDINVOICE', IDINVOICE)
       .sum({ total: 'NOMINAL' })
@@ -67,8 +67,11 @@ export async function createAngsuran(req, res) {
       return res.status(400).json({ success: false, message: 'Bank wajib dipilih untuk Transfer Bank' });
     }
 
-    // Insert angsuran baru
+    const tanggalBayar = new Date().toISOString();
+    const NOANGSURAN = await generateNoAngsuran(tanggalBayar, trx);
+
     await AngsuranModel.create({
+      NOANGSURAN,
       IDINVOICE,
       NOMINAL,
       METODE,
@@ -79,7 +82,6 @@ export async function createAngsuran(req, res) {
     const totalSetelahBayar = sudahDibayar + NOMINAL;
     const statusBaru = totalSetelahBayar >= invoice.TOTALTAGIHAN ? 'LUNAS' : 'BELUM_LUNAS';
 
-    // Update status invoice
     await trx('invoice').where('IDINVOICE', IDINVOICE).update({
       STATUS: statusBaru,
       UPDATED_AT: db.fn.now()
@@ -118,7 +120,6 @@ export async function updateAngsuran(req, res) {
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    // Hitung total pembayaran selain angsuran ini
     const totalBayarLain = await trx('angsuran')
       .where('IDINVOICE', IDINVOICE)
       .andWhereNot('IDANGSURAN', id)
@@ -133,7 +134,6 @@ export async function updateAngsuran(req, res) {
       return res.status(400).json({ success: false, message: 'Nominal total melebihi sisa tagihan' });
     }
 
-    // Update angsuran
     await trx('angsuran').where('IDANGSURAN', id).update({
       NOMINAL,
       METODE,
@@ -142,7 +142,6 @@ export async function updateAngsuran(req, res) {
       UPDATED_AT: trx.fn.now()
     });
 
-    // Update status invoice berdasarkan total angsuran baru
     const statusBaru = totalSetelahUpdate >= invoice.TOTALTAGIHAN ? 'LUNAS' : 'BELUM_LUNAS';
     await trx('invoice').where('IDINVOICE', IDINVOICE).update({
       STATUS: statusBaru,
@@ -171,10 +170,8 @@ export async function deleteAngsuran(req, res) {
 
     const { IDINVOICE } = angsuran;
 
-    // Hapus angsuran
     await trx('angsuran').where('IDANGSURAN', id).del();
 
-    // Hitung ulang total angsuran tersisa
     const totalAngsuran = await trx('angsuran')
       .where('IDINVOICE', IDINVOICE)
       .sum({ total: 'NOMINAL' })
@@ -188,7 +185,6 @@ export async function deleteAngsuran(req, res) {
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    // Perbarui status invoice
     const statusBaru = totalBayar >= invoice.TOTALTAGIHAN ? 'LUNAS' : 'BELUM_LUNAS';
     await trx('invoice').where('IDINVOICE', IDINVOICE).update({
       STATUS: statusBaru,

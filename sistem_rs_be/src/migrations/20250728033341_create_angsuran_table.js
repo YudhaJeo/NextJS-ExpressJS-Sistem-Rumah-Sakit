@@ -5,11 +5,12 @@
 export const up = function (knex) {
   return knex.schema.createTable('angsuran', (table) => {
     table.increments('IDANGSURAN').primary();
+    table.string('NOANGSURAN', 30).notNullable().unique();
     table.integer('IDINVOICE').unsigned().notNullable()
       .references('IDINVOICE').inTable('invoice').onDelete('CASCADE');
     table.double('NOMINAL', 15, 2).notNullable();
     table.datetime('TANGGALBAYAR').notNullable().defaultTo(knex.fn.now());
-    table.string('METODE', 50).notNullable(); // berasal dari master metode
+    table.string('METODE', 50).notNullable();
     table.integer('IDBANK').unsigned()
       .references('IDBANK').inTable('bank_account').onDelete('SET NULL');
     table.string('KETERANGAN', 255);
