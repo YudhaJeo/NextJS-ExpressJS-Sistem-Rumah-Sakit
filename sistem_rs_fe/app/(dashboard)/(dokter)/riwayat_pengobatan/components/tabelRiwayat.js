@@ -1,11 +1,15 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
 
 const TabelPengobatan = ({ data, loading, onEdit, onDelete, onUploadFoto }) => {
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewSrc, setPreviewSrc] = useState(null);
+
   const formatTanggal = (tanggal) => {
     if (!tanggal) return "-";
     const tgl = new Date(tanggal);
@@ -17,13 +21,20 @@ const TabelPengobatan = ({ data, loading, onEdit, onDelete, onUploadFoto }) => {
     });
   };
 
+  const handlePreview = (src) => {
+    setPreviewSrc(src);
+    setPreviewVisible(true);
+  };
+
   const fotoBodyTemplate = (rowData) => {
+    const src = `http://localhost:4000/uploads/riwayat_pengobatan/${rowData.FOTOPROFIL}`;
     return rowData.FOTOPROFIL ? (
-      <img 
-        src={`http://localhost:4000/uploads/riwayat_pengobatan/${rowData.FOTOPROFIL}`} 
-        alt="foto" 
-        width="100" 
-        style={{ borderRadius: '5px' }} 
+      <img
+        src={src}
+        alt="foto"
+        width="100"
+        style={{ borderRadius: '5px', cursor: 'pointer' }}
+        onClick={() => handlePreview(src)}
       />
     ) : (
       <span className="text-gray-400">Belum ada foto</span>
@@ -57,31 +68,44 @@ const TabelPengobatan = ({ data, loading, onEdit, onDelete, onUploadFoto }) => {
   );
 
   return (
-    <DataTable
-      value={data}
-      paginator
-      rows={10}
-      loading={loading}
-      stripedRows
-      responsiveLayout="scroll"
-    >
-      <Column field="NAMALENGKAP" header="Nama Pasien" />
-      <Column field="NIK" header="NIK" />
-      <Column 
-        field="TANGGALKUNJUNGAN" 
-        header="Tgl Kunjungan" 
-        body={(row) => formatTanggal(row.TANGGALKUNJUNGAN)} 
-      />
-      <Column field="KELUHAN" header="Keluhan" />
-      <Column field="POLI" header="Poli" />
-      <Column field="STATUSKUNJUNGAN" header="Status Kunjungan" />
-      <Column field="NAMADOKTER" header="Dokter" />
-      <Column field="STATUSRAWAT" header="Status Rawat" />
-      <Column field="DIAGNOSA" header="Diagnosa" />
-      <Column field="OBAT" header="Obat" />
-      <Column header="Foto Profil" body={fotoBodyTemplate} style={{ width: "120px" }} />
-      <Column header="Aksi" body={actionBody} style={{ width: "220px" }} />
-    </DataTable>
+    <>
+      <DataTable
+        value={data}
+        paginator
+        rows={10}
+        loading={loading}
+        stripedRows
+        responsiveLayout="scroll"
+      >
+        <Column field="NAMALENGKAP" header="Nama Pasien" />
+        <Column field="NIK" header="NIK" />
+        <Column
+          field="TANGGALKUNJUNGAN"
+          header="Tgl Kunjungan"
+          body={(row) => formatTanggal(row.TANGGALKUNJUNGAN)}
+        />
+        <Column field="KELUHAN" header="Keluhan" />
+        <Column field="POLI" header="Poli" />
+        <Column field="STATUSKUNJUNGAN" header="Status Kunjungan" />
+        <Column field="NAMADOKTER" header="Dokter" />
+        <Column field="STATUSRAWAT" header="Status Rawat" />
+        <Column field="DIAGNOSA" header="Diagnosa" />
+        <Column field="OBAT" header="Obat" />
+        <Column header="Foto Profil" body={fotoBodyTemplate} style={{ width: "120px" }} />
+        <Column header="Aksi" body={actionBody} style={{ width: "220px" }} />
+      </DataTable>
+
+      {/* Dialog Preview Foto */}
+      <Dialog
+        header="Preview Foto"
+        visible={previewVisible}
+        style={{ width: '400px' }}
+        modal
+        onHide={() => setPreviewVisible(false)}
+      >
+        {previewSrc && <img src={previewSrc} alt="Preview" style={{ width: '100%', borderRadius: '8px' }} />}
+      </Dialog>
+    </>
   );
 };
 
