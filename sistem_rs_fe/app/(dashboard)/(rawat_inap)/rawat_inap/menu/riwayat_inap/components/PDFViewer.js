@@ -65,10 +65,27 @@ function PDFViewer({ pdfUrl, paperSize, fileName }) {
     };
 
     const handlePrint = () => {
-        if (pdfUrl) {
-            window.open(pdfUrl, '_blank');
+        if (!pdfUrl) return;
+      
+        // kalau pdfUrl diawali "data:application/pdf"
+        if (pdfUrl.startsWith('data:application/pdf')) {
+          // ambil bagian base64
+          const base64Data = pdfUrl.split(',')[1];
+          const byteCharacters = atob(base64Data);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+          const blob = new Blob([byteArray], { type: 'application/pdf' });
+      
+          const blobUrl = URL.createObjectURL(blob);
+          window.open(blobUrl, '_blank');
+        } else {
+          // kalau isinya url biasa
+          window.open(pdfUrl, '_blank');
         }
-    };
+      };      
 
     useEffect(() => {
         const loadPdf = async () => {
