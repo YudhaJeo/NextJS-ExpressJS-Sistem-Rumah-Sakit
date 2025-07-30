@@ -5,6 +5,9 @@ import React, { useState, useEffect } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { Button } from 'primereact/button'
 
+import 'react-pdf/dist/Page/TextLayer.css'
+import 'react-pdf/dist/Page/AnnotationLayer.css'
+
 // worker harus pakai file .js
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',

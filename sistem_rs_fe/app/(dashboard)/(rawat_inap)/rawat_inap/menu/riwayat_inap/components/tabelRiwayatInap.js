@@ -1,4 +1,4 @@
-// app/(dashboard)/(rawat_inap)/riwayat_inap/components/tabelRiwayatInap.js
+// sistem_rs_fe\app\(dashboard)\(rawat_inap)\rawat_inap\menu\riwayat_inap\components\tabelRiwayatInap.js
 'use client'
 
 import React, { useState } from 'react'
@@ -6,10 +6,8 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
-import AdjustPrintMarginLaporan from './adjustPrintMarginLaporan'
 import dynamic from 'next/dynamic'
-import axios from 'axios'
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+import AdjustPrintMarginLaporan from './adjustPrintMarginLaporan'
 
 const TabelRiwayatInap = ({ data, loading }) => {
   const [adjustDialog, setAdjustDialog] = useState(false)
@@ -17,10 +15,8 @@ const TabelRiwayatInap = ({ data, loading }) => {
   const [pdfUrl, setPdfUrl] = useState('')
   const [fileName, setFileName] = useState('')
   const [selectedRow, setSelectedRow] = useState(null)
-  
-  const PDFViewer = dynamic(() => import('./PDFViewer'), {
-    ssr: false,
-  })
+
+  const PDFViewer = dynamic(() => import('./PDFViewer'), { ssr: false })
 
   const formatTanggal = (tanggal) => {
     if (!tanggal) return '-'
@@ -35,34 +31,9 @@ const TabelRiwayatInap = ({ data, loading }) => {
   const formatRupiah = (value) =>
     new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value || 0)
 
-  const btnAdjust = (row) => {
+  const handleOpenAdjust = (row) => {
     setSelectedRow(row)
     setAdjustDialog(true)
-  }
-
-  const handleAdjust = async (adjustConfig) => {
-    if (!selectedRow?.IDRIWAYATINAP) return
-  
-    // langsung buat url ke backend
-    const pdfLink = `${API_URL}/riwayat_inap/${selectedRow.IDRIWAYATINAP}/pdf`
-  
-    setPdfUrl(pdfLink)
-    setFileName(`Laporan_RawatInap_${selectedRow.IDRIWAYATINAP}`)
-    setSelectedRow({
-      ...selectedRow,
-      paperSize: adjustConfig.paperSize
-    })
-  
-    setAdjustDialog(false)
-    setJsPdfPreviewOpen(true)
-  }
-
-  const exportExcel = () => {
-    if (!selectedRow) {
-      console.warn('tidak ada baris yang dipilih')
-      return
-    }
-    // fungsi export excel
   }
 
   const actionBody = (rowData) => (
@@ -72,16 +43,12 @@ const TabelRiwayatInap = ({ data, loading }) => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Button
-          icon="pi pi-eye"
-          className="p-button-sm"
-          tooltip="Lihat Detail"
-        />
+        <Button icon="pi pi-eye" className="p-button-sm" tooltip="Lihat Detail" />
       </a>
       <Button
         icon="pi pi-sliders-h"
         className="p-button-sm p-button-warning"
-        onClick={() => btnAdjust(rowData)}
+        onClick={() => handleOpenAdjust(rowData)}
         tooltip="Atur Margin"
       />
     </div>
@@ -90,25 +57,60 @@ const TabelRiwayatInap = ({ data, loading }) => {
   return (
     <>
       <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
-        <Column field="NAMALENGKAP" header="Pasien" />
-        <Column field="NOMORBED" header="Bed" />
-        <Column field="TOTALOBAT" header="Total Obat" body={(row) => formatRupiah(row.TOTALOBAT)} />
-        <Column field="TOTALTINDAKAN" header="Total Tindakan" body={(row) => formatRupiah(row.TOTALTINDAKAN)} />
-        <Column field="TOTALKAMAR" header="Total Kamar" body={(row) => formatRupiah(row.TOTALKAMAR)} />
-        <Column field="TOTALBIAYA" header="Tagihan Total" body={(row) => formatRupiah(row.TOTALBIAYA)} />
-        <Column field="TANGGALMASUK" header="Tanggal Masuk" body={(row) => formatTanggal(row.TANGGALMASUK)} />
-        <Column field="TANGGALKELUAR" header="Tanggal Keluar" body={(row) => formatTanggal(row.TANGGALKELUAR)} />
-        <Column header="Aksi" body={actionBody} style={{ width: '150px', textAlign: 'center' }} />
+        <Column 
+          field="NAMALENGKAP" 
+          header="Pasien" 
+        />
+        <Column 
+          field="NOMORBED" 
+          header="Bed" 
+        />
+        <Column 
+          field="TOTALOBAT" 
+          header="Total Obat" 
+          body={(r) => formatRupiah(r.TOTALOBAT)} 
+        />
+        <Column 
+          field="TOTALTINDAKAN" 
+          header="Total Tindakan" 
+          body={(r) => formatRupiah(r.TOTALTINDAKAN)} 
+        />
+        <Column 
+          field="TOTALKAMAR" 
+          header="Total Kamar" 
+          body={(r) => formatRupiah(r.TOTALKAMAR)} 
+        />
+        <Column 
+          field="TOTALBIAYA" 
+          header="Tagihan Total" 
+          body={(r) => formatRupiah(r.TOTALBIAYA)} 
+        />
+        <Column 
+          field="TANGGALMASUK" 
+          header="Tanggal Masuk" 
+          body={(r) => formatTanggal(r.TANGGALMASUK)} 
+        />
+        <Column 
+          field="TANGGALKELUAR" 
+          header="Tanggal Keluar" 
+          body={(r) => formatTanggal(r.TANGGALKELUAR)} 
+        />
+        <Column 
+          header="Aksi" 
+          body={actionBody} 
+          style={{ width: '150px', textAlign: 'center' }} 
+        />
       </DataTable>
 
       <AdjustPrintMarginLaporan
         adjustDialog={adjustDialog}
         setAdjustDialog={setAdjustDialog}
-        handleAdjust={handleAdjust}
-        excel={exportExcel}
+        selectedRow={selectedRow}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
       />
 
-      {/* dialog preview pdf */}
       <Dialog
         visible={jsPdfPreviewOpen}
         onHide={() => setJsPdfPreviewOpen(false)}
@@ -120,7 +122,6 @@ const TabelRiwayatInap = ({ data, loading }) => {
           pdfUrl={pdfUrl}
           fileName={fileName}
           paperSize={selectedRow?.paperSize || 'A4'}
-          idRiwayat={selectedRow?.IDRIWAYATINAP}
         />
       </Dialog>
     </>
