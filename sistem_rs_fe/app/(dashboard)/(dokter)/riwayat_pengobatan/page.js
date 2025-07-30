@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
@@ -33,49 +34,15 @@ const RiwayatPengobatanPage = () => {
   const [endDate, setEndDate] = useState(null);
   const [dokterOptions, setDokterOptions] = useState([]);
   const [pendaftaranOptions, setPendaftaranOptions] = useState([]);
-
-  // Upload Foto State
   const [selectedRow, setSelectedRow] = useState(null);
   const [visibleUpload, setVisibleUpload] = useState(false);
   const [file, setFile] = useState(null);
+  const [unitKerja, setUnitKerja] = useState(null);
 
   const toastRef = useRef(null);
   const toastUpload = useRef(null);
 
-  useEffect(() => {
-    fetchData();
-    fetchDokter();
-  }, []);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
-      const list = res.data.data || [];
-      setData(list);
-      setOriginalData(list);
-
-      const daftarRes = await axios.get(`${API_URL}/pendaftaran`);
-      const options = daftarRes.data.data.map((item) => {
-        const d = new Date(item.TANGGALKUNJUNGAN);
-        const tanggalFormatted = `${d.getDate().toString().padStart(2, "0")}-${(d.getMonth() + 1)
-          .toString()
-          .padStart(2, "0")}-${d.getFullYear()}`;
-        return {
-          label: `${item.NAMALENGKAP} - ${tanggalFormatted}`,
-          value: item.IDPENDAFTARAN,
-        };
-      });
-      setPendaftaranOptions(options);
-    } catch (err) {
-      console.error("Gagal ambil data monitoring:", err);
-      toastRef.current?.showToast("01", "Gagal mengambil data dari server");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchDokter = async () => {
+  async function fetchDokter() {
     try {
       const res = await axios.get(`${API_URL}/dokter`);
       const options = res.data.map((dokter) => ({
@@ -86,7 +53,57 @@ const RiwayatPengobatanPage = () => {
     } catch (err) {
       console.error("Gagal ambil data Dokter:", err);
     }
+  }
+
+  const fetchData = async (poliFilter) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
+      let list = res.data.data || [];
+
+      if (poliFilter) {
+        list = list.filter((item) => item.POLI === poliFilter);
+      }
+
+      setData(list);
+      setOriginalData(list);
+
+      const daftarRes = await axios.get(`${API_URL}/pendaftaran`);
+      let options = daftarRes.data.data;
+
+      if (poliFilter) {
+        options = options.filter((item) => item.POLI === poliFilter);
+      }
+
+      options = options.map((item) => {
+        const d = new Date(item.TANGGALKUNJUNGAN);
+        const tanggalFormatted = `${d.getDate().toString().padStart(2, "0")}-${(
+          d.getMonth() + 1
+        )
+          .toString()
+          .padStart(2, "0")}-${d.getFullYear()}`;
+        return {
+          label: `${item.NAMALENGKAP} - ${tanggalFormatted}`,
+          value: item.IDPENDAFTARAN,
+        };
+      });
+
+      setPendaftaranOptions(options);
+    } catch (err) {
+      console.error("Gagal ambil data monitoring:", err);
+      toastRef.current?.showToast("01", "Gagal mengambil data dari server");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    const poliUser = Cookies.get("unitKerja");
+    const roleUser = Cookies.get("role");
+    setUnitKerja(roleUser === "Super Admin" ? null : poliUser || null);
+    fetchData(roleUser === "Super Admin" ? null : poliUser || null);
+    fetchDokter();
+  }, []);
 
   const resetForm = () => setForm(initialForm());
 
@@ -122,7 +139,7 @@ const RiwayatPengobatanPage = () => {
         await axios.put(`${API_URL}/riwayat_pengobatan/${form.IDPENGOBATAN}`, payload);
         toastRef.current?.showToast("00", "Data berhasil diperbarui");
       }
-      fetchData();
+      fetchData(unitKerja);
       setDialogVisible(false);
       resetForm();
     } catch (err) {
@@ -156,7 +173,7 @@ const RiwayatPengobatanPage = () => {
           await axios.delete(`${API_URL}/riwayat_pengobatan/${row.IDPENGOBATAN}`);
           await axios.delete(`${API_URL}/pendaftaran/${row.IDPENDAFTARAN}`);
           toastRef.current?.showToast("00", "Data berhasil dihapus");
-          fetchData();
+          fetchData(unitKerja);
         } catch (err) {
           console.error("Gagal hapus data:", err);
           toastRef.current?.showToast("01", "Gagal menghapus data");
@@ -184,7 +201,7 @@ const RiwayatPengobatanPage = () => {
       toastUpload.current.show({ severity: "success", summary: "Sukses", detail: "Foto berhasil diupload!" });
       setVisibleUpload(false);
       setFile(null);
-      fetchData();
+      fetchData(unitKerja);
     } catch (error) {
       toastUpload.current.show({ severity: "error", summary: "Error", detail: "Gagal upload foto!" });
     }

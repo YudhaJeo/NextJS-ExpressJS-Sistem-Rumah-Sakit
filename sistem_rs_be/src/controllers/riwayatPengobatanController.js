@@ -3,7 +3,13 @@ import * as PendaftaranModel from '../models/pendaftaranModel.js';
 
 export async function getAllPengobatan(req, res) {
   try {
-    const data = await PengobatanModel.getAllPengobatan();
+    const poli = req.query.poli; 
+    let data = await PengobatanModel.getAllPengobatan();
+
+    if (poli) {
+      data = data.filter((item) => item.POLI === poli);
+    }
+
     res.json({ data });
   } catch (err) {
     console.error('🔥 ERROR GET /riwayat_pengobatan:', err);
