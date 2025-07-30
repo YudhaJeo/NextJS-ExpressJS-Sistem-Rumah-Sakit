@@ -17,47 +17,50 @@ function DataAntrianPoli() {
   const [currentId, setCurrentId] = useState(null);
   const [selectedZona, setSelectedZona] = useState(null);
   const [unitKerja, setUnitKerja] = useState(null);
+  const [userRole, setUserRole] = useState(null);
 
   const toastRef = useRef(null);
   const socketRef = useRef(null);
 
   useEffect(() => {
     const poliUser = Cookies.get('unitKerja'); 
+    const role = Cookies.get('role'); // ← Tambah baca role
     setUnitKerja(poliUser || null);
+    setUserRole(role || null);
   }, []);
 
   useEffect(() => {
-    if (unitKerja !== null) {
-    fetchData();
-    fetchPoli();
-
-    const savedId = localStorage.getItem('currentAntrianPoliId');
-    if (savedId) setCurrentId(parseInt(savedId));
-
-    // Ganti WebSocket → Socket.IO
-    const socket = io(SOCKET_URL);
-    socketRef.current = socket;
-
-    socket.on('connect', () => {
-      console.log('🔌 Socket.IO tersambung:', socket.id);
-    });
-
-    socket.on('antrian-update', () => {
-      console.log('📥 Update antrian diterima');
+    if (userRole) {
       fetchData();
-    });
+      fetchPoli();
 
-    socket.on('disconnect', () => {
-      console.warn('❌ Socket.IO terputus');
-    });
+      const savedId = localStorage.getItem('currentAntrianPoliId');
+      if (savedId) setCurrentId(parseInt(savedId));
 
-    return () => {
-      if (socket) {
-        socket.disconnect();
-      }
-    };
+      // Ganti WebSocket → Socket.IO
+      const socket = io(SOCKET_URL);
+      socketRef.current = socket;
+
+      socket.on('connect', () => {
+        console.log('🔌 Socket.IO tersambung:', socket.id);
+      });
+
+      socket.on('antrian-update', () => {
+        console.log('📥 Update antrian diterima');
+        fetchData();
+      });
+
+      socket.on('disconnect', () => {
+        console.warn('❌ Socket.IO terputus');
+      });
+
+      return () => {
+        if (socket) {
+          socket.disconnect();
+        }
+      };
     }
-  }, [unitKerja]);
+  }, [unitKerja, userRole]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -65,7 +68,8 @@ function DataAntrianPoli() {
       const res = await axios.get(`${API_URL}/antrian_poli/data`);
       let allData = res.data.data || [];
 
-      if (unitKerja) {
+      // Hanya filter jika bukan Super Admin
+      if (userRole !== 'Super Admin' && unitKerja) {
         allData = allData.filter((item) => item.POLI === unitKerja);
       }
 
@@ -77,21 +81,21 @@ function DataAntrianPoli() {
     }
   };
 
+  const fetchPoli = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/poli`);
+      let list = res.data || [];
 
-const fetchPoli = async () => {
-  try {
-    const res = await axios.get(`${API_URL}/poli`);
-    let list = res.data || [];
+      // Hanya filter jika bukan Super Admin
+      if (userRole !== 'Super Admin' && unitKerja) {
+        list = list.filter((p) => p.NAMAPOLI === unitKerja);
+      }
 
-    if (unitKerja) {
-      list = list.filter((p) => p.NAMAPOLI === unitKerja);
+      setPoliList(list);
+    } catch (err) {
+      console.error('Gagal fetch poli:', err);
     }
-
-    setPoliList(list);
-  } catch (err) {
-    console.error('Gagal fetch poli:', err);
-  }
-};
+  };
 
   const handlePanggil = async (id) => {
     try {
