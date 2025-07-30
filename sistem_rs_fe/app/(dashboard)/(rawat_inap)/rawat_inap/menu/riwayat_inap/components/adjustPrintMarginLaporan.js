@@ -182,26 +182,6 @@ export default function AdjustPrintMarginLaporan({
           6: { halign: 'right' },
         },
         margin: { left: marginLeft, right: marginRight },
-        didDrawCell: function (data) {
-          // untuk kolom "Jenis" (index 4)
-          if (data.section === 'body' && data.column.index === 4) {
-            const value = data.cell.raw;
-            let color = null;
-            if (value === 'Kamar') color = [76, 175, 80]; // hijau
-            if (value === 'Obat') color = [33, 150, 243]; // biru
-            if (value === 'Tindakan') color = [255, 152, 0]; // oranye
-      
-            if (color) {
-              const { x, y, height, width } = data.cell;
-              doc.setFillColor(...color);
-              doc.roundedRect(x + 2, y + 1.5, width - 4, height - 3, 2, 2, 'F');
-              doc.setTextColor(255, 255, 255);
-              doc.text(value, x + width / 2, y + height / 2 + 1.5, { align: 'center', baseline: 'middle' });
-              // skip default text rendering
-              data.cell.text = '';
-            }
-          }
-        },
       });      
   
     let y2 = doc.lastAutoTable.finalY + 10;
