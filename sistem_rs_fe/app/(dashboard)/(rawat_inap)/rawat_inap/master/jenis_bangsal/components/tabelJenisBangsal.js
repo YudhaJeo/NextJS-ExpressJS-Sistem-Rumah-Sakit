@@ -22,7 +22,7 @@ const TabelJenis = ({ data, loading, onEdit, onDelete }) => {
           new Intl.NumberFormat('id-ID', {
             style: 'currency',
             currency: 'IDR',
-          }).format(rowData.HARGA_PER_HARI || 0)
+          }).format(rowData.HARGAPERHARI || 0)
         }
       />
       <Column field="FASILITAS" header="Fasilitas" />

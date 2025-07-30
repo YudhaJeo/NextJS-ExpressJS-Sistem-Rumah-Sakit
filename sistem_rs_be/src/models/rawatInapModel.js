@@ -12,7 +12,7 @@ export const getAll = () =>
       'rawat_inap.*',
       'pasien.NAMALENGKAP',
       'bed.NOMORBED',
-      'jenis_bangsal.HARGA_PER_HARI'
+      'jenis_bangsal.HARGAPERHARI'
     );
 
 export const getById = (id) =>
@@ -30,7 +30,7 @@ export const create = async (data) => {
     .join('bangsal', 'kamar.IDBANGSAL', 'bangsal.IDBANGSAL')
     .join('jenis_bangsal', 'bangsal.IDJENISBANGSAL', 'jenis_bangsal.IDJENISBANGSAL')
     .where('bed.IDBED', IDBED)
-    .select('jenis_bangsal.HARGA_PER_HARI')
+    .select('jenis_bangsal.HARGAPERHARI')
     .first();
 
   const tanggalMasuk = new Date(TANGGALMASUK);
@@ -44,7 +44,7 @@ export const create = async (data) => {
       1,
       Math.ceil((tanggalKeluar - tanggalMasuk) / (1000 * 60 * 60 * 24))
     );
-    totalHarga = harga.HARGA_PER_HARI * durasi;
+    totalHarga = harga.HARGAPERHARI * durasi;
     status = 'SELESAI';
   }
 
@@ -80,11 +80,11 @@ export const update = async (id, data) => {
       .join('bangsal', 'kamar.IDBANGSAL', 'bangsal.IDBANGSAL')
       .join('jenis_bangsal', 'bangsal.IDJENISBANGSAL', 'jenis_bangsal.IDJENISBANGSAL')
       .where('bed.IDBED', bed)
-      .select('jenis_bangsal.HARGA_PER_HARI')
+      .select('jenis_bangsal.HARGAPERHARI')
       .first();
 
     const durasi = Math.max(1, Math.ceil((tanggalKeluar - tanggalMasuk) / (1000 * 60 * 60 * 24)));
-    totalHarga = harga.HARGA_PER_HARI * durasi;
+    totalHarga = harga.HARGAPERHARI * durasi;
     status = 'SELESAI';
   }
 
