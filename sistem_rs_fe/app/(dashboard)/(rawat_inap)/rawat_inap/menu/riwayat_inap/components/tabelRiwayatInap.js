@@ -8,6 +8,9 @@ import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import dynamic from 'next/dynamic'
 import AdjustPrintMarginLaporan from './adjustPrintMarginLaporan'
+import axios from 'axios'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 const TabelRiwayatInap = ({ data, loading }) => {
   const [adjustDialog, setAdjustDialog] = useState(false)
@@ -31,9 +34,19 @@ const TabelRiwayatInap = ({ data, loading }) => {
   const formatRupiah = (value) =>
     new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value || 0)
 
-  const handleOpenAdjust = (row) => {
-    setSelectedRow(row)
-    setAdjustDialog(true)
+  const handleOpenAdjust = async (rowData) => {
+    try {
+      // ambil detail lengkap dari backend (supaya ada obat dan tindakan)
+      const res = await axios.get(`${API_URL}/riwayat_inap/${rowData.IDRIWAYATINAP}`)
+      const detail = res.data.data
+
+      // simpan hasil ke selectedRow supaya dialog export PDF bisa pakai data lengkap
+      setSelectedRow(detail)
+      setAdjustDialog(true)
+    } catch (err) {
+      console.error('Gagal ambil detail:', err)
+      alert('Gagal mengambil detail rawat inap')
+    }
   }
 
   const actionBody = (rowData) => (
@@ -57,7 +70,7 @@ const TabelRiwayatInap = ({ data, loading }) => {
   return (
     <>
       <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
-        <Column 
+      <Column 
           field="NAMALENGKAP" 
           header="Pasien" 
         />
