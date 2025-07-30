@@ -7,10 +7,13 @@ import Cookies from "js-cookie";
 const AppMenu = () => {
   const { layoutConfig } = useContext(LayoutContext);
   const [userRole, setUserRole] = useState(null);
+  const [unitKerja, setUnitKerja] = useState(null);
 
   useEffect(() => {
     const roleFromCookies = Cookies.get("role");
+    const unitKerjaFromCookies = Cookies.get("unitKerja");
     setUserRole(roleFromCookies);
+    setUnitKerja(unitKerjaFromCookies);
   }, []);
 
   if (!userRole) return null; 
@@ -229,6 +232,29 @@ const AppMenu = () => {
                   { label: "Histori Transaksi", icon: "pi pi-fw pi-history", to: "/dokter/histori_transaksi" },
                 ],
               },
+            ],
+          },
+        ],
+      },
+    ];
+  } else if (userRole === "Perawat") {
+    model = [
+      {
+        label: "Antrian",
+        icon: "pi pi-fw pi-list",
+        items: [
+          { label: "Antrian Poli", icon: "pi pi-fw pi-users", to: "/antrian/antrian_poli" },
+        ],
+      },
+      {
+        label: "Fitur Dokter",
+        items: [
+          { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_dokter" },
+          {
+            label: "Menu",
+            items: [
+              { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
+              { label: "Riwayat Pengobatan", icon: "pi pi-fw pi-folder-open", to: "/riwayat_pengobatan" },
             ],
           },
         ],

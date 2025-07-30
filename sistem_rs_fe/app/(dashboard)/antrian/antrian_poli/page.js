@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { Toast } from 'primereact/toast';
 import { io } from 'socket.io-client'; 
 import TabelAntrianPoli from './components/tabelAntrianPoli';
@@ -15,11 +16,18 @@ function DataAntrianPoli() {
   const [loading, setLoading] = useState(false);
   const [currentId, setCurrentId] = useState(null);
   const [selectedZona, setSelectedZona] = useState(null);
+  const [unitKerja, setUnitKerja] = useState(null);
 
   const toastRef = useRef(null);
   const socketRef = useRef(null);
 
   useEffect(() => {
+    const poliUser = Cookies.get('unitKerja'); 
+    setUnitKerja(poliUser || null);
+  }, []);
+
+  useEffect(() => {
+    if (unitKerja !== null) {
     fetchData();
     fetchPoli();
 
@@ -48,13 +56,20 @@ function DataAntrianPoli() {
         socket.disconnect();
       }
     };
-  }, []);
+    }
+  }, [unitKerja]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
       const res = await axios.get(`${API_URL}/antrian_poli/data`);
-      setData(res.data.data || []);
+      let allData = res.data.data || [];
+
+      if (unitKerja) {
+        allData = allData.filter((item) => item.POLI === unitKerja);
+      }
+
+      setData(allData);
     } catch (err) {
       console.error('Gagal fetch antrian poli:', err);
     } finally {
@@ -62,14 +77,21 @@ function DataAntrianPoli() {
     }
   };
 
-  const fetchPoli = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/poli`);
-      setPoliList(res.data || []);
-    } catch (err) {
-      console.error('Gagal fetch poli:', err);
+
+const fetchPoli = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/poli`);
+    let list = res.data || [];
+
+    if (unitKerja) {
+      list = list.filter((p) => p.NAMAPOLI === unitKerja);
     }
-  };
+
+    setPoliList(list);
+  } catch (err) {
+    console.error('Gagal fetch poli:', err);
+  }
+};
 
   const handlePanggil = async (id) => {
     try {

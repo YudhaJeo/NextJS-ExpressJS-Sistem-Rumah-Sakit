@@ -31,6 +31,7 @@ function LoginPage() {
       Cookies.set("username", res.data.username);
       Cookies.set("role", res.data.role, { expires: 1 });
       Cookies.set("profile", res.data.profile, { expires: 1 });
+      Cookies.set("unitKerja", res.data.unitKerja, { expires: 1 });
 
       if (toastRef.current) {
         toastRef.current.showToast("00", "Login berhasil!");

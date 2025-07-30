@@ -23,6 +23,7 @@ export const login = async (req, res) => {
       id: user.IDTENAGAMEDIS || user.IDTENAGANONMEDIS, 
       role: user.ROLE,
       email: user.EMAIL,
+      unitKerja: user.UNITKERJA,
       sumber: user.IDTENAGAMEDIS ? 'medis' : 'non_medis' 
     });
 
@@ -31,6 +32,7 @@ export const login = async (req, res) => {
       username: user.USERNAME,
       email: user.EMAIL,
       role: user.ROLE,
+      unitKerja: user.UNITKERJA,
       profile: user.FOTOPROFIL ? `http://localhost:4000${user.FOTOPROFIL}` : null
     });
     
