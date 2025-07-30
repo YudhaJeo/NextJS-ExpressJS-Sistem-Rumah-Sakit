@@ -24,7 +24,7 @@ function DataAntrianPoli() {
 
   useEffect(() => {
     const poliUser = Cookies.get('unitKerja'); 
-    const role = Cookies.get('role'); // ← Tambah baca role
+    const role = Cookies.get('role');
     setUnitKerja(poliUser || null);
     setUserRole(role || null);
   }, []);
@@ -37,7 +37,6 @@ function DataAntrianPoli() {
       const savedId = localStorage.getItem('currentAntrianPoliId');
       if (savedId) setCurrentId(parseInt(savedId));
 
-      // Ganti WebSocket → Socket.IO
       const socket = io(SOCKET_URL);
       socketRef.current = socket;
 
@@ -68,7 +67,6 @@ function DataAntrianPoli() {
       const res = await axios.get(`${API_URL}/antrian_poli/data`);
       let allData = res.data.data || [];
 
-      // Hanya filter jika bukan Super Admin
       if (userRole !== 'Super Admin' && unitKerja) {
         allData = allData.filter((item) => item.POLI === unitKerja);
       }
@@ -86,7 +84,6 @@ function DataAntrianPoli() {
       const res = await axios.get(`${API_URL}/poli`);
       let list = res.data || [];
 
-      // Hanya filter jika bukan Super Admin
       if (userRole !== 'Super Admin' && unitKerja) {
         list = list.filter((p) => p.NAMAPOLI === unitKerja);
       }
