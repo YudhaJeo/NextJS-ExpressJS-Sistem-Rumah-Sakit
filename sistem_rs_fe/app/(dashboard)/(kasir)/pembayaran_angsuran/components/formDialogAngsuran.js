@@ -101,7 +101,7 @@ const FormDialogAngsuran = ({
           <label className="font-medium">NIK</label>
           <InputText
             className="w-full mt-2"
-            value={form.NIK}
+            value={form.NIK || ''}
             readOnly
           />
         </div>
@@ -110,7 +110,7 @@ const FormDialogAngsuran = ({
           <label className="font-medium">Nama Pasien</label>
           <InputText
             className="w-full mt-2"
-            value={form.NAMAPASIEN}
+            value={form.NAMAPASIEN || ''}   
             readOnly
           />
         </div>
@@ -119,7 +119,7 @@ const FormDialogAngsuran = ({
           <label className="font-medium">Asuransi</label>
           <InputText
             className="w-full mt-2"
-            value={form.NAMA_ASURANSI}
+            value={form.NAMA_ASURANSI || ''}
             readOnly
           />
         </div>

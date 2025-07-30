@@ -100,6 +100,16 @@ const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
           })}`
         }
       />
+      <Column
+        field="SISA_TAGIHAN"
+        header="Sisa Tagihan"
+        body={(row) =>
+          `Rp ${Number(row.SISA_TAGIHAN || 0).toLocaleString('id-ID', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          })}`
+        }
+      />
       <Column field="STATUS" header="Status" body={statusBodyTemplate} />
       <Column
         header="Aksi"

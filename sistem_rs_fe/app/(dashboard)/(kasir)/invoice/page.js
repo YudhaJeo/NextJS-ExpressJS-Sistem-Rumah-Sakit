@@ -32,6 +32,7 @@ const Page = () => {
     TOTALTAGIHAN: 0,
     TOTALDEPOSIT: 0,
     TOTALANGSURAN: 0,
+    SISA_TAGIHAN: 0,
     STATUS: 'BELUM_LUNAS',
   });
 
@@ -126,6 +127,7 @@ const Page = () => {
       TANGGALINVOICE: row.TANGGALINVOICE?.split('T')[0] || '',
       TOTALDEPOSIT: row.TOTALDEPOSIT || 0,
       TOTALANGSURAN: row.TOTALANGSURAN || 0,
+      SISA_TAGIHAN: row.SISA_TAGIHAN || 0,
     });
     setDialogVisible(true);
   };
@@ -158,6 +160,9 @@ const Page = () => {
       NAMAPASIEN: '',
       TANGGALINVOICE: '',
       TOTALTAGIHAN: 0,
+      TOTALDEPOSIT: 0,
+      TOTALANGSURAN: 0,
+      SISA_TAGIHAN: 0,
       STATUS: 'BELUM_LUNAS',
     });
   };

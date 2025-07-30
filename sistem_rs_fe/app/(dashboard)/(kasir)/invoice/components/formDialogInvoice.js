@@ -148,6 +148,18 @@ const FormDialogInvoice = ({
             readOnly
           />
         </div>
+        
+        <div>
+          <label className="font-medium">Sisa Tagihan</label>
+          <InputNumber
+            className="w-full mt-2"
+            value={form.SISA_TAGIHAN}
+            mode="currency"
+            currency="IDR"
+            locale="id-ID"
+            readOnly
+          />
+        </div>
 
         <div>
           <label className="font-medium">Status</label>
