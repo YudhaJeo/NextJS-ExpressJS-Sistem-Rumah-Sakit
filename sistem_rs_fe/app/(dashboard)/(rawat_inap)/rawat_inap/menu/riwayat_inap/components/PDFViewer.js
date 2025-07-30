@@ -8,7 +8,6 @@ import { Button } from 'primereact/button'
 import 'react-pdf/dist/Page/TextLayer.css'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 
-// worker harus pakai file .js
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
   import.meta.url,
@@ -67,9 +66,7 @@ function PDFViewer({ pdfUrl, paperSize, fileName }) {
     const handlePrint = () => {
         if (!pdfUrl) return;
       
-        // kalau pdfUrl diawali "data:application/pdf"
         if (pdfUrl.startsWith('data:application/pdf')) {
-          // ambil bagian base64
           const base64Data = pdfUrl.split(',')[1];
           const byteCharacters = atob(base64Data);
           const byteNumbers = new Array(byteCharacters.length);
@@ -82,7 +79,6 @@ function PDFViewer({ pdfUrl, paperSize, fileName }) {
           const blobUrl = URL.createObjectURL(blob);
           window.open(blobUrl, '_blank');
         } else {
-          // kalau isinya url biasa
           window.open(pdfUrl, '_blank');
         }
       };      
@@ -110,7 +106,6 @@ function PDFViewer({ pdfUrl, paperSize, fileName }) {
                     paperWidthInMm = 216;
                     paperHeightInMm = 356;
                 } else {
-                    // Gunakan ukuran default jika pilihan tidak valid
                     paperWidthInMm = 216;
                     paperHeightInMm = 279;
                 }

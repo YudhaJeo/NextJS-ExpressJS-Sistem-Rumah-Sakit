@@ -36,11 +36,9 @@ const TabelRiwayatInap = ({ data, loading }) => {
 
   const handleOpenAdjust = async (rowData) => {
     try {
-      // ambil detail lengkap dari backend (supaya ada obat dan tindakan)
       const res = await axios.get(`${API_URL}/riwayat_inap/${rowData.IDRIWAYATINAP}`)
       const detail = res.data.data
 
-      // simpan hasil ke selectedRow supaya dialog export PDF bisa pakai data lengkap
       setSelectedRow(detail)
       setAdjustDialog(true)
     } catch (err) {

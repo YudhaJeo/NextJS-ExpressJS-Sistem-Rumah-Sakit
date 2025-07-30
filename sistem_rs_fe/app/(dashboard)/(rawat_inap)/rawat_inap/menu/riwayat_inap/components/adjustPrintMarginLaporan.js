@@ -46,18 +46,6 @@ export default function AdjustPrintMarginLaporan({
     setDataAdjust((prev) => ({ ...prev, [name]: e.value }))
   }
 
-  const formatTanggal = (tanggal) =>
-    tanggal
-      ? new Date(tanggal).toLocaleDateString('id-ID', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric'
-        })
-      : '-'
-
-  const formatRupiah = (val) =>
-    new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(val || 0)
-
   async function exportPDF(detail, adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,
@@ -149,7 +137,7 @@ export default function AdjustPrintMarginLaporan({
         services.push([
         services.length + 1,
         t.NAMATINDAKAN,
-        t.KATEGORI || '-', // kolom kategori
+        t.KATEGORI || '-', 
         t.JUMLAH,
         'Tindakan',
         formatRupiah(t.HARGA),
@@ -222,11 +210,6 @@ export default function AdjustPrintMarginLaporan({
     if (!selectedRow) return
     try {
       setLoadingExport(true)
-  
-      // cek apakah data yang dikirim lengkap
-      console.log('selectedRow data:', selectedRow)
-      console.log('selectedRow.obat:', selectedRow?.obat)
-      console.log('selectedRow.tindakan:', selectedRow?.tindakan)
   
       const pdfDataUrl = await exportPDF(selectedRow, dataAdjust)
       setPdfUrl(pdfDataUrl)

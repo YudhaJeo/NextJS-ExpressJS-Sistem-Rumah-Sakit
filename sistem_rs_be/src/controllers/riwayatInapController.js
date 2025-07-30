@@ -16,8 +16,6 @@ export async function getAllRiwayatInap(req, res) {
 export async function getRiwayatInapById(req, res) {
   const { id } = req.params;
 
-  console.log('[DEBUG] masuk ke getRiwayatInapById', req.params.id)
-
   if (isNaN(parseInt(id))) {
     return res.status(400).json({ message: 'ID tidak valid' });
   }
