@@ -57,7 +57,7 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
   
-    let y = marginTop;
+    let y = marginTop + 10;
   
     const formatTanggal = (tanggal) =>
       tanggal
@@ -77,33 +77,44 @@ export default function AdjustPrintMarginLaporan({
     // === HEADER TITLE ===
     doc.setFontSize(18);
     doc.text('Detail Rawat Inap', doc.internal.pageSize.width / 2, y, { align: 'center' });
-    y += 10;
+    y += 5;
   
     // ID transaksi
     doc.setFontSize(10);
     doc.text(`ID Transaksi: #${detail.IDRAWATINAP}`, doc.internal.pageSize.width / 2, y, { align: 'center' });
-    y += 10;
+    y += 15;
   
     // === INFORMASI PASIEN ===
+    const labelX = marginLeft;
+    const valueX = marginLeft + 25; 
+
     doc.setFontSize(12);
-    doc.text('Informasi Pasien', marginLeft, y);
+    doc.text('Informasi Pasien', labelX, y);
     y += 6;
+
     doc.setFontSize(10);
-    doc.text(`Nama Pasien: ${detail.NAMALENGKAP}`, marginLeft, y);
+    doc.text('Nama Pasien', labelX, y);
+    doc.text(`: ${detail.NAMALENGKAP}`, valueX - 2, y);
     y += 6;
-    doc.text(`Nomor Bed: ${detail.NOMORBED}`, marginLeft, y);
+
+    doc.text('Nomor Bed', labelX, y);
+    doc.text(`: ${detail.NOMORBED}`, valueX - 2, y);
     y += 10;
-  
+
     // === PERIODE RAWAT INAP ===
     doc.setFontSize(12);
-    doc.text('Periode Rawat Inap', marginLeft, y);
+    doc.text('Periode Rawat Inap', labelX, y);
     y += 6;
+
     doc.setFontSize(10);
-    doc.text(`Masuk : ${formatTanggal(detail.TANGGALMASUK)}`, marginLeft, y);
+    doc.text('Masuk', labelX, y);
+    doc.text(`: ${formatTanggal(detail.TANGGALMASUK)}`, valueX - 2, y);
     y += 6;
-    doc.text(`Keluar: ${formatTanggal(detail.TANGGALKELUAR)}`, marginLeft, y);
+
+    doc.text('Keluar', labelX, y);
+    doc.text(`: ${formatTanggal(detail.TANGGALKELUAR)}`, valueX - 2, y);
     y += 10;
-  
+
     // === RINCIAN LAYANAN (TABLE) ===
     const services = [];
     let no = 1;
