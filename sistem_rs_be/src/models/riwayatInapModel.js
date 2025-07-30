@@ -6,18 +6,9 @@ export async function getAllRiwayatInap() {
     .join('pasien', 'rawat_inap.IDPASIEN', 'pasien.IDPASIEN')
     .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
     .select(
-      'riwayat_rawat_inap.IDRIWAYATINAP',
-      'riwayat_rawat_inap.IDRAWATINAP',
-      'riwayat_rawat_inap.TANGGALMASUK',
-      'riwayat_rawat_inap.TANGGALKELUAR',
+      'riwayat_rawat_inap.*',
       'pasien.NAMALENGKAP',
       'bed.NOMORBED',
-      'riwayat_rawat_inap.TOTALKAMAR',
-      'riwayat_rawat_inap.TOTALOBAT',
-      'riwayat_rawat_inap.TOTALTINDAKAN',
-      'riwayat_rawat_inap.TOTALBIAYA',
-      'riwayat_rawat_inap.STATUS',
-      'riwayat_rawat_inap.CATATAN'
     )    
     .orderBy('riwayat_rawat_inap.IDRIWAYATINAP', 'desc');
 }
