@@ -113,7 +113,7 @@ const AppMenu = () => {
                 label: "Laporan",
                 icon: "pi pi-fw pi-chart-bar",
                 items: [
-                  { label: "Laporan Komisi", icon: "pi pi-fw pi-file", to: "/dokter/laporan_komisi" },
+                  { label: "Laporan Komisi", icon: "pi pi-fw pi-file", to: "/laporan_komisi" },
                   { label: "Entri Rekam Medis", icon: "pi pi-fw pi-pencil", to: "/dokter/entri_rm" },
                   { label: "Drawing Rekam Medis", icon: "pi pi-fw pi-image", to: "/dokter/drawing_rm" },
                   { label: "Histori Transaksi", icon: "pi pi-fw pi-history", to: "/dokter/histori_transaksi" },

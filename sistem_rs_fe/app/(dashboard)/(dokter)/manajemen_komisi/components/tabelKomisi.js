@@ -4,6 +4,7 @@ import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { formatTanggal } from '@/types/dateformat';
+import { Tag } from "primereact/tag";
 
 const formatRupiah = (value) => {
   if (value == null) return '-';
@@ -40,7 +41,24 @@ export const TabelKomisiDokter = ({ data, loading, onEdit, onDelete }) => {
         header="Nilai Komisi"
         body={komisiTemplate}
       />
-      <Column field="STATUS" header="Status" />
+      <Column
+        header="Status"
+        body={(row) => {
+          const status = row.STATUS;
+          const severity = () => {
+            switch (status) {
+              case "Sudah Dibayar":
+                return "success";
+              case "Belum Dibayar":
+                return "danger";
+              default:
+                return "info";
+            }
+          };
+
+          return <Tag value={status} severity={severity()} />;
+        }}
+      />
       <Column field="KETERANGAN" header="Keterangan" />
       <Column
         header="Aksi"

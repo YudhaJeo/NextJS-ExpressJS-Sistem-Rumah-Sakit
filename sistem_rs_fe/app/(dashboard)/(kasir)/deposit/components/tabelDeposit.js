@@ -72,6 +72,7 @@ const TabelDeposit = ({ data, loading, onEdit, onDelete }) => {
     >
       <Column field="NODEPOSIT" header="No Deposit" />
       <Column field="NIK" header="NIK" />
+      <Column field="NAMALENGKAP" header="Nama"/>
       <Column field="NOMINAL" header="Nominal" body={nominalBodyTemplate} />
       <Column field="METODE" header="Metode" body={metodeBodyTemplate} />
       <Column field="NAMA_BANK" header="Bank" body={bankBodyTemplate}/>

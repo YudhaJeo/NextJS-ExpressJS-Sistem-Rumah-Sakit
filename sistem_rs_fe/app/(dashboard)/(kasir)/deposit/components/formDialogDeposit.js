@@ -15,7 +15,7 @@ const FormDialogDeposit = ({
   onSubmit,
   form,
   setForm,
-  pasienOptions,
+  invoiceOptions,
   metodeOptions,
   bankOptions,
 }) => {
@@ -28,7 +28,7 @@ const FormDialogDeposit = ({
 
   const validate = () => {
     const newErrors = {};
-    if (!form.NIK) newErrors.NIK = 'NIK pasien wajib dipilih';
+    if (!form.IDINVOICE) newErrors.IDINVOICE = 'Invoice wajib dipilih';
     if (!form.TANGGALDEPOSIT) newErrors.TANGGALDEPOSIT = 'Tanggal Deposit wajib diisi';
     if (!form.NOMINAL || form.NOMINAL <= 0)
       newErrors.NOMINAL = 'Nominal harus lebih dari 0';
@@ -69,33 +69,43 @@ const FormDialogDeposit = ({
         </div>
 
         <div>
-          <label className="font-medium">NIK Pasien</label>
+          <label className="font-medium">Invoice Pasien</label>
           <Dropdown
-            className={classNames('w-full mt-2', { 'p-invalid': errors.NIK })}
-            options={pasienOptions}
-            value={form.NIK}
+            className={classNames('w-full mt-2', { 'p-invalid': errors.IDINVOICE })}
+            options={invoiceOptions}
+            value={form.IDINVOICE}
             onChange={(e) => {
-              const selected = pasienOptions.find((p) => p.value === e.value);
+              const selected = invoiceOptions.find((inv) => inv.value === e.value);
               setForm({
                 ...form,
-                NIK: e.value,
-                NAMAPASIEN: selected?.NAMALENGKAP || '',
+                IDINVOICE: e.value,
+                NIK: selected?.NIK || '',
+                NAMALENGKAP: selected?.NAMALENGKAP || '',
+                NOINVOICE: selected?.NOINVOICE || '',
               });
             }}
-            placeholder="Pilih Pasien"
+            placeholder="Pilih Invoice"
             filter
             showClear
+            optionLabel="label"
+            optionValue="value"
           />
-          {errors.NIK && <small className="p-error">{errors.NIK}</small>}
+          {errors.IDINVOICE && <small className="p-error">{errors.IDINVOICE}</small>}
+        </div>
+
+        <div>
+          <label className="font-medium">No Invoice</label>
+          <InputText className="w-full mt-2" value={form.NOINVOICE || '-'} readOnly />
+        </div>
+
+        <div>
+          <label className="font-medium">NIK Pasien</label>
+          <InputText className="w-full mt-2" value={form.NIK || '-'} readOnly />
         </div>
 
         <div>
           <label className="font-medium">Nama Pasien</label>
-          <InputText
-            className="w-full mt-2"
-            value={form.NAMAPASIEN || '-'}
-            readOnly
-          />
+          <InputText className="w-full mt-2" value={form.NAMALENGKAP || '-'} readOnly />
         </div>
 
         <div>

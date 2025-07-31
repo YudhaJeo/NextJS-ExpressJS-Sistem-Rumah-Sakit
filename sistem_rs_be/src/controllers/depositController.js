@@ -31,20 +31,24 @@ export async function getDepositById(req, res) {
 export async function createDeposit(req, res) {
   const trx = await db.transaction();
   try {
-    const { NIK, TANGGALDEPOSIT, NOMINAL, METODE, STATUS, KETERANGAN, IDBANK } = req.body;
+    const { IDINVOICE, TANGGALDEPOSIT, NOMINAL, METODE, STATUS, KETERANGAN, IDBANK } = req.body;
 
-    const pasien = await trx('pasien').where('NIK', NIK).first();
+    const invoice = await trx('invoice').where('IDINVOICE', IDINVOICE).first();
+    if (!invoice) {
+      await trx.rollback();
+      return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
+    }
+
+    const pasien = await trx('pasien').where('NIK', invoice.NIK).first();
     if (!pasien) {
       await trx.rollback();
-      return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan' });
+      return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan dari invoice' });
     }
 
     if (METODE === 'Transfer Bank' && !IDBANK) {
       await trx.rollback();
       return res.status(400).json({ success: false, message: 'Bank wajib dipilih untuk Transfer Bank' });
     }
-
-    const idBankFinal = METODE === 'Transfer Bank' ? IDBANK : null;
 
     const tanggalDeposit = TANGGALDEPOSIT || new Date().toISOString().split('T')[0];
     const NODEPOSIT = await generateNoDeposit(tanggalDeposit, trx);
@@ -54,14 +58,14 @@ export async function createDeposit(req, res) {
 
     await trx('deposit').insert({
       NODEPOSIT,
-      NIK,
+      IDINVOICE,
       TANGGALDEPOSIT: tanggalDeposit,
       NOMINAL,
       METODE,
-      IDBANK: idBankFinal,
+      IDBANK: METODE === 'Transfer Bank' ? IDBANK : null,
       SALDO_SISA: saldoSisa,
       STATUS: statusFinal,
-      KETERANGAN
+      KETERANGAN,
     });
 
     await trx.commit();
@@ -76,11 +80,11 @@ export async function createDeposit(req, res) {
 export async function updateDeposit(req, res) {
   try {
     const { id } = req.params;
-    const { NIK, TANGGALDEPOSIT, NOMINAL, METODE, SALDO_SISA, STATUS, KETERANGAN, IDBANK } = req.body;
+    const { IDINVOICE, TANGGALDEPOSIT, NOMINAL, METODE, SALDO_SISA, STATUS, KETERANGAN, IDBANK } = req.body;
 
-    const pasien = await db('pasien').where('NIK', NIK).first();
-    if (!pasien) {
-      return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan' });
+    const invoice = await db('invoice').where('IDINVOICE', IDINVOICE).first();
+    if (!invoice) {
+      return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
     if (METODE === 'Transfer Bank' && !IDBANK) {
@@ -88,18 +92,17 @@ export async function updateDeposit(req, res) {
     }
 
     const idBankFinal = METODE === 'Transfer Bank' ? IDBANK : null;
-
     const statusFinal = (SALDO_SISA === 0) ? 'HABIS' : STATUS;
 
     const updated = await DepositModel.update(id, {
-      NIK,
+      IDINVOICE,
       TANGGALDEPOSIT: TANGGALDEPOSIT || db.fn.now(),
       NOMINAL,
       METODE,
       IDBANK: idBankFinal,
       SALDO_SISA,
       STATUS: statusFinal,
-      KETERANGAN
+      KETERANGAN,
     });
 
     if (!updated) {
@@ -132,16 +135,16 @@ export async function deleteDeposit(req, res) {
 export async function getDepositOptions(req, res) {
   try {
     const rows = await db('deposit')
-      .leftJoin('pasien', 'deposit.NIK', 'pasien.NIK')
-      .where('deposit.STATUS', 'AKTIF')
-      .select(
-        'deposit.IDDEPOSIT as value',
-        'deposit.NODEPOSIT as label',
-        'deposit.SALDO_SISA',
-        'pasien.NIK',
-        'pasien.NAMALENGKAP as NAMAPASIEN'
-      );
-
+    .join('invoice', 'deposit.IDINVOICE', 'invoice.IDINVOICE')
+    .join('pasien', 'invoice.NIK', 'pasien.NIK')
+    .where('deposit.STATUS', 'AKTIF')
+    .select(
+      'deposit.IDDEPOSIT as value',
+      'deposit.NODEPOSIT as label',
+      'deposit.SALDO_SISA',
+      'pasien.NIK',
+      'pasien.NAMALENGKAP as NAMAPASIEN'
+    );
     res.status(200).json({ success: true, data: rows });
   } catch (err) {
     console.error('Error getDepositOptions:', err);
