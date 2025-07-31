@@ -6,8 +6,8 @@ export const up = function (knex) {
   return knex.schema.createTable('deposit', (table) => {
     table.increments('IDDEPOSIT').primary();
     table.string('NODEPOSIT', 50).notNullable().unique();
-    table.string('NIK', 20).notNullable()
-      .references('NIK').inTable('pasien').onDelete('CASCADE');
+    table.integer('IDINVOICE').unsigned().notNullable()
+      .references('IDINVOICE').inTable('invoice').onDelete('CASCADE');
     table.datetime('TANGGALDEPOSIT').notNullable().defaultTo(knex.fn.now());
     table.double('NOMINAL', 15, 2).notNullable();
     table.string('METODE', 50).notNullable();

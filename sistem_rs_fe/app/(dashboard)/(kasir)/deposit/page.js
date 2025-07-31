@@ -21,9 +21,9 @@ const Page = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [pasienOptions, setPasienOptions] = useState([]);
   const [metodeOptions, setMetodeOptions] = useState([]);
   const [bankOptions, setBankOptions] = useState([]);
+  const [invoiceOptions, setInvoiceOptions] = useState([]);
 
   const [form, setForm] = useState({
     IDDEPOSIT: 0,
@@ -49,7 +49,7 @@ const Page = () => {
       return;
     }
     fetchData();
-    fetchPasien();
+    fetchInvoices();
     fetchMetodePembayaran();
     fetchBanks();
   }, []);
@@ -67,18 +67,19 @@ const Page = () => {
     }
   };
 
-  const fetchPasien = async () => {
+  const fetchInvoices = async () => {
     try {
-      const res = await axios.get(`${API_URL}/pasien`);
-      const options = res.data.data.map((pasien) => ({
-        label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
-        value: pasien.NIK,
-        NAMALENGKAP: pasien.NAMALENGKAP,
-        ASURANSI: pasien.NAMAASURANSI || '-',
+      const res = await axios.get(`${API_URL}/invoice`);
+      const options = res.data.data.map((inv) => ({
+        label: `${inv.NOINVOICE} - ${inv.NIK} - ${inv.NAMALENGKAP}`,
+        value: inv.IDINVOICE,
+        NIK: inv.NIK,
+        NOINVOICE: inv.NOINVOICE,
+        NAMAPASIEN: inv.NAMALENGKAP,
       }));
-      setPasienOptions(options);
+      setInvoiceOptions(options);
     } catch (err) {
-      console.error('Gagal ambil data pasien:', err);
+      console.error('Gagal ambil data invoice:', err);
     }
   };
 
@@ -254,9 +255,9 @@ const Page = () => {
         onSubmit={handleSubmit}
         form={form}
         setForm={setForm}
-        pasienOptions={pasienOptions}
         metodeOptions={metodeOptions}
         bankOptions={bankOptions}
+        invoiceOptions={invoiceOptions}
       />
     </div>
   );
