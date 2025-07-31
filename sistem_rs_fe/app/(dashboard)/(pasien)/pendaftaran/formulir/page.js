@@ -63,7 +63,6 @@ const Page = () => {
   const fetchPoli = async () => {
   try {
     const res = await axios.get(`${API_URL}/poli`);
-    console.log('Data poli API:', res.data);
 
     const options = res.data.map((poli) => ({
       label: `${poli.NAMAPOLI}`,

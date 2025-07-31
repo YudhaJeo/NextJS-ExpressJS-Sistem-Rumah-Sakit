@@ -104,7 +104,6 @@ const transformJadwalHariIni = (list) => {
 const fetchPoli = async () => {
   try {
     const res = await axios.get(`${API_URL}/poli`);
-    console.log('Data poli API:', res.data);
 
     const options = res.data.map((poli) => ({
       label: `${poli.NAMAPOLI}`,
@@ -120,7 +119,6 @@ const fetchPoli = async () => {
 const fetchDokter = async () => {
   try {
     const res = await axios.get(`${API_URL}/dokter`);
-    console.log('Data poli API:', res.data);
 
     const options = res.data.map((dokter) => ({
       label: `${dokter.NAMALENGKAP} (${dokter.JADWALPRAKTEK || 'Jadwal tidak tersedia' })`,
