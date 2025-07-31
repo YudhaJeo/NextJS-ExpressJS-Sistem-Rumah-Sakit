@@ -46,6 +46,7 @@ export async function updateInvoice(req, res) {
     }
 
     const SISA_TAGIHAN = (TOTALTAGIHAN || 0) + (TOTALDEPOSIT || 0) - (TOTALANGSURAN || 0);
+    const statusFinal = SISA_TAGIHAN <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
     const updated = await InvoiceModel.update(id, {
       NIK,
@@ -55,7 +56,7 @@ export async function updateInvoice(req, res) {
       TOTALDEPOSIT,
       TOTALANGSURAN,
       SISA_TAGIHAN,
-      STATUS,
+      STATUS: statusFinal,
       UPDATED_AT: db.fn.now()
     });
 

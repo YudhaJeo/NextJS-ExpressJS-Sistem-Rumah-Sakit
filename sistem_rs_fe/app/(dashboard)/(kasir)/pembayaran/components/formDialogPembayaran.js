@@ -47,7 +47,9 @@ const FormDialogPembayaran = ({
   const handleInvoiceChange = (e) => {
     const selectedInvoice = invoiceOptions.find((inv) => inv.value === e.value);
     if (selectedInvoice) {
-      const pasien = pasienOptions.find((p) => selectedInvoice.label.includes(p.label.split(' - ')[1]));
+      const pasien = pasienOptions.find((p) =>
+        selectedInvoice.label.includes(p.label.split(' - ')[1])
+      );
       setForm({
         ...form,
         IDINVOICE: selectedInvoice.value,
@@ -55,7 +57,7 @@ const FormDialogPembayaran = ({
         NIK: pasien?.value || '',
         NAMAPASIEN: pasien?.label.split(' - ')[1] || '',
         ASURANSI: pasien?.NAMAASURANSI || '',
-        JUMLAHBAYAR: selectedInvoice.JUMLAHBAYAR || 0,
+        JUMLAHBAYAR: selectedInvoice.SISA_TAGIHAN || 0, // ← Gunakan sisa tagihan
       });
     } else {
       setForm({
