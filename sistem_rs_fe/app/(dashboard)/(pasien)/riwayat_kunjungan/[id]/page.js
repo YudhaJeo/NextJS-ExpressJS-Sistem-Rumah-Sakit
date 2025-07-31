@@ -31,8 +31,6 @@ export default function DetailRiwayatKunjunganPage() {
   const fetchDetail = async (token) => {
     try {
       const res = await axios.get(`${API_URL}/riwayat_kunjungan`);
-      // Karena endpoint belum ada untuk /riwayat_kunjungan/:id
-      // kita filter manual di frontend
       const found = res.data.data.find(item => item.IDPENDAFTARAN == id);
       setDetail(found || null);
     } catch (err) {
