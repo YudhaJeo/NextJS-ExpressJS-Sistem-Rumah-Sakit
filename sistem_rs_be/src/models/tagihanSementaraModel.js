@@ -5,6 +5,7 @@ export const getAllTagihanSementara = async () => {
     const data = await db('rawat_inap')
       .join('pasien', 'rawat_inap.IDPASIEN', 'pasien.IDPASIEN')
       .join('bed', 'rawat_inap.IDBED', 'bed.IDBED') 
+      .where('rawat_inap.STATUS', 'AKTIF')
   
       .leftJoin(
         db('obat_inap')

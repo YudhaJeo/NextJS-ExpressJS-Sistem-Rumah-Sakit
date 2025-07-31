@@ -60,9 +60,11 @@ const Page = () => {
   const fetchPasien = async () => {
     try {
       const res = await axios.get(`${API_URL}/rawat_inap`);
-      const options = res.data.data.map((pasien) => ({
-        label: pasien.NAMALENGKAP,
-        value: pasien.IDRAWATINAP,
+      const options = res.data.data
+        .filter((item) => item.STATUS === 'AKTIF')
+        .map((pasien) => ({
+          label: pasien.NAMALENGKAP,
+          value: pasien.IDRAWATINAP,
       }));
       setPasienOptions(options);
     } catch (err) {
