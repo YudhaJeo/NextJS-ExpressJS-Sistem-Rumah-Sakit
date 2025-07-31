@@ -4,7 +4,9 @@ import db from '../core/config/knex.js';
 export const getAll = () =>
   db('obat_inap')
     .join('rawat_inap', 'obat_inap.IDRAWATINAP', 'rawat_inap.IDRAWATINAP')
-    .join('pasien', 'rawat_inap.IDPASIEN', 'pasien.IDPASIEN')
+    .join('riwayat_pengobatan', 'rawat_inap.IDPENGOBATAN', 'riwayat_pengobatan.IDPENGOBATAN')
+    .join('pendaftaran', 'riwayat_pengobatan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+    .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
     .join('obat', 'obat_inap.IDOBAT', 'obat.IDOBAT')
     .select(
@@ -13,6 +15,7 @@ export const getAll = () =>
       'bed.NOMORBED',
       'obat.NAMAOBAT'
     );
+
 
 export const getById = (id) =>
   db('obat_inap')

@@ -22,9 +22,8 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
       <Column
-        field="IDPASIEN"
+        field="NAMALENGKAP"
         header="Pasien"
-        body={(row) => row.NAMALENGKAP}
       />
       <Column
         field="IDBED"

@@ -1,4 +1,4 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\rawat_inap\components\formTindakan.js
+// app\(dashboard)\(rawat_inap)\rawat_inap\menu\rawat_inap\components\formRawatInap.js
 'use client';
 
 import { Button } from 'primereact/button';
@@ -16,7 +16,7 @@ const FormRawatInap = ({
   form, 
   setForm,
   errors,
-  pasienOptions,
+  pengobatanOptions,
   kamarOptions,
   bedOptions
 }) => {
@@ -37,18 +37,18 @@ const FormRawatInap = ({
         }}
       >
         <div className="mt-2">
-          <label>Pasien</label>
+          <label>Riwayat Pengobatan</label>
           <Dropdown
-            className={inputClass('IDPASIEN')}
-            value={form.IDPASIEN}
-            options={pasienOptions}
-            onChange={(e) => setForm({ ...form, IDPASIEN: e.target.value })}
-            placeholder="Pilih Pasien"
+            className={inputClass('IDPENGOBATAN')}
+            value={form.IDPENGOBATAN}
+            options={pengobatanOptions} 
+            onChange={(e) => setForm({ ...form, IDPENGOBATAN: e.value })}
+            placeholder="Pilih Riwayat Pengobatan"
             filter
             showClear
             optionLabel="label"
           />
-          {errors.IDPASIEN && <small className="text-red-500">{errors.IDPASIEN}</small>}
+          {errors.IDPENGOBATAN && <small className="text-red-500">{errors.IDPENGOBATAN}</small>}
         </div>
 
         <div className="mt-2">
