@@ -43,18 +43,17 @@ export async function createPenggunaan(req, res) {
       return res.status(400).json({ success: false, message: 'Saldo deposit tidak mencukupi' });
     }
 
+    // Kurangi saldo deposit
     const newSaldo = deposit.SALDO_SISA - JUMLAH_PEMAKAIAN;
+    await trx('deposit').where('IDDEPOSIT', IDDEPOSIT).update({
+      SALDO_SISA: newSaldo,
+      STATUS: newSaldo === 0 ? 'HABIS' : 'AKTIF'
+    });
 
-    await trx('deposit')
-      .where('IDDEPOSIT', IDDEPOSIT)
-      .update({ SALDO_SISA: newSaldo });
+    // Kurangi sisa tagihan invoice
+    await trx('invoice').where('IDINVOICE', IDINVOICE).decrement('SISA_TAGIHAN', JUMLAH_PEMAKAIAN);
 
-    if (newSaldo === 0) {
-      await trx('deposit')
-        .where('IDDEPOSIT', IDDEPOSIT)
-        .update({ STATUS: 'HABIS' });
-    }
-
+    // Simpan penggunaan
     await PenggunaanModel.create({
       IDDEPOSIT,
       IDINVOICE,
@@ -83,35 +82,32 @@ export async function updatePenggunaan(req, res) {
       return res.status(404).json({ success: false, message: 'Data penggunaan tidak ditemukan' });
     }
 
-    const deposit = await trx('deposit').where('IDDEPOSIT', penggunaanLama.IDDEPOSIT).first();
-    if (!deposit) {
+    // Kembalikan saldo ke deposit sebelumnya
+    await trx('deposit').where('IDDEPOSIT', penggunaanLama.IDDEPOSIT).increment('SALDO_SISA', penggunaanLama.JUMLAH_PEMAKAIAN);
+    await trx('deposit').where('IDDEPOSIT', penggunaanLama.IDDEPOSIT).update({ STATUS: 'AKTIF' });
+
+    // Kembalikan jumlah ke SISA_TAGIHAN invoice sebelumnya
+    await trx('invoice').where('IDINVOICE', penggunaanLama.IDINVOICE).increment('SISA_TAGIHAN', penggunaanLama.JUMLAH_PEMAKAIAN);
+
+    // Cek deposit baru
+    const depositBaru = await trx('deposit').where('IDDEPOSIT', IDDEPOSIT).first();
+    if (!depositBaru) {
       await trx.rollback();
-      return res.status(400).json({ success: false, message: 'Deposit tidak ditemukan' });
+      return res.status(400).json({ success: false, message: 'Deposit baru tidak ditemukan' });
     }
 
-    let saldoRollback = deposit.SALDO_SISA + penggunaanLama.JUMLAH_PEMAKAIAN;
-
-    if (penggunaanLama.IDDEPOSIT !== IDDEPOSIT) {
-      await trx('deposit').where('IDDEPOSIT', penggunaanLama.IDDEPOSIT).update({ SALDO_SISA: saldoRollback });
-
-      const depositBaru = await trx('deposit').where('IDDEPOSIT', IDDEPOSIT).first();
-      if (!depositBaru) {
-        await trx.rollback();
-        return res.status(400).json({ success: false, message: 'Deposit baru tidak ditemukan' });
-      }
-      saldoRollback = depositBaru.SALDO_SISA;
-    }
-
-    const saldoAkhir = saldoRollback - JUMLAH_PEMAKAIAN;
-    if (saldoAkhir < 0) {
+    if (depositBaru.SALDO_SISA < JUMLAH_PEMAKAIAN) {
       await trx.rollback();
-      return res.status(400).json({ success: false, message: 'Saldo deposit tidak mencukupi untuk update' });
+      return res.status(400).json({ success: false, message: 'Saldo deposit tidak mencukupi' });
     }
 
+    const saldoAkhir = depositBaru.SALDO_SISA - JUMLAH_PEMAKAIAN;
     await trx('deposit').where('IDDEPOSIT', IDDEPOSIT).update({
       SALDO_SISA: saldoAkhir,
       STATUS: saldoAkhir === 0 ? 'HABIS' : 'AKTIF',
     });
+
+    await trx('invoice').where('IDINVOICE', IDINVOICE).decrement('SISA_TAGIHAN', JUMLAH_PEMAKAIAN);
 
     const updated = await PenggunaanModel.update(id, {
       IDDEPOSIT,
@@ -146,18 +142,12 @@ export async function deletePenggunaan(req, res) {
       return res.status(404).json({ success: false, message: 'Data penggunaan tidak ditemukan' });
     }
 
-    const deposit = await trx('deposit').where('IDDEPOSIT', penggunaan.IDDEPOSIT).first();
-    if (!deposit) {
-      await trx.rollback();
-      return res.status(400).json({ success: false, message: 'Deposit tidak ditemukan' });
-    }
+    // Kembalikan saldo deposit
+    await trx('deposit').where('IDDEPOSIT', penggunaan.IDDEPOSIT).increment('SALDO_SISA', penggunaan.JUMLAH_PEMAKAIAN);
+    await trx('deposit').where('IDDEPOSIT', penggunaan.IDDEPOSIT).update({ STATUS: 'AKTIF' });
 
-    const saldoBaru = deposit.SALDO_SISA + penggunaan.JUMLAH_PEMAKAIAN;
-
-    await trx('deposit').where('IDDEPOSIT', penggunaan.IDDEPOSIT).update({
-      SALDO_SISA: saldoBaru,
-      STATUS: 'AKTIF',
-    });
+    // Kembalikan nilai ke SISA_TAGIHAN invoice
+    await trx('invoice').where('IDINVOICE', penggunaan.IDINVOICE).increment('SISA_TAGIHAN', penggunaan.JUMLAH_PEMAKAIAN);
 
     const deleted = await PenggunaanModel.remove(id, trx);
     if (!deleted) {

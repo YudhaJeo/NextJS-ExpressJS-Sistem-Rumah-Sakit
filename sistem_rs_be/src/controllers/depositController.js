@@ -68,6 +68,27 @@ export async function createDeposit(req, res) {
       KETERANGAN,
     });
 
+    // ✅ Hitung ulang TOTALDEPOSIT
+    const totalDeposit = await trx('deposit')
+      .where('IDINVOICE', IDINVOICE)
+      .sum('NOMINAL as total')
+      .first();
+
+    const newTotalDeposit = totalDeposit.total || 0;
+
+    // ✅ Hitung ulang SISA_TAGIHAN
+    const sisaTagihan = invoice.TOTALTAGIHAN + newTotalDeposit - invoice.TOTALANGSURAN;
+    const newStatus = sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
+
+    await trx('invoice')
+      .where('IDINVOICE', IDINVOICE)
+      .update({
+        TOTALDEPOSIT: newTotalDeposit,
+        SISA_TAGIHAN: sisaTagihan,
+        STATUS: newStatus,
+        UPDATED_AT: trx.fn.now(),
+      });
+
     await trx.commit();
     res.status(201).json({ success: true, message: 'Deposit berhasil ditambahkan', NODEPOSIT });
   } catch (err) {
@@ -78,55 +99,122 @@ export async function createDeposit(req, res) {
 }
 
 export async function updateDeposit(req, res) {
+  const trx = await db.transaction();
   try {
     const { id } = req.params;
     const { IDINVOICE, TANGGALDEPOSIT, NOMINAL, METODE, SALDO_SISA, STATUS, KETERANGAN, IDBANK } = req.body;
 
-    const invoice = await db('invoice').where('IDINVOICE', IDINVOICE).first();
+    const invoice = await trx('invoice').where('IDINVOICE', IDINVOICE).first();
     if (!invoice) {
+      await trx.rollback();
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
     if (METODE === 'Transfer Bank' && !IDBANK) {
+      await trx.rollback();
       return res.status(400).json({ success: false, message: 'Bank wajib dipilih untuk Transfer Bank' });
     }
 
     const idBankFinal = METODE === 'Transfer Bank' ? IDBANK : null;
     const statusFinal = (SALDO_SISA === 0) ? 'HABIS' : STATUS;
 
-    const updated = await DepositModel.update(id, {
-      IDINVOICE,
-      TANGGALDEPOSIT: TANGGALDEPOSIT || db.fn.now(),
-      NOMINAL,
-      METODE,
-      IDBANK: idBankFinal,
-      SALDO_SISA,
-      STATUS: statusFinal,
-      KETERANGAN,
-    });
+    const updated = await trx('deposit')
+      .where('IDDEPOSIT', id)
+      .update({
+        IDINVOICE,
+        TANGGALDEPOSIT: TANGGALDEPOSIT || trx.fn.now(),
+        NOMINAL,
+        METODE,
+        IDBANK: idBankFinal,
+        SALDO_SISA,
+        STATUS: statusFinal,
+        KETERANGAN,
+        UPDATED_AT: trx.fn.now(),
+      });
 
     if (!updated) {
+      await trx.rollback();
       return res.status(404).json({ success: false, message: 'Deposit tidak ditemukan' });
     }
 
+    // ✅ Hitung ulang TOTALDEPOSIT
+    const totalDeposit = await trx('deposit')
+      .where('IDINVOICE', IDINVOICE)
+      .sum('NOMINAL as total')
+      .first();
+
+    const newTotalDeposit = totalDeposit.total || 0;
+
+    // ✅ Hitung ulang SISA_TAGIHAN
+    const sisaTagihan = invoice.TOTALTAGIHAN + newTotalDeposit - invoice.TOTALANGSURAN;
+    const newStatus = sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
+
+    await trx('invoice')
+      .where('IDINVOICE', IDINVOICE)
+      .update({
+        TOTALDEPOSIT: newTotalDeposit,
+        SISA_TAGIHAN: sisaTagihan,
+        STATUS: newStatus,
+        UPDATED_AT: trx.fn.now(),
+      });
+
+    await trx.commit();
     res.status(200).json({ success: true, message: 'Deposit berhasil diperbarui' });
   } catch (err) {
+    await trx.rollback();
     console.error('Update Deposit Error:', err);
     res.status(500).json({ success: false, message: err.message });
   }
 }
 
 export async function deleteDeposit(req, res) {
+  const trx = await db.transaction();
   try {
     const { id } = req.params;
-    const deleted = await DepositModel.remove(id);
 
-    if (!deleted) {
+    // Ambil IDINVOICE dari deposit sebelum dihapus
+    const deposit = await trx('deposit').where('IDDEPOSIT', id).first();
+    if (!deposit) {
+      await trx.rollback();
       return res.status(404).json({ success: false, message: 'Deposit tidak ditemukan' });
     }
 
+    const { IDINVOICE } = deposit;
+    const invoice = await trx('invoice').where('IDINVOICE', IDINVOICE).first();
+    if (!invoice) {
+      await trx.rollback();
+      return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
+    }
+
+    // Hapus deposit
+    await trx('deposit').where('IDDEPOSIT', id).del();
+
+    // Hitung ulang TOTALDEPOSIT setelah penghapusan
+    const totalDeposit = await trx('deposit')
+      .where('IDINVOICE', IDINVOICE)
+      .sum('NOMINAL as total')
+      .first();
+
+    const newTotalDeposit = totalDeposit.total || 0;
+
+    // Hitung ulang SISA_TAGIHAN
+    const sisaTagihan = invoice.TOTALTAGIHAN + newTotalDeposit - invoice.TOTALANGSURAN;
+    const newStatus = sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
+
+    // Update invoice
+    await trx('invoice')
+      .where('IDINVOICE', IDINVOICE)
+      .update({
+        TOTALDEPOSIT: newTotalDeposit,
+        SISA_TAGIHAN: sisaTagihan,
+        STATUS: newStatus,
+        UPDATED_AT: trx.fn.now(),
+      });
+
+    await trx.commit();
     res.status(200).json({ success: true, message: 'Deposit berhasil dihapus' });
   } catch (err) {
+    await trx.rollback();
     console.error('Delete Deposit Error:', err);
     res.status(500).json({ success: false, message: err.message });
   }

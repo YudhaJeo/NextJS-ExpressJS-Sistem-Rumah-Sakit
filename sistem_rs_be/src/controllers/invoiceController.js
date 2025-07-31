@@ -45,7 +45,7 @@ export async function updateInvoice(req, res) {
       return res.status(400).json({ success: false, message: 'Pasien dengan NIK ini tidak ditemukan' });
     }
 
-    const SISA_TAGIHAN = (TOTALTAGIHAN || 0) - (TOTALDEPOSIT || 0) - (TOTALANGSURAN || 0);
+    const SISA_TAGIHAN = (TOTALTAGIHAN || 0) + (TOTALDEPOSIT || 0) - (TOTALANGSURAN || 0);
 
     const updated = await InvoiceModel.update(id, {
       NIK,
