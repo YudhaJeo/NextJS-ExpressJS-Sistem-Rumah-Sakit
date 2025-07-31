@@ -46,7 +46,6 @@ const FormDialogKomisi = ({
           onSubmit();
         }}
       >
-        {/* Pilih Riwayat Pengobatan */}
         <div>
           <label>Riwayat Pengobatan</label>
           <Dropdown
@@ -71,7 +70,6 @@ const FormDialogKomisi = ({
           />
         </div>
 
-        {/* Info Tambahan Otomatis */}
         <div className="grid-cols-2 gap-3 text-sm text-gray-700">
           <div>
             <label>NIK</label>
@@ -95,7 +93,6 @@ const FormDialogKomisi = ({
           </div>
         </div>
 
-        {/* Nilai Komisi */}
         <div>
           <label>Nilai Komisi</label>
           <InputNumber
@@ -110,7 +107,6 @@ const FormDialogKomisi = ({
           />
         </div>
 
-        {/* Status */}
         <div>
           <label>Status</label>
           <Dropdown
@@ -122,7 +118,6 @@ const FormDialogKomisi = ({
           />
         </div>
 
-        {/* Keterangan */}
         <div>
           <label>Keterangan</label>
           <InputText
@@ -135,17 +130,7 @@ const FormDialogKomisi = ({
           />
         </div>
 
-        {/* Tombol Aksi */}
         <div className="flex justify-between pt-2">
-          {formData.IDKOMISI > 0 && (
-            <Button
-              type="button"
-              label="Hapus"
-              icon="pi pi-trash"
-              className="p-button-danger"
-              onClick={() => onDelete(formData)}
-            />
-          )}
           <Button type="submit" label="Simpan" icon="pi pi-save" />
         </div>
       </form>
