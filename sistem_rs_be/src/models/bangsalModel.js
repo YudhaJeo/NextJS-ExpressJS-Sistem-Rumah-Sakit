@@ -6,7 +6,7 @@ export const getAll = () => {
     .select(
       'bangsal.*',
       'jenis_bangsal.NAMAJENIS',
-      'jenis_bangsal.HARGA_PER_HARI',
+      'jenis_bangsal.HARGAPERHARI',
       'jenis_bangsal.FASILITAS'
     );
 };

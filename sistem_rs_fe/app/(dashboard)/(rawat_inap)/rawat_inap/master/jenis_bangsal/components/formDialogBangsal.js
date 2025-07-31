@@ -39,15 +39,15 @@ const FormDialog = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
           <InputNumber
             inputId="harga"
             className="w-full mt-2"
-            inputClassName={errors.HARGA_PER_HARI ? 'p-invalid' : ''}
-            value={form.HARGA_PER_HARI}
-            onValueChange={(e) => setForm({ ...form, HARGA_PER_HARI: e.value })}
+            inputClassName={errors.HARGAPERHARI ? 'p-invalid' : ''}
+            value={form.HARGAPERHARI}
+            onValueChange={(e) => setForm({ ...form, HARGAPERHARI: e.value })}
             mode="currency"
             currency="IDR"
             locale="id-ID"
           />
-          {errors.HARGA_PER_HARI && (
-            <small className="text-red-500">{errors.HARGA_PER_HARI}</small>
+          {errors.HARGAPERHARI && (
+            <small className="text-red-500">{errors.HARGAPERHARI}</small>
           )}
         </div>
         <div>

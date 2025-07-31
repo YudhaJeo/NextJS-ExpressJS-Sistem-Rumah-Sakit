@@ -20,7 +20,7 @@ const Page = () => {
 
   const [form, setForm] = useState({
     NAMAJENIS: '',
-    HARGA_PER_HARI: null,
+    HARGAPERHARI: null,
     FASILITAS: '',
   });
 
@@ -59,11 +59,11 @@ const Page = () => {
     }
 
     if (
-      form.HARGA_PER_HARI === null ||
-      form.HARGA_PER_HARI === undefined ||
-      isNaN(form.HARGA_PER_HARI)
+      form.HARGAPERHARI === null ||
+      form.HARGAPERHARI === undefined ||
+      isNaN(form.HARGAPERHARI)
     ) {
-      newErrors.HARGA_PER_HARI = (
+      newErrors.HARGAPERHARI = (
         <span style={{ color: 'red' }}>Harga wajib diisi</span>
       );
     }
@@ -99,7 +99,7 @@ const Page = () => {
       setDialogVisible(false);
       setForm({
         NAMAJENIS: '',
-        HARGA_PER_HARI: null,
+        HARGAPERHARI: null,
         FASILITAS: '',
       });
     } catch (err) {
@@ -153,7 +153,7 @@ const Page = () => {
         onAddClick={() => {
           setForm({
             NAMAJENIS: '',
-            HARGA_PER_HARI: null,
+            HARGAPERHARI: null,
             FASILITAS: '',
           });
           setDialogVisible(true);
