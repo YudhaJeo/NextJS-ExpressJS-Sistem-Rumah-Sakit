@@ -40,6 +40,12 @@ export default function FormDialogProfile({
     const file = e.files[0]
     if (!file) return
 
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg']
+    if (!allowedTypes.includes(file.type)) {
+      toast.current.show({ severity: 'error', summary: 'Format tidak didukung', detail: 'Hanya PNG atau JPG' })
+      return
+    }
+
     setTotalSize(file.size)
     setForm({ ...form, file })
 
@@ -142,7 +148,7 @@ export default function FormDialogProfile({
       <FileUpload
         ref={fileUploadRef}
         name="demo[]"
-        accept="image/*"
+        accept=".png, .jpg, .jpeg"
         maxFileSize={5000000}
         customUpload
         onUpload={onTemplateUpload}
