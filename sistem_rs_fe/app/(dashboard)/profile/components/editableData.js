@@ -1,37 +1,16 @@
 // sistem_rs_fe\app\(dashboard)\profile\components\editableData.js
 'use client'
 
-import { Avatar } from 'primereact/avatar'
-import { Tag } from 'primereact/tag'
 import { Skeleton } from 'primereact/skeleton'
 
-export default function EditableData({ user, setDialogVisible, loading }) {
-  const ProfileField = ({ label, value, icon }) => (
-    <div className="mb-4">
-      <div className="flex align-items-center mb-2">
-        {icon && <i className={`${icon} text-500 mr-2`}></i>}
-        <span className="text-sm font-medium text-600">{label}</span>
-      </div>
-      <div className="text-900 font-semibold">{value || '-'}</div>
-    </div>
-  )
-
-  const getRoleTagSeverity = (role) => {
-    switch (role?.toLowerCase()) {
-      case 'admin': return 'danger'
-      case 'dokter': return 'success'
-      case 'perawat': return 'info'
-      default: return 'secondary'
-    }
-  }
-
+export default function EditableData({ user, loading }) {
   if (loading) {
     return (
       <div className="col-12 md:col-4">
         <div className="flex flex-column align-items-center">
-          <Skeleton shape="circle" size="8rem" className="mb-3"></Skeleton>
-          <Skeleton width="10rem" height="2rem" className="mb-2"></Skeleton>
-          <Skeleton width="8rem" height="1rem"></Skeleton>
+          <Skeleton shape="circle" size="10rem" className="mb-3" />
+          <Skeleton width="12rem" height="2rem" className="mb-2" />
+          <Skeleton width="8rem" height="1rem" />
         </div>
       </div>
     )
@@ -39,22 +18,38 @@ export default function EditableData({ user, setDialogVisible, loading }) {
 
   return (
     <div className="col-12 md:col-4">
-      <div className="flex flex-column align-items-center text-center">
-        <div className="mb-4">
-          {user.FOTOPROFIL ? (
-            <Avatar image={user.FOTOPROFIL} size="xlarge" shape="circle" className="shadow-3" />
-          ) : (
-            <Avatar icon="pi pi-user" size="xlarge" shape="circle" className="bg-gray-100 text-gray-600 shadow-3" />
-          )}
+      <div className="card align-items-center text-center">
+        {/* foto profil */}
+        <div className="relative">
+            {user.FOTOPROFIL ? (
+              <img
+                src={user.FOTOPROFIL}
+                alt="Preview"
+                style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover', borderRadius: '50%' }}
+                className="w-24 h-24 rounded-full object-cover border shadow"
+              />          
+            ) : (
+              <div className="w-32 h-32 flex items-center justify-center rounded-full bg-gray-100 border border-gray-300 shadow-inner">
+                <i className="pi pi-user text-4xl text-gray-500"></i>
+              </div>
+            )}
         </div>
 
-        <h3 className="text-xl font-bold text-900 mb-2">{user.NAMALENGKAP || 'Nama tidak tersedia'}</h3>
-        {user.ROLE && <Tag value={user.ROLE} severity={getRoleTagSeverity(user.ROLE)} className="mb-3" />}
+        <h2 className="text-2xl font-bold">{user.NAMALENGKAP || 'Nama tidak tersedia'}</h2>
+        
+        <h4 className="card text-lg mt-5">
+            <i className="pi pi-id-card text-lg text-gray-500 m-2"></i>
+            {user.ROLE || 'Role tersedia'}
+        </h4>
+        <h4 className="card text-lg">
+            <i className="pi pi-envelope text-lg text-gray-500 m-2"></i>
+            {user.EMAIL || 'Email tersedia'}
+        </h4>
+        <h4 className="card text-lg">
+            <i className="pi pi-phone text-lg text-gray-500 m-2"></i>
+            {user.NOHP || 'Nomor telepon tersedia'}
+        </h4>
 
-        <div className="w-full text-left">
-          <ProfileField label="Email" value={user.EMAIL} icon="pi pi-envelope" />
-          <ProfileField label="No. Telepon" value={user.NOHP} icon="pi pi-phone" />
-        </div>
       </div>
     </div>
   )
