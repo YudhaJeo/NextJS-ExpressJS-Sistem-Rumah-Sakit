@@ -67,15 +67,16 @@ export default function FormDialogProfile({
   }
 
   const headerTemplate = (options) => {
-    const { className, chooseButton } = options
+    const { className, chooseButton, cancelButton } = options
     const value = totalSize / 50000
     const formattedValue = fileUploadRef.current
       ? fileUploadRef.current.formatSize(totalSize)
       : '0 B'
-
+  
     return (
       <div className={className} style={{ background: 'transparent', display: 'flex', alignItems: 'center' }}>
         {chooseButton}
+        {cancelButton} 
         <div className="flex align-items-center gap-3 ml-auto">
           <span>{formattedValue} / 5 MB</span>
           <ProgressBar value={value} showValue={false} style={{ width: '10rem', height: '12px' }} />
@@ -83,6 +84,7 @@ export default function FormDialogProfile({
       </div>
     )
   }
+  
 
   const itemTemplate = (file, props) => {
     return (
@@ -159,6 +161,11 @@ export default function FormDialogProfile({
         itemTemplate={itemTemplate}
         emptyTemplate={emptyTemplate}
         chooseOptions={chooseOptions}
+        cancelOptions={{
+          icon: 'pi pi-fw pi-times',
+          iconOnly: true,
+          className: 'custom-cancel-btn p-button-danger p-button-rounded p-button-outlined'
+        }}
       />
 
       <div className="space-y-4 mt-5">
