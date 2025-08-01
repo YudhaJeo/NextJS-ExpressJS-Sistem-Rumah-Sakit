@@ -17,7 +17,7 @@ const Page = () => {
   const [originalData, setOriginalData] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [unitKerjaType, setUnitKerjaType] = useState("Poli");
-  const [listPoli, setListPoli] = useState([]); // ✅ TAMBAH INI
+  const [listPoli, setListPoli] = useState([]);
   const [errors, setErrors] = useState({});
   const toastRef = useRef(null);
   const router = useRouter();
