@@ -3,19 +3,19 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Tag } from "primereact/tag";
-import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
-import dynamic from 'next/dynamic';
-import AdjustPrintMarginLaporan from './adjustPrintMarginLaporan';
-import { useState } from 'react';
+import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
+import AdjustPrintMarginLaporan from "./adjustPrintMarginLaporan";
+import { useState } from "react";
 
-const PDFViewer = dynamic(() => import('./PDFViewer'), { ssr: false })
+const PDFViewer = dynamic(() => import("./PDFViewer"), { ssr: false });
 
 const TabelRiwayatKunjungan = ({ data, loading }) => {
   const [adjustDialog, setAdjustDialog] = useState(false);
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState('');
-  const [fileName, setFileName] = useState('');
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
   const [selectedRow, setSelectedRow] = useState(null);
 
   const formatTanggal = (tanggal) => {
@@ -31,6 +31,12 @@ const TabelRiwayatKunjungan = ({ data, loading }) => {
   const handleOpenAdjust = (rowData) => {
     setSelectedRow(rowData);
     setAdjustDialog(true);
+  };
+
+  const fotoBodyTemplate = (rowData) => {
+    if (!rowData.FOTOPROFIL) return <span className="text-gray-400">Belum ada foto</span>;
+    const src = `http://localhost:4000/uploads/riwayat_pengobatan/${rowData.FOTOPROFIL}`;
+    return <img src={src} alt="foto" width="80" className="rounded-md" />;
   };
 
   const actionBody = (rowData) => (
@@ -80,10 +86,14 @@ const TabelRiwayatKunjungan = ({ data, loading }) => {
             />
           )}
         />
+        <Column field="STATUSRAWAT" header="Status Rawat" />
+        <Column field="NAMADOKTER" header="Dokter" />
+        <Column field="DIAGNOSA" header="Diagnosa" />
+        <Column field="OBAT" header="Obat" />
         <Column
           header="Aksi"
           body={actionBody}
-          style={{ width: '150px', textAlign: 'center' }}
+          style={{ width: "150px", textAlign: "center" }}
         />
       </DataTable>
 
@@ -100,14 +110,10 @@ const TabelRiwayatKunjungan = ({ data, loading }) => {
         visible={jsPdfPreviewOpen}
         onHide={() => setJsPdfPreviewOpen(false)}
         modal
-        style={{ width: '90vw', height: '90vh' }}
+        style={{ width: "90vw", height: "90vh" }}
         header="Preview PDF"
       >
-        <PDFViewer
-          pdfUrl={pdfUrl}
-          fileName={fileName}
-          paperSize={'A4'}
-        />
+        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize={"A4"} />
       </Dialog>
     </>
   );

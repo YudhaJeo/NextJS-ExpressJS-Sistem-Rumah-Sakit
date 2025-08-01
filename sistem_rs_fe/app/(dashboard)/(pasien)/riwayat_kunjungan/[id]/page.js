@@ -10,7 +10,6 @@ import { Tag } from 'primereact/tag';
 import { Divider } from 'primereact/divider';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Message } from 'primereact/message';
-import Panel from 'primereact/panel';
 import ToastNotifier from '@/app/components/toastNotifier';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -25,10 +24,10 @@ export default function DetailRiwayatKunjunganPage() {
   useEffect(() => {
     const token = Cookies.get('token');
     if (!token) return router.push('/login');
-    fetchDetail(token);
+    fetchDetail();
   }, [id]);
 
-  const fetchDetail = async (token) => {
+  const fetchDetail = async () => {
     try {
       const res = await axios.get(`${API_URL}/riwayat_kunjungan`);
       const found = res.data.data.find(item => item.IDPENDAFTARAN == id);
@@ -67,6 +66,10 @@ export default function DetailRiwayatKunjunganPage() {
     );
   }
 
+  const fotoUrl = detail.FOTOPROFIL 
+    ? `http://localhost:4000/uploads/riwayat_pengobatan/${detail.FOTOPROFIL}`
+    : null;
+
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
@@ -85,6 +88,7 @@ export default function DetailRiwayatKunjunganPage() {
                 <Divider />
                 <p><b>Nama Lengkap:</b> {detail.NAMALENGKAP}</p>
                 <p><b>NIK:</b> {detail.NIK}</p>
+                {fotoUrl && <img src={fotoUrl} alt="Foto Pasien" className="mt-2 rounded-md w-40" />}
               </div>
 
               <div className="col-12 md:col-6">
@@ -92,7 +96,9 @@ export default function DetailRiwayatKunjunganPage() {
                 <Divider />
                 <p><b>Tanggal Kunjungan:</b> {formatTanggal(detail.TANGGALKUNJUNGAN)}</p>
                 <p><b>Poli:</b> {detail.POLI}</p>
-                <p><b>Status:</b> <Tag value={detail.STATUSKUNJUNGAN} severity={detail.STATUSKUNJUNGAN === 'Selesai' ? 'success' : 'warning'} /></p>
+                <p><b>Status Kunjungan:</b> <Tag value={detail.STATUSKUNJUNGAN} severity={detail.STATUSKUNJUNGAN === 'Selesai' ? 'success' : 'warning'} /></p>
+                <p><b>Status Rawat:</b> {detail.STATUSRAWAT || '-'}</p>
+                <p><b>Dokter:</b> {detail.NAMADOKTER || '-'}</p>
               </div>
             </div>
 
@@ -100,6 +106,12 @@ export default function DetailRiwayatKunjunganPage() {
 
             <h4>Keluhan</h4>
             <p>{detail.KELUHAN || '-'}</p>
+
+            <Divider />
+
+            <h4>Diagnosa & Obat</h4>
+            <p><b>Diagnosa:</b> {detail.DIAGNOSA || '-'}</p>
+            <p><b>Obat:</b> {detail.OBAT || '-'}</p>
 
             <Divider />
             <div className="text-center mt-4 p-3 bg-gray-50 border-round">

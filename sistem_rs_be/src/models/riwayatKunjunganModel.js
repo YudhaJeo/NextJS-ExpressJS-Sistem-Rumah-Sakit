@@ -4,6 +4,8 @@ export const getRiwayatKunjungan = () => {
   return db('pendaftaran as p')
     .join('pasien as ps', 'p.NIK', 'ps.NIK')
     .join('poli as pl', 'p.IDPOLI', 'pl.IDPOLI')
+    .leftJoin('riwayat_pengobatan as r', 'p.IDPENDAFTARAN', 'r.IDPENDAFTARAN')
+    .leftJoin('master_tenaga_medis as d', 'r.IDDOKTER', 'd.IDTENAGAMEDIS')
     .select(
       'p.IDPENDAFTARAN',
       'ps.NAMALENGKAP',
@@ -11,7 +13,12 @@ export const getRiwayatKunjungan = () => {
       'p.TANGGALKUNJUNGAN',
       'p.KELUHAN',
       'pl.NAMAPOLI as POLI',
-      'p.STATUSKUNJUNGAN'
+      'p.STATUSKUNJUNGAN',
+      'r.STATUSRAWAT',
+      'r.DIAGNOSA',
+      'r.OBAT',
+      'd.NAMALENGKAP as NAMADOKTER'
     )
-    .where('p.STATUSKUNJUNGAN', 'Selesai');
+    .where('p.STATUSKUNJUNGAN', 'Selesai')
+    .orderBy('p.TANGGALKUNJUNGAN', 'desc');
 };
