@@ -47,7 +47,7 @@ const AppMenu = () => {
               { label: "Asuransi", icon: "pi pi-fw pi-id-card", to: "/master/asuransi" },
               { label: "Agama", icon: "pi pi-fw pi-building-columns", to: "/master/agama" },
               { label: "Poli", icon: "pi pi-fw pi-warehouse", to: "/master/poli" },
-              { label: "Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/dokter" },
+              { label: "Jadwal Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/dokter" },
               { label: "Role", icon: "pi pi-fw pi-users", to: "/master/role" },
               { label: "Tenaga Medis", icon: "pi pi-fw pi-users", to: "/master/tenaga_medis" },
               { label: "Tenaga Non Medis", icon: "pi pi-fw pi-users", to: "/master/tenaga_non_medis" },

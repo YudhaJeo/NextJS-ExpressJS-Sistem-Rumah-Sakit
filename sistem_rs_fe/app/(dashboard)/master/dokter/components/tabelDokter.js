@@ -22,7 +22,7 @@ const TableDokter = ({ data, loading, onEdit, onDelete }) => {
       size="small"
       scrollable
     >
-      <Column field="IDDOKTER" header="ID Dokter" />
+      <Column field="IDDOKTER" header="ID" />
       <Column field="NAMALENGKAP" header="Nama Dokter" />
       <Column field="NAMAPOLI" header="Nama Poli" />
       <Column header="Jadwal Praktek" body={jadwalTemplate} />
