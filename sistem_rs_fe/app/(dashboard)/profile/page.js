@@ -109,22 +109,22 @@ export default function ProfilePage() {
       </div>
 
     <div className="card w-full justify-center items-stretch">
-      <div className="flex flex-col items-center space-y-4 mb-6">
-        <div className="relative">
-          {user.profile ? (
-            <img
-              src={user.profile}
-              alt="Foto Profil"
-              className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
-            />
-          ) : (
-            <div className="w-32 h-32 flex items-center justify-center rounded-full bg-gray-100 border border-gray-300 shadow-inner">
-              <i className="pi pi-user text-4xl text-gray-500"></i>
-            </div>
-          )}
-          <div className="text-center mt-2 text-sm text-gray-500 italic">Foto Profil Pengguna</div>
+        <div className="flex flex-col items-center space-y-4 mb-4">
+          <div className="relative">
+            {user.profile ? (
+              <img
+                src={user.profile}
+                alt="Preview"
+                style={{ maxWidth: '120px', maxHeight: '120px', objectFit: 'cover', borderRadius: '50%' }}
+                className="w-24 h-24 rounded-full object-cover border shadow"
+              />          
+            ) : (
+              <div className="w-32 h-32 flex items-center justify-center rounded-full bg-gray-100 border border-gray-300 shadow-inner">
+                <i className="pi pi-user text-4xl text-gray-500"></i>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
 
         <div>
           <span className="text-gray-600 font-medium">Nama Pengguna:</span>
