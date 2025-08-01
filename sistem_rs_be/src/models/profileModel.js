@@ -5,34 +5,22 @@ export const getById = async (id, sumber) => {
   if (sumber === 'medis') {
     const row = await db('master_tenaga_medis')
       .where({ IDTENAGAMEDIS: id })
-      .select('*', db.raw('?? as ROLE', ['JENISTENAGAMEDIS']))
+      .select('*')
       .first();
 
     if (row) {
-      return {
-        ...row,
-        ID: row.IDTENAGAMEDIS,
-        USERNAME: row.NAMALENGKAP,
-        EMAIL: row.EMAIL,
-        NOHP: row.NOHP
-      };
+      return row; 
     }
   }
 
   if (sumber === 'non_medis') {
     const row = await db('master_tenaga_non_medis')
       .where({ IDTENAGANONMEDIS: id })
-      .select('*', db.raw('?? as ROLE', ['JENISTENAGANONMEDIS']))
+      .select('*')
       .first();
 
     if (row) {
-      return {
-        ...row,
-        ID: row.IDTENAGANONMEDIS,
-        USERNAME: row.NAMALENGKAP,
-        EMAIL: row.EMAIL,
-        NOHP: row.NOHP
-      };
+      return row; 
     }
   }
 
@@ -41,13 +29,13 @@ export const getById = async (id, sumber) => {
 
 export const updateProfile = async (id, sumber, data) => {
   const baseData = {
-    NAMALENGKAP: data.username,
-    EMAIL: data.email,
-    NOHP: data.nohp
+    NAMALENGKAP: data.NAMALENGKAP,
+    EMAIL: data.EMAIL,
+    NOHP: data.NOHP
   };
 
-  if (data.fotoprofil) {
-    baseData.FOTOPROFIL = data.fotoprofil;
+  if (data.FOTOPROFIL) {
+    baseData.FOTOPROFIL = data.FOTOPROFIL;
   }
 
   if (sumber === 'medis') {

@@ -24,14 +24,14 @@ export default function FormDialogProfile({
   const fileUploadRef = useRef(null)
 
   useEffect(() => {
-    if (form.profile) setPreview(form.profile)
-  }, [form.profile])
+    if (form.FOTOPROFIL) setPreview(form.FOTOPROFIL)
+  }, [form.FOTOPROFIL])
 
   const validate = () => {
     const newErrors = {}
-    if (!form.username.trim()) newErrors.username = 'Nama wajib diisi'
-    if (!form.email.trim()) newErrors.email = 'Email wajib diisi'
-    if (!form.nohp?.trim()) newErrors.nohp = 'No telepon wajib diisi'
+    if (!form.NAMALENGKAP.trim()) newErrors.NAMALENGKAP = 'Nama wajib diisi'
+    if (!form.EMAIL.trim()) newErrors.EMAIL = 'Email wajib diisi'
+    if (!form.NOHP?.trim()) newErrors.NOHP = 'No telepon wajib diisi'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -172,33 +172,33 @@ export default function FormDialogProfile({
         <div>
           <label className="block">Nama Pengguna</label>
           <InputText
-            className={errors.username ? 'p-invalid w-full mt-2' : 'w-full mt-2'}
-            value={form.username}
-            onChange={e => setForm({ ...form, username: e.target.value })}
+            className={errors.NAMALENGKAP ? 'p-invalid w-full mt-2' : 'w-full mt-2'}
+            value={form.NAMALENGKAP}
+            onChange={e => setForm({ ...form, NAMALENGKAP: e.target.value })}
           />
-          {errors.username && <small className="text-red-500">{errors.username}</small>}
+          {errors.NAMALENGKAP && <small className="text-red-500">{errors.NAMALENGKAP}</small>}
         </div>
 
         <div className="mt-3">
           <label className="block">Email</label>
           <InputText
-            type="email"
-            className={errors.email ? 'p-invalid w-full mt-2' : 'w-full mt-2'}
-            value={form.email}
-            onChange={e => setForm({ ...form, email: e.target.value })}
+            type="EMAIL"
+            className={errors.EMAIL ? 'p-invalid w-full mt-2' : 'w-full mt-2'}
+            value={form.EMAIL}
+            onChange={e => setForm({ ...form, EMAIL: e.target.value })}
           />
-          {errors.email && <small className="text-red-500">{errors.email}</small>}
+          {errors.EMAIL && <small className="text-red-500">{errors.EMAIL}</small>}
         </div>
 
         <div className="mt-3">
           <label className="block">No Telepon</label>
           <InputText
-            type="nohp"
-            className={errors.nohp ? 'p-invalid w-full mt-2' : 'w-full mt-2'}
-            value={form.nohp}
-            onChange={e => setForm({ ...form, nohp: e.target.value })}
+            type="NOHP"
+            className={errors.NOHP ? 'p-invalid w-full mt-2' : 'w-full mt-2'}
+            value={form.NOHP}
+            onChange={e => setForm({ ...form, NOHP: e.target.value })}
           />
-          {errors.nohp && <small className="text-red-500">{errors.nohp}</small>}
+          {errors.NOHP && <small className="text-red-500">{errors.NOHP}</small>}
         </div>
 
         <div className="text-right pt-3">

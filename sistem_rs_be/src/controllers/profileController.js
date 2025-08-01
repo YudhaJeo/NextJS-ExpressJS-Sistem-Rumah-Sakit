@@ -10,14 +10,19 @@ export async function getUser(req, res) {
 
     delete user.PASSWORD;
 
+    if (sumber === 'medis') {
+      user.ROLE = user.JENISTENAGAMEDIS;
+    } else if (sumber === 'non_medis') {
+      user.ROLE = user.JENISTENAGANONMEDIS;
+    }
+
+    user.FOTOPROFIL = user.FOTOPROFIL
+      ? `http://localhost:4000${user.FOTOPROFIL}`
+      : null;
+
+    // kirim seluruh field user
     res.json({
-      data: {
-        username: user.USERNAME,
-        email: user.EMAIL,
-        role: user.ROLE,
-        nohp: user.NOHP,
-        profile: user.FOTOPROFIL ? `http://localhost:4000${user.FOTOPROFIL}` : null
-      }
+      data: user
     });
   } catch (err) {
     console.error(err);
@@ -25,17 +30,18 @@ export async function getUser(req, res) {
   }
 }
 
+
 export async function updateUser(req, res) {
   try {
     const { id, sumber } = req.user;
-    const { username, email, nohp } = req.body;
+    const { USERNAME, EMAIL, NOHP } = req.body;
     const file = req.file;
 
-    if (!username || !email || !nohp) {
+    if (!USERNAME || !EMAIL || !NOHP) {
       return res.status(400).json({ error: 'Semua field wajib diisi' });
     }
 
-    const data = { username, email, nohp };
+    const data = { USERNAME, EMAIL, NOHP };
 
     if (file) {
       data.fotoprofil = `/uploads/${sumber === 'medis' ? 'tenaga_medis' : 'tenaga_non_medis'}/${file.filename}`;

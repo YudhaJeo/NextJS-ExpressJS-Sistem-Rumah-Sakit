@@ -12,10 +12,30 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog'
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export default function ProfilePage() {
-  const [user, setUser] = useState({ username: '', email: '', nohp: '', role: '', profile: '' })
+  const [user, setUser] = useState({
+    NAMALENGKAP: '',
+    EMAIL: '',
+    NOHP: '',
+    FOTOPROFIL: '',
+    TEMPATLAHIR: '',
+    TANGGALLAHIR: '',
+    JENISKELAMIN: '',
+    STATUSKEPEGAWAIAN: '',
+    SPESIALISASI: '',
+    UNITKERJA: '',
+    JENISTENAGANONMEDIS: ''
+  })  
+  
+  const [form, setForm] = useState({ 
+    NAMALENGKAP: '', 
+    EMAIL: '', 
+    NOHP: '', 
+    FOTOPROFIL: '', 
+    file: null 
+  })
+
   const [loading, setLoading] = useState(true)
   const [dialogVisible, setDialogVisible] = useState(false)
-  const [form, setForm] = useState({ username: '', email: '', nohp: '', role: '', fotoprofil: '', file: null })
   const [errors, setErrors] = useState({})
   const router = useRouter()
   const toastRef = useRef(null)
@@ -32,17 +52,39 @@ export default function ProfilePage() {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (!res.data?.data) throw new Error('Data user kosong')
-
-      const { username, email, nohp, role, profile } = res.data.data
-      setUser({ username, email, nohp, role, profile })
-      setForm({ username, email, nohp, role, profile, file: null })
+  
+      const data = res.data.data
+      setUser(data)
+      setForm({ 
+        NAMALENGKAP: data.NAMALENGKAP,
+        EMAIL: data.EMAIL,
+        NOHP: data.NOHP,
+        FOTOPROFIL: data.FOTOPROFIL,
+        file: null
+      })
     } catch (err) {
       console.error('Gagal ambil data:', err)
       router.push('/login')
     } finally {
       setLoading(false)
     }
-  }
+  }  
+
+  const formatTanggal = (tanggal) => {
+    if (!tanggal) return "-";
+    const tgl = new Date(tanggal);
+    return tgl.toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
+
+  const formatGender = (gender) => {
+    if (!gender) return "-";
+    return gender === "L" ? "Laki-laki" : "Perempuan";
+  };
+  
 
   const handleLogout = () => {
     confirmDialog({
@@ -70,12 +112,13 @@ export default function ProfilePage() {
     const token = Cookies.get('token')
     try {
       const formData = new FormData()
-      formData.append('username', newData.username)
-      formData.append('email', newData.email)
-      formData.append('nohp', newData.nohp || '')
+      formData.append('username', newData.NAMALENGKAP)
+      formData.append('email', newData.EMAIL)
+      formData.append('nohp', newData.NOHP || '')
       if (newData.file) {
         formData.append('file', newData.file)
       }
+
 
       await axios.put(`${API_URL}/profile`, formData, {
         headers: {
@@ -104,44 +147,88 @@ export default function ProfilePage() {
         <h3 className="text-xl font-semibold">Profil Pengguna</h3>
       </div>
 
-      <div className="card w-full justify-center items-stretch mt-5">
-        <div className="flex flex-col items-center space-y-4 mb-4">
-          <div className="relative">
-            {user.profile ? (
-              <img
-                src={user.profile}
-                alt="Preview"
-                style={{ maxWidth: '120px', maxHeight: '120px', objectFit: 'cover', borderRadius: '50%' }}
-                className="w-24 h-24 rounded-full object-cover border shadow"
-              />
-            ) : (
-              <div className="w-32 h-32 flex items-center justify-center rounded-full bg-gray-100 border border-gray-300 shadow-inner">
-                <i className="pi pi-user text-4xl text-gray-500"></i>
-              </div>
-            )}
+      <div className='flex gap-5'>
+        {/* Kiri(EDITABLE) */}
+        <div className="card w-1/2 justify-center mt-5">
+          <div className="flex flex-col items-center space-y-4 mb-4">
+            <div className="relative">
+              {user.FOTOPROFIL ? (
+                <img
+                  src={user.FOTOPROFIL}
+                  alt="Preview"
+                  style={{ maxWidth: '120px', maxHeight: '120px', objectFit: 'cover', borderRadius: '50%' }}
+                  className="w-24 h-24 rounded-full object-cover border shadow"
+                />
+              ) : (
+                <div className="w-32 h-32 flex items-center justify-center rounded-full bg-gray-100 border border-gray-300 shadow-inner">
+                  <i className="pi pi-user text-4xl text-gray-500"></i>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <span className="text-gray-600 font-medium">Nama Pengguna:</span>
+            <div className="card text-lg font-semibold mt-2">{user.NAMALENGKAP}</div>
+          </div>
+
+          <div className="my-4">
+            <span className="text-gray-600 font-medium">Email:</span>
+            <div className="card text-lg font-semibold mt-2">{user.EMAIL}</div>
+          </div>
+
+          <div className="my-4">
+            <span className="text-gray-600 font-medium">No Telepon:</span>
+            <div className="card text-lg font-semibold mt-2">{user.NOHP}</div>
+          </div>
+
+          <div>
+            <span className="text-gray-600 font-medium">Role:</span>
+            <div className="card text-lg font-semibold mt-2 uppercase">{user.ROLE}</div>
           </div>
         </div>
 
-        <div>
-          <span className="text-gray-600 font-medium">Nama Pengguna:</span>
-          <div className="card text-lg font-semibold mt-2">{user.username}</div>
-        </div>
+        {/* Kanan (TIDAK EDITABLE) */}
+        <div className='card w-1/2 justify-center mt-5'>
+          <div>
+            <span className="text-gray-600 font-medium">Tempat Lahir:</span>
+            <div className="card text-lg font-semibold mt-2">{user.TEMPATLAHIR}</div>
+          </div>
 
-        <div className="my-4">
-          <span className="text-gray-600 font-medium">Email:</span>
-          <div className="card text-lg font-semibold mt-2">{user.email}</div>
-        </div>
+          <div className="my-4">
+            <span className="text-gray-600 font-medium">Tanggal Lahir:</span>
+            <div className="card text-lg font-semibold mt-2">{formatTanggal(user.TANGGALLAHIR)}</div>
+          </div>
 
-        <div className="my-4">
-          <span className="text-gray-600 font-medium">No Telepon:</span>
-          <div className="card text-lg font-semibold mt-2">{user.nohp}</div>
-        </div>
+          <div className="my-4">
+            <span className="text-gray-600 font-medium">Jenis Kelamin:</span>
+            <div className="card text-lg font-semibold mt-2">{formatGender(user.JENISKELAMIN)}</div>
+          </div>
 
-        <div>
-          <span className="text-gray-600 font-medium">Role:</span>
-          <div className="card text-lg font-semibold mt-2 uppercase">{user.role}</div>
+          <div className="my-4">
+            <span className="text-gray-600 font-medium">Status Kepegawaian:</span>
+            <div className="card text-lg font-semibold mt-2">{user.STATUSKEPEGAWAIAN}</div>
+          </div>
+
+          <div className="my-4">
+            <span className="text-gray-600 font-medium">Spesialisasi:</span>
+            <div className="card text-lg font-semibold mt-2">{user.SPESIALISASI}</div>
+          </div>
+
+          <div className="my-4">
+            <span className="text-gray-600 font-medium">Unit Kerja:</span>
+            <div className="card text-lg font-semibold mt-2">{user.UNITKERJA}</div>
+          </div>
+
+          <div>
+            <span className="text-gray-600 font-medium">Jenis Tenaga:</span>
+            <div className="card text-lg font-semibold mt-2 uppercase">
+              {user.JENISTENAGANONMEDIS}
+            </div>
+          </div>
         </div>
       </div>
+
 
       <div className="card">
         <div className="flex gap-3 justify-end">
