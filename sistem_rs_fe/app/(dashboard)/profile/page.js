@@ -77,19 +77,19 @@ export default function ProfilePage() {
       formData.append('username', newData.username);
       formData.append('email', newData.email);
       if (newData.file) {
-        formData.append('FOTOPROFIL', newData.file);
+        formData.append('file', newData.file); // pakai "file", bukan "FOTOPROFIL"
       }
-
-      const res = await axios.put(`${API_URL}/profile`, formData, {
+  
+      await axios.put(`${API_URL}/profile`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
         }
       });
-
+  
       await fetchData(token);
       setDialogVisible(false);
-
+  
       Cookies.set('username', newData.username);
       Cookies.set('email', newData.email);
       toastRef.current?.showToast('00', 'Data berhasil diperbarui');
@@ -97,7 +97,7 @@ export default function ProfilePage() {
       console.error(err);
       toastRef.current?.showToast('01', 'Gagal memperbarui profile');
     }
-  };
+  };  
 
   return (
     <div>

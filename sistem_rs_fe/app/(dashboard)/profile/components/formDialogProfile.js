@@ -45,10 +45,6 @@ export default function FormDialogProfile({
     const reader = new FileReader()
     reader.onloadend = () => setPreview(reader.result)
     reader.readAsDataURL(file)
-
-    if (fileUploadRef.current) {
-      fileUploadRef.current.upload()
-    }
   }
 
   const onTemplateUpload = (e) => {
@@ -148,7 +144,7 @@ export default function FormDialogProfile({
         url="/api/upload"
         accept="image/*"
         maxFileSize={5000000}
-        auto
+        customUpload
         onUpload={onTemplateUpload}
         onSelect={onTemplateSelect}
         onError={onTemplateClear}
