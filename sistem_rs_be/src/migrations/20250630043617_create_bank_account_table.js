@@ -11,7 +11,7 @@ export const up = function (knex) {
     table.string('CABANG', 100);
     table.string('KODE_BANK', 10);
     table.enu('STATUS', ['AKTIF', 'NONAKTIF']).defaultTo('AKTIF').notNullable();
-    table.text('CATATAN');
+    table.text('KETERANGAN');
   });
 };
 

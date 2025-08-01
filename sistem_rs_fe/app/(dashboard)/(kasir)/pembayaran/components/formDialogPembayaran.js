@@ -47,17 +47,15 @@ const FormDialogPembayaran = ({
   const handleInvoiceChange = (e) => {
     const selectedInvoice = invoiceOptions.find((inv) => inv.value === e.value);
     if (selectedInvoice) {
-      const pasien = pasienOptions.find((p) =>
-        selectedInvoice.label.includes(p.label.split(' - ')[1])
-      );
+      const pasien = pasienOptions.find((p) => selectedInvoice.label.includes(p.label.split(' - ')[1]));
       setForm({
         ...form,
         IDINVOICE: selectedInvoice.value,
         NOINVOICE: selectedInvoice.label.split(' - ')[0],
         NIK: pasien?.value || '',
         NAMAPASIEN: pasien?.label.split(' - ')[1] || '',
-        ASURANSI: pasien?.NAMAASURANSI || '',
-        JUMLAHBAYAR: selectedInvoice.SISA_TAGIHAN || 0, // ← Gunakan sisa tagihan
+        ASURANSI: pasien?.NAMAASURANSI || '',        
+        JUMLAHBAYAR: selectedInvoice.JUMLAHBAYAR || 0,
       });
     } else {
       setForm({

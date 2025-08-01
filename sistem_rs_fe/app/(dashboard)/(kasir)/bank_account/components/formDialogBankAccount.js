@@ -122,10 +122,10 @@ const FormDialogBankAccount = ({
           <Dropdown
             className={inputClass('STATUS')}
             options={[
-              { label: 'AKTIF', value: 'AKTIF' },
-              { label: 'NONAKTIF', value: 'NONAKTIF' },
+              { label: 'Aktif', value: 'AKTIF' },
+              { label: 'Nonaktif', value: 'NONAKTIF' },
             ]}
-            value={form.STATUS}
+            value={form.STATUS ?? null}
             onChange={(e) => setForm({ ...form, STATUS: e.value })}
             placeholder="Pilih Status"
           />
@@ -135,11 +135,12 @@ const FormDialogBankAccount = ({
         </div>
 
         <div>
-          <label>Catatan</label>
+          <label>Keterangan</label>
           <InputText
             className="w-full mt-2"
-            value={form.CATATAN}
-            onChange={(e) => setForm({ ...form, CATATAN: e.target.value })}
+            placeholder="Opsional"
+            value={form.KETERANGAN ?? ''}
+            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
           />
         </div>
 

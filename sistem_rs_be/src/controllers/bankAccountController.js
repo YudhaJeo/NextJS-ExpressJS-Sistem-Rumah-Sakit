@@ -11,7 +11,7 @@ export async function getAllBank(req, res) {
 
 export async function createBank(req, res) {
   try {
-    const { NAMA_BANK, NO_REKENING, ATAS_NAMA, CABANG, KODE_BANK, STATUS, CATATAN } = req.body;
+    const { NAMA_BANK, NO_REKENING, ATAS_NAMA, CABANG, KODE_BANK, STATUS, KETERANGAN } = req.body;
 
     if (!NAMA_BANK || !NO_REKENING || !ATAS_NAMA) {
       return res.status(400).json({ error: 'NAMA_BANK, NO_REKENING, dan ATAS_NAMA wajib diisi' });
@@ -24,7 +24,7 @@ export async function createBank(req, res) {
       CABANG: CABANG ?? '',
       KODE_BANK: KODE_BANK ?? '',
       STATUS: STATUS ?? 'AKTIF',
-      CATATAN: CATATAN ?? '',
+      KETERANGAN: KETERANGAN ?? '',
     };
 
     await BankModel.create(dataToInsert);
@@ -38,7 +38,7 @@ export async function createBank(req, res) {
 export async function updateBank(req, res) {
   try {
     const id = req.params.id;
-    const { NAMA_BANK, NO_REKENING, ATAS_NAMA, CABANG, KODE_BANK, STATUS, CATATAN } = req.body;
+    const { NAMA_BANK, NO_REKENING, ATAS_NAMA, CABANG, KODE_BANK, STATUS, KETERANGAN } = req.body;
 
     const dataToUpdate = {
       NAMA_BANK,
@@ -47,7 +47,7 @@ export async function updateBank(req, res) {
       CABANG: CABANG ?? '',
       KODE_BANK: KODE_BANK ?? '',
       STATUS: STATUS ?? 'AKTIF',
-      CATATAN: CATATAN ?? '',
+      KETERANGAN: KETERANGAN ?? '',
     };
 
     await BankModel.update(id, dataToUpdate);

@@ -75,14 +75,13 @@ const Page = () => {
       const options = res.data.data
         .filter((inv) => inv.STATUS !== 'LUNAS')
         .map((inv) => {
-          const sisaTagihan = inv.TOTALTAGIHAN - (inv.TOTALBAYAR || 0);
           return {
             label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN}`,
             value: inv.IDINVOICE,
             NIK: inv.NIK,
             NAMAPASIEN: inv.NAMAPASIEN,
             NAMAASURANSI: inv.NAMAASURANSI,
-            SISA_TAGIHAN: sisaTagihan,
+            JUMLAHBAYAR: inv.TOTALTAGIHAN,
           };
         });
       setInvoiceOptions(options);

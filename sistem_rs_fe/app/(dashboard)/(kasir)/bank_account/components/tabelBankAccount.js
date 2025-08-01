@@ -26,9 +26,9 @@ const TabelBankAccount = ({ data, loading, onEdit, onDelete }) => {
       />
     );
   };
-
-  const catatanBodyTemplate = (row) => {
-    return row.CATATAN && row.CATATAN.trim() !== '' ? row.CATATAN : '-';
+ 
+  const keteranganBodyTemplate = (row) => {
+    return row.KETERANGAN && row.KETERANGAN.trim() !== '' ? row.KETERANGAN : '-';
   };
 
   return (
@@ -40,13 +40,14 @@ const TabelBankAccount = ({ data, loading, onEdit, onDelete }) => {
       size="small"
       scrollable
     >
-      <Column field="NAMA_BANK" header="Nama Bank" sortable />
+      <Column field="IDBANK" header="No" />
+      <Column field="NAMA_BANK" header="Nama Bank" />
       <Column field="NO_REKENING" header="No Rekening" />
       <Column field="ATAS_NAMA" header="Atas Nama" />
       <Column field="CABANG" header="Cabang" />
       <Column field="KODE_BANK" header="Kode Bank" />
       <Column field="STATUS" header="Status" body={statusBodyTemplate} />
-      <Column field="CATATAN" header="Catatan" body={catatanBodyTemplate}/>
+      <Column field="KETERANGAN" header="Keterangan" body={keteranganBodyTemplate}/>
       <Column
         header="Aksi"
         body={(row) => (
