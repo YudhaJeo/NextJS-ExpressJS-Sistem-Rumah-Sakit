@@ -46,7 +46,7 @@ const Page = () => {
 
   useEffect(() => {
     fetchData();
-    fetchPoli(); // ✅ PANGGIL DI SINI
+    fetchPoli(); 
 
     const token = Cookies.get("token");
     if (!token) {
@@ -64,7 +64,6 @@ const Page = () => {
     }
   };
 
-  // ✅ TAMBAHKAN INI UNTUK AMBIL DAFTAR POLI
   const fetchPoli = async () => {
     try {
       const res = await axios.get(`${API_URL}/poli`);
