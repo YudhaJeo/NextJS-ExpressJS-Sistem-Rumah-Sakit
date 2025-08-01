@@ -31,6 +31,7 @@ export default function FormDialogProfile({
     const newErrors = {}
     if (!form.username.trim()) newErrors.username = 'Nama wajib diisi'
     if (!form.email.trim()) newErrors.email = 'Email wajib diisi'
+    if (!form.nohp?.trim()) newErrors.nohp = 'No telepon wajib diisi'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -141,7 +142,6 @@ export default function FormDialogProfile({
       <FileUpload
         ref={fileUploadRef}
         name="demo[]"
-        url="/api/upload"
         accept="image/*"
         maxFileSize={5000000}
         customUpload
@@ -175,6 +175,17 @@ export default function FormDialogProfile({
             onChange={e => setForm({ ...form, email: e.target.value })}
           />
           {errors.email && <small className="text-red-500">{errors.email}</small>}
+        </div>
+
+        <div className="mt-3">
+          <label className="block">No Telepon</label>
+          <InputText
+            type="nohp"
+            className={errors.nohp ? 'p-invalid w-full mt-2' : 'w-full mt-2'}
+            value={form.nohp}
+            onChange={e => setForm({ ...form, nohp: e.target.value })}
+          />
+          {errors.nohp && <small className="text-red-500">{errors.nohp}</small>}
         </div>
 
         <div className="text-right pt-3">

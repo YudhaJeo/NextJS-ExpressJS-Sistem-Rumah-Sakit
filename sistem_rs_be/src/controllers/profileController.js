@@ -15,6 +15,7 @@ export async function getUser(req, res) {
         username: user.USERNAME,
         email: user.EMAIL,
         role: user.ROLE,
+        nohp: user.NOHP,
         profile: user.FOTOPROFIL ? `http://localhost:4000${user.FOTOPROFIL}` : null
       }
     });
@@ -27,14 +28,14 @@ export async function getUser(req, res) {
 export async function updateUser(req, res) {
   try {
     const { id, sumber } = req.user;
-    const { username, email } = req.body;
+    const { username, email, nohp } = req.body;
     const file = req.file;
 
-    if (!username || !email) {
+    if (!username || !email || !nohp) {
       return res.status(400).json({ error: 'Semua field wajib diisi' });
     }
 
-    const data = { username, email };
+    const data = { username, email, nohp };
 
     if (file) {
       data.fotoprofil = `/uploads/${sumber === 'medis' ? 'tenaga_medis' : 'tenaga_non_medis'}/${file.filename}`;

@@ -13,7 +13,8 @@ export const getById = async (id, sumber) => {
         ...row,
         ID: row.IDTENAGAMEDIS,
         USERNAME: row.NAMALENGKAP,
-        EMAIL: row.EMAIL
+        EMAIL: row.EMAIL,
+        NOHP: row.NOHP
       };
     }
   }
@@ -29,7 +30,8 @@ export const getById = async (id, sumber) => {
         ...row,
         ID: row.IDTENAGANONMEDIS,
         USERNAME: row.NAMALENGKAP,
-        EMAIL: row.EMAIL
+        EMAIL: row.EMAIL,
+        NOHP: row.NOHP
       };
     }
   }
@@ -40,7 +42,8 @@ export const getById = async (id, sumber) => {
 export const updateProfile = async (id, sumber, data) => {
   const baseData = {
     NAMALENGKAP: data.username,
-    EMAIL: data.email
+    EMAIL: data.email,
+    NOHP: data.nohp
   };
 
   if (data.fotoprofil) {
