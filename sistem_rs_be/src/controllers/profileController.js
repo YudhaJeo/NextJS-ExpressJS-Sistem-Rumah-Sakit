@@ -34,17 +34,17 @@ export async function getUser(req, res) {
 export async function updateUser(req, res) {
   try {
     const { id, sumber } = req.user;
-    const { USERNAME, EMAIL, NOHP } = req.body;
+    const { NAMALENGKAP, EMAIL, NOHP } = req.body;
     const file = req.file;
 
-    if (!USERNAME || !EMAIL || !NOHP) {
+    if (!NAMALENGKAP || !EMAIL || !NOHP) {
       return res.status(400).json({ error: 'Semua field wajib diisi' });
     }
 
-    const data = { USERNAME, EMAIL, NOHP };
+    const data = { NAMALENGKAP, EMAIL, NOHP };
 
     if (file) {
-      data.fotoprofil = `/uploads/${sumber === 'medis' ? 'tenaga_medis' : 'tenaga_non_medis'}/${file.filename}`;
+      data.FOTOPROFIL = `/uploads/${sumber === 'medis' ? 'tenaga_medis' : 'tenaga_non_medis'}/${file.filename}`;
     }
 
     await ProfileModel.updateProfile(id, sumber, data);

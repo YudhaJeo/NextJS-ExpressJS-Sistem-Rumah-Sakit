@@ -79,23 +79,25 @@ export default function ProfilePage() {
     const token = Cookies.get('token')
     try {
       const formData = new FormData()
-      formData.append('username', newData.NAMALENGKAP)
-      formData.append('email', newData.EMAIL)
-      formData.append('nohp', newData.NOHP || '')
-      if (newData.file) formData.append('file', newData.file)
-
+      formData.append('NAMALENGKAP', newData.NAMALENGKAP)
+      formData.append('EMAIL', newData.EMAIL)
+      formData.append('NOHP', newData.NOHP || '')
+      if (newData.file) {
+        formData.append('file', newData.file)
+      }
+  
       await axios.put(`${API_URL}/profile`, formData, {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
+        headers: { Authorization: `Bearer ${token}` }
       })
-
+  
       await fetchData(token)
       setDialogVisible(false)
       toastRef.current?.showToast('00', 'Data berhasil diperbarui')
     } catch (err) {
-      console.error(err)
+      console.error('Update profil error:', err.response?.data || err)
       toastRef.current?.showToast('01', 'Gagal memperbarui profile')
     }
-  }
+  }  
 
   return (
     <div className="card">
