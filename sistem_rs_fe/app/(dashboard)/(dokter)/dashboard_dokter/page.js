@@ -31,7 +31,7 @@ const DashboardDokter = () => {
 
         const style = getComputedStyle(document.documentElement);
 
-        const labels = ['Jumlah Dokter', 'Jumlah Poli', 'Jadwal Hari Ini', 'Laporan Hari Ini'];
+        const labels = ['Jumlah Dokter', 'Jumlah Poli', 'Jumlah Pasien Hari Ini', 'Laporan Hari Ini'];
         const values = [
           resData.totalDokter ?? 0,
           resData.totalPoli ?? 0,
@@ -126,9 +126,9 @@ const DashboardDokter = () => {
       border: '#FFCC00',
     },
     {
-      title: 'Jadwal Hari Ini',
+      title: 'Jumlah Pasien Hari Ini',
       value: data?.jadwalHariIni ?? 0,
-      icon: 'pi pi-calendar',
+      icon: 'pi pi-user',
       background: 'rgba(6, 146, 62, 0.2)',
       border: '#06923E',
     },

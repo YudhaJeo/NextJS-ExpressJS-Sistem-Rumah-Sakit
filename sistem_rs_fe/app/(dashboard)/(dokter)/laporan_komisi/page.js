@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import HeaderBar from "@/app/components/headerbar";
 import ToastNotifier from "@/app/components/toastNotifier";
 import TabelLaporanKomisi from "./components/tabelLaporanKomisi";
+import FilterTanggal from "@/app/components/filterTanggal";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -16,6 +17,8 @@ const LaporanKomisiPage = () => {
   const [loading, setLoading] = useState(false);
   const toastRef = useRef(null);
   const router = useRouter();
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -42,6 +45,23 @@ const LaporanKomisiPage = () => {
   }
 };
 
+const resetFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setData(originalData);
+  };
+
+const handleDateFilter = () => {
+    if (!startDate && !endDate) return setData(originalData);
+    const filtered = originalData.filter((item) => {
+      const visitDate = new Date(item.TANGGALKUNJUNGAN);
+      const from = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+      const to = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+      return (!from || visitDate >= from) && (!to || visitDate <= to);
+    });
+    setData(filtered);
+  };
+
 
   const handleSearch = (keyword) => {
     if (!keyword) {
@@ -60,10 +80,20 @@ const LaporanKomisiPage = () => {
       <ToastNotifier ref={toastRef} />
       <h3 className="text-xl font-semibold mb-3">Laporan Komisi Dokter</h3>
 
-      <HeaderBar
-        placeholder="Cari nama dokter/pasien..."
-        onSearch={handleSearch}
-      />
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+              <FilterTanggal
+                startDate={startDate}
+                endDate={endDate}
+                setStartDate={setStartDate}
+                setEndDate={setEndDate}
+                handleDateFilter={handleDateFilter}
+                resetFilter={resetFilter}
+              />
+              <HeaderBar
+                placeholder="Cari nama dokter/pasien..."
+                onSearch={handleSearch}
+              />
+        </div>
 
       <TabelLaporanKomisi data={data} loading={loading} />
     </div>
