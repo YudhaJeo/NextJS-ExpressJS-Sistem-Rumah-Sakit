@@ -5,6 +5,12 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/navigation'
 import { Button } from 'primereact/button'
+import { Card } from 'primereact/card'
+import { Avatar } from 'primereact/avatar'
+import { Divider } from 'primereact/divider'
+import { Tag } from 'primereact/tag'
+import { Panel } from 'primereact/panel'
+import { Skeleton } from 'primereact/skeleton'
 import FormDialogProfile from './components/formDialogProfile'
 import ToastNotifier from '@/app/components/toastNotifier'
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog'
@@ -23,8 +29,14 @@ export default function ProfilePage() {
     STATUSKEPEGAWAIAN: '',
     SPESIALISASI: '',
     UNITKERJA: '',
-    JENISTENAGANONMEDIS: ''
-  })  
+    JENISTENAGANONMEDIS: '',
+    JENISTENAGAMEDIS: '',
+    NOSTR: '',
+    TGLEXPSTR: '',
+    NOSIP: '',
+    TGLEXPSIP: '',
+    DOKUMENPENDUKUNG: ''
+  })    
   
   const [form, setForm] = useState({ 
     NAMALENGKAP: '', 
@@ -54,6 +66,8 @@ export default function ProfilePage() {
       if (!res.data?.data) throw new Error('Data user kosong')
   
       const data = res.data.data
+
+      console.log("[DEBUG]Data:", data)
       setUser(data)
       setForm({ 
         NAMALENGKAP: data.NAMALENGKAP,
@@ -85,7 +99,6 @@ export default function ProfilePage() {
     return gender === "L" ? "Laki-laki" : "Perempuan";
   };
   
-
   const handleLogout = () => {
     confirmDialog({
       message: `Apakah anda yakin ingin logout?`,
@@ -119,7 +132,6 @@ export default function ProfilePage() {
         formData.append('file', newData.file)
       }
 
-
       await axios.put(`${API_URL}/profile`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -138,104 +150,248 @@ export default function ProfilePage() {
     }
   }
 
+  const ProfileField = ({ label, value, icon }) => (
+    <div className="mb-4">
+      <div className="flex align-items-center mb-2">
+        {icon && <i className={`${icon} text-500 mr-2`}></i>}
+        <span className="text-sm font-medium text-600">{label}</span>
+      </div>
+      <div className="text-900 font-semibold">
+        {value || '-'}
+      </div>
+    </div>
+  )
+
+  const getRoleTagSeverity = (role) => {
+    switch (role?.toLowerCase()) {
+      case 'admin': return 'danger'
+      case 'dokter': return 'success'
+      case 'perawat': return 'info'
+      default: return 'secondary'
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="p-4">
+        <Card className="shadow-2">
+          <div className="grid">
+            <div className="col-12 md:col-4">
+              <div className="flex flex-column align-items-center">
+                <Skeleton shape="circle" size="8rem" className="mb-3"></Skeleton>
+                <Skeleton width="10rem" height="2rem" className="mb-2"></Skeleton>
+                <Skeleton width="8rem" height="1rem"></Skeleton>
+              </div>
+            </div>
+            <div className="col-12 md:col-8">
+              <Skeleton width="100%" height="2rem" className="mb-3"></Skeleton>
+              <Skeleton width="100%" height="1.5rem" className="mb-2"></Skeleton>
+              <Skeleton width="80%" height="1.5rem" className="mb-2"></Skeleton>
+              <Skeleton width="60%" height="1.5rem"></Skeleton>
+            </div>
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
   return (
-    <div className='card'>
+    <div className="p-4">
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
 
-      <div className="">
-        <h3 className="text-xl font-semibold">Profil Pengguna</h3>
+      {/* Header */}
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold text-900 m-0">Profil Pengguna</h2>
+        <p className="text-600 mt-1">Kelola informasi profil dan pengaturan akun Anda</p>
       </div>
 
-      <div className='flex gap-5'>
-        {/* Kiri(EDITABLE) */}
-        <div className="card w-1/2 justify-center mt-5">
-          <div className="flex flex-col items-center space-y-4 mb-4">
-            <div className="relative">
-              {user.FOTOPROFIL ? (
-                <img
-                  src={user.FOTOPROFIL}
-                  alt="Preview"
-                  style={{ maxWidth: '120px', maxHeight: '120px', objectFit: 'cover', borderRadius: '50%' }}
-                  className="w-24 h-24 rounded-full object-cover border shadow"
+      {/* Main Profile Card */}
+      <Card className="shadow-2 mb-4">
+        <div className="grid">
+          {/* Left Section - Editable Info */}
+          <div className="col-12 md:col-4">
+            <div className="flex flex-column align-items-center text-center">
+              {/* Avatar */}
+              <div className="mb-4">
+                {user.FOTOPROFIL ? (
+                  <Avatar 
+                    image={user.FOTOPROFIL} 
+                    size="xlarge" 
+                    shape="circle"
+                    className="shadow-3"
+                  />
+                ) : (
+                  <Avatar 
+                    icon="pi pi-user" 
+                    size="xlarge" 
+                    shape="circle"
+                    className="bg-gray-100 text-gray-600 shadow-3"
+                  />
+                )}
+              </div>
+              
+              {/* Name and Role */}
+              <h3 className="text-xl font-bold text-900 mb-2">{user.NAMALENGKAP || 'Nama tidak tersedia'}</h3>
+              {user.ROLE && (
+                <Tag 
+                  value={user.ROLE} 
+                  severity={getRoleTagSeverity(user.ROLE)}
+                  className="mb-3"
                 />
-              ) : (
-                <div className="w-32 h-32 flex items-center justify-center rounded-full bg-gray-100 border border-gray-300 shadow-inner">
-                  <i className="pi pi-user text-4xl text-gray-500"></i>
-                </div>
               )}
+              
+              {/* Contact Info */}
+              <div className="w-full text-left">
+                <ProfileField 
+                  label="Email" 
+                  value={user.EMAIL} 
+                  icon="pi pi-envelope"
+                />
+                <ProfileField 
+                  label="No. Telepon" 
+                  value={user.NOHP} 
+                  icon="pi pi-phone"
+                />
+              </div>
             </div>
           </div>
 
-          <div>
-            <span className="text-gray-600 font-medium">Nama Pengguna:</span>
-            <div className="card text-lg font-semibold mt-2">{user.NAMALENGKAP}</div>
-          </div>
+          {/* Right Section - Personal Info */}
+          <div className="col-12 md:col-8">
+            <Panel header="Informasi Personal" className="mb-4">
+              <div className="grid">
+                <div className="col-12 md:col-6">
+                  <ProfileField 
+                    label="Tempat Lahir" 
+                    value={user.TEMPATLAHIR} 
+                    icon="pi pi-map-marker"
+                  />
+                </div>
+                <div className="col-12 md:col-6">
+                  <ProfileField 
+                    label="Tanggal Lahir" 
+                    value={formatTanggal(user.TANGGALLAHIR)} 
+                    icon="pi pi-calendar"
+                  />
+                </div>
+                <div className="col-12 md:col-6">
+                  <ProfileField 
+                    label="Jenis Kelamin" 
+                    value={formatGender(user.JENISKELAMIN)} 
+                    icon="pi pi-user"
+                  />
+                </div>
+                <div className="col-12 md:col-6">
+                  <ProfileField 
+                    label="Status Kepegawaian" 
+                    value={user.STATUSKEPEGAWAIAN} 
+                    icon="pi pi-briefcase"
+                  />
+                </div>
+              </div>
+            </Panel>
 
-          <div className="my-4">
-            <span className="text-gray-600 font-medium">Email:</span>
-            <div className="card text-lg font-semibold mt-2">{user.EMAIL}</div>
-          </div>
+            <Panel header="Informasi Pekerjaan" className="mb-4">
+              <div className="grid">
+                <div className="col-12 md:col-6">
+                  <ProfileField 
+                    label="Unit Kerja" 
+                    value={user.UNITKERJA} 
+                    icon="pi pi-building"
+                  />
+                </div>
+                <div className="col-12 md:col-6">
+                  <ProfileField 
+                    label="Spesialisasi" 
+                    value={user.SPESIALISASI} 
+                    icon="pi pi-star"
+                  />
+                </div>
+                <div className="col-12">
+                  <ProfileField 
+                    label="Jenis Tenaga" 
+                    value={user.JENISTENAGAMEDIS || user.JENISTENAGANONMEDIS} 
+                    icon="pi pi-users"
+                  />
+                </div>
+              </div>
+            </Panel>
 
-          <div className="my-4">
-            <span className="text-gray-600 font-medium">No Telepon:</span>
-            <div className="card text-lg font-semibold mt-2">{user.NOHP}</div>
-          </div>
-
-          <div>
-            <span className="text-gray-600 font-medium">Role:</span>
-            <div className="card text-lg font-semibold mt-2 uppercase">{user.ROLE}</div>
+            {/* Medical Credentials - Only show if user has STR */}
+            {user.NOSTR && (
+              <Panel header="Kredensial Medis" className="mb-4">
+                <div className="grid">
+                  <div className="col-12 md:col-6">
+                    <ProfileField 
+                      label="No. STR" 
+                      value={user.NOSTR} 
+                      icon="pi pi-id-card"
+                    />
+                  </div>
+                  <div className="col-12 md:col-6">
+                    <ProfileField 
+                      label="Tanggal Exp STR" 
+                      value={formatTanggal(user.TGLEXPSTR)} 
+                      icon="pi pi-calendar-times"
+                    />
+                  </div>
+                  <div className="col-12 md:col-6">
+                    <ProfileField 
+                      label="No. SIP" 
+                      value={user.NOSIP} 
+                      icon="pi pi-id-card"
+                    />
+                  </div>
+                  <div className="col-12 md:col-6">
+                    <ProfileField 
+                      label="Tanggal Exp SIP" 
+                      value={formatTanggal(user.TGLEXPSIP)} 
+                      icon="pi pi-calendar-times"
+                    />
+                  </div>
+                  <div className="col-12">
+                    <div className="mb-4">
+                      <div className="flex align-items-center mb-2">
+                        <i className="pi pi-file text-500 mr-2"></i>
+                        <span className="text-sm font-medium text-600">Dokumen Pendukung</span>
+                      </div>
+                      <div className="text-900 font-semibold">
+                        {user.DOKUMENPENDUKUNG ? (
+                          <Button 
+                            label="Lihat Dokumen" 
+                            icon="pi pi-external-link" 
+                            link
+                            onClick={() => window.open(`http://localhost:4000${user.DOKUMENPENDUKUNG}`, '_blank')}
+                          />
+                        ) : '-'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Panel>
+            )}
           </div>
         </div>
 
-        {/* Kanan (TIDAK EDITABLE) */}
-        <div className='card w-1/2 justify-center mt-5'>
-          <div>
-            <span className="text-gray-600 font-medium">Tempat Lahir:</span>
-            <div className="card text-lg font-semibold mt-2">{user.TEMPATLAHIR}</div>
-          </div>
+        <Divider />
 
-          <div className="my-4">
-            <span className="text-gray-600 font-medium">Tanggal Lahir:</span>
-            <div className="card text-lg font-semibold mt-2">{formatTanggal(user.TANGGALLAHIR)}</div>
-          </div>
-
-          <div className="my-4">
-            <span className="text-gray-600 font-medium">Jenis Kelamin:</span>
-            <div className="card text-lg font-semibold mt-2">{formatGender(user.JENISKELAMIN)}</div>
-          </div>
-
-          <div className="my-4">
-            <span className="text-gray-600 font-medium">Status Kepegawaian:</span>
-            <div className="card text-lg font-semibold mt-2">{user.STATUSKEPEGAWAIAN}</div>
-          </div>
-
-          <div className="my-4">
-            <span className="text-gray-600 font-medium">Spesialisasi:</span>
-            <div className="card text-lg font-semibold mt-2">{user.SPESIALISASI}</div>
-          </div>
-
-          <div className="my-4">
-            <span className="text-gray-600 font-medium">Unit Kerja:</span>
-            <div className="card text-lg font-semibold mt-2">{user.UNITKERJA}</div>
-          </div>
-
-          <div>
-            <span className="text-gray-600 font-medium">Jenis Tenaga:</span>
-            <div className="card text-lg font-semibold mt-2 uppercase">
-              {user.JENISTENAGANONMEDIS}
-            </div>
-          </div>
+        {/* Action Buttons */}
+        <div className="flex justify-content-end gap-3 pt-3">
+          <Button 
+            label="Edit Profil" 
+            icon="pi pi-pencil" 
+            onClick={() => setDialogVisible(true)}
+            className="p-button-outlined"
+          />
+          <Button 
+            label="Logout" 
+            icon="pi pi-sign-out" 
+            severity="danger" 
+            onClick={handleLogout}
+          />
         </div>
-      </div>
-
-
-      <div className="card">
-        <div className="flex gap-3 justify-end">
-          <Button label="Edit Profil" icon="pi pi-pencil" onClick={() => setDialogVisible(true)} />
-          <Button label="Logout" icon="pi pi-sign-out" severity="danger" onClick={handleLogout} />
-        </div>
-      </div>
+      </Card>
 
       <FormDialogProfile
         visible={dialogVisible}
