@@ -1,10 +1,11 @@
-import * as UserModel from '../models/userModel.js';
+// sistem_rs_be/src/controllers/profileController.js
+import * as ProfileModel from '../models/profileModel.js';
 
 export async function getUser(req, res) {
   try {
-    const id = req.user.id;
-    const sumber = req.user.sumber; 
-    const user = await UserModel.getById(id, sumber); 
+    const { id, sumber } = req.user;
+    const user = await ProfileModel.getById(id, sumber);
+
     if (!user) return res.status(404).json({ error: 'User tidak ditemukan' });
 
     delete user.PASSWORD;
@@ -14,6 +15,7 @@ export async function getUser(req, res) {
         username: user.USERNAME,
         email: user.EMAIL,
         role: user.ROLE,
+        nohp: user.NOHP,
         profile: user.FOTOPROFIL ? `http://localhost:4000${user.FOTOPROFIL}` : null
       }
     });
@@ -25,21 +27,21 @@ export async function getUser(req, res) {
 
 export async function updateUser(req, res) {
   try {
-    const id = req.user.id;
-    const sumber = req.user.sumber;
-    const { username, email } = req.body;
+    const { id, sumber } = req.user;
+    const { username, email, nohp } = req.body;
     const file = req.file;
 
-    if (!username || !email) {
+    if (!username || !email || !nohp) {
       return res.status(400).json({ error: 'Semua field wajib diisi' });
     }
 
-    const data = { username, email };
+    const data = { username, email, nohp };
+
     if (file) {
       data.fotoprofil = `/uploads/${sumber === 'medis' ? 'tenaga_medis' : 'tenaga_non_medis'}/${file.filename}`;
     }
 
-    await UserModel.updateProfile(id, sumber, data);
+    await ProfileModel.updateProfile(id, sumber, data);
     res.json({ message: 'Profil berhasil diperbarui' });
   } catch (err) {
     console.error(err);

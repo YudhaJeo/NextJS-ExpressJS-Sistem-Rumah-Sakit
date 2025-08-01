@@ -11,15 +11,17 @@ const statusOptions = [
   { label: 'Sudah Dibayar', value: 'Sudah Dibayar' },
 ];
 
-const formatTanggal = (dateStr) => {
-  if (!dateStr) return '';
-  const date = new Date(dateStr);
+const formatTanggal = (date) => {
+  if (!date) return "-"; // jika date null/undefined
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "-"; // jika invalid date
   return new Intl.DateTimeFormat("id-ID", {
-    day: "2-digit",
+    day: "numeric",
     month: "long",
     year: "numeric"
-  }).format(date);
+  }).format(d);
 };
+
 
 const FormDialogKomisi = ({
   visible,

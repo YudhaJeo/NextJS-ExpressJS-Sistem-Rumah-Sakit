@@ -23,14 +23,14 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [errors, setErrors] = useState({});
-  const [pasienOptions, setPasienOptions] = useState([]);
+  const [pengobatanOptions, setPengobatanOptions] = useState([]);
   const [bedOptions, setBedOptions] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
   const defaultForm = {
     IDRAWATINAP: '',
-    IDPASIEN: '',
+    IDPENGOBATAN: '',
     IDBED: '',
     TANGGALMASUK: '',
     TANGGALKELUAR: '',
@@ -47,7 +47,7 @@ const Page = () => {
       return;
     }
     fetchData();
-    fetchPasien();
+    fetchPengobatan();
     fetchBed();
   }, []);
 
@@ -63,20 +63,22 @@ const Page = () => {
     }
   };
 
-  const fetchPasien = async () => {
+  const fetchPengobatan = async () => {
     try {
-      const res = await axios.get(`${API_URL}/pasien`);
-      const options = res.data.data.map((pasien) => ({
-        label: `${pasien.NAMALENGKAP} - ${pasien.NIK}`,
-        value: pasien.IDPASIEN,
-        NAMALENGKAP: pasien.NAMALENGKAP,
+      const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
+      const options = res.data.data
+        .filter((item) => item.STATUSRAWAT === 'Rawat Inap')  
+        .map((item) => ({
+          label: `${item.NAMALENGKAP} - ${item.POLI}`,
+          value: item.IDPENGOBATAN,
       }));
-      setPasienOptions(options);
+      setPengobatanOptions(options);
     } catch (err) {
-      console.error('Gagal ambil data pasien:', err);
+      console.error('Gagal ambil data riwayat pengobatan:', err);
     }
   };
 
+  
   const fetchBed = async () => {
     try {
       const res = await axios.get(`${API_URL}/bed`);
@@ -96,13 +98,12 @@ const Page = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!form.IDPASIEN) newErrors.IDPASIEN = 'Pasien harus dipilih';
+    if (!form.IDPENGOBATAN) newErrors.IDPENGOBATAN = 'Riwayat pengobatan harus dipilih';
     if (!form.IDBED) newErrors.IDBED = 'Bed harus dipilih';
     if (!form.TANGGALMASUK) newErrors.TANGGALMASUK = 'Tanggal masuk wajib';
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+  };  
 
   const resetForm = () => {
     setForm(defaultForm)
@@ -158,12 +159,12 @@ const Page = () => {
   const handleEdit = (row) => {
     setForm({
       IDRAWATINAP: row.IDRAWATINAP,
-      IDPASIEN: row.IDPASIEN,
+      IDPENGOBATAN: row.IDPENGOBATAN,
       IDBED: row.IDBED,
       TANGGALMASUK: row.TANGGALMASUK,
       TANGGALKELUAR: row.TANGGALKELUAR || '',
       CATATAN: row.CATATAN || ''
-    });
+    });    
     setDialogVisible(true);
   };
   
@@ -262,7 +263,7 @@ const Page = () => {
         form={form}
         setForm={setForm}
         errors={errors}
-        pasienOptions={pasienOptions}
+        pengobatanOptions={pengobatanOptions}
         bedOptions={bedOptions}
       />
     </div>

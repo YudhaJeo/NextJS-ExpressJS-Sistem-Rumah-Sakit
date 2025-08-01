@@ -20,32 +20,21 @@ export const getTotalPoli = async () => {
 
 export const getJadwalHariIni = async () => {
   try {
-    const today = new Date().toISOString().slice(0, 10);
-    const hariSekarang = new Date().toLocaleDateString('id-ID', { weekday: 'long' });
-    const hariUpper = hariSekarang.charAt(0).toUpperCase() + hariSekarang.slice(1); // Kapitalisasi awal huruf
-
-    return await db('jadwal_dokter')
-    .where('HARI', hariUpper)
-    .count('IDJADWAL as total');
-
+    return await db('pasien').count('IDPASIEN as total').first();
   } catch (error) {
     console.error('Error getJadwalHariIni:', error);
     throw error;
   }
 };
 
-// export const getLaporanHariIni = async () => {
-//   try {
-//     const today = new Date().toISOString().slice(0, 10);
-//     return await db('laporan_dokter')
-//       .where('TANGGAL', today)
-//       .count('IDLAPORAN as total')
-//       .first();
-//   } catch (error) {
-//     console.error('Error getLaporanHariIni:', error);
-//     throw error;
-//   }
-// };
+ export const getLaporanHariIni = async () => {
+   try {
+    return await db('komisi_dokter').count('IDKOMISI as total').first();
+  } catch (error) {
+    console.error('Error getLaporanHariIni:', error);
+    throw error;
+  }
+ };
 
 // export const getStatistikBulanan = async () => {
 //   try {

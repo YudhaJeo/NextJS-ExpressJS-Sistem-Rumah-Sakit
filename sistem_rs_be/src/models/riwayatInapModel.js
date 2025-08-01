@@ -3,20 +3,24 @@ import db from '../core/config/knex.js';
 export async function getAllRiwayatInap() {
   return await db('riwayat_rawat_inap')
     .join('rawat_inap', 'riwayat_rawat_inap.IDRAWATINAP', 'rawat_inap.IDRAWATINAP')
-    .join('pasien', 'rawat_inap.IDPASIEN', 'pasien.IDPASIEN')
+    .join('riwayat_pengobatan', 'rawat_inap.IDPENGOBATAN', 'riwayat_pengobatan.IDPENGOBATAN')
+    .join('pendaftaran', 'riwayat_pengobatan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+    .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
     .select(
       'riwayat_rawat_inap.*',
       'pasien.NAMALENGKAP',
       'bed.NOMORBED',
-    )    
+    )
     .orderBy('riwayat_rawat_inap.IDRIWAYATINAP', 'desc');
 }
 
 export async function getRiwayatInapById(id) {
   return await db('riwayat_rawat_inap')
     .join('rawat_inap', 'riwayat_rawat_inap.IDRAWATINAP', 'rawat_inap.IDRAWATINAP')
-    .join('pasien', 'rawat_inap.IDPASIEN', 'pasien.IDPASIEN')
+    .join('riwayat_pengobatan', 'rawat_inap.IDPENGOBATAN', 'riwayat_pengobatan.IDPENGOBATAN')
+    .join('pendaftaran', 'riwayat_pengobatan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+    .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
     .select(
       'riwayat_rawat_inap.*',
@@ -27,6 +31,7 @@ export async function getRiwayatInapById(id) {
     .where('riwayat_rawat_inap.IDRIWAYATINAP', id)
     .first();
 }
+
 
 export async function getRiwayatObatByIdRiwayat(id) {
   return await db('riwayat_obat_inap')
