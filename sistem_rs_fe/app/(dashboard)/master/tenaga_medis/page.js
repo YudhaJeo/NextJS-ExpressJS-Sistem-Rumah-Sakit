@@ -17,7 +17,7 @@ const Page = () => {
   const [originalData, setOriginalData] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [unitKerjaType, setUnitKerjaType] = useState("Poli");
-  const [listPoli, setListPoli] = useState([]); // ✅ TAMBAH INI
+  const [listPoli, setListPoli] = useState([]);
   const [errors, setErrors] = useState({});
   const toastRef = useRef(null);
   const router = useRouter();
@@ -46,7 +46,7 @@ const Page = () => {
 
   useEffect(() => {
     fetchData();
-    fetchPoli(); // ✅ PANGGIL DI SINI
+    fetchPoli(); 
 
     const token = Cookies.get("token");
     if (!token) {
@@ -64,7 +64,6 @@ const Page = () => {
     }
   };
 
-  // ✅ TAMBAHKAN INI UNTUK AMBIL DAFTAR POLI
   const fetchPoli = async () => {
     try {
       const res = await axios.get(`${API_URL}/poli`);

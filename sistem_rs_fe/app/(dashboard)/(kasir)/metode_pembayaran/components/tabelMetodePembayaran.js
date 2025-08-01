@@ -27,8 +27,8 @@ const TabelMetodePembayaran = ({ data, loading, onEdit, onDelete }) => {
     );
   };
 
-  const catatanBodyTemplate = (row) => {
-    return row.CATATAN && row.CATATAN.trim() !== '' ? row.CATATAN : '-';
+  const keteranganBodyTemplate = (row) => {
+    return row.KETERANGAN && row.KETERANGAN.trim() !== '' ? row.KETERANGAN : '-';
   };
 
   return (
@@ -40,15 +40,15 @@ const TabelMetodePembayaran = ({ data, loading, onEdit, onDelete }) => {
       size="small"
       scrollable
     >
-      <Column field="NAMA" header="Nama Metode" sortable />
+      <Column field="IDMETODE" header="No" />
+      <Column field="NAMA" header="Nama Metode" />
       <Column
         field="FEE_PERSEN"
         header="Fee (%)"
         body={(row) => `${row.FEE_PERSEN || 0}%`}
-        sortable
       />
       <Column field="STATUS" header="Status" body={statusBodyTemplate} />
-      <Column field="CATATAN" header="Catatan" body={catatanBodyTemplate} />
+      <Column field="KETERANGAN" header="Keterangan" body={keteranganBodyTemplate} />
       <Column
         header="Aksi"
         body={(row) => (

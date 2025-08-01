@@ -94,11 +94,11 @@ const FormDialogMetodePembayaran = ({
         </div>
 
         <div>
-          <label>Catatan</label>
+          <label>Keterangan</label>
           <InputText
             className="w-full mt-2"
-            value={form.CATATAN ?? ''}
-            onChange={(e) => setForm({ ...form, CATATAN: e.target.value })}
+            value={form.KETERANGAN ?? ''}
+            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
           />
         </div>
 

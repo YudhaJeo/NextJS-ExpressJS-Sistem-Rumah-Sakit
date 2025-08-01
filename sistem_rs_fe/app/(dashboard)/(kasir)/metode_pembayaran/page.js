@@ -22,7 +22,7 @@ const Page = () => {
     IDMETODE: null,
     NAMA: '',
     STATUS: 'AKTIF',
-    CATATAN: '',
+    KETERANGAN: '',
     FEE_PERSEN: 0,
   });
 
@@ -70,7 +70,7 @@ const Page = () => {
     const payload = {
       NAMA: form.NAMA,
       STATUS: form.STATUS,
-      CATATAN: form.CATATAN,
+      KETERANGAN: form.KETERANGAN,
       FEE_PERSEN: form.FEE_PERSEN,
     };
 
@@ -102,7 +102,7 @@ const Page = () => {
       IDMETODE: row.IDMETODE ?? null,
       NAMA: row.NAMA ?? '',
       STATUS: row.STATUS ?? 'AKTIF',
-      CATATAN: row.CATATAN ?? '',
+      KETERANGAN: row.KETERANGAN ?? '',
       FEE_PERSEN: row.FEE_PERSEN ?? 0,
     });
     setDialogVisible(true);
@@ -134,7 +134,7 @@ const Page = () => {
       NAMA: '',
       TIPE: '',
       STATUS: 'AKTIF',
-      CATATAN: '',
+      KETERANGAN: '',
       FEE_PERSEN: 0,
       IDBANK: null,
     });

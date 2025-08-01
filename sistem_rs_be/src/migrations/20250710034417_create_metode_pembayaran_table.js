@@ -8,7 +8,7 @@ export const up = function (knex) {
     table.string('NAMA', 50).notNullable();
     table.decimal('FEE_PERSEN', 5, 2).defaultTo(0); 
     table.enu('STATUS', ['AKTIF', 'NONAKTIF']).defaultTo('AKTIF').notNullable(); 
-    table.text('CATATAN');
+    table.text('KETERANGAN');
   });
 };
 

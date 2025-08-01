@@ -24,8 +24,8 @@ const Page = () => {
     ATAS_NAMA: '',
     CABANG: '',
     KODE_BANK: '',
-    STATUS: 'AKTIF',
-    CATATAN: '',
+    STATUS: null,
+    KETERANGAN: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -125,8 +125,8 @@ const Page = () => {
       ATAS_NAMA: '',
       CABANG: '',
       KODE_BANK: '',
-      STATUS: 'AKTIF',
-      CATATAN: '',
+      STATUS: null,
+      KETERANGAN: '',
     });
     setErrors({});
   };
