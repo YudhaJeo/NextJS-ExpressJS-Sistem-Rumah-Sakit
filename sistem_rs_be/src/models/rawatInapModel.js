@@ -3,7 +3,9 @@ import db from '../core/config/knex.js';
 
 export const getAll = () =>
   db('rawat_inap')
-    .join('pasien', 'rawat_inap.IDPASIEN', 'pasien.IDPASIEN')
+    .join('riwayat_pengobatan', 'rawat_inap.IDPENGOBATAN', 'riwayat_pengobatan.IDPENGOBATAN')
+    .join('pendaftaran', 'riwayat_pengobatan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+    .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
     .join('kamar', 'bed.IDKAMAR', 'kamar.IDKAMAR')
     .join('bangsal', 'kamar.IDBANGSAL', 'bangsal.IDBANGSAL')
@@ -15,6 +17,7 @@ export const getAll = () =>
       'jenis_bangsal.HARGAPERHARI'
     );
 
+
 export const getById = (id) =>
   db('rawat_inap')
     .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
@@ -23,7 +26,7 @@ export const getById = (id) =>
     .first();
 
 export const create = async (data) => {
-  const { IDPASIEN, IDBED, TANGGALMASUK, TANGGALKELUAR, CATATAN } = data;
+  const { IDPENGOBATAN, IDBED, TANGGALMASUK, TANGGALKELUAR, CATATAN } = data;
 
   const harga = await db('bed')
     .join('kamar', 'bed.IDKAMAR', 'kamar.IDKAMAR')
@@ -49,7 +52,7 @@ export const create = async (data) => {
   }
 
   await db('rawat_inap').insert({
-    IDPASIEN,
+    IDPENGOBATAN,
     IDBED,
     TANGGALMASUK,
     TANGGALKELUAR,

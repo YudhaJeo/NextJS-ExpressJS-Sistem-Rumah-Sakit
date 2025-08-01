@@ -28,7 +28,14 @@ const getById = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const inserted = await RawatInap.create(req.body);
+    const { IDPENGOBATAN, IDBED, TANGGALMASUK, TANGGALKELUAR, CATATAN } = req.body;
+    const inserted = await RawatInap.create({
+    IDPENGOBATAN,
+    IDBED,
+    TANGGALMASUK,
+    TANGGALKELUAR,
+    CATATAN
+    });
     res.status(200).json({ message: 'Data rawat inap berhasil ditambahkan', data: inserted });
   } catch (err) {
     console.error('Error create:', err);
