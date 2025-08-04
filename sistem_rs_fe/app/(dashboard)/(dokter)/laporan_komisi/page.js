@@ -73,7 +73,7 @@ const LaporanKomisiPage = () => {
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
-      <h3 className="text-xl font-semibold mb-3">Laporan Komisi Dokter</h3>
+      <h3 className="text-xl font-semibold mb-3">Laporan dan Transaksi</h3>
 
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
         <FilterTanggal

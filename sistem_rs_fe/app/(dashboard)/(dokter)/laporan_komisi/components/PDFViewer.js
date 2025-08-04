@@ -112,6 +112,7 @@ function PDFViewer({ pdfUrl, paperSize, fileName }) {
                 setPageWidth(paperWidthInMm * mmToPixel);
                 setPageHeight(paperHeightInMm * mmToPixel);
             } catch (error) {
+            }
             };
 
             if (pdfUrl) {

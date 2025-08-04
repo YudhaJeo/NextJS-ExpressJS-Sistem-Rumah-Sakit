@@ -110,7 +110,7 @@ export default function AdjustPrintMarginLaporan({
 
     services.push([
       1,
-      `Biaya Komisi Dokter (${detail.NILAIKOMISI})`,
+      `Biaya Komisi Dokter (${detail.NAMAPASIEN})`,
       '-',
       1,
       'Komisi',
