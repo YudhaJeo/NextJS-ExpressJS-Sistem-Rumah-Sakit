@@ -2,8 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import HeaderBar from "@/app/components/headerbar";
@@ -18,7 +16,6 @@ const Page = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [errors, setErrors] = useState({});
   const toastRef = useRef(null);
-  const router = useRouter();
 
   const [form, setForm] = useState({
     IDTENAGANONMEDIS: 0,
@@ -59,6 +56,20 @@ const Page = () => {
   const handleSubmit = async () => {
     try {
       const formData = new FormData();
+
+      if (form.IDTENAGANONMEDIS) {
+        await axios.put(
+          `${API_URL}/tenaga_non_medis/${form.IDTENAGANONMEDIS}`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+      } else {
+        await axios.post(
+          `${API_URL}/tenaga_non_medis`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+      }      
 
       for (const key in form) {
         if (key === "FOTOPROFIL" || key === "DOKUMENPENDUKUNG") continue;

@@ -237,8 +237,21 @@ const TabelTenagaNonMedis = ({ data, loading, onEdit, onDelete }) => {
             </div>
             <div>
               <b>Dokumen Pendukung:</b>{" "}
-              {selectedData.DOKUMENPENDUKUNG || "-"}
+              {selectedData.DOKUMENPENDUKUNG ? (
+                <Button
+                  label="Lihat Dokumen"
+                  icon="pi pi-external-link"
+                  link
+                  onClick={() =>
+                    window.open(`${process.env.NEXT_PUBLIC_URL}${selectedData.DOKUMENPENDUKUNG}`, "_blank")
+                  }
+                />
+              ) : (
+                "-"
+              )}
             </div>
+
+
           </div>
         )}
       </Dialog>
