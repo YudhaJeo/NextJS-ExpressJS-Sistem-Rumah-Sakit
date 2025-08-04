@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import axios from 'axios';
-import Cookies from 'js-cookie';
+
+// PrimeReact Components
 import { Card } from 'primereact/card';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -21,24 +22,21 @@ export default function DetailRiwayatInapPage() {
   const [detail, setDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [services, setServices] = useState([]);
-  const router = useRouter();
   const { id } = useParams();
   const toastRef = useRef(null);
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) return router.push('/login');
-    fetchDetail(token);
+    fetchDetail();
   }, [id]);
 
-  const fetchDetail = async (token) => {
+  const fetchDetail = async () => {
     try {
-      const res = await axios.get(`${API_URL}/komisi_dokter/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(`${API_URL}/komisi_dokter/${id}`);
       setDetail(res.data);
 
+
       const servicesData = [];
+
 
       servicesData.push({
         id: 1,
@@ -75,20 +73,15 @@ export default function DetailRiwayatInapPage() {
       currency: 'IDR',
     }).format(value || 0);
 
-  // Column templates
-  const noBodyTemplate = (rowData, { rowIndex }) => {
-    return rowIndex + 1;
-  };
+  const noBodyTemplate = (rowData, { rowIndex }) => rowIndex + 1;
 
-  const layananBodyTemplate = (rowData) => {
-    return (
-      <div>
-        <div className="font-medium">{rowData.layanan}</div>
-        {rowData.satuan && <div className="text-sm text-gray-500">{rowData.satuan}</div>}
-        {rowData.kategori && <div className="text-sm text-gray-500">{rowData.kategori}</div>}
-      </div>
-    );
-  };
+  const layananBodyTemplate = (rowData) => (
+    <div>
+      <div className="font-medium">{rowData.layanan}</div>
+      {rowData.satuan && <div className="text-sm text-gray-500">{rowData.satuan}</div>}
+      {rowData.kategori && <div className="text-sm text-gray-500">{rowData.kategori}</div>}
+    </div>
+  );
 
   const jenisBodyTemplate = (rowData) => {
     let severity = 'success';
@@ -98,17 +91,17 @@ export default function DetailRiwayatInapPage() {
     return <Tag value={rowData.jenis} severity={severity} />;
   };
 
-  const hargaBodyTemplate = (rowData) => {
-    return <div className="text-right font-medium">{formatRupiah(rowData.hargaSatuan)}</div>;
-  };
+  const hargaBodyTemplate = (rowData) => (
+    <div className="text-right font-medium">{formatRupiah(rowData.hargaSatuan)}</div>
+  );
 
-  const totalBodyTemplate = (rowData) => {
-    return <div className="text-right font-medium">{formatRupiah(rowData.total)}</div>;
-  };
+  const totalBodyTemplate = (rowData) => (
+    <div className="text-right font-medium">{formatRupiah(rowData.total)}</div>
+  );
 
-  const qtyBodyTemplate = (rowData) => {
-    return <div className="text-center">{rowData.qty}</div>;
-  };
+  const qtyBodyTemplate = (rowData) => (
+    <div className="text-center">{rowData.qty}</div>
+  );
 
   if (loading) {
     return (
@@ -137,9 +130,11 @@ export default function DetailRiwayatInapPage() {
     <div className="card">
       <ToastNotifier ref={toastRef} />
 
+
       <div className="max-w-6xl mx-auto">
         <Card className="shadow-3">
           {headerTemplate}
+
 
           <div className="p-4">
             <div className="grid">
@@ -177,6 +172,10 @@ export default function DetailRiwayatInapPage() {
 
             <div className="mb-4">
               <h3 className="text-xl font-semibold text-900 mb-3">Rincian Komisi</h3>
+
+              <DataTable
+                value={services}
+                stripedRows
 
               <DataTable
                 value={services}
@@ -235,7 +234,9 @@ export default function DetailRiwayatInapPage() {
                       <span className="font-medium">{formatRupiah(detail.NILAIKOMISI)}</span>
                     </div>
 
+
                     <Divider />
+
 
                     <div className="flex justify-content-between">
                       <span className="text-lg font-semibold text-900">Total Biaya:</span>

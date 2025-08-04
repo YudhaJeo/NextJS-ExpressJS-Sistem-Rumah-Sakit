@@ -19,13 +19,6 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) {
-      router.push('/login');
-      return;
-
-    }
-
     fetchData();
   }, []);
 

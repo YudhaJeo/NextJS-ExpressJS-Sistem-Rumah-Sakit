@@ -40,10 +40,6 @@ const Page = () => {
 
   useEffect(() => {
     fetchData();
-    const token = Cookies.get("token");
-    if (!token) {
-      router.push("/login");
-    }
   }, []);
 
   const fetchData = async () => {

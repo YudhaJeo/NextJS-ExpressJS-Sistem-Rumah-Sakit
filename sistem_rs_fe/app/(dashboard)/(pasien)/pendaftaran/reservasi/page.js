@@ -41,15 +41,8 @@ const ReservasiPasienPage = () => {
 
 
   const toastRef = useRef(null);
-  const router = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
     fetchReservasi();
     fetchPasien();
     fetchPoli();

@@ -19,9 +19,6 @@ const Dashboard = () => {
   const [barOptions, setBarOptions] = useState({});
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) return router.push('/login');
-
     axios.get(`${API_URL}/dashboard`)
       .then(res => {
         setData(res.data);

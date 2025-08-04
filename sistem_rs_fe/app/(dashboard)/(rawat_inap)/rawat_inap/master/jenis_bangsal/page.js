@@ -25,14 +25,8 @@ const Page = () => {
 
   const [errors, setErrors] = useState({});
   const toastRef = useRef(null);
-  const router = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
     fetchData();
   }, []);
 

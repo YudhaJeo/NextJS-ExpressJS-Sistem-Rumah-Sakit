@@ -34,11 +34,6 @@ const Page = () => {
   const [form, setForm] = useState(defaultForm);
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
     fetchData();
     fetchPasien();
     fetchObat();
