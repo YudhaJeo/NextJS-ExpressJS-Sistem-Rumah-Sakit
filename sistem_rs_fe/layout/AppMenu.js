@@ -172,6 +172,32 @@ const AppMenu = () => {
         ],
       },
       {
+        label: "Apotek & Farmasi",
+        items: [
+          { label: "Dashboard Apotek", icon: "pi pi-fw pi-chart-bar", to: "/apotek/dashboard" },
+          {
+            label: "Menu",
+            items: [
+          { label: "Daftar Obat dan Alkes", icon: "pi pi-fw pi-database", to: "/apotek/daftar_obat" },
+          { label: "Kartu Stock", icon: "pi pi-fw pi-bars", to: "/apotek/kartu_stock" },
+          { label: "First Expired First Out", icon: "pi pi-fw pi-chart-line", to: "/apotek/FEFO" },
+          { label: "Order Pengambilan Obat", icon: "pi pi-fw pi-history", to: "/apotek/order_pengambilan_obat" },
+          { label: "Penjualan/POS Kasir", icon: "pi pi-fw pi-shopping-cart", to: "/apotek/penjualan" },
+            ],
+          },
+          {
+            label: "Laporan",
+            items: [
+              // { label: "Penjualan Obat", icon: "pi pi-fw pi-shopping-cart", to: "/apotek/penjualan" },
+              // { label: "Pembelian Obat", icon: "pi pi-fw pi-dollar", to: "/apotek/pembelian" },
+              // { label: "Retur Obat", icon: "pi pi-fw pi-undo", to: "/apotek/retur" },
+              { label: "Laporan Penjualan", icon: "pi pi-fw pi-chart-bar", to: "/apotek/laporan_penjualan_obat" },
+              // { label: "Laporan Pembelian", icon: "pi pi-fw pi-chart-bar", to: "/apotek/laporan_pembelian" },
+            ],
+          },
+        ],
+      },
+      {
         label: "Fitur Kasir & Sales",
         items: [
           { label: "Dashboard Kasir", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_kasir" },
