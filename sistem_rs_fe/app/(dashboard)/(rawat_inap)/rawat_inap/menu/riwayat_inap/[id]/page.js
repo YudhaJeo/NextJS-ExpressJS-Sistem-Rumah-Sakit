@@ -3,8 +3,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import { Axios } from '@/utils/axios';
 
 // PrimeReact Components
 import { Card } from 'primereact/card';
@@ -24,25 +23,20 @@ export default function DetailRiwayatInapPage() {
   const [detail, setDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [services, setServices] = useState([]);
-  const router = useRouter();
   const { id } = useParams();
   const toastRef = useRef(null);
 
   useEffect(() => {
-    fetchDetail(token);
+    fetchDetail();
   }, [id]);
 
-  const fetchDetail = async (token) => {
+  const fetchDetail = async () => {
     try {
-      const res = await axios.get(`${API_URL}/riwayat_inap/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(`${API_URL}/riwayat_inap/${id}`);
       setDetail(res.data.data);
       
-      // Prepare services data for DataTable
       const servicesData = [];
       
-      // Add room service
       servicesData.push({
         id: 1,
         layanan: `Biaya Kamar Rawat Inap (Bed ${res.data.data.NOMORBED})`,
@@ -53,7 +47,6 @@ export default function DetailRiwayatInapPage() {
         type: 'kamar'
       });
 
-      // Add medicines
       res.data.data.obat?.forEach((obat, index) => {
         servicesData.push({
           id: index + 2,

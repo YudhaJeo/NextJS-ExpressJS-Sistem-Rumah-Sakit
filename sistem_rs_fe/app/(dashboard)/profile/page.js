@@ -27,23 +27,18 @@ export default function ProfilePage() {
   const router = useRouter()
 
   useEffect(() => {
-    const token = Cookies.get('token')
-    if (!token) return router.push('/login')
-    fetchData(token)
+    fetchData()
   }, [])
 
-  const fetchData = async (token) => {
+  const fetchData = async () => {
     try {
-      const res = await axios.get(`${API_URL}/profile`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      const res = await axios.get(`${API_URL}/profile`)
       if (!res.data?.data) throw new Error('Data user kosong')
       const data = res.data.data
       setUser(data)
       setForm({ NAMALENGKAP: data.NAMALENGKAP, EMAIL: data.EMAIL, NOHP: data.NOHP, FOTOPROFIL: data.FOTOPROFIL, file: null })
     } catch (err) {
       console.error('Gagal ambil data:', err)
-      router.push('/login')
     } finally {
       setLoading(false)
     }
@@ -86,9 +81,7 @@ export default function ProfilePage() {
         formData.append('file', newData.file)
       }
   
-      await axios.put(`${API_URL}/profile`, formData, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      await axios.put(`${API_URL}/profile`, formData)
   
       await fetchData(token)
       setDialogVisible(false)
