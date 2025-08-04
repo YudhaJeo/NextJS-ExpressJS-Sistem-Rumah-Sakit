@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import { Axios } from '@/utils/axios';
 
 import { Card } from 'primereact/card';
 import { DataTable } from 'primereact/datatable';
@@ -22,19 +21,16 @@ export default function DetailRiwayatInapPage() {
   const [detail, setDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [services, setServices] = useState([]);
-  const router = useRouter();
   const { id } = useParams();
   const toastRef = useRef(null);
 
   useEffect(() => {
-    fetchDetail(token);
+    fetchDetail();
   }, [id]);
 
-  const fetchDetail = async (token) => {
+  const fetchDetail = async () => {
     try {
-      const res = await axios.get(`${API_URL}/riwayat_inap/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(`${API_URL}/riwayat_inap/${id}`);
       setDetail(res.data.data);
 
       const servicesData = [];

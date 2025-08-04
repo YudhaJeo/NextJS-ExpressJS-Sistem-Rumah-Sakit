@@ -36,26 +36,28 @@ function LoginPage() {
       if (toastRef.current) {
         toastRef.current.showToast("00", "Login berhasil!");
       }
-
-      switch (res.data.role) {
-        case "dokter":
-          router.push("/dashboard_dokter");
-          break;
-        case "perawat":
-          router.push("/dashboard_perawat");
-          break;
-        case "admin":
-          router.push("/dashboard_admin");
-          break;
-        case "superadmin":
-          router.push("/");
-          break;
-        case "kasir":
-          router.push("/dashboard_kasir");
-        default:
-          router.push("/");
-      }
-
+      
+      setTimeout(() => {
+        switch (res.data.role) {
+          case "dokter":
+            router.push("/dashboard_dokter");
+            break;
+          case "perawat":
+            router.push("/dashboard_perawat");
+            break;
+          case "admin":
+            router.push("/dashboard_admin");
+            break;
+          case "superadmin":
+            router.push("/");
+            break;
+          case "kasir":
+            router.push("/dashboard_kasir");
+            break;
+          default:
+            router.push("/");
+        }
+      }, 400);
     } catch (err) {
       if (toastRef.current) {
         toastRef.current.showToast(
