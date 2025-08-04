@@ -151,7 +151,6 @@ const AppMenu = () => {
           {
             label: "Master",
             items: [
-              { label: "Daftar Obat", icon: "pi pi-fw pi-chart-pie", to: "/rawat_inap/master/obat" },
               { label: "Tindakan Medis", icon: "pi pi-fw pi-heart", to: "/rawat_inap/master/tindakan_medis" },
               { label: "Jenis Bangsal", icon: "pi pi-fw pi-tag", to: "/rawat_inap/master/jenis_bangsal" },
               { label: "Manajemen Bangsal", icon: "pi pi-fw pi-th-large", to: "/rawat_inap/master/manajemen_bangsal" },
@@ -174,15 +173,20 @@ const AppMenu = () => {
       {
         label: "Apotek & Farmasi",
         items: [
-          { label: "Dashboard Apotek", icon: "pi pi-fw pi-chart-bar", to: "/apotek/dashboard" },
+          { label: "Dashboard Apotek", icon: "pi pi-fw pi-chart-bar", to: "/dashboard" },
+          {
+            label: "Master",
+            items: [
+              { label: "Daftar Obat dan Alkes", icon: "pi pi-fw pi-database", to: "/daftar_obat" },
+            ],
+          },
           {
             label: "Menu",
             items: [
-          { label: "Daftar Obat dan Alkes", icon: "pi pi-fw pi-database", to: "/apotek/daftar_obat" },
-          { label: "Kartu Stock", icon: "pi pi-fw pi-bars", to: "/apotek/kartu_stock" },
-          { label: "First Expired First Out", icon: "pi pi-fw pi-chart-line", to: "/apotek/FEFO" },
-          { label: "Order Pengambilan Obat", icon: "pi pi-fw pi-history", to: "/apotek/order_pengambilan_obat" },
-          { label: "Penjualan/POS Kasir", icon: "pi pi-fw pi-shopping-cart", to: "/apotek/penjualan" },
+              { label: "Kartu Stock", icon: "pi pi-fw pi-bars", to: "/kartu_stock" },
+              { label: "First Expired First Out", icon: "pi pi-fw pi-chart-line", to: "/FEFO" },
+              { label: "Order Pengambilan Obat", icon: "pi pi-fw pi-history", to: "/order_pengambilan_obat" },
+              { label: "Penjualan/POS Kasir", icon: "pi pi-fw pi-shopping-cart", to: "/penjualan" },
             ],
           },
           {
