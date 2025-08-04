@@ -1,10 +1,8 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\tindakan_inap\components\tabelTindakan.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import React from 'react';
 
 const TabelTindakanInap = ({ data, loading, onEdit, onDelete }) => {
   return (

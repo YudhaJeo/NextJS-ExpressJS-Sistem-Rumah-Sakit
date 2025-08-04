@@ -1,6 +1,5 @@
 import express from 'express';
 import * as LoketController from '../controllers/loketController.js';
-import { verifyToken } from '../middlewares/jwt.js';
 
 const router = express.Router();
 

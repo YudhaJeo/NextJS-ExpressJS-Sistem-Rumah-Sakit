@@ -1,4 +1,3 @@
-// src\controllers\tagihanSementaraController.js
 import * as TagihanModel from '../models/tagihanSementaraModel.js';
 
 const getAll = async (req, res) => {

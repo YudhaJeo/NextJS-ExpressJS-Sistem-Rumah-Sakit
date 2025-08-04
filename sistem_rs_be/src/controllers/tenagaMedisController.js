@@ -44,7 +44,7 @@ export const createTenagaMedis = async (req, res) => {
     const data = {
       ...body,
       PASSWORD: hashedPassword,
-      FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_medis/${files.FOTOPROFIL[0].filename}`: null,
+      FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_medis/${files.FOTOPROFIL[0].filename}` : null,
       DOKUMENPENDUKUNG: files?.DOKUMENPENDUKUNG?.[0] ? `/uploads/tenaga_medis/${files.DOKUMENPENDUKUNG[0].filename}` : null,
       TANGGALLAHIR: formatDate(body.TANGGALLAHIR),
       TGLEXPSTR: formatDate(body.TGLEXPSTR),
@@ -76,7 +76,7 @@ export const updateTenagaMedis = async (req, res) => {
 
     const data = {
       ...body,
-      FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_medis/${files.FOTOPROFIL[0].filename}`: null,
+      FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_medis/${files.FOTOPROFIL[0].filename}` : null,
       DOKUMENPENDUKUNG: files?.DOKUMENPENDUKUNG?.[0] ? `/uploads/tenaga_medis/${files.DOKUMENPENDUKUNG[0].filename}` : null,
       TANGGALLAHIR: formatDate(body.TANGGALLAHIR),
       TGLEXPSTR: formatDate(body.TGLEXPSTR),

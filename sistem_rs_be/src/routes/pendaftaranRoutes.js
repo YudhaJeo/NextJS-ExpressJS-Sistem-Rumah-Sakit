@@ -1,6 +1,5 @@
 import express from 'express';
 import * as PendaftaranController from '../controllers/pendaftaranController.js';
-import { verifyToken } from '../middlewares/jwt.js';
 
 const router = express.Router();
 

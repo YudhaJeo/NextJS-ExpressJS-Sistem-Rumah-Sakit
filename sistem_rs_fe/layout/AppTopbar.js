@@ -1,19 +1,18 @@
-    import Link from "next/link";
-    import { classNames } from "primereact/utils";
-    import React, {
+import Link from "next/link";
+import { classNames } from "primereact/utils";
+import React, {
     forwardRef,
     useContext,
     useImperativeHandle,
     useRef,
     useEffect,
     useState,
-    } from "react";
-    import { LayoutContext } from "./context/layoutcontext";
-    import Cookies from "js-cookie";
-    import { Avatar } from "primereact/avatar";
-    import { Badge } from "primereact/badge";
+} from "react";
+import { LayoutContext } from "./context/layoutcontext";
+import Cookies from "js-cookie";
+import { Avatar } from "primereact/avatar";
 
-    const AppTopbar = forwardRef((props, ref) => {
+const AppTopbar = forwardRef((props, ref) => {
     const { layoutConfig, layoutState, onMenuToggle, showProfileSidebar } =
         useContext(LayoutContext);
     const menubuttonRef = useRef(null);
@@ -37,72 +36,72 @@
     useEffect(() => {
         const profileData = Cookies.get("profile");
         if (profileData && profileData !== "null" && profileData !== "undefined") {
-        setProfile(profileData);
+            setProfile(profileData);
         }
     }, []);
 
     return (
         <div className="layout-topbar">
-        <Link href="/" className="layout-topbar-logo">
-            <img src={`/layout/images/logo.png`} alt="logo" />
-            <span>Rumah Sakit</span>
-        </Link>
-
-        <button
-            ref={menubuttonRef}
-            type="button"
-            className="p-link layout-menu-button layout-topbar-button"
-            onClick={onMenuToggle}
-        >
-            <i className="pi pi-bars" />
-        </button>
-
-        <button
-            ref={topbarmenubuttonRef}
-            type="button"
-            className="p-link layout-topbar-menu-button layout-topbar-button"
-            onClick={showProfileSidebar}
-        >
-            <i className="pi pi-ellipsis-v" />
-        </button>
-
-        <div    
-            ref={topbarmenuRef}
-            className={classNames("layout-topbar-menu", {
-            "layout-topbar-menu-mobile-active": layoutState.profileSidebarVisible,
-            })}
-        >
-            <p className="text-base md:text-xl my-2 font-medium">{username}</p>
-
-            <Link href="/profile">
-            <button type="button" className="p-link layout-topbar-button">
-                <Avatar
-                image={
-                    profile && profile !== "null" && profile !== "undefined"
-                    ? profile
-                    : undefined
-                }
-                icon={
-                    !profile || profile === "null" || profile === "undefined"
-                    ? "pi pi-user"
-                    : undefined
-                }
-                size="xlarge"
-                shape="circle"
-                style={{ objectFit: 'cover', width: '3rem', height: '3rem', background: 'transparent' }}
-                onImageError={(e) => {
-                    e.target.src = "";
-                    e.target.classList.add("pi", "pi-user");
-                }}
-                />
-                <span>Profile</span>
-            </button>
+            <Link href="/" className="layout-topbar-logo">
+                <img src={`/layout/images/logo.png`} alt="logo" />
+                <span>Rumah Sakit</span>
             </Link>
-        </div>
+
+            <button
+                ref={menubuttonRef}
+                type="button"
+                className="p-link layout-menu-button layout-topbar-button"
+                onClick={onMenuToggle}
+            >
+                <i className="pi pi-bars" />
+            </button>
+
+            <button
+                ref={topbarmenubuttonRef}
+                type="button"
+                className="p-link layout-topbar-menu-button layout-topbar-button"
+                onClick={showProfileSidebar}
+            >
+                <i className="pi pi-ellipsis-v" />
+            </button>
+
+            <div
+                ref={topbarmenuRef}
+                className={classNames("layout-topbar-menu", {
+                    "layout-topbar-menu-mobile-active": layoutState.profileSidebarVisible,
+                })}
+            >
+                <p className="text-base md:text-xl my-2 font-medium">{username}</p>
+
+                <Link href="/profile">
+                    <button type="button" className="p-link layout-topbar-button">
+                        <Avatar
+                            image={
+                                profile && profile !== "null" && profile !== "undefined"
+                                    ? profile
+                                    : undefined
+                            }
+                            icon={
+                                !profile || profile === "null" || profile === "undefined"
+                                    ? "pi pi-user"
+                                    : undefined
+                            }
+                            size="xlarge"
+                            shape="circle"
+                            style={{ objectFit: 'cover', width: '3rem', height: '3rem', background: 'transparent' }}
+                            onImageError={(e) => {
+                                e.target.src = "";
+                                e.target.classList.add("pi", "pi-user");
+                            }}
+                        />
+                        <span>Profile</span>
+                    </button>
+                </Link>
+            </div>
         </div>
     );
-    });
+});
 
-    AppTopbar.displayName = "AppTopbar";
+AppTopbar.displayName = "AppTopbar";
 
-    export default AppTopbar;
+export default AppTopbar;

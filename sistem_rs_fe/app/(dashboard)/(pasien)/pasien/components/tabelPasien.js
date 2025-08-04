@@ -3,7 +3,6 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import React from 'react';
 
 const TabelPasien = ({ data, loading, onEdit, onDelete }) => {
   return (

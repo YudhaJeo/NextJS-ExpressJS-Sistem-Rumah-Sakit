@@ -1,4 +1,3 @@
-// sistem_rs_be\src\models\pendaftaranModel.js
 import db from '../core/config/knex.js';
 
 export const getAll = () => {

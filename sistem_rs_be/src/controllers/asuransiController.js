@@ -1,16 +1,15 @@
 import * as Asuransi from '../models/asuransiModel.js';
 
 export async function getAllAsuransi(req, res) {
-    try {
-      const data = await Asuransi.getAll();
-    //   console.log('Data asuransi:', data);
-      res.json({ data });
-    } catch (err) {
-      console.error('Gagal get asuransi:', err);
-      res.status(500).json({ error: err.message });
-    }
+  try {
+    const data = await Asuransi.getAll();
+    res.json({ data });
+  } catch (err) {
+    console.error('Gagal get asuransi:', err);
+    res.status(500).json({ error: err.message });
   }
-  
+}
+
 export async function createAsuransi(req, res) {
   try {
     const { NAMAASURANSI, KETERANGAN } = req.body;

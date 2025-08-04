@@ -19,16 +19,16 @@ const DokterPage = () => {
     const [dialogVisible, setDialogVisible] = useState(false);
 
     const [formData, setFormData] = useState({
-    IDDOKTER: 0,
-    IDTENAGAMEDIS: "",
-    IDPOLI: "",
-    JADWAL: [
-        { HARI: "Senin", JAM_MULAI: "", JAM_SELESAI: "" },
-        { HARI: "Selasa", JAM_MULAI: "", JAM_SELESAI: "" },
-        { HARI: "Rabu", JAM_MULAI: "", JAM_SELESAI: "" },
-        { HARI: "Kamis", JAM_MULAI: "", JAM_SELESAI: "" },
-        { HARI: "Jum'at", JAM_MULAI: "", JAM_SELESAI: "" }
-    ]
+        IDDOKTER: 0,
+        IDTENAGAMEDIS: "",
+        IDPOLI: "",
+        JADWAL: [
+            { HARI: "Senin", JAM_MULAI: "", JAM_SELESAI: "" },
+            { HARI: "Selasa", JAM_MULAI: "", JAM_SELESAI: "" },
+            { HARI: "Rabu", JAM_MULAI: "", JAM_SELESAI: "" },
+            { HARI: "Kamis", JAM_MULAI: "", JAM_SELESAI: "" },
+            { HARI: "Jum'at", JAM_MULAI: "", JAM_SELESAI: "" }
+        ]
     });
 
     const [poliOptions, setPoliOptions] = useState([]);
@@ -55,32 +55,32 @@ const DokterPage = () => {
         }
     };
     const fetchPoli = async () => {
-         try {
-    const res = await axios.get(`${API_URL}/poli`);
-    const options = res.data.map((poli) => ({
-      label: `${poli.IDPOLI} - ${poli.NAMAPOLI}`,
-      value: poli.IDPOLI,
-      }));
+        try {
+            const res = await axios.get(`${API_URL}/poli`);
+            const options = res.data.map((poli) => ({
+                label: `${poli.IDPOLI} - ${poli.NAMAPOLI}`,
+                value: poli.IDPOLI,
+            }));
 
-    setPoliOptions(options);
-      } catch (err) {
-    console.error('Gagal ambil data poli:', err);
-      }
+            setPoliOptions(options);
+        } catch (err) {
+            console.error('Gagal ambil data poli:', err);
+        }
     };
 
     const fetchTenaga = async () => {
-         try {
-    const res = await axios.get(`${API_URL}/tenaga_medis`);
-    console.log('Data tenaga medis API:', res.data);
-    const options = res.data.data.map((master_tenaga_medis) => ({
-      label: `${master_tenaga_medis.NAMALENGKAP} - ${master_tenaga_medis.JENISTENAGAMEDIS}`,
-      value: master_tenaga_medis.IDTENAGAMEDIS,
-      }));
+        try {
+            const res = await axios.get(`${API_URL}/tenaga_medis`);
+            console.log('Data tenaga medis API:', res.data);
+            const options = res.data.data.map((master_tenaga_medis) => ({
+                label: `${master_tenaga_medis.NAMALENGKAP} - ${master_tenaga_medis.JENISTENAGAMEDIS}`,
+                value: master_tenaga_medis.IDTENAGAMEDIS,
+            }));
 
-    setTenagaOptions(options);
-      } catch (err) {
-    console.error('Gagal ambil data tenaga:', err);
-      }
+            setTenagaOptions(options);
+        } catch (err) {
+            console.error('Gagal ambil data tenaga:', err);
+        }
     };
 
     const handleSearch = (keyword) => {
@@ -95,64 +95,64 @@ const DokterPage = () => {
     };
 
     const handleSubmit = async () => {
-    if (!formData.IDTENAGAMEDIS) {
-        toastRef.current?.showToast('01', 'Nama Dokter wajib diisi!');
-        return;
-    }
-
-    const isEdit = !!formData.IDDOKTER;
-    const url = isEdit
-        ? `${API_URL}/dokter/${formData.IDDOKTER}`
-        : `${API_URL}/dokter`;
-
-    try {
-        if (isEdit) {
-            await axios.put(url, formData);
-            toastRef.current?.showToast('00', 'Data berhasil diperbarui');
-        } else {
-            await axios.post(url, formData);
-            toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
+        if (!formData.IDTENAGAMEDIS) {
+            toastRef.current?.showToast('01', 'Nama Dokter wajib diisi!');
+            return;
         }
-        fetchDokter();
-        setDialogVisible(false);
-        resetForm();
-    } catch (err) {
-        console.error('Gagal menyimpan data:', err);
-        toastRef.current?.showToast('01', 'Gagal menyimpan data');
-    }
-};
 
-const parseJadwalPraktek = (text) => {
-    if (!text) return [];
+        const isEdit = !!formData.IDDOKTER;
+        const url = isEdit
+            ? `${API_URL}/dokter/${formData.IDDOKTER}`
+            : `${API_URL}/dokter`;
 
-    return text.split(',').map((slot) => {
-        const trimmed = slot.trim(); // "Senin 10:00 - 12:00"
-        const firstSpaceIndex = trimmed.indexOf(' ');
-        const hari = trimmed.substring(0, firstSpaceIndex); // Senin
-        const jamString = trimmed.substring(firstSpaceIndex + 1); // "10:00 - 12:00"
+        try {
+            if (isEdit) {
+                await axios.put(url, formData);
+                toastRef.current?.showToast('00', 'Data berhasil diperbarui');
+            } else {
+                await axios.post(url, formData);
+                toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
+            }
+            fetchDokter();
+            setDialogVisible(false);
+            resetForm();
+        } catch (err) {
+            console.error('Gagal menyimpan data:', err);
+            toastRef.current?.showToast('01', 'Gagal menyimpan data');
+        }
+    };
 
-        const [mulai, selesai] = jamString.split('-').map(j => j.trim()); // "10:00", "12:00"
+    const parseJadwalPraktek = (text) => {
+        if (!text) return [];
 
-        return {
-            HARI: hari,
-            JAM_MULAI: mulai,
-            JAM_SELESAI: selesai,
-        };
-    });
-};
+        return text.split(',').map((slot) => {
+            const trimmed = slot.trim(); // "Senin 10:00 - 12:00"
+            const firstSpaceIndex = trimmed.indexOf(' ');
+            const hari = trimmed.substring(0, firstSpaceIndex); // Senin
+            const jamString = trimmed.substring(firstSpaceIndex + 1); // "10:00 - 12:00"
 
-const handleEdit = (row) => {
-    const jadwal = parseJadwalPraktek(row.JADWALPRAKTEK);
+            const [mulai, selesai] = jamString.split('-').map(j => j.trim()); // "10:00", "12:00"
 
-    setFormData({
-        IDDOKTER: row.IDDOKTER,
-        IDTENAGAMEDIS: row.IDTENAGAMEDIS,
-        IDPOLI: row.IDPOLI,
-        JADWAL: jadwal
-    });
+            return {
+                HARI: hari,
+                JAM_MULAI: mulai,
+                JAM_SELESAI: selesai,
+            };
+        });
+    };
 
-    setDialogVisible(true);
-};
+    const handleEdit = (row) => {
+        const jadwal = parseJadwalPraktek(row.JADWALPRAKTEK);
+
+        setFormData({
+            IDDOKTER: row.IDDOKTER,
+            IDTENAGAMEDIS: row.IDTENAGAMEDIS,
+            IDPOLI: row.IDPOLI,
+            JADWAL: jadwal
+        });
+
+        setDialogVisible(true);
+    };
 
     const handleDelete = (row) => {
         confirmDialog({
@@ -175,12 +175,12 @@ const handleEdit = (row) => {
     };
 
     const resetForm = () => {
-    setFormData({
-        IDDOKTER: 0,
-        IDTENAGAMEDIS: "",
-        IDPOLI: "",
-        JADWAL: []
-    });
+        setFormData({
+            IDDOKTER: 0,
+            IDTENAGAMEDIS: "",
+            IDPOLI: "",
+            JADWAL: []
+        });
     };
 
     return (
@@ -218,7 +218,7 @@ const handleEdit = (row) => {
                 formData={formData}
                 poliOptions={poliOptions}
                 tenagaOptions={tenagaOptions}
-                
+
             />
         </div>
     );

@@ -25,28 +25,28 @@ const LaporanKomisiPage = () => {
   }, []);
 
   const fetchData = async () => {
-  setLoading(true);
-  try {
-    const res = await axios.get(`${API_URL}/komisi_dokter`);
-    const filtered = res.data.filter((item) => item.STATUS === 'Sudah Dibayar');
+    setLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}/komisi_dokter`);
+      const filtered = res.data.filter((item) => item.STATUS === 'Sudah Dibayar');
 
-    setData(filtered);
-    setOriginalData(filtered);
-  } catch (err) {
-    console.error("Gagal mengambil data komisi dokter:", err);
-    toastRef.current?.showToast("01", "Gagal memuat data laporan");
-  } finally {
-    setLoading(false);
-  }
-};
+      setData(filtered);
+      setOriginalData(filtered);
+    } catch (err) {
+      console.error("Gagal mengambil data komisi dokter:", err);
+      toastRef.current?.showToast("01", "Gagal memuat data laporan");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const resetFilter = () => {
+  const resetFilter = () => {
     setStartDate(null);
     setEndDate(null);
     setData(originalData);
   };
 
-const handleDateFilter = () => {
+  const handleDateFilter = () => {
     if (!startDate && !endDate) return setData(originalData);
     const filtered = originalData.filter((item) => {
       const visitDate = new Date(item.TANGGALKUNJUNGAN);
@@ -76,19 +76,19 @@ const handleDateFilter = () => {
       <h3 className="text-xl font-semibold mb-3">Laporan Komisi Dokter</h3>
 
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-              <FilterTanggal
-                startDate={startDate}
-                endDate={endDate}
-                setStartDate={setStartDate}
-                setEndDate={setEndDate}
-                handleDateFilter={handleDateFilter}
-                resetFilter={resetFilter}
-              />
-              <HeaderBar
-                placeholder="Cari nama dokter/pasien..."
-                onSearch={handleSearch}
-              />
-        </div>
+        <FilterTanggal
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          handleDateFilter={handleDateFilter}
+          resetFilter={resetFilter}
+        />
+        <HeaderBar
+          placeholder="Cari nama dokter/pasien..."
+          onSearch={handleSearch}
+        />
+      </div>
 
       <TabelLaporanKomisi data={data} loading={loading} />
     </div>

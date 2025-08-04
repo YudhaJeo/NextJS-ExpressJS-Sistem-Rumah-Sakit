@@ -1,15 +1,13 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\manajemen-kamar\components\tabelKamar.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import React from 'react';
 
 const TabelKamar = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
-      
+
       <Column field="IDKAMAR" header="ID" />
       <Column field="NAMAKAMAR" header="Nama Kamar" />
       <Column

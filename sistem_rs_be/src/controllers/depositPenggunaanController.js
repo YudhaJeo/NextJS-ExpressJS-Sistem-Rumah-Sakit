@@ -43,17 +43,14 @@ export async function createPenggunaan(req, res) {
       return res.status(400).json({ success: false, message: 'Saldo deposit tidak mencukupi' });
     }
 
-    // Kurangi saldo deposit
     const newSaldo = deposit.SALDO_SISA - JUMLAH_PEMAKAIAN;
     await trx('deposit').where('IDDEPOSIT', IDDEPOSIT).update({
       SALDO_SISA: newSaldo,
       STATUS: newSaldo === 0 ? 'HABIS' : 'AKTIF'
     });
 
-    // Kurangi sisa tagihan invoice
     await trx('invoice').where('IDINVOICE', IDINVOICE).decrement('SISA_TAGIHAN', JUMLAH_PEMAKAIAN);
 
-    // Simpan penggunaan
     await PenggunaanModel.create({
       IDDEPOSIT,
       IDINVOICE,
@@ -82,14 +79,10 @@ export async function updatePenggunaan(req, res) {
       return res.status(404).json({ success: false, message: 'Data penggunaan tidak ditemukan' });
     }
 
-    // Kembalikan saldo ke deposit sebelumnya
     await trx('deposit').where('IDDEPOSIT', penggunaanLama.IDDEPOSIT).increment('SALDO_SISA', penggunaanLama.JUMLAH_PEMAKAIAN);
     await trx('deposit').where('IDDEPOSIT', penggunaanLama.IDDEPOSIT).update({ STATUS: 'AKTIF' });
-
-    // Kembalikan jumlah ke SISA_TAGIHAN invoice sebelumnya
     await trx('invoice').where('IDINVOICE', penggunaanLama.IDINVOICE).increment('SISA_TAGIHAN', penggunaanLama.JUMLAH_PEMAKAIAN);
 
-    // Cek deposit baru
     const depositBaru = await trx('deposit').where('IDDEPOSIT', IDDEPOSIT).first();
     if (!depositBaru) {
       await trx.rollback();
@@ -142,11 +135,8 @@ export async function deletePenggunaan(req, res) {
       return res.status(404).json({ success: false, message: 'Data penggunaan tidak ditemukan' });
     }
 
-    // Kembalikan saldo deposit
     await trx('deposit').where('IDDEPOSIT', penggunaan.IDDEPOSIT).increment('SALDO_SISA', penggunaan.JUMLAH_PEMAKAIAN);
     await trx('deposit').where('IDDEPOSIT', penggunaan.IDDEPOSIT).update({ STATUS: 'AKTIF' });
-
-    // Kembalikan nilai ke SISA_TAGIHAN invoice
     await trx('invoice').where('IDINVOICE', penggunaan.IDINVOICE).increment('SISA_TAGIHAN', penggunaan.JUMLAH_PEMAKAIAN);
 
     const deleted = await PenggunaanModel.remove(id, trx);

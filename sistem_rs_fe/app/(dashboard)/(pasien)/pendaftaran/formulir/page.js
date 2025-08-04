@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import TabelPendaftaran from './components/tabelFormulir'; 
+import TabelPendaftaran from './components/tabelFormulir';
 import FormDialogPendaftaran from './components/formDialogFormulir';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
@@ -56,19 +56,19 @@ const Page = () => {
   };
 
   const fetchPoli = async () => {
-  try {
-    const res = await axios.get(`${API_URL}/poli`);
+    try {
+      const res = await axios.get(`${API_URL}/poli`);
 
-    const options = res.data.map((poli) => ({
-      label: `${poli.NAMAPOLI}`,
-      value: poli.IDPOLI,
+      const options = res.data.map((poli) => ({
+        label: `${poli.NAMAPOLI}`,
+        value: poli.IDPOLI,
       }));
 
-    setPoliOptions(options);
-      } catch (err) {
-    console.error('Gagal ambil data poli:', err);
-      }
-    };
+      setPoliOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil data poli:', err);
+    }
+  };
 
 
   const fetchPasien = async () => {

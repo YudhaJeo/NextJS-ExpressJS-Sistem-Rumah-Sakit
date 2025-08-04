@@ -1,4 +1,3 @@
-// sistem_rs_be\src\middlewares\jwt.js
 import "dotenv/config";
 import * as jose from "jose";
 import { datetime, status } from "../utils/general.js";
@@ -19,7 +18,7 @@ export const verifyToken = async (req, res, next) => {
     const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
 
     const { payload } = await jose.jwtVerify(token, secretKey, {
-      algorithms: ["HS512"], 
+      algorithms: ["HS512"],
     });
 
     req.user = payload;

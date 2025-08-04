@@ -1,4 +1,3 @@
-// sistem_rs_fe\app\(dashboard)\(rawat_inap)\rawat_inap\menu\riwayat_inap\components\tabelRiwayatInap.js
 'use client'
 
 import React, { useState } from 'react'
@@ -68,48 +67,48 @@ const TabelRiwayatInap = ({ data, loading }) => {
   return (
     <>
       <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
-      <Column 
-          field="NAMALENGKAP" 
-          header="Pasien" 
+        <Column
+          field="NAMALENGKAP"
+          header="Pasien"
         />
-        <Column 
-          field="NOMORBED" 
-          header="Bed" 
+        <Column
+          field="NOMORBED"
+          header="Bed"
         />
-        <Column 
-          field="TOTALOBAT" 
-          header="Total Obat" 
-          body={(r) => formatRupiah(r.TOTALOBAT)} 
+        <Column
+          field="TOTALOBAT"
+          header="Total Obat"
+          body={(r) => formatRupiah(r.TOTALOBAT)}
         />
-        <Column 
-          field="TOTALTINDAKAN" 
-          header="Total Tindakan" 
-          body={(r) => formatRupiah(r.TOTALTINDAKAN)} 
+        <Column
+          field="TOTALTINDAKAN"
+          header="Total Tindakan"
+          body={(r) => formatRupiah(r.TOTALTINDAKAN)}
         />
-        <Column 
-          field="TOTALKAMAR" 
-          header="Total Kamar" 
-          body={(r) => formatRupiah(r.TOTALKAMAR)} 
+        <Column
+          field="TOTALKAMAR"
+          header="Total Kamar"
+          body={(r) => formatRupiah(r.TOTALKAMAR)}
         />
-        <Column 
-          field="TOTALBIAYA" 
-          header="Tagihan Total" 
-          body={(r) => formatRupiah(r.TOTALBIAYA)} 
+        <Column
+          field="TOTALBIAYA"
+          header="Tagihan Total"
+          body={(r) => formatRupiah(r.TOTALBIAYA)}
         />
-        <Column 
-          field="TANGGALMASUK" 
-          header="Tanggal Masuk" 
-          body={(r) => formatTanggal(r.TANGGALMASUK)} 
+        <Column
+          field="TANGGALMASUK"
+          header="Tanggal Masuk"
+          body={(r) => formatTanggal(r.TANGGALMASUK)}
         />
-        <Column 
-          field="TANGGALKELUAR" 
-          header="Tanggal Keluar" 
-          body={(r) => formatTanggal(r.TANGGALKELUAR)} 
+        <Column
+          field="TANGGALKELUAR"
+          header="Tanggal Keluar"
+          body={(r) => formatTanggal(r.TANGGALKELUAR)}
         />
-        <Column 
-          header="Aksi" 
-          body={actionBody} 
-          style={{ width: '150px', textAlign: 'center' }} 
+        <Column
+          header="Aksi"
+          body={actionBody}
+          style={{ width: '150px', textAlign: 'center' }}
         />
       </DataTable>
 

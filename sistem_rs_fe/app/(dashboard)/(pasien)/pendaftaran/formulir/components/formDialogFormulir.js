@@ -97,10 +97,10 @@ const FormDialogPendaftaran = ({
             placeholder="Masukkan Keluhan pasien"
           />
           {errors.KELUHAN && <small className="p-error">{errors.KELUHAN}</small>}
-        </div>        
+        </div>
 
-          <div>
-            <label className="font-medium">Poli</label>
+        <div>
+          <label className="font-medium">Poli</label>
           <Dropdown
             className="w-full mt-2"
             options={poliOptions}
@@ -116,8 +116,8 @@ const FormDialogPendaftaran = ({
             filter
             showClear
           />
-            {errors.POLI && <small className="p-error">{errors.POLI}</small>}
-          </div>
+          {errors.POLI && <small className="p-error">{errors.POLI}</small>}
+        </div>
 
         <div>
           <label className="font-medium">Status Kunjungan</label>

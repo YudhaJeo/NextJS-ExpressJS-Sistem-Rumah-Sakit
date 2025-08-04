@@ -3,13 +3,13 @@ import db from '../core/config/knex.js';
 import { generateNoInvoice } from '../utils/generateNoInvoice.js';
 
 export async function getAllReservasi(req, res) {
-    try {
-        const reservasi = await ReservasiModel.getAll();
-        res.json(reservasi);
-    } catch (err) {
-        console.error('Error backend:', err);
-        res.status(500).json({ error: err.message });
-    }
+  try {
+    const reservasi = await ReservasiModel.getAll();
+    res.json(reservasi);
+  } catch (err) {
+    console.error('Error backend:', err);
+    res.status(500).json({ error: err.message });
+  }
 }
 
 export async function createReservasi(req, res) {
@@ -60,25 +60,25 @@ export async function createReservasi(req, res) {
 }
 
 export async function updateReservasi(req, res) {
-    try {
-        const id = req.params.id;
-        const { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, STATUS, KETERANGAN } = req.body;
+  try {
+    const id = req.params.id;
+    const { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, STATUS, KETERANGAN } = req.body;
 
-        await ReservasiModel.update(id, { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, STATUS, KETERANGAN });
-        res.json({ message: 'Reservasi berhasil diperbarui' });
-    } catch (err) {
-        console.error('Error backend:', err);
-        res.status(500).json({ error: err.message });
-    }
+    await ReservasiModel.update(id, { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, STATUS, KETERANGAN });
+    res.json({ message: 'Reservasi berhasil diperbarui' });
+  } catch (err) {
+    console.error('Error backend:', err);
+    res.status(500).json({ error: err.message });
+  }
 }
 
 export async function deleteReservasi(req, res) {
-    try {
-        const id = req.params.id;
-        await ReservasiModel.remove(id);
-        res.json({ message: 'Reservasi berhasil dihapus' });
-    } catch (err) {
-        console.error('Error backend:', err);
-        res.status(500).json({ error: err.message });
-    }
+  try {
+    const id = req.params.id;
+    await ReservasiModel.remove(id);
+    res.json({ message: 'Reservasi berhasil dihapus' });
+  } catch (err) {
+    console.error('Error backend:', err);
+    res.status(500).json({ error: err.message });
+  }
 }

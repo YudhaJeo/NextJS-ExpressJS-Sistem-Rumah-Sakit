@@ -33,7 +33,7 @@ const DashboardDokter = () => {
           resData.totalDokter ?? 0,
           resData.totalPoli ?? 0,
           resData.jadwalHariIni ?? 0,
-          resData.laporanHariIni ?? 0, 
+          resData.laporanHariIni ?? 0,
         ];
 
         const backgroundColors = [
@@ -103,7 +103,7 @@ const DashboardDokter = () => {
       })
       .catch((err) => {
         console.error('Gagal ambil data dashboard dokter:', err);
-        setData(null); // fallback ke null
+        setData(null);
       });
   }, []);
 

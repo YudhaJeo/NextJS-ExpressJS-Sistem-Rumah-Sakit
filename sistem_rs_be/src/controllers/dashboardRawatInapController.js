@@ -20,14 +20,14 @@ export const getRawatInapDashboard = async (req, res) => {
       .count('IDBANGSAL as count')
       .first();
 
-      res.json({
-        data: {
-          tersedia: Number(TERSEDIA.count),
-          terisi: Number(TERISI.count),
-          jumlah_kamar: Number(KAMAR.count),
-          jumlah_bangsal: Number(BANGSAL.count),
-        }
-      });
+    res.json({
+      data: {
+        tersedia: Number(TERSEDIA.count),
+        terisi: Number(TERISI.count),
+        jumlah_kamar: Number(KAMAR.count),
+        jumlah_bangsal: Number(BANGSAL.count),
+      }
+    });
   } catch (err) {
     console.error('Gagal ambil data dashboard:', err);
     res.status(500).json({ error: 'Gagal ambil data dashboard' });

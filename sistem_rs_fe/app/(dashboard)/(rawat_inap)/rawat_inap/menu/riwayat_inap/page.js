@@ -1,4 +1,3 @@
-// app/(dashboard)/(rawat_inap)/riwayat_inap/page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -63,9 +62,9 @@ const Page = () => {
     if (!keyword) return setData(originalData);
 
     const filtered = originalData.filter((item) => {
-      const nama = item.NAMALENGKAP?.toLowerCase() 
+      const nama = item.NAMALENGKAP?.toLowerCase()
       return (
-        nama.includes(keyword.toLowerCase()) 
+        nama.includes(keyword.toLowerCase())
       );
     });
 

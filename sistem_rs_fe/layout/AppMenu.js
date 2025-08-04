@@ -16,7 +16,7 @@ const AppMenu = () => {
     setUnitKerja(unitKerjaFromCookies);
   }, []);
 
-  if (!userRole) return null; 
+  if (!userRole) return null;
 
   let model = [];
 
@@ -99,7 +99,7 @@ const AppMenu = () => {
           },
         ],
       },
-            {
+      {
         label: "Fitur Dokter",
         items: [
           { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_dokter" },
@@ -262,7 +262,7 @@ const AppMenu = () => {
     ];
   } else if (userRole === "Kasir") {
     model = [
-    {
+      {
         label: "Fitur Kasir & Sales",
         items: [
           { label: "Dashboard Kasir", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_kasir" },

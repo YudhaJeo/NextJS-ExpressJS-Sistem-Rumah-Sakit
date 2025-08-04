@@ -40,21 +40,21 @@ const KomisiPage = () => {
   }, []);
 
   useEffect(() => {
-  if (formData.IDPENGOBATAN && allRiwayatOptions.length > 0) {
-    const selected = allRiwayatOptions.find(
-      (opt) => String(opt.value) === String(formData.IDPENGOBATAN)
-    );
-    if (selected) {
-      setFormData((prev) => ({
-        ...prev,
-        NIK: selected.NIK,
-        NAMAPASIEN: selected.NAMAPASIEN,
-        NAMADOKTER: selected.NAMADOKTER,
-        TANGGAL: selected.TANGGAL,
-      }));
+    if (formData.IDPENGOBATAN && allRiwayatOptions.length > 0) {
+      const selected = allRiwayatOptions.find(
+        (opt) => String(opt.value) === String(formData.IDPENGOBATAN)
+      );
+      if (selected) {
+        setFormData((prev) => ({
+          ...prev,
+          NIK: selected.NIK,
+          NAMAPASIEN: selected.NAMAPASIEN,
+          NAMADOKTER: selected.NAMADOKTER,
+          TANGGAL: selected.TANGGAL,
+        }));
+      }
     }
-  }
-}, [formData.IDPENGOBATAN, allRiwayatOptions]);
+  }, [formData.IDPENGOBATAN, allRiwayatOptions]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -71,13 +71,13 @@ const KomisiPage = () => {
   };
 
   const formatTanggal = (dateStr) => {
-  if (!dateStr) return '';
-  const date = new Date(dateStr);
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
-  }).format(date);
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return new Intl.DateTimeFormat("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    }).format(date);
   };
 
   const fetchRiwayat = async () => {
@@ -147,19 +147,19 @@ const KomisiPage = () => {
 
   const handleEdit = (row) => {
     const selected = allRiwayatOptions.find(
-    (opt) => String(opt.value) === String(row.IDPENGOBATAN)
-  );
+      (opt) => String(opt.value) === String(row.IDPENGOBATAN)
+    );
     setFormData({
-    IDKOMISI: row.IDKOMISI,
-    IDPENGOBATAN: row.IDPENGOBATAN,
-    NIK: selected?.NIK || row.NIK || "",
-    NAMAPASIEN: selected?.NAMAPASIEN || row.NAMAPASIEN || "",
-    NAMADOKTER: selected?.NAMADOKTER || row.NAMADOKTER || "",
-    TANGGAL: selected?.TANGGAL || row.TANGGAL || "",
-    NILAIKOMISI: row.NILAIKOMISI,
-    STATUS: row.STATUS,
-    KETERANGAN: row.KETERANGAN,
-  });
+      IDKOMISI: row.IDKOMISI,
+      IDPENGOBATAN: row.IDPENGOBATAN,
+      NIK: selected?.NIK || row.NIK || "",
+      NAMAPASIEN: selected?.NAMAPASIEN || row.NAMAPASIEN || "",
+      NAMADOKTER: selected?.NAMADOKTER || row.NAMADOKTER || "",
+      TANGGAL: selected?.TANGGAL || row.TANGGAL || "",
+      NILAIKOMISI: row.NILAIKOMISI,
+      STATUS: row.STATUS,
+      KETERANGAN: row.KETERANGAN,
+    });
     setDialogVisible(true);
   };
 

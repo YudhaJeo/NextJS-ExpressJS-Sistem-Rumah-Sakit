@@ -11,7 +11,7 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil, onReset, currentId,
   useEffect(() => {
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
-        fetchData(); 
+        fetchData();
       }
     };
     document.addEventListener("visibilitychange", handleVisibility);

@@ -1,4 +1,3 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\rawat_inap\page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -134,7 +133,6 @@ const Page = () => {
           response = await axios.post(url, payload);
         }
       
-        // validasi apakah response sukses
         if (response.status === 200 && response.data?.message) {
           toastRef.current?.showToast('00', response.data.message);
         } else {

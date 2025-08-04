@@ -1,4 +1,3 @@
-// src\models\tagihanSementaraModel.js
 import db from '../core/config/knex.js';
 
 export const getAllTagihanSementara = async () => {

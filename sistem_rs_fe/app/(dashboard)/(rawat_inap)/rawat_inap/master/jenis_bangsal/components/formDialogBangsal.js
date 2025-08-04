@@ -1,4 +1,3 @@
-// app/(dashboard)/master/jenis_bangsal/components/formDialogBangsal.js
 'use client';
 
 import { Button } from 'primereact/button';

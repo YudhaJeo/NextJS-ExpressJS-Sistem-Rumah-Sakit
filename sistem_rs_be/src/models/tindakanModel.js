@@ -4,9 +4,9 @@ export const getAll = () =>
     db('tindakan_medis').select();
 
 export const getById = (id) =>
-    db('tindakan_medis').where({ IDTINDAKAN: id}).first();
+    db('tindakan_medis').where({ IDTINDAKAN: id }).first();
 
-export const createTindakan = (data) => 
+export const createTindakan = (data) =>
     db('tindakan_medis').insert(data);
 
 export const updateTindakan = (id, data) =>
@@ -15,7 +15,7 @@ export const updateTindakan = (id, data) =>
         .update({
             ...data,
             UPDATED_AT: db.fn.now(),
-          });
+        });
 
 export const remove = (id) =>
     db('tindakan_medis').where({ IDTINDAKAN: id }).delete();

@@ -1,17 +1,15 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\master\obat\components\tabelObat.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import React from 'react';
 
-const TabelObat = ({ data, loading, onEdit, onDelete  }) => {
+const TabelObat = ({ data, loading, onEdit, onDelete }) => {
   return (
-    <DataTable 
-      value={data} 
-      paginator rows={10} 
-      loading={loading} 
+    <DataTable
+      value={data}
+      paginator rows={10}
+      loading={loading}
       size="small">
       <Column field="IDOBAT" header="ID" />
       <Column field="NAMAOBAT" header="Nama Obat" />
@@ -27,7 +25,7 @@ const TabelObat = ({ data, loading, onEdit, onDelete  }) => {
         }
       />
       <Column field="KETERANGAN" header="Keterangan" />
-      
+
       <Column
         header="Aksi"
         body={(row) => (

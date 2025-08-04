@@ -1,4 +1,3 @@
-// app/(dashboard)/(rawat_inap)/rawat_inap/manajemen-bed/page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -150,15 +149,15 @@ const Page = () => {
         return (
           item.NOMORBED.toLowerCase().includes(key) ||
           item.STATUS.toLowerCase().includes(key) ||
-          item.NAMAKAMAR.toLowerCase().includes(key) || 
-          item.NAMAJENIS?.toLowerCase().includes(key)   
+          item.NAMAKAMAR.toLowerCase().includes(key) ||
+          item.NAMAJENIS?.toLowerCase().includes(key)
         );
       });
       setData(filtered);
     }
   };
-  
-  
+
+
 
   return (
     <div className="card">

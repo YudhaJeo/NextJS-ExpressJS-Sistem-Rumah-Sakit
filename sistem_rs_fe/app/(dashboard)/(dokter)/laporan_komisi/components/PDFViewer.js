@@ -8,8 +8,8 @@ import 'react-pdf/dist/Page/TextLayer.css'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url,
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url,
 ).toString()
 
 function PDFViewer({ pdfUrl, paperSize, fileName }) {
@@ -64,23 +64,23 @@ function PDFViewer({ pdfUrl, paperSize, fileName }) {
 
     const handlePrint = () => {
         if (!pdfUrl) return;
-      
+
         if (pdfUrl.startsWith('data:application/pdf')) {
-          const base64Data = pdfUrl.split(',')[1];
-          const byteCharacters = atob(base64Data);
-          const byteNumbers = new Array(byteCharacters.length);
-          for (let i = 0; i < byteCharacters.length; i++) {
-            byteNumbers[i] = byteCharacters.charCodeAt(i);
-          }
-          const byteArray = new Uint8Array(byteNumbers);
-          const blob = new Blob([byteArray], { type: 'application/pdf' });
-      
-          const blobUrl = URL.createObjectURL(blob);
-          window.open(blobUrl, '_blank');
+            const base64Data = pdfUrl.split(',')[1];
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+            const blobUrl = URL.createObjectURL(blob);
+            window.open(blobUrl, '_blank');
         } else {
-          window.open(pdfUrl, '_blank');
+            window.open(pdfUrl, '_blank');
         }
-      };      
+    };
 
     useEffect(() => {
         const loadPdf = async () => {
@@ -112,18 +112,12 @@ function PDFViewer({ pdfUrl, paperSize, fileName }) {
                 setPageWidth(paperWidthInMm * mmToPixel);
                 setPageHeight(paperHeightInMm * mmToPixel);
             } catch (error) {
-                // Swal.fire({
-                //     icon: 'error',
-                //     title: 'Error',
-                //     text: 'Error loading PDF: ' + error.message
-                // });
-            }
-        };
+            };
 
-        if (pdfUrl) {
-            loadPdf();
-        }
-    }, [pdfUrl, paperSize]);
+            if (pdfUrl) {
+                loadPdf();
+            }
+        }, [pdfUrl, paperSize]);
 
     return (
         <div>
@@ -131,7 +125,6 @@ function PDFViewer({ pdfUrl, paperSize, fileName }) {
                 <div>
                     <div
                         style={{
-                            // display: 'flex',
                             backgroundColor: '#f0f0f0',
                             padding: '10px',
                             borderRadius: '5px',

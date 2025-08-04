@@ -1,4 +1,3 @@
-// sistem_rs_be/src/routes/profileRoutes.js
 import express from 'express';
 import { getUser, updateUser } from '../controllers/profileController.js';
 import { verifyToken } from '../middlewares/jwt.js';
@@ -8,7 +7,6 @@ import fs from 'fs';
 
 const router = express.Router();
 
-// konfigurasi folder upload dinamis berdasarkan sumber
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const sumber = req.user?.sumber === 'medis' ? 'tenaga_medis' : 'tenaga_non_medis';

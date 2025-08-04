@@ -27,29 +27,29 @@ const FormReservasiPasien = ({
   setDokterOptions,
   allDokterOptions,
 }) => {
-    const inputClass = (field) =>
+  const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
   useEffect(() => {
-  if (!formData.TANGGALRESERVASI || !formData.IDPOLI) {
-    setDokterOptions([]);
-    return;
-  }
+    if (!formData.TANGGALRESERVASI || !formData.IDPOLI) {
+      setDokterOptions([]);
+      return;
+    }
 
-  const hari = getNamaHari(formData.TANGGALRESERVASI);
+    const hari = getNamaHari(formData.TANGGALRESERVASI);
 
-  const filtered = allDokterOptions.filter(
-    (dokter) =>
-      dokter.IDPOLI === formData.IDPOLI &&
-      dokter.label.toLowerCase().includes(hari.toLowerCase())
-  );
+    const filtered = allDokterOptions.filter(
+      (dokter) =>
+        dokter.IDPOLI === formData.IDPOLI &&
+        dokter.label.toLowerCase().includes(hari.toLowerCase())
+    );
 
-  setDokterOptions(filtered);
+    setDokterOptions(filtered);
 
-  if (!filtered.some((d) => d.value === formData.IDDOKTER)) {
-    setFormData((prev) => ({ ...prev, IDDOKTER: "" }));
-  }
-}, [formData.TANGGALRESERVASI, formData.IDPOLI]);
+    if (!filtered.some((d) => d.value === formData.IDDOKTER)) {
+      setFormData((prev) => ({ ...prev, IDDOKTER: "" }));
+    }
+  }, [formData.TANGGALRESERVASI, formData.IDPOLI]);
   return (
     <Dialog
       header={formData.IDRESERVASI ? "Edit Reservasi" : "Tambah Reservasi"}
@@ -84,57 +84,57 @@ const FormReservasiPasien = ({
         </div>
 
         <div className="flex flex-col md:flex-row gap-4">
-  <div className="w-full md:w-1/2">
-          <label>Tanggal Reservasi</label>
-          <Calendar
-            className={inputClass('TANGGALRESERVASI')}
-            dateFormat="yy-mm-dd"
-            value={
-              formData.TANGGALRESERVASI
-                ? new Date(formData.TANGGALRESERVASI)
-                : undefined
-            }
-            onChange={(e) =>
-              onChange({
-                ...formData,
-                TANGGALRESERVASI: e.value?.toISOString().split("T")[0] || "",
-              })
-            }
-            showIcon
-          />
-          {errors.TANGGALRESERVASI && <small className="text-red-500">{errors.TANGGALRESERVASI}</small>}
+          <div className="w-full md:w-1/2">
+            <label>Tanggal Reservasi</label>
+            <Calendar
+              className={inputClass('TANGGALRESERVASI')}
+              dateFormat="yy-mm-dd"
+              value={
+                formData.TANGGALRESERVASI
+                  ? new Date(formData.TANGGALRESERVASI)
+                  : undefined
+              }
+              onChange={(e) =>
+                onChange({
+                  ...formData,
+                  TANGGALRESERVASI: e.value?.toISOString().split("T")[0] || "",
+                })
+              }
+              showIcon
+            />
+            {errors.TANGGALRESERVASI && <small className="text-red-500">{errors.TANGGALRESERVASI}</small>}
+          </div>
+
+          <div className="w-full md:w-1/2">
+            <label>Poli</label>
+            <Dropdown
+              className={inputClass('IDPOLI')}
+              options={poliOptions}
+              value={formData.IDPOLI}
+              onChange={(e) => {
+                const selectedPoli = e.value;
+
+                setFormData({
+                  ...formData,
+                  IDPOLI: selectedPoli,
+                  IDDOKTER: "",
+                });
+
+                const filteredDokter = allDokterOptions.filter(
+                  (dokter) => dokter.IDPOLI === selectedPoli
+                );
+                setDokterOptions(filteredDokter);
+              }}
+              placeholder="Pilih Poli"
+              filter
+              showClear
+            />
+            {errors.IDPOLI && <small className="text-red-500">{errors.IDPOLI}</small>}
+          </div>
         </div>
 
-        <div className="w-full md:w-1/2">
-          <label>Poli</label>
-          <Dropdown
-            className={inputClass('IDPOLI')}
-            options={poliOptions}
-            value={formData.IDPOLI}
-            onChange={(e) => {
-              const selectedPoli = e.value;
-
-              setFormData({
-                ...formData,
-                IDPOLI: selectedPoli,
-                IDDOKTER: "",
-              });
-
-              const filteredDokter = allDokterOptions.filter(
-                (dokter) => dokter.IDPOLI === selectedPoli
-              );
-              setDokterOptions(filteredDokter);
-            }}
-            placeholder="Pilih Poli"
-            filter
-            showClear
-          />
-          {errors.IDPOLI && <small className="text-red-500">{errors.IDPOLI}</small>}
-        </div>
-        </div>
-
-      <div>
-        <label>Nama Dokter & Jadwal Praktek</label>
+        <div>
+          <label>Nama Dokter & Jadwal Praktek</label>
           <Dropdown
             className={inputClass('IDDOKTER')}
             options={dokterOptions}
@@ -150,7 +150,7 @@ const FormReservasiPasien = ({
             showClear
           />
           {errors.IDDOKTER && <small className="text-red-500">{errors.IDDOKTER}</small>}
-      </div>
+        </div>
 
         <div>
           <label>Keluhan</label>

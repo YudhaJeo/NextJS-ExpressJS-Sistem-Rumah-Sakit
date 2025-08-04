@@ -12,9 +12,9 @@ const statusOptions = [
 ];
 
 const formatTanggal = (date) => {
-  if (!date) return "-"; // jika date null/undefined
+  if (!date) return "-";
   const d = new Date(date);
-  if (isNaN(d.getTime())) return "-"; // jika invalid date
+  if (isNaN(d.getTime())) return "-";
   return new Intl.DateTimeFormat("id-ID", {
     day: "numeric",
     month: "long",
@@ -57,13 +57,13 @@ const FormDialogKomisi = ({
             onChange={(e) => {
               const selected = allRiwayatOptions.find((opt) => opt.value === e.value);
               onChange({
-              ...formData,
-              IDPENGOBATAN: e.value,
-              NIK: selected ? selected.NIK : formData.NIK,
-              NAMAPASIEN: selected ? selected.NAMAPASIEN : formData.NAMAPASIEN,
-              NAMADOKTER: selected ? selected.NAMADOKTER : formData.NAMADOKTER,
-              TANGGAL: selected ? selected.TANGGAL : formData.TANGGAL,
-            });
+                ...formData,
+                IDPENGOBATAN: e.value,
+                NIK: selected ? selected.NIK : formData.NIK,
+                NAMAPASIEN: selected ? selected.NAMAPASIEN : formData.NAMAPASIEN,
+                NAMADOKTER: selected ? selected.NAMADOKTER : formData.NAMADOKTER,
+                TANGGAL: selected ? selected.TANGGAL : formData.TANGGAL,
+              });
 
             }}
             placeholder="Pilih Dokter / Pasien / Tanggal"

@@ -1,4 +1,3 @@
-// sistem_rs_fe\app\(dashboard)\(rawat_inap)\rawat_inap\menu\riwayat_inap\[id]\page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -35,7 +34,9 @@ export default function DetailRiwayatInapPage() {
       const res = await axios.get(`${API_URL}/komisi_dokter/${id}`);
       setDetail(res.data);
 
+
       const servicesData = [];
+
 
       servicesData.push({
         id: 1,
@@ -86,6 +87,7 @@ export default function DetailRiwayatInapPage() {
     let severity = 'success';
     if (rowData.type === 'obat') severity = 'info';
     if (rowData.type === 'tindakan') severity = 'warning';
+
     return <Tag value={rowData.jenis} severity={severity} />;
   };
 
@@ -128,9 +130,11 @@ export default function DetailRiwayatInapPage() {
     <div className="card">
       <ToastNotifier ref={toastRef} />
 
+
       <div className="max-w-6xl mx-auto">
         <Card className="shadow-3">
           {headerTemplate}
+
 
           <div className="p-4">
             <div className="grid">
@@ -172,16 +176,50 @@ export default function DetailRiwayatInapPage() {
               <DataTable
                 value={services}
                 stripedRows
+
+              <DataTable
+                value={services}
+                stripedRows
                 showGridlines
                 responsiveLayout="scroll"
                 className="p-datatable-customers"
               >
-                <Column field="id" header="#" body={noBodyTemplate} style={{ width: '60px' }} />
-                <Column field="layanan" header="Layanan" body={layananBodyTemplate} style={{ minWidth: '200px' }} />
-                <Column field="qty" header="Qty" body={qtyBodyTemplate} style={{ width: '80px' }} />
-                <Column field="jenis" header="Jenis" body={jenisBodyTemplate} style={{ width: '120px' }} />
-                <Column field="hargaSatuan" header="Jumlah Komisi" body={hargaBodyTemplate} style={{ width: '150px' }} />
-                <Column field="total" header="Total" body={totalBodyTemplate} style={{ width: '150px' }} />
+                <Column
+                  field="id"
+                  header="#"
+                  body={noBodyTemplate}
+                  style={{ width: '60px' }}
+                />
+                <Column
+                  field="layanan"
+                  header="Layanan"
+                  body={layananBodyTemplate}
+                  style={{ minWidth: '200px' }}
+                />
+                <Column
+                  field="qty"
+                  header="Qty"
+                  body={qtyBodyTemplate}
+                  style={{ width: '80px' }}
+                />
+                <Column
+                  field="jenis"
+                  header="Jenis"
+                  body={jenisBodyTemplate}
+                  style={{ width: '120px' }}
+                />
+                <Column
+                  field="hargaSatuan"
+                  header="Jumlah Komisi"
+                  body={hargaBodyTemplate}
+                  style={{ width: '150px' }}
+                />
+                <Column
+                  field="total"
+                  header="Total"
+                  body={totalBodyTemplate}
+                  style={{ width: '150px' }}
+                />
               </DataTable>
             </div>
 
@@ -196,7 +234,9 @@ export default function DetailRiwayatInapPage() {
                       <span className="font-medium">{formatRupiah(detail.NILAIKOMISI)}</span>
                     </div>
 
+
                     <Divider />
+
 
                     <div className="flex justify-content-between">
                       <span className="text-lg font-semibold text-900">Total Biaya:</span>

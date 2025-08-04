@@ -6,9 +6,9 @@ import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 
 const asuransiSeverity = {
-  UMUM: 'info',      
-  BPJS: 'success',   
-  DEFAULT: 'warning' 
+  UMUM: 'info',
+  BPJS: 'success',
+  DEFAULT: 'warning'
 };
 
 const metodeSeverity = {
@@ -41,9 +41,9 @@ const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
 
   const metodeBodyTemplate = (row) => (
     <Tag
-        value={row.METODEPEMBAYARAN}
-        severity={metodeSeverity[row.METODEPEMBAYARAN] || metodeSeverity.DEFAULT}
-      />
+      value={row.METODEPEMBAYARAN}
+      severity={metodeSeverity[row.METODEPEMBAYARAN] || metodeSeverity.DEFAULT}
+    />
   );
 
   const bankBodyTemplate = (row) => {
@@ -51,16 +51,16 @@ const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
   };
 
   const asuransiBodyTemplate = (row) => {
-      const severity =
-        asuransiSeverity[row.ASURANSI?.toUpperCase()] || asuransiSeverity.DEFAULT;
-  
-      return (
-        <Tag
-          value={row.ASURANSI}
-          severity={severity}
-        />
-      );
-    };
+    const severity =
+      asuransiSeverity[row.ASURANSI?.toUpperCase()] || asuransiSeverity.DEFAULT;
+
+    return (
+      <Tag
+        value={row.ASURANSI}
+        severity={severity}
+      />
+    );
+  };
 
   return (
     <DataTable
@@ -77,7 +77,7 @@ const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
       <Column field="NAMAPASIEN" header="Nama Pasien" />
       <Column field="ASURANSI" header="Asuransi" body={asuransiBodyTemplate} />
       <Column field="METODEPEMBAYARAN" header="Metode" body={metodeBodyTemplate} />
-      <Column field="NAMA_BANK" header="Bank" body={bankBodyTemplate}/>
+      <Column field="NAMA_BANK" header="Bank" body={bankBodyTemplate} />
       <Column field="JUMLAHBAYAR" header="Jumlah Bayar" body={jumlahBodyTemplate} />
       <Column field="TANGGALBAYAR" header="Tanggal Bayar" body={tanggalBodyTemplate} />
       <Column field="KETERANGAN" header="Keterangan" body={keteranganBodyTemplate} />

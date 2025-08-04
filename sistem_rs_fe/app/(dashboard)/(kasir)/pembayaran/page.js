@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { Button } from 'primereact/button';
 import FilterTanggal from '@/app/components/filterTanggal';
 import TabelPembayaran from './components/tabelPembayaran';
 import FormDialogPembayaran from './components/formDialogPembayaran';
@@ -47,7 +46,7 @@ const Page = () => {
     fetchData();
     fetchInvoices();
     fetchPasien();
-    fetchMetode(); 
+    fetchMetode();
     fetchBanks();
   }, []);
 
@@ -76,7 +75,7 @@ const Page = () => {
             NIK: inv.NIK,
             NAMAPASIEN: inv.NAMAPASIEN,
             NAMAASURANSI: inv.NAMAASURANSI,
-            JUMLAHBAYAR: inv.TOTALTAGIHAN,
+            SISA_TAGIHAN: inv.SISA_TAGIHAN,
           };
         });
       setInvoiceOptions(options);
@@ -241,7 +240,7 @@ const Page = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
-        
+
         <HeaderBar
           title=""
           placeholder="Cari no pembayaran atau nama pasien..."
@@ -271,7 +270,7 @@ const Page = () => {
         setForm={setForm}
         invoiceOptions={invoiceOptions}
         pasienOptions={pasienOptions}
-        metodeOptions={metodeOptions} 
+        metodeOptions={metodeOptions}
         bankOptions={bankOptions}
       />
     </div>

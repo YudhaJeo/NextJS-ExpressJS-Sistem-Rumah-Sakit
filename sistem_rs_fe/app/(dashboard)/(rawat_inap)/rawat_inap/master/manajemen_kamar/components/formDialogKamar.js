@@ -1,17 +1,15 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\manajemen-kamar\components\formKamar.js
 'use client';
 
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
-import React from 'react';
 
-const FormDialogKamar = ({ 
-  visible, 
-  onHide, 
-  onSubmit, 
-  form, 
+const FormDialogKamar = ({
+  visible,
+  onHide,
+  onSubmit,
+  form,
   setForm,
   errors,
   bangsalOptions

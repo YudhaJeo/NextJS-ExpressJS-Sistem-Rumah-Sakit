@@ -1,17 +1,15 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\master\tindakan_medis\components\tabelTindakan.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import React from 'react';
 
-const MyTabel = ({ data, loading, onEdit, onDelete  }) => {
+const MyTabel = ({ data, loading, onEdit, onDelete }) => {
   return (
-    <DataTable 
-      value={data} 
-      paginator rows={10} 
-      loading={loading} 
+    <DataTable
+      value={data}
+      paginator rows={10}
+      loading={loading}
       size="small">
       <Column field="IDTINDAKAN" header="ID" />
       <Column field="NAMATINDAKAN" header="Nama Tindakan" />
@@ -26,7 +24,7 @@ const MyTabel = ({ data, loading, onEdit, onDelete  }) => {
       />
       <Column field="KATEGORI" header="Kategori" />
       <Column field="DESKRIPSI" header="Deskripsi" />
-      
+
       <Column
         header="Aksi"
         body={(row) => (

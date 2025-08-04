@@ -1,7 +1,6 @@
 import express from 'express';
 import * as PengobatanController from '../controllers/riwayatPengobatanController.js';
 import { upload } from '../middlewares/riwayatMulter.js';
-import { verifyToken } from '../middlewares/jwt.js';
 
 const router = express.Router();
 

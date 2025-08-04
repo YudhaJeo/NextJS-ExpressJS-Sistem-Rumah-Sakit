@@ -1,4 +1,3 @@
-// sistem_rs_fe\app\components\headerbar.js
 "use client";
 
 import { InputText } from "primereact/inputtext";

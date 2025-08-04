@@ -1,4 +1,3 @@
-// sistem_rs_fe\app\(dashboard)\profile\page.js
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
@@ -90,7 +89,7 @@ export default function ProfilePage() {
       console.error('Update profil error:', err.response?.data || err)
       toastRef.current?.showToast('01', 'Gagal memperbarui profile')
     }
-  }  
+  }
 
   return (
     <div className="card">

@@ -13,9 +13,9 @@ const metodeSeverity = {
 };
 
 const asuransiSeverity = {
-  UMUM: 'info',      
-  BPJS: 'success',   
-  DEFAULT: 'warning' 
+  UMUM: 'info',
+  BPJS: 'success',
+  DEFAULT: 'warning'
 };
 
 const TabelAngsuran = ({ data, loading, onEdit, onDelete }) => {
@@ -53,7 +53,7 @@ const TabelAngsuran = ({ data, loading, onEdit, onDelete }) => {
   const asuransiBodyTemplate = (row) => {
     const severity =
       asuransiSeverity[row.NAMAASURANSI?.toUpperCase()] || asuransiSeverity.DEFAULT;
-    
+
     return (
       <Tag
         value={row.NAMAASURANSI}

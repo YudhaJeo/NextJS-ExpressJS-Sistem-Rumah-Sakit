@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { Button } from 'primereact/button';
 import FilterTanggal from '@/app/components/filterTanggal';
 import TabelDepositPenggunaan from './components/tabelDepositPenggunaan';
 import FormDialogDepositPenggunaan from './components/formDialogDepositPenggunaan';
@@ -73,13 +72,13 @@ const Page = () => {
       minimumFractionDigits: 0,
     }).format(number);
   };
-  
+
   const fetchDepositOptions = async () => {
     try {
       const res = await axios.get(`${API_URL}/deposit/options`);
       setDepositOptions(res.data.data.map(item => ({
-        value: item.value, 
-        label: `${item.label} | ${item.NAMAPASIEN} | Sisa: ${formatRupiah(item.SALDO_SISA)}`,
+        value: item.value,
+        label: `${item.label} - ${item.NAMAPASIEN} | Sisa: ${formatRupiah(item.SALDO_SISA)}`,
         nik: item.NIK,
         NAMAPASIEN: item.NAMAPASIEN,
       })));
@@ -92,9 +91,9 @@ const Page = () => {
     const res = await axios.get(`${API_URL}/invoice`);
     setInvoiceOptions(res.data.data.map(item => ({
       value: item.IDINVOICE,
-      label: `${item.NOINVOICE} | ${item.NAMAPASIEN}`,
+      label: `${item.NOINVOICE} - ${item.NAMAPASIEN}`,
       nik: item.NIK,
-      NAMAPASIEN: item.NAMAPASIEN, 
+      NAMAPASIEN: item.NAMAPASIEN,
     })));
   };
 

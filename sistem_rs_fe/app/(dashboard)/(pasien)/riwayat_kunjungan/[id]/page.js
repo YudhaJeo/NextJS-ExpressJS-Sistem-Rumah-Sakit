@@ -64,14 +64,14 @@ export default function DetailRiwayatKunjunganPage() {
     );
   }
 
-  const fotoUrl = detail.FOTOPROFIL 
+  const fotoUrl = detail.FOTOPROFIL
     ? `http://localhost:4000/uploads/riwayat_pengobatan/${detail.FOTOPROFIL}`
     : null;
 
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
-      
+
       <div className="max-w-4xl mx-auto">
         <Card className="shadow-3">
           <div className="bg-primary text-white p-4 text-center">

@@ -1,4 +1,3 @@
-// src/models/authModel.js
 import db from '../core/config/knex.js';
 
 export const findUserByEmail = async (email) => {
@@ -18,9 +17,9 @@ export const findUserByEmail = async (email) => {
     .first()
     .select('*', db.raw('?? as ROLE', ['JENISTENAGANONMEDIS']))
 
-    if (tenagaNonMedis) return {
-  ...tenagaNonMedis,
-  ID: tenagaNonMedis.IDTENAGANONMEDIS,
-  USERNAME: tenagaNonMedis.NAMALENGKAP,
-};
+  if (tenagaNonMedis) return {
+    ...tenagaNonMedis,
+    ID: tenagaNonMedis.IDTENAGANONMEDIS,
+    USERNAME: tenagaNonMedis.NAMALENGKAP,
+  };
 };

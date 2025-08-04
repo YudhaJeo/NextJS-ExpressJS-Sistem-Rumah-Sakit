@@ -7,7 +7,6 @@ import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { classNames } from 'primereact/utils';
-import React from 'react';
 
 const FormDialogMetodePembayaran = ({
   visible,

@@ -39,13 +39,13 @@ const Page = () => {
     }
   };
 
-  
+
   const validateForm = () => {
     const newErrors = {};
-    if (!form.NAMAAGAMA.trim()) newErrors.NAMAAGAMA = 
-    <span  style={{color: 'red'}}>
-      Nama agama wajib diisi
-    </span>;
+    if (!form.NAMAAGAMA.trim()) newErrors.NAMAAGAMA =
+      <span style={{ color: 'red' }}>
+        Nama agama wajib diisi
+      </span>;
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -125,10 +125,10 @@ const Page = () => {
       />
 
       <TabelAgama
-        data={data} 
-        loading={loading} 
-        onEdit={handleEdit} 
-        onDelete={handleDelete} 
+        data={data}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
       />
 
       <FormDialogAgama

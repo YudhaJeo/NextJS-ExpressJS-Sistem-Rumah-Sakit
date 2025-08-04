@@ -1,4 +1,3 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\tagihan_sementara\components\tabelTagihanSementara.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';

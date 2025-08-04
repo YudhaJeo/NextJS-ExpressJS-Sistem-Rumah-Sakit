@@ -1,4 +1,3 @@
-// src\routes\rawatInapRoute.js
 import express from 'express';
 import RawatInapController from '../controllers/rawatInapController.js';
 

@@ -1,4 +1,3 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\tagihan_sementara\page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -56,8 +55,8 @@ const Page = () => {
         }}
       />
 
-      <TabelTagihanSementara 
-        data={data} 
+      <TabelTagihanSementara
+        data={data}
         loading={loading}
       />
     </div>

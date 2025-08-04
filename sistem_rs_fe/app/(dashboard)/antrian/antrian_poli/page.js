@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { Toast } from 'primereact/toast';
-import { io } from 'socket.io-client'; 
+import { io } from 'socket.io-client';
 import TabelAntrianPoli from './components/tabelAntrianPoli';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -23,7 +23,7 @@ function DataAntrianPoli() {
   const socketRef = useRef(null);
 
   useEffect(() => {
-    const poliUser = Cookies.get('unitKerja'); 
+    const poliUser = Cookies.get('unitKerja');
     const role = Cookies.get('role');
     setUnitKerja(poliUser || null);
     setUserRole(role || null);

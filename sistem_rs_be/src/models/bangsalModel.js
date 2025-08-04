@@ -24,7 +24,7 @@ export const update = (id, data) => {
     .where({ IDBANGSAL: id })
     .update({
       ...data,
-      UPDATED_AT: db.fn.now(), 
+      UPDATED_AT: db.fn.now(),
     });
 };
 

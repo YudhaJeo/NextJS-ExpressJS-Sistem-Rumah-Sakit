@@ -4,7 +4,6 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
-import React from 'react';
 
 const statusLabels = {
   AKTIF: 'Aktif',
@@ -12,8 +11,8 @@ const statusLabels = {
 };
 
 const statusSeverity = {
-  AKTIF: 'success',  
-  NONAKTIF: 'danger', 
+  AKTIF: 'success',
+  NONAKTIF: 'danger',
 };
 
 const TabelMetodePembayaran = ({ data, loading, onEdit, onDelete }) => {

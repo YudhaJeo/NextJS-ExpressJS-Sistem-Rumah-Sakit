@@ -26,7 +26,7 @@ export const createDokumen = async (req, res) => {
     }
 
     const NAMAFILE = file.filename;
-    const LOKASIFILE = file.path.replace(/\\/g, '/'); 
+    const LOKASIFILE = file.path.replace(/\\/g, '/');
     const TANGGALUPLOAD = new Date();
 
     const newDokumen = {
@@ -68,7 +68,7 @@ export const updateDokumen = async (req, res) => {
         fs.unlinkSync(dokumenLama.LOKASIFILE);
       }
 
-      updatedData.LOKASIFILE = file.path.replace(/\\/g, '/'); 
+      updatedData.LOKASIFILE = file.path.replace(/\\/g, '/');
       updatedData.NAMAFILE = file.filename;
     }
 
@@ -107,7 +107,7 @@ export const downloadDokumen = async (req, res) => {
       return res.status(404).json({ error: 'File tidak ditemukan' });
     }
 
-    res.download(filePath, filename); 
+    res.download(filePath, filename);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -130,7 +130,7 @@ export const downloadById = async (req, res) => {
 
     res.download(fullPath, dokumen.NAMAFILE);
   } catch (err) {
-    console.error('Download error:', err); 
+    console.error('Download error:', err);
     res.status(500).json({ error: err.message });
   }
 };

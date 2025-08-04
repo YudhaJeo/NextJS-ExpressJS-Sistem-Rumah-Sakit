@@ -1,4 +1,3 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\master\obat\page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';

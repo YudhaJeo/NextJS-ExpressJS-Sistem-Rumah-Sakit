@@ -69,7 +69,7 @@ const FormDialogDeposit = ({
         </div>
 
         <div>
-          <label className="font-medium">Invoice Pasien</label>
+          <label className="font-medium">No Invoice </label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDINVOICE })}
             options={invoiceOptions}
@@ -80,7 +80,7 @@ const FormDialogDeposit = ({
                 ...form,
                 IDINVOICE: e.value,
                 NIK: selected?.NIK || '',
-                NAMALENGKAP: selected?.NAMALENGKAP || '',
+                NAMAPASIEN: selected?.NAMAPASIEN || '',
                 NOINVOICE: selected?.NOINVOICE || '',
               });
             }}
@@ -94,18 +94,13 @@ const FormDialogDeposit = ({
         </div>
 
         <div>
-          <label className="font-medium">No Invoice</label>
-          <InputText className="w-full mt-2" value={form.NOINVOICE || '-'} readOnly />
+          <label className="font-medium">NIK</label>
+          <InputText className="w-full mt-2" value={form.NIK || ''} readOnly />
         </div>
 
         <div>
-          <label className="font-medium">NIK Pasien</label>
-          <InputText className="w-full mt-2" value={form.NIK || '-'} readOnly />
-        </div>
-
-        <div>
-          <label className="font-medium">Nama Pasien</label>
-          <InputText className="w-full mt-2" value={form.NAMALENGKAP || '-'} readOnly />
+          <label className="font-medium">Nama</label>
+          <InputText className="w-full mt-2" value={form.NAMAPASIEN || ''} readOnly />
         </div>
 
         <div>
@@ -210,7 +205,7 @@ const FormDialogDeposit = ({
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUS })}
             options={statusOptions}
-            value={form.SALDO_SISA === 0 ? 'HABIS' : form.STATUS} 
+            value={form.SALDO_SISA === 0 ? 'HABIS' : form.STATUS}
             onChange={(e) => setForm({ ...form, STATUS: e.value })}
             placeholder="Pilih Status"
             disabled={form.SALDO_SISA === 0}

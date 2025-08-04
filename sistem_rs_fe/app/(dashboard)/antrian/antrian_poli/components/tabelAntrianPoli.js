@@ -158,9 +158,9 @@ const TabelAntrianPoli = ({
             value={selectedZona}
             onChange={(e) => setSelectedZona(e.value)}
             options={[...new Set(poliList.map((p) => p.ZONA))].map((z) => ({
-                label: z,
-                value: z,
-              }))}
+              label: z,
+              value: z,
+            }))}
             placeholder="Pilih Zona"
             className="w-full md:w-14rem"
             showClear

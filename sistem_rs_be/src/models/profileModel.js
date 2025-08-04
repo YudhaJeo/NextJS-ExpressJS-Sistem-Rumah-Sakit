@@ -1,4 +1,3 @@
-// sistem_rs_be/src/models/profileModel.js
 import db from '../core/config/knex.js';
 
 export const getById = async (id, sumber) => {
@@ -9,7 +8,7 @@ export const getById = async (id, sumber) => {
       .first();
 
     if (row) {
-      return row; 
+      return row;
     }
   }
 
@@ -20,7 +19,7 @@ export const getById = async (id, sumber) => {
       .first();
 
     if (row) {
-      return row; 
+      return row;
     }
   }
 

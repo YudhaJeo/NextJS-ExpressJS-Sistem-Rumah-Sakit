@@ -1,23 +1,20 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\rawat_inap\components\formRawatInap.js
 'use client';
 
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
-import React from 'react';
 import { InputTextarea } from 'primereact/inputtextarea';
-        
 
-const FormRawatInap = ({ 
-  visible, 
-  onHide, 
-  onSubmit, 
-  form, 
+
+const FormRawatInap = ({
+  visible,
+  onHide,
+  onSubmit,
+  form,
   setForm,
   errors,
   pengobatanOptions,
-  kamarOptions,
   bedOptions
 }) => {
   const inputClass = (field) =>
@@ -41,7 +38,7 @@ const FormRawatInap = ({
           <Dropdown
             className={inputClass('IDPENGOBATAN')}
             value={form.IDPENGOBATAN}
-            options={pengobatanOptions} 
+            options={pengobatanOptions}
             onChange={(e) => setForm({ ...form, IDPENGOBATAN: e.value })}
             placeholder="Pilih Riwayat Pengobatan"
             filter
@@ -108,7 +105,7 @@ const FormRawatInap = ({
           <label>Catatan</label>
           <InputTextarea
             className={inputClass('CATATAN')}
-            value={form.CATATAN || ''} 
+            value={form.CATATAN || ''}
             onChange={(e) => setForm({ ...form, CATATAN: e.target.value })}
             placeholder="Masukkan catatan (Opsional)"
           />

@@ -34,7 +34,7 @@ export async function createBangsal(req, res) {
 export async function updateBangsal(req, res) {
   try {
     const { id } = req.params;
-    const { NAMABANGSAL, IDJENISBANGSAL, LOKASI} = req.body;
+    const { NAMABANGSAL, IDJENISBANGSAL, LOKASI } = req.body;
 
     const updated = await BangsalModel.update(id, {
       NAMABANGSAL,

@@ -1,4 +1,3 @@
-// app/(dashboard)/master/jenis_bangsal/page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';

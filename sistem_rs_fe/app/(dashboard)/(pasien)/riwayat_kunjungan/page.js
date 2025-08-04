@@ -14,11 +14,11 @@ const RiwayatKunjunganPage = () => {
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);  
+  const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 30000); 
+    const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -35,7 +35,7 @@ const RiwayatKunjunganPage = () => {
     }
   };
 
-    const handleSearch = (keyword) => {
+  const handleSearch = (keyword) => {
     if (!keyword) return setData(originalData);
     const filtered = originalData.filter(
       (item) =>
@@ -46,7 +46,7 @@ const RiwayatKunjunganPage = () => {
   };
 
 
-    const handleDateFilter = () => {
+  const handleDateFilter = () => {
     if (!startDate && !endDate) return setData(originalData);
     const filtered = originalData.filter((item) => {
       const visitDate = new Date(item.TANGGALKUNJUNGAN);
@@ -87,7 +87,7 @@ const RiwayatKunjunganPage = () => {
         />
       </div>
 
-        <TabelRiwayatKunjungan data={data} loading={loading} />
+      <TabelRiwayatKunjungan data={data} loading={loading} />
 
     </div>
   );

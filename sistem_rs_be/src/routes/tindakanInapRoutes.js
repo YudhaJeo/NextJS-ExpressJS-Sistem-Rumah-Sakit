@@ -1,4 +1,3 @@
-// src\routes\tindakanInapRoutes.js
 import express from 'express';
 import {
   getAllTindakanInap,

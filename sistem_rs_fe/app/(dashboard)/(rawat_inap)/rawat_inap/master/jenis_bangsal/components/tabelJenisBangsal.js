@@ -1,4 +1,3 @@
-// app/(dashboard)/master/jenis_bangsal/components/tabelJenisBangsal.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
@@ -8,10 +7,10 @@ import React from 'react';
 
 const TabelJenis = ({ data, loading, onEdit, onDelete }) => {
   return (
-    <DataTable 
-      value={data} 
-      paginator rows={10} 
-      loading={loading} 
+    <DataTable
+      value={data}
+      paginator rows={10}
+      loading={loading}
       size="small"
     >
       <Column field="IDJENISBANGSAL" header="ID" />

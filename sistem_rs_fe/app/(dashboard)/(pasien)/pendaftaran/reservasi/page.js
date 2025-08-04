@@ -49,36 +49,36 @@ const ReservasiPasienPage = () => {
     fetchDokter();
   }, []);
 
-const fetchReservasi = async () => {
-  setLoading(true);
-  try {
-    const res = await axios.get(`${API_URL}/reservasi`);
-    const transformed = transformJadwalHariIni(res.data);
-    setData(transformed);
-    setOriginalData(transformed);
-  } catch (err) {
-    console.error('Gagal mengambil data:', err);
-  } finally {
-    setLoading(false);
-  }
-};
+  const fetchReservasi = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}/reservasi`);
+      const transformed = transformJadwalHariIni(res.data);
+      setData(transformed);
+      setOriginalData(transformed);
+    } catch (err) {
+      console.error('Gagal mengambil data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const transformJadwalHariIni = (list) => {
-  return list.map((item) => {
-    const hariReservasi = getHariFromTanggal(item.TANGGALRESERVASI).toLowerCase(); 
-    const semuaJadwal = item.JADWALPRAKTEK || [];
+  const transformJadwalHariIni = (list) => {
+    return list.map((item) => {
+      const hariReservasi = getHariFromTanggal(item.TANGGALRESERVASI).toLowerCase();
+      const semuaJadwal = item.JADWALPRAKTEK || [];
 
-    const jadwalHariIni = semuaJadwal
-      .map((j) => j.trim()) 
-      .filter((j) => j.toLowerCase().includes(hariReservasi)) 
-      .join(', ') || '-'; 
+      const jadwalHariIni = semuaJadwal
+        .map((j) => j.trim())
+        .filter((j) => j.toLowerCase().includes(hariReservasi))
+        .join(', ') || '-';
 
-    return {
-      ...item,
-      JADWAL_PRAKTEK_HARI_INI: jadwalHariIni,
-    };
-  });
-};
+      return {
+        ...item,
+        JADWAL_PRAKTEK_HARI_INI: jadwalHariIni,
+      };
+    });
+  };
 
   const fetchPasien = async () => {
     try {
@@ -94,37 +94,37 @@ const transformJadwalHariIni = (list) => {
     }
   };
 
-const fetchPoli = async () => {
-  try {
-    const res = await axios.get(`${API_URL}/poli`);
+  const fetchPoli = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/poli`);
 
-    const options = res.data.map((poli) => ({
-      label: `${poli.NAMAPOLI}`,
-      value: poli.IDPOLI,
+      const options = res.data.map((poli) => ({
+        label: `${poli.NAMAPOLI}`,
+        value: poli.IDPOLI,
       }));
 
-    setPoliOptions(options);
-      } catch (err) {
-    console.error('Gagal ambil data poli:', err);
-      }
-    };
+      setPoliOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil data poli:', err);
+    }
+  };
 
-const fetchDokter = async () => {
-  try {
-    const res = await axios.get(`${API_URL}/dokter`);
+  const fetchDokter = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/dokter`);
 
-    const options = res.data.map((dokter) => ({
-      label: `${dokter.NAMALENGKAP} (${dokter.JADWALPRAKTEK || 'Jadwal tidak tersedia' })`,
-      value: dokter.IDDOKTER,
-      IDPOLI: dokter.IDPOLI,
-    }));
+      const options = res.data.map((dokter) => ({
+        label: `${dokter.NAMALENGKAP} (${dokter.JADWALPRAKTEK || 'Jadwal tidak tersedia'})`,
+        value: dokter.IDDOKTER,
+        IDPOLI: dokter.IDPOLI,
+      }));
 
-    setDokterOptions(options);
-    setAllDokterOptions(options);
-  } catch (err) {
-    console.error('Gagal ambil data poli:', err);
-  }
-};
+      setDokterOptions(options);
+      setAllDokterOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil data poli:', err);
+    }
+  };
 
 
   const handleSearch = (keyword) => {
@@ -143,17 +143,17 @@ const fetchDokter = async () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.NIK.trim()) newErrors.NIK = <span style={{color: 'red'}}>NIK wajib diisi</span>;
-    if (!formData.TANGGALRESERVASI.trim()) newErrors.TANGGALRESERVASI = <span style={{color: 'red'}}>Tanggal Reservasi wajib diisi</span>;
-    if (!formData.IDPOLI) newErrors.IDPOLI = <span style={{color: 'red'}}>Poli wajib dipilih</span>;
-    if (!formData.IDDOKTER) newErrors.IDDOKTER = <span style={{color: 'red'}}>Dokter wajib dipilih</span>;
-    if (!formData.KETERANGAN.trim()) newErrors.KETERANGAN = <span style={{color: 'red'}}>Keluhan wajib dipilih</span>;
-    if (!formData.STATUS.trim()) newErrors.STATUS = <span style={{color: 'red'}}>Status wajib dipilih</span>;
+    if (!formData.NIK.trim()) newErrors.NIK = <span style={{ color: 'red' }}>NIK wajib diisi</span>;
+    if (!formData.TANGGALRESERVASI.trim()) newErrors.TANGGALRESERVASI = <span style={{ color: 'red' }}>Tanggal Reservasi wajib diisi</span>;
+    if (!formData.IDPOLI) newErrors.IDPOLI = <span style={{ color: 'red' }}>Poli wajib dipilih</span>;
+    if (!formData.IDDOKTER) newErrors.IDDOKTER = <span style={{ color: 'red' }}>Dokter wajib dipilih</span>;
+    if (!formData.KETERANGAN.trim()) newErrors.KETERANGAN = <span style={{ color: 'red' }}>Keluhan wajib dipilih</span>;
+    if (!formData.STATUS.trim()) newErrors.STATUS = <span style={{ color: 'red' }}>Status wajib dipilih</span>;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  
+
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
@@ -208,7 +208,7 @@ const fetchDokter = async () => {
     });
   };
 
-   const handleDateFilter = () => {
+  const handleDateFilter = () => {
     if (!startDate && !endDate) return setData(originalData);
     const filtered = originalData.filter((item) => {
       const visitDate = new Date(item.TANGGALKUNJUNGAN);

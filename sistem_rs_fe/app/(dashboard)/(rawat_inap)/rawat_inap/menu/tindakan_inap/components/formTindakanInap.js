@@ -1,17 +1,15 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\rawat_inap\components\formTindakan.js
 'use client';
 
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
-import React from 'react';
 import { InputNumber } from 'primereact/inputnumber';
 
-const FormTindakanInap = ({ 
-  visible, 
-  onHide, 
-  onSubmit, 
-  form, 
+const FormTindakanInap = ({
+  visible,
+  onHide,
+  onSubmit,
+  form,
   setForm,
   errors,
   pasienOptions,
@@ -57,9 +55,9 @@ const FormTindakanInap = ({
             onChange={(e) => {
               setForm({
                 ...form,
-                IDTINDAKAN: e.value, 
+                IDTINDAKAN: e.value,
               });
-            }}            
+            }}
             placeholder="Pilih tindakan yang diberikan ke pasien"
             filter
             showClear

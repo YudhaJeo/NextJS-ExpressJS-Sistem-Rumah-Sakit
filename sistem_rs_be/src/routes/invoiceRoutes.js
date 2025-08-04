@@ -1,6 +1,5 @@
 import express from 'express';
 import * as InvoiceController from '../controllers/invoiceController.js';
-import { verifyToken } from '../middlewares/jwt.js';
 
 const router = express.Router();
 

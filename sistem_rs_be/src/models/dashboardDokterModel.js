@@ -27,14 +27,14 @@ export const getJadwalHariIni = async () => {
   }
 };
 
- export const getLaporanHariIni = async () => {
-   try {
+export const getLaporanHariIni = async () => {
+  try {
     return await db('komisi_dokter').count('IDKOMISI as total').first();
   } catch (error) {
     console.error('Error getLaporanHariIni:', error);
     throw error;
   }
- };
+};
 
 // export const getStatistikBulanan = async () => {
 //   try {

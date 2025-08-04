@@ -33,32 +33,32 @@ function MonitorAntrianPoli() {
     setZona(z || "");
   }, []);
 
-const fetchData = useCallback(async (showLoading = false) => {
-  if (showLoading) setLoading(true);
-  try {
-    const [poliRes, antrianRes] = await Promise.all([
-      axios.get(`${API_URL}/poli`),
-      axios.get(`${API_URL}/antrian_poli/data`),
-    ]);
+  const fetchData = useCallback(async (showLoading = false) => {
+    if (showLoading) setLoading(true);
+    try {
+      const [poliRes, antrianRes] = await Promise.all([
+        axios.get(`${API_URL}/poli`),
+        axios.get(`${API_URL}/antrian_poli/data`),
+      ]);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const currentZona = urlParams.get("zona") || "";
+      const urlParams = new URLSearchParams(window.location.search);
+      const currentZona = urlParams.get("zona") || "";
 
-    let filteredPoli = poliRes.data || [];
-    if (currentZona) {
-      filteredPoli = filteredPoli.filter(
-        (p) => p.ZONA?.toLowerCase() === currentZona.toLowerCase()
-      );
+      let filteredPoli = poliRes.data || [];
+      if (currentZona) {
+        filteredPoli = filteredPoli.filter(
+          (p) => p.ZONA?.toLowerCase() === currentZona.toLowerCase()
+        );
+      }
+
+      setPoliList(filteredPoli);
+      setAntrianList(antrianRes.data.data || []);
+    } catch (error) {
+      showToast("error", "Gagal memuat data");
+    } finally {
+      if (showLoading) setLoading(false);
     }
-
-    setPoliList(filteredPoli);
-    setAntrianList(antrianRes.data.data || []);
-  } catch (error) {
-    showToast("error", "Gagal memuat data");
-  } finally {
-    if (showLoading) setLoading(false);
-  }
-}, []);
+  }, []);
 
   useEffect(() => {
     if (zona !== null) fetchData(true);
@@ -70,7 +70,7 @@ const fetchData = useCallback(async (showLoading = false) => {
         try {
           const msg = JSON.parse(e.data);
           if (msg.type === "update") fetchData(false);
-        } catch {}
+        } catch { }
       };
       ws.current.onclose = () => setTimeout(connectWebSocket, 5000);
       ws.current.onerror = () => startPolling();
@@ -124,7 +124,7 @@ const fetchData = useCallback(async (showLoading = false) => {
 
       if (userHasInteracted) {
         const ding = new Audio("/sounds/opening.mp3");
-        ding.play().catch(() => {});
+        ding.play().catch(() => { });
         ding.onended = () => {
           const suara = new SpeechSynthesisUtterance();
           suara.lang = "id-ID";
@@ -229,9 +229,8 @@ const fetchData = useCallback(async (showLoading = false) => {
             <div className="flex justify-between mb-2">
               <div className="flex items-center gap-2">
                 <i
-                  className={`pi pi-circle-fill text-sm ${
-                    isActive ? "text-green-500" : "text-red-500"
-                  }`}
+                  className={`pi pi-circle-fill text-sm ${isActive ? "text-green-500" : "text-red-500"
+                    }`}
                 />
                 <span className="font-bold text-base">{poli.NAMAPOLI}</span>
               </div>

@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { Button } from 'primereact/button';
 import FilterTanggal from '@/app/components/filterTanggal';
 import TabelAngsuran from './components/tabelAngsuran';
 import FormDialogAngsuran from './components/formDialogAngsuran';
@@ -71,7 +70,11 @@ const Page = () => {
         .map((inv) => ({
           label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN}`,
           value: inv.IDINVOICE,
+          NIK: inv.NIK,
+          NAMAPASIEN: inv.NAMAPASIEN,
+          NAMAASURANSI: inv.ASURANSI,
         }));
+      console.log("Data Invoice:", options)
       setInvoiceOptions(options);
     } catch (err) {
       console.error('Gagal ambil data invoice:', err);

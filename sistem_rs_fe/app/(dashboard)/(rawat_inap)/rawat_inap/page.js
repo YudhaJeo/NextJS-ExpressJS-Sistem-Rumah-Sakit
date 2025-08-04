@@ -1,4 +1,3 @@
-// app/(dashboard)/(rawat_inap)/rawat_inap/page.js
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -26,7 +25,6 @@ const DashboardRawatInap = () => {
 
         const style = getComputedStyle(document.documentElement);
 
-        // Bar Chart
         setBarChartData({
           labels: ['Tersedia', 'Terisi', 'Jumlah Kamar', 'Jumlah Bangsal'],
           datasets: [
@@ -72,7 +70,6 @@ const DashboardRawatInap = () => {
           },
         });
 
-        // Polar Area Chart
         setPolarChartData({
           labels: ['Tersedia', 'Terisi', 'Jumlah Kamar', 'Jumlah Bangsal'],
           datasets: [
@@ -151,7 +148,6 @@ const DashboardRawatInap = () => {
         </h1>
       </div>
 
-      {/* Card */}
       {cards.map((card, i) => (
         <div className="col-12 md:col-6 xl:col-3" key={i}>
           <Card
@@ -179,7 +175,6 @@ const DashboardRawatInap = () => {
         </div>
       ))}
 
-      {/* Polar Area Chart */}
       <div className="col-12 md:col-6">
         <Card>
           <div className="flex justify-content-between mb-3">
@@ -197,7 +192,6 @@ const DashboardRawatInap = () => {
         </Card>
       </div>
 
-      {/* Bar Chart */}
       <div className="col-12 md:col-6">
         <Card>
           <div className="flex justify-content-between mb-3">

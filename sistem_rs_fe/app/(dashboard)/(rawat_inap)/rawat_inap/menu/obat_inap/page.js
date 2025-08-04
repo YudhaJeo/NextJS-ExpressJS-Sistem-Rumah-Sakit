@@ -1,4 +1,3 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\obat_inap\page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -30,8 +29,8 @@ const Page = () => {
     IDRAWATINAP: '',
     IDOBAT: '',
     JUMLAH: '1',
-  };  
-  
+  };
+
   const [form, setForm] = useState(defaultForm);
 
   useEffect(() => {
@@ -43,7 +42,7 @@ const Page = () => {
   const fetchData = async () => {
     try {
       const res = await axios.get(`${API_URL}/obat_inap`);
-      setData(res.data.data); 
+      setData(res.data.data);
       setOriginalData(res.data.data);
     } catch (err) {
       console.error('Gagal ambil data obat pasien rawat inap:', err);
@@ -60,7 +59,7 @@ const Page = () => {
         .map((pasien) => ({
           label: pasien.NAMALENGKAP,
           value: pasien.IDRAWATINAP,
-      }));
+        }));
       setPasienOptions(options);
     } catch (err) {
       console.error('Gagal ambil data pasien:', err);
@@ -111,13 +110,12 @@ const Page = () => {
     const url = isEdit
       ? `${API_URL}/obat_inap/${form.IDOBATINAP}`
       : `${API_URL}/obat_inap`;
-  
-    // fix: pastikan ambil harga dari list jika form.HARGA hilang
+
     const selectedObat = obatOptions.find((o) => o.value === form.IDOBAT);
     const harga = selectedObat?.HARGA || form.HARGA || 0;
     const jumlah = form.JUMLAH || 0;
     const total = harga * jumlah;
-  
+
     const payload = {
       IDRAWATINAP: form.IDRAWATINAP,
       IDOBAT: form.IDOBAT,
@@ -125,20 +123,18 @@ const Page = () => {
       HARGA: harga,
       TOTAL: total,
     };
-  
+
     try {
       const response = isEdit
         ? await axios.put(url, payload)
         : await axios.post(url, payload);
 
-      // console.log('Payload gw:', payload)
-  
       if (response.status === 200 && response.data?.message) {
         toastRef.current?.showToast('00', response.data.message);
       } else {
         throw new Error('Respons tidak valid');
       }
-  
+
       fetchData();
       setDialogVisible(false);
       resetForm();
@@ -146,12 +142,12 @@ const Page = () => {
       console.error('Gagal simpan data:', err);
       toastRef.current?.showToast('01', 'Gagal menyimpan data');
     }
-  };  
+  };
 
   const handleEdit = (row) => {
     const selectedObat = obatOptions.find((o) => o.value === row.IDOBAT);
     const harga = selectedObat?.HARGA || 0;
-  
+
     setForm({
       IDOBATINAP: row.IDOBATINAP,
       IDRAWATINAP: row.IDRAWATINAP,
@@ -197,7 +193,7 @@ const Page = () => {
           const filtered = data.filter((item) =>
             item.NAMALENGKAP?.toLowerCase().includes(keyword.toLowerCase()) ||
             item.NOMOROBAT?.toLowerCase().includes(keyword.toLowerCase()) ||
-            item.STATUS?.toLowerCase().includes(keyword.toLowerCase()) 
+            item.STATUS?.toLowerCase().includes(keyword.toLowerCase())
           );
           setData(filtered);
         }}

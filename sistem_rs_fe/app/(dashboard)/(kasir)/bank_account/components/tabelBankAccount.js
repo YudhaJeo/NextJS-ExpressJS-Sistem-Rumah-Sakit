@@ -4,7 +4,6 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
-import React from 'react';
 
 const statusLabels = {
   AKTIF: 'Aktif',
@@ -12,21 +11,21 @@ const statusLabels = {
 };
 
 const statusSeverity = {
-  AKTIF: 'success',   
-  NONAKTIF: 'danger', 
+  AKTIF: 'success',
+  NONAKTIF: 'danger',
 };
 
 const TabelBankAccount = ({ data, loading, onEdit, onDelete }) => {
   const statusBodyTemplate = (row) => {
-    const statusKey = (row.STATUS || '').toUpperCase(); 
+    const statusKey = (row.STATUS || '').toUpperCase();
     return (
       <Tag
         value={statusLabels[statusKey] || row.STATUS}
-        severity={statusSeverity[statusKey] || 'info'} 
+        severity={statusSeverity[statusKey] || 'info'}
       />
     );
   };
- 
+
   const keteranganBodyTemplate = (row) => {
     return row.KETERANGAN && row.KETERANGAN.trim() !== '' ? row.KETERANGAN : '-';
   };
@@ -47,7 +46,7 @@ const TabelBankAccount = ({ data, loading, onEdit, onDelete }) => {
       <Column field="CABANG" header="Cabang" />
       <Column field="KODE_BANK" header="Kode Bank" />
       <Column field="STATUS" header="Status" body={statusBodyTemplate} />
-      <Column field="KETERANGAN" header="Keterangan" body={keteranganBodyTemplate}/>
+      <Column field="KETERANGAN" header="Keterangan" body={keteranganBodyTemplate} />
       <Column
         header="Aksi"
         body={(row) => (

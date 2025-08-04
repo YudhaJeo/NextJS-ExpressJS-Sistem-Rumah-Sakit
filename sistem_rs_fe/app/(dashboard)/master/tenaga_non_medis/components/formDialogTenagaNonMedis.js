@@ -28,21 +28,21 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
   const [previewDokumen, setPreviewDokumen] = useState(null);
   const [roleOptions, setRoleOptions] = useState([]);
 
-useEffect(() => {
-  if (visible) {
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/role/tenaga-non-medis`)
-      .then((res) => {
-        const options = res.data.data.map((role) => ({
-          label: role.NAMAROLE,
-          value: role.NAMAROLE,
-        }));
-        setRoleOptions(options);
-      })
-      .catch((err) => {
-        console.error("Gagal mengambil role tenaga non medis:", err);
-      });
-  }
-}, [visible]);
+  useEffect(() => {
+    if (visible) {
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/role/tenaga-non-medis`)
+        .then((res) => {
+          const options = res.data.data.map((role) => ({
+            label: role.NAMAROLE,
+            value: role.NAMAROLE,
+          }));
+          setRoleOptions(options);
+        })
+        .catch((err) => {
+          console.error("Gagal mengambil role tenaga non medis:", err);
+        });
+    }
+  }, [visible]);
 
   useEffect(() => {
     if (!visible) {
@@ -206,17 +206,17 @@ useEffect(() => {
         </div>
 
         <div>
-        <label className="font-medium">Jenis Tenaga Non Medis</label>
-        <Dropdown
+          <label className="font-medium">Jenis Tenaga Non Medis</label>
+          <Dropdown
             className={classNames("w-full mt-2", { "p-invalid": errors.JENISTENAGANONMEDIS })}
             value={form.JENISTENAGANONMEDIS}
             options={roleOptions}
             onChange={(e) => setForm({ ...form, JENISTENAGANONMEDIS: e.value })}
             placeholder="Pilih Jenis Tenaga Non Medis"
-        />
-        {errors.JENISTENAGANONMEDIS && (
+          />
+          {errors.JENISTENAGANONMEDIS && (
             <small className="p-error">{errors.JENISTENAGANONMEDIS}</small>
-        )}
+          )}
         </div>
 
         <div>

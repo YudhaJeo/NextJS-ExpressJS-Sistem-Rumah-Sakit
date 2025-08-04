@@ -1,10 +1,8 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\rawat_inap\components\tabelTindakan.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import React from 'react';
 import { Tag } from 'primereact/tag';
 
 const TabelRawatInap = ({ data, loading, onEdit, onDelete }) => {
@@ -30,15 +28,15 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete }) => {
         header="Bed"
         body={(row) => row.NOMORBED}
       />
-      <Column 
-        field="TANGGALMASUK" 
-        header="Masuk" 
-        body={(row) => formatTanggal(row.TANGGALMASUK)} 
+      <Column
+        field="TANGGALMASUK"
+        header="Masuk"
+        body={(row) => formatTanggal(row.TANGGALMASUK)}
       />
-      <Column 
-        field="TANGGALKELUAR" 
-        header="Keluar" 
-        body={(row) => formatTanggal(row.TANGGALKELUAR)} 
+      <Column
+        field="TANGGALKELUAR"
+        header="Keluar"
+        body={(row) => formatTanggal(row.TANGGALKELUAR)}
       />
 
       <Column
@@ -49,24 +47,24 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete }) => {
             switch (status) {
               case "AKTIF":
                 return "success";
-                case "SELESAI":
-                  return "danger"; 
-                  default:
-                    return "info"; 
-                  }
-                };
-                
-                return <Tag 
-                value={status.toLowerCase().replace(/^\w/, c => c.toUpperCase())} 
-                severity={severity()} 
-                />
-                ;
-              }}
+              case "SELESAI":
+                return "danger";
+              default:
+                return "info";
+            }
+          };
+
+          return <Tag
+            value={status.toLowerCase().replace(/^\w/, c => c.toUpperCase())}
+            severity={severity()}
+          />
+            ;
+        }}
       />
       <Column field="CATATAN" header="Catatan" />
       <Column
-        field="TOTALKAMAR" 
-        header="Total Biaya Kamar" 
+        field="TOTALKAMAR"
+        header="Total Biaya Kamar"
         body={(row) => row.TOTALKAMAR?.toLocaleString('id-ID', {
           style: 'currency',
           currency: 'IDR',

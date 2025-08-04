@@ -83,13 +83,13 @@ export async function createAngsuran(req, res) {
     const statusBaru = totalSetelahBayar >= invoice.TOTALTAGIHAN ? 'LUNAS' : 'BELUM_LUNAS';
 
     await trx('invoice')
-    .where('IDINVOICE', IDINVOICE)
-    .update({
-      TOTALANGSURAN: totalSetelahBayar,
-      SISA_TAGIHAN: invoice.TOTALTAGIHAN - invoice.TOTALDEPOSIT - totalSetelahBayar,
-      STATUS: statusBaru,
-      UPDATED_AT: db.fn.now()
-    });
+      .where('IDINVOICE', IDINVOICE)
+      .update({
+        TOTALANGSURAN: totalSetelahBayar,
+        SISA_TAGIHAN: invoice.TOTALTAGIHAN - invoice.TOTALDEPOSIT - totalSetelahBayar,
+        STATUS: statusBaru,
+        UPDATED_AT: db.fn.now()
+      });
 
     await trx.commit();
     res.status(201).json({ success: true, message: 'Angsuran berhasil ditambahkan' });
@@ -147,15 +147,15 @@ export async function updateAngsuran(req, res) {
     });
 
     const statusBaru = totalSetelahUpdate >= invoice.TOTALTAGIHAN ? 'LUNAS' : 'BELUM_LUNAS';
-    
+
     await trx('invoice')
-    .where('IDINVOICE', IDINVOICE)
-    .update({
-      TOTALANGSURAN: totalSetelahUpdate,
-      SISA_TAGIHAN: invoice.TOTALTAGIHAN - invoice.TOTALDEPOSIT - totalSetelahUpdate,
-      STATUS: statusBaru,
-      UPDATED_AT: trx.fn.now()
-    });
+      .where('IDINVOICE', IDINVOICE)
+      .update({
+        TOTALANGSURAN: totalSetelahUpdate,
+        SISA_TAGIHAN: invoice.TOTALTAGIHAN - invoice.TOTALDEPOSIT - totalSetelahUpdate,
+        STATUS: statusBaru,
+        UPDATED_AT: trx.fn.now()
+      });
 
     await trx.commit();
     res.json({ success: true, message: 'Angsuran berhasil diperbarui' });
@@ -195,15 +195,15 @@ export async function deleteAngsuran(req, res) {
     }
 
     const statusBaru = totalBayar >= invoice.TOTALTAGIHAN ? 'LUNAS' : 'BELUM_LUNAS';
-    
+
     await trx('invoice')
-    .where('IDINVOICE', IDINVOICE)
-    .update({
-      TOTALANGSURAN: totalBayar,
-      SISA_TAGIHAN: invoice.TOTALTAGIHAN - invoice.TOTALDEPOSIT - totalBayar,
-      STATUS: statusBaru,
-      UPDATED_AT: trx.fn.now()
-    });
+      .where('IDINVOICE', IDINVOICE)
+      .update({
+        TOTALANGSURAN: totalBayar,
+        SISA_TAGIHAN: invoice.TOTALTAGIHAN - invoice.TOTALDEPOSIT - totalBayar,
+        STATUS: statusBaru,
+        UPDATED_AT: trx.fn.now()
+      });
 
     await trx.commit();
     res.json({ success: true, message: 'Angsuran berhasil dihapus' });
