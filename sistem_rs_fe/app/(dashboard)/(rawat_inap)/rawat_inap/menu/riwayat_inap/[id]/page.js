@@ -29,8 +29,6 @@ export default function DetailRiwayatInapPage() {
   const toastRef = useRef(null);
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) return router.push('/login');
     fetchDetail(token);
   }, [id]);
 
