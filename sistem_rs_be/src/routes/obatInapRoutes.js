@@ -1,4 +1,3 @@
-// src\routes\obatInapRoutes.js
 import express from 'express';
 import {
   getAllObatInap,

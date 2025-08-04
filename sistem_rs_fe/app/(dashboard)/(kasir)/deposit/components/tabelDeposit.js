@@ -37,9 +37,9 @@ const TabelDeposit = ({ data, loading, onEdit, onDelete }) => {
 
   const metodeBodyTemplate = (row) => (
     <Tag
-        value={row.METODE}
-        severity={metodeSeverity[row.METODE] || metodeSeverity.DEFAULT}
-      />
+      value={row.METODE}
+      severity={metodeSeverity[row.METODE] || metodeSeverity.DEFAULT}
+    />
   );
 
   const nominalBodyTemplate = (row) =>
@@ -71,11 +71,12 @@ const TabelDeposit = ({ data, loading, onEdit, onDelete }) => {
       scrollHeight="400px"
     >
       <Column field="NODEPOSIT" header="No Deposit" />
+      <Column field="NOINVOICE" header="No Invoice" />
       <Column field="NIK" header="NIK" />
-      <Column field="NAMALENGKAP" header="Nama"/>
+      <Column field="NAMAPASIEN" header="Nama" />
       <Column field="NOMINAL" header="Nominal" body={nominalBodyTemplate} />
       <Column field="METODE" header="Metode" body={metodeBodyTemplate} />
-      <Column field="NAMA_BANK" header="Bank" body={bankBodyTemplate}/>
+      <Column field="NAMA_BANK" header="Bank" body={bankBodyTemplate} />
       <Column field="SALDO_SISA" header="Saldo Sisa" body={saldoSisaBodyTemplate} />
       <Column field="STATUS" header="Status" body={statusBodyTemplate} />
       <Column field="KETERANGAN" header="Keterangan" body={keteranganBodyTemplate} />

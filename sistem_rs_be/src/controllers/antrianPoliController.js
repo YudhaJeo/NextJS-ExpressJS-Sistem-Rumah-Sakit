@@ -65,7 +65,7 @@ export const panggilAntrianPoli = async (req, res) => {
 
     const io = req.app.get('io');
     if (io) {
-      io.emit('updateAntrianPoli'); // emit socket event ke semua client
+      io.emit('updateAntrianPoli');
     }
 
     res.json({ success: true, message: 'Antrian poli berhasil dipanggil' });
@@ -98,7 +98,7 @@ export const resetByPoli = async (req, res) => {
 
     const io = req.app.get('io');
     if (io) {
-      io.emit('updateAntrianPoli'); // emit event real-time
+      io.emit('updateAntrianPoli');
     }
 
     return res.json({ message: `Antrian poli ${poli} berhasil direset.` });

@@ -1,4 +1,3 @@
-// sistem_rs_be/src/controllers/profileController.js
 import * as ProfileModel from '../models/profileModel.js';
 
 export async function getUser(req, res) {
@@ -20,7 +19,6 @@ export async function getUser(req, res) {
       ? `http://localhost:4000${user.FOTOPROFIL}`
       : null;
 
-    // kirim seluruh field user
     res.json({
       data: user
     });

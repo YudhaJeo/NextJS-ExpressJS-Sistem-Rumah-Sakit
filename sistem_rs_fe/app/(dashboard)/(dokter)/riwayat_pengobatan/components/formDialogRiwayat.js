@@ -27,7 +27,7 @@ const FormDialogPengobatan = ({
   form,
   setForm,
   dokterOptions,
-  pendaftaranOptions, 
+  pendaftaranOptions,
 }) => {
   const [errors, setErrors] = useState({});
 

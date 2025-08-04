@@ -4,7 +4,6 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
-import React, { useEffect } from "react";
 import Link from "next/link";
 import "@/styles/customTable.css";
 
@@ -158,9 +157,9 @@ const TabelAntrianPoli = ({
             value={selectedZona}
             onChange={(e) => setSelectedZona(e.value)}
             options={[...new Set(poliList.map((p) => p.ZONA))].map((z) => ({
-                label: z,
-                value: z,
-              }))}
+              label: z,
+              value: z,
+            }))}
             placeholder="Pilih Zona"
             className="w-full md:w-14rem"
             showClear

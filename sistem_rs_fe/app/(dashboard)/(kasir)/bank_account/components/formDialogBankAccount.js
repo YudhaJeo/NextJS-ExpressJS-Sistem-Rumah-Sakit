@@ -14,7 +14,7 @@ const FormDialogBankAccount = ({
   onSubmit,
   form,
   setForm,
-  errors: externalErrors 
+  errors: externalErrors
 }) => {
   const [errors, setErrors] = useState({});
 
@@ -37,7 +37,7 @@ const FormDialogBankAccount = ({
     e.preventDefault();
     if (validate()) {
       onSubmit();
-      setErrors({}); 
+      setErrors({});
     }
   };
 

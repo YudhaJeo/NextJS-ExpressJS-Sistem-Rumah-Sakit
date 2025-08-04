@@ -44,7 +44,7 @@ const Page = () => {
     } catch (err) {
       console.error('Gagal ambil data asuransi:', err);
     }
-  };  
+  };
 
   const [form, setForm] = useState({
     NIK: '',
@@ -91,65 +91,65 @@ const Page = () => {
 
   const validateForm = () => {
     const newErrors = {};
-  
-    if (!form.NAMALENGKAP.trim()) newErrors.NAMALENGKAP = <span style={{color: 'red'}}>Nama wajib diisi</span>;
+
+    if (!form.NAMALENGKAP.trim()) newErrors.NAMALENGKAP = <span style={{ color: 'red' }}>Nama wajib diisi</span>;
     if (!form.NIK.trim()) {
-      newErrors.NIK = <span style={{color: 'red'}}>NIK wajib diisi</span>;
+      newErrors.NIK = <span style={{ color: 'red' }}>NIK wajib diisi</span>;
     } else if (!/^\d{16}$/.test(form.NIK)) {
-      newErrors.NIK = <span style={{color: 'red'}}>NIK harus 16 digit angka</span>;
+      newErrors.NIK = <span style={{ color: 'red' }}>NIK harus 16 digit angka</span>;
     }
-  
-    if (!form.TANGGALLAHIR) newErrors.TANGGALLAHIR = 
-      <span style={{color: 'red'}}>
+
+    if (!form.TANGGALLAHIR) newErrors.TANGGALLAHIR =
+      <span style={{ color: 'red' }}>
         Tanggal Lahir wajib diisi
       </span>;
-    if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = 
-      <span style={{color: 'red'}}>
+    if (!form.JENISKELAMIN) newErrors.JENISKELAMIN =
+      <span style={{ color: 'red' }}>
         Jenis kelamin wajib dipilih
       </span>;
-    if (!form.ALAMAT?.trim()) newErrors.ALAMAT = 
-      <span style={{color: 'red'}}>
+    if (!form.ALAMAT?.trim()) newErrors.ALAMAT =
+      <span style={{ color: 'red' }}>
         Alamat wajib diisi
       </span>;
     if (!form.NOHP?.trim()) {
-      newErrors.NOHP = 
-      <span style={{color: 'red'}}>
-        No HP wajib diisi
-      </span>;
+      newErrors.NOHP =
+        <span style={{ color: 'red' }}>
+          No HP wajib diisi
+        </span>;
     } else if (!/^\d{9,13}$/.test(form.NOHP)) {
-      newErrors.NOHP = 
-      <span style={{color: 'red'}}>
-        No HP harus 9–13 digit angka
-      </span>;
+      newErrors.NOHP =
+        <span style={{ color: 'red' }}>
+          No HP harus 9–13 digit angka
+        </span>;
     }
-  
-    if (!form.IDAGAMA) newErrors.IDAGAMA = 
-      <span style={{color: 'red'}}>
+
+    if (!form.IDAGAMA) newErrors.IDAGAMA =
+      <span style={{ color: 'red' }}>
         Agama wajib diisi
       </span>;
-    if (!form.GOLDARAH) newErrors.GOLDARAH = 
-      <span style={{color: 'red'}}>
+    if (!form.GOLDARAH) newErrors.GOLDARAH =
+      <span style={{ color: 'red' }}>
         Golongan darah wajib dipilih
       </span>;
     if (!form.IDASURANSI) {
-      newErrors.IDASURANSI = 
-        <span style={{color: 'red'}}>
+      newErrors.IDASURANSI =
+        <span style={{ color: 'red' }}>
           Asuransi wajib dipilih
         </span>;
     } else {
       const selected = asuransiOptions.find(opt => opt.value === form.IDASURANSI);
       if (selected?.label !== 'Umum' && !form.NOASURANSI.trim()) {
-        newErrors.NOASURANSI = 
-          <span style={{color: 'red'}}>
+        newErrors.NOASURANSI =
+          <span style={{ color: 'red' }}>
             No Asuransi wajib diisi
           </span>;
       }
     }
-  
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  
+
 
   const handleSearch = (keyword) => {
     if (!keyword) {
@@ -158,14 +158,14 @@ const Page = () => {
       const filtered = originalData.filter(
         (item) =>
           item.NIK.toLowerCase().includes(keyword.toLowerCase()) ||
-          item.NAMALENGKAP.toLowerCase().includes(keyword.toLowerCase()) 
+          item.NAMALENGKAP.toLowerCase().includes(keyword.toLowerCase())
       );
       setData(filtered);
     }
   };
 
   const handleSubmit = async () => {
-  
+
     if (!validateForm()) return;
 
     const isEdit = !!form.IDPASIEN;
@@ -262,11 +262,11 @@ const Page = () => {
         }}
       />
 
-      <TabelPasien 
-        data={data} 
-        loading={loading} 
-        onEdit={handleEdit} 
-        onDelete={handleDelete} 
+      <TabelPasien
+        data={data}
+        loading={loading}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
       />
 
       <FormDialogPasien

@@ -72,11 +72,11 @@ export default function FormDialogProfile({
     const formattedValue = fileUploadRef.current
       ? fileUploadRef.current.formatSize(totalSize)
       : '0 B'
-  
+
     return (
       <div className={className} style={{ background: 'transparent', display: 'flex', alignItems: 'center' }}>
         {chooseButton}
-        {cancelButton} 
+        {cancelButton}
         <div className="flex align-items-center gap-3 ml-auto">
           <span>{formattedValue} / 5 MB</span>
           <ProgressBar value={value} showValue={false} style={{ width: '10rem', height: '12px' }} />
@@ -84,7 +84,7 @@ export default function FormDialogProfile({
       </div>
     )
   }
-  
+
 
   const itemTemplate = (file, props) => {
     return (

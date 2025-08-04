@@ -1,6 +1,5 @@
 import express from 'express';
 import * as PembayaranController from '../controllers/pembayaranController.js';
-import { verifyToken } from '../middlewares/jwt.js';
 
 const router = express.Router();
 

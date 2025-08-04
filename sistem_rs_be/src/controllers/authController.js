@@ -20,11 +20,11 @@ export const login = async (req, res) => {
     }
 
     const token = await generateToken({
-      id: user.IDTENAGAMEDIS || user.IDTENAGANONMEDIS, 
+      id: user.IDTENAGAMEDIS || user.IDTENAGANONMEDIS,
       role: user.ROLE,
       email: user.EMAIL,
       unitKerja: user.UNITKERJA,
-      sumber: user.IDTENAGAMEDIS ? 'medis' : 'non_medis' 
+      sumber: user.IDTENAGAMEDIS ? 'medis' : 'non_medis'
     });
 
     res.status(200).json({
@@ -35,7 +35,7 @@ export const login = async (req, res) => {
       unitKerja: user.UNITKERJA,
       profile: user.FOTOPROFIL ? `http://localhost:4000${user.FOTOPROFIL}` : null
     });
-    
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Terjadi kesalahan server' });

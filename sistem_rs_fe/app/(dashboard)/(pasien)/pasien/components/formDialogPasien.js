@@ -5,13 +5,12 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
-import React from 'react';
 
-const FormDialogPasien = ({ 
-  visible, 
-  onHide, 
-  onSubmit, 
-  form, 
+const FormDialogPasien = ({
+  visible,
+  onHide,
+  onSubmit,
+  form,
   setForm,
   errors,
   agamaOptions,
@@ -141,13 +140,13 @@ const FormDialogPasien = ({
         <div>
           <label>Asuransi</label>
           <Dropdown
-              className={inputClass('IDASURANSI')}
-              options={asuransiOptions}
-              value={form.IDASURANSI}
-              onChange={(e) => setForm({ ...form, IDASURANSI: e.value })}
-              placeholder="Pilih"
-            />
-            {errors.IDASURANSI && <small className="text-red-500">{errors.IDASURANSI}</small>}
+            className={inputClass('IDASURANSI')}
+            options={asuransiOptions}
+            value={form.IDASURANSI}
+            onChange={(e) => setForm({ ...form, IDASURANSI: e.value })}
+            placeholder="Pilih"
+          />
+          {errors.IDASURANSI && <small className="text-red-500">{errors.IDASURANSI}</small>}
         </div>
 
         <div>

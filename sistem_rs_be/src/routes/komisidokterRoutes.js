@@ -1,6 +1,5 @@
 import express from 'express';
 import * as komisiController from '../controllers/komisidokterController.js';
-import { verifyToken } from '../middlewares/jwt.js';
 
 const router = express.Router();
 

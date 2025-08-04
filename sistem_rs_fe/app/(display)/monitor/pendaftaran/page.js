@@ -35,7 +35,7 @@ function MonitorAntrian() {
         try {
           const msg = JSON.parse(e.data);
           if (msg.type === "update") fetchData(false);
-        } catch {}
+        } catch { }
       };
       ws.current.onclose = () => setTimeout(connectWebSocket, 5000);
       ws.current.onerror = () => startPolling();
@@ -61,7 +61,7 @@ function MonitorAntrian() {
       setLastNoDipanggil(panggilan.no);
       if (userHasInteracted) {
         const ding = new Audio("/sounds/opening.mp3");
-        ding.play().catch(() => {});
+        ding.play().catch(() => { });
         ding.onended = () => {
           const suara = new SpeechSynthesisUtterance();
           suara.lang = "id-ID";
@@ -217,9 +217,8 @@ function MonitorAntrian() {
                 style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
               >
                 <i
-                  className={`pi pi-circle-fill text-sm ${
-                    isActive ? "text-green-500" : "text-red-500"
-                  }`}
+                  className={`pi pi-circle-fill text-sm ${isActive ? "text-green-500" : "text-red-500"
+                    }`}
                 />
                 <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
                   {loket.NAMALOKET}
@@ -337,7 +336,7 @@ function MonitorAntrian() {
           scrollamount="2"
           className="text-blue-900 font-semibold text-2xl"
         >
-          Selamat datang di RSUD Bayza Medika • Harap menunggu dengan tertib • Gunakan masker • Jaga jarak • 
+          Selamat datang di RSUD Bayza Medika • Harap menunggu dengan tertib • Gunakan masker • Jaga jarak •
           Cuci tangan sebelum masuk ruangan • Antrian akan dipanggil sesuai urutan • Terima kasih atas kesabaran Anda 🙏
         </marquee>
       </div>

@@ -102,7 +102,7 @@ const Page = () => {
   };
 
   const handleEdit = (row) => {
-    setForm({ ...row }); 
+    setForm({ ...row });
     setDialogVisible(true);
   };
 

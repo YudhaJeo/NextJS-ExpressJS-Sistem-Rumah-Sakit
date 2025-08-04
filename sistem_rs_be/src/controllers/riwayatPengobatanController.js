@@ -3,7 +3,7 @@ import * as PendaftaranModel from '../models/pendaftaranModel.js';
 
 export async function getAllPengobatan(req, res) {
   try {
-    const poli = req.query.poli; 
+    const poli = req.query.poli;
     let data = await PengobatanModel.getAllPengobatan();
 
     if (poli) {
@@ -31,7 +31,7 @@ export async function createPengobatan(req, res) {
     });
     res.json({ message: 'Pengobatan berhasil ditambahkan' });
   } catch (err) {
-    console.error('Insert Error:', err); 
+    console.error('Insert Error:', err);
     res.status(500).json({ error: err.message });
   }
 }
@@ -75,7 +75,7 @@ export async function deletePengobatan(req, res) {
 
 export const getMonitoringPengobatan = async (req, res) => {
   try {
-    const data = await PengobatanModel.getAllPengobatan(); 
+    const data = await PengobatanModel.getAllPengobatan();
     res.json(data);
   } catch (error) {
     console.error('Error getMonitoringPengobatan:', error);

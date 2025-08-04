@@ -7,11 +7,11 @@ import { Button } from 'primereact/button';
 const TableDokter = ({ data, loading, onEdit, onDelete }) => {
   const jadwalTemplate = (row) => {
     return (
-    <span className="text-sm whitespace-pre-line">
-      {row.JADWALPRAKTEK || '-'}
-    </span>
-  );
-};
+      <span className="text-sm whitespace-pre-line">
+        {row.JADWALPRAKTEK || '-'}
+      </span>
+    );
+  };
 
   return (
     <DataTable

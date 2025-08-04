@@ -1,4 +1,3 @@
-// sistem_rs_fe\app\(dashboard)\profile\components\nonmedisTable.js
 'use client'
 
 import { Panel } from 'primereact/panel'

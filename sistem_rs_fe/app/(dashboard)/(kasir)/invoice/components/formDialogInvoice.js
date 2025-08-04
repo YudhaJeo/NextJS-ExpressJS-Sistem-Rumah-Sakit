@@ -72,7 +72,7 @@ const FormDialogInvoice = ({
                 ...form,
                 NIK: e.value,
                 NAMAPASIEN: selected?.NAMALENGKAP || '',
-                ASURANSI: selected?.ASURANSI || '-', 
+                ASURANSI: selected?.ASURANSI || '-',
               });
             }}
             placeholder="Pilih Pasien"
@@ -87,7 +87,7 @@ const FormDialogInvoice = ({
           <InputText
             className="w-full mt-2"
             value={form.ASURANSI || '-'}
-            readOnly 
+            readOnly
           />
         </div>
 
@@ -148,7 +148,7 @@ const FormDialogInvoice = ({
             readOnly
           />
         </div>
-        
+
         <div>
           <label className="font-medium">Sisa Tagihan</label>
           <InputNumber

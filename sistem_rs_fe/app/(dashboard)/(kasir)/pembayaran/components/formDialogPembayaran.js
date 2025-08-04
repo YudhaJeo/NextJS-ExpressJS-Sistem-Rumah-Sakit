@@ -6,7 +6,6 @@ import { InputText } from 'primereact/inputtext';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
-import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
 import { classNames } from 'primereact/utils';
 
@@ -54,7 +53,8 @@ const FormDialogPembayaran = ({
         NOINVOICE: selectedInvoice.label.split(' - ')[0],
         NIK: pasien?.value || '',
         NAMAPASIEN: pasien?.label.split(' - ')[1] || '',
-        ASURANSI: pasien?.NAMAASURANSI || '',        
+        ASURANSI: pasien?.NAMAASURANSI || '',
+        JUMLAHBAYAR: selectedInvoice.SISA_TAGIHAN || 0,
       });
     } else {
       setForm({
@@ -201,13 +201,14 @@ const FormDialogPembayaran = ({
             mode="currency"
             currency="IDR"
             locale="id-ID"
+            readOnly
           />
           {errors.JUMLAHBAYAR && <small className="p-error">{errors.JUMLAHBAYAR}</small>}
         </div>
 
         <div>
           <label className="font-medium">Keterangan</label>
-          <InputTextarea
+          <InputText
             className="w-full mt-2"
             value={form.KETERANGAN}
             onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}

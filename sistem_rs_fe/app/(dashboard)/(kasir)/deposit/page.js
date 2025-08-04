@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { Button } from 'primereact/button';
 import FilterTanggal from '@/app/components/filterTanggal';
 import TabelDeposit from './components/tabelDeposit';
 import FormDialogDeposit from './components/formDialogDeposit';
@@ -71,11 +70,11 @@ const Page = () => {
     try {
       const res = await axios.get(`${API_URL}/invoice`);
       const options = res.data.data.map((inv) => ({
-        label: `${inv.NOINVOICE} - ${inv.NIK} - ${inv.NAMALENGKAP}`,
+        label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN}`,
         value: inv.IDINVOICE,
         NIK: inv.NIK,
         NOINVOICE: inv.NOINVOICE,
-        NAMAPASIEN: inv.NAMALENGKAP,
+        NAMAPASIEN: inv.NAMAPASIEN,
       }));
       setInvoiceOptions(options);
     } catch (err) {
@@ -142,7 +141,6 @@ const Page = () => {
       ? `${API_URL}/deposit/${form.IDDEPOSIT}`
       : `${API_URL}/deposit`;
 
-    // Buat salinan form yang benar-benar fix statusnya:
     const body = { ...form };
     if (body.SALDO_SISA === 0) {
       body.STATUS = 'HABIS';

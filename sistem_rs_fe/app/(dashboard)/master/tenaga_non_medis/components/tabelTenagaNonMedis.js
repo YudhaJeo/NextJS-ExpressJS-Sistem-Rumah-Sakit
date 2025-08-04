@@ -28,7 +28,6 @@ const TabelTenagaNonMedis = ({ data, loading, onEdit, onDelete }) => {
     setDialogVisible(true);
   };
 
-  // Template List
   const listItem = (row, index) => {
     return (
       <div
@@ -94,7 +93,6 @@ const TabelTenagaNonMedis = ({ data, loading, onEdit, onDelete }) => {
     );
   };
 
-  // Template Grid
   const gridItem = (row) => {
     return (
       <div

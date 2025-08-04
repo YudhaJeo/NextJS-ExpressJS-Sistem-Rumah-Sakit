@@ -1,10 +1,8 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\obat_inap\components\tabelObat.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import React from 'react';
 
 const TabelObatInap = ({ data, loading, onEdit, onDelete }) => {
   return (

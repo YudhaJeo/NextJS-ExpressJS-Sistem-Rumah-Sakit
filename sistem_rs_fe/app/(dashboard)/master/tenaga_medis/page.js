@@ -46,7 +46,7 @@ const Page = () => {
 
   useEffect(() => {
     fetchData();
-    fetchPoli(); 
+    fetchPoli();
 
     const token = Cookies.get("token");
     if (!token) {

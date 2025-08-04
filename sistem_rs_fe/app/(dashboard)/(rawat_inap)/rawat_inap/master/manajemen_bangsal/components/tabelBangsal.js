@@ -1,18 +1,15 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\manajemen-bangsal\components\tabelBangsal.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import React from 'react';
-import { Tag } from "primereact/tag";
 
 const TabelBangsal = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
-      
+
       <Column field="IDBANGSAL" header="ID" />
-      <Column field="NAMABANGSAL" header="Nama Bangsal"/>
+      <Column field="NAMABANGSAL" header="Nama Bangsal" />
       <Column
         field="IDJENISBANGSAL"
         header="Jenis Bangsal"

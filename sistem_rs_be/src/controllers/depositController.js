@@ -68,7 +68,6 @@ export async function createDeposit(req, res) {
       KETERANGAN,
     });
 
-    // ✅ Hitung ulang TOTALDEPOSIT
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
       .sum('NOMINAL as total')
@@ -76,7 +75,6 @@ export async function createDeposit(req, res) {
 
     const newTotalDeposit = totalDeposit.total || 0;
 
-    // ✅ Hitung ulang SISA_TAGIHAN
     const sisaTagihan = invoice.TOTALTAGIHAN + newTotalDeposit - invoice.TOTALANGSURAN;
     const newStatus = sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
@@ -137,7 +135,6 @@ export async function updateDeposit(req, res) {
       return res.status(404).json({ success: false, message: 'Deposit tidak ditemukan' });
     }
 
-    // ✅ Hitung ulang TOTALDEPOSIT
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
       .sum('NOMINAL as total')
@@ -145,7 +142,6 @@ export async function updateDeposit(req, res) {
 
     const newTotalDeposit = totalDeposit.total || 0;
 
-    // ✅ Hitung ulang SISA_TAGIHAN
     const sisaTagihan = invoice.TOTALTAGIHAN + newTotalDeposit - invoice.TOTALANGSURAN;
     const newStatus = sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
@@ -172,7 +168,6 @@ export async function deleteDeposit(req, res) {
   try {
     const { id } = req.params;
 
-    // Ambil IDINVOICE dari deposit sebelum dihapus
     const deposit = await trx('deposit').where('IDDEPOSIT', id).first();
     if (!deposit) {
       await trx.rollback();
@@ -186,10 +181,8 @@ export async function deleteDeposit(req, res) {
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    // Hapus deposit
     await trx('deposit').where('IDDEPOSIT', id).del();
 
-    // Hitung ulang TOTALDEPOSIT setelah penghapusan
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
       .sum('NOMINAL as total')
@@ -197,11 +190,9 @@ export async function deleteDeposit(req, res) {
 
     const newTotalDeposit = totalDeposit.total || 0;
 
-    // Hitung ulang SISA_TAGIHAN
     const sisaTagihan = invoice.TOTALTAGIHAN + newTotalDeposit - invoice.TOTALANGSURAN;
     const newStatus = sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
-    // Update invoice
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
@@ -223,16 +214,16 @@ export async function deleteDeposit(req, res) {
 export async function getDepositOptions(req, res) {
   try {
     const rows = await db('deposit')
-    .join('invoice', 'deposit.IDINVOICE', 'invoice.IDINVOICE')
-    .join('pasien', 'invoice.NIK', 'pasien.NIK')
-    .where('deposit.STATUS', 'AKTIF')
-    .select(
-      'deposit.IDDEPOSIT as value',
-      'deposit.NODEPOSIT as label',
-      'deposit.SALDO_SISA',
-      'pasien.NIK',
-      'pasien.NAMALENGKAP as NAMAPASIEN'
-    );
+      .join('invoice', 'deposit.IDINVOICE', 'invoice.IDINVOICE')
+      .join('pasien', 'invoice.NIK', 'pasien.NIK')
+      .where('deposit.STATUS', 'AKTIF')
+      .select(
+        'deposit.IDDEPOSIT as value',
+        'deposit.NODEPOSIT as label',
+        'deposit.SALDO_SISA',
+        'pasien.NIK',
+        'pasien.NAMALENGKAP as NAMAPASIEN'
+      );
     res.status(200).json({ success: true, data: rows });
   } catch (err) {
     console.error('Error getDepositOptions:', err);

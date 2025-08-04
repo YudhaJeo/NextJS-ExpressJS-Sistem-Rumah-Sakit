@@ -13,7 +13,7 @@ export const getAll = async () => {
       'poli.NAMAPOLI',
       'dokter.IDDOKTER',
       'master_tenaga_medis.NAMALENGKAP as NAMADOKTER',
-      'jadwal_dokter.HARI', 
+      'jadwal_dokter.HARI',
       'jadwal_dokter.JAM_MULAI',
       'jadwal_dokter.JAM_SELESAI'
     );
@@ -51,9 +51,9 @@ export const create = (data) => {
 }
 
 export const update = (id, data) => {
-    return db('reservasi').where('IDRESERVASI', id).update(data);
+  return db('reservasi').where('IDRESERVASI', id).update(data);
 }
 
 export const remove = (id) => {
-    return db('reservasi').where('IDRESERVASI', id).del();
+  return db('reservasi').where('IDRESERVASI', id).del();
 }

@@ -1,4 +1,3 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\tindakan_inap\page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -18,7 +17,6 @@ const Page = () => {
   const router = useRouter();
 
   const [data, setData] = useState([]);
-  const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [errors, setErrors] = useState({});
@@ -30,13 +28,13 @@ const Page = () => {
     IDRAWATINAP: '',
     IDTINDAKAN: '',
     JUMLAH: '1',
-  };  
-  
+  };
+
   const [form, setForm] = useState(defaultForm);
 
   useEffect(() => {
     const token = Cookies.get('token');
-    if (!token) {     
+    if (!token) {
       router.push('/login');
       return;
     }
@@ -48,7 +46,7 @@ const Page = () => {
   const fetchData = async () => {
     try {
       const res = await axios.get(`${API_URL}/tindakan_inap`);
-      setData(res.data.data); 
+      setData(res.data.data);
       setOriginalData(res.data.data);
     } catch (err) {
       console.error('Gagal ambil data tindakan pasien rawat inap:', err);
@@ -65,7 +63,7 @@ const Page = () => {
         .map((pasien) => ({
           label: pasien.NAMALENGKAP,
           value: pasien.IDRAWATINAP,
-      }));
+        }));
       setPasienOptions(options);
     } catch (err) {
       console.error('Gagal ambil data pasien:', err);
@@ -116,12 +114,12 @@ const Page = () => {
     const url = isEdit
       ? `${API_URL}/tindakan_inap/${form.IDTINDAKANINAP}`
       : `${API_URL}/tindakan_inap`;
-  
+
     const selectedTindakan = tindakanOptions.find((o) => o.value === form.IDTINDAKAN);
     const harga = selectedTindakan?.HARGA || form.HARGA || 0;
     const jumlah = form.JUMLAH || 0;
     const total = harga * jumlah;
-  
+
     const payload = {
       IDRAWATINAP: form.IDRAWATINAP,
       IDTINDAKAN: form.IDTINDAKAN,
@@ -129,20 +127,18 @@ const Page = () => {
       HARGA: harga,
       TOTAL: total,
     };
-  
+
     try {
       const response = isEdit
         ? await axios.put(url, payload)
         : await axios.post(url, payload);
 
-      // console.log('Payload gw:', payload)
-  
       if (response.status === 200 && response.data?.message) {
         toastRef.current?.showToast('00', response.data.message);
       } else {
         throw new Error('Respons tidak valid');
       }
-  
+
       fetchData();
       setDialogVisible(false);
       resetForm();
@@ -150,12 +146,12 @@ const Page = () => {
       console.error('Gagal simpan data:', err);
       toastRef.current?.showToast('01', 'Gagal menyimpan data');
     }
-  };  
+  };
 
   const handleEdit = (row) => {
     const selectedTindakan = tindakanOptions.find((o) => o.value === row.IDTINDAKAN);
     const harga = selectedTindakan?.HARGA || 0;
-  
+
     setForm({
       IDTINDAKANINAP: row.IDTINDAKANINAP,
       IDRAWATINAP: row.IDRAWATINAP,
@@ -200,7 +196,7 @@ const Page = () => {
           if (!keyword) return fetchData();
           const filtered = data.filter((item) =>
             item.NAMALENGKAP?.toLowerCase().includes(keyword.toLowerCase()) ||
-            item.NAMATINDAKAN?.toLowerCase().includes(keyword.toLowerCase()) 
+            item.NAMATINDAKAN?.toLowerCase().includes(keyword.toLowerCase())
           );
           setData(filtered);
         }}

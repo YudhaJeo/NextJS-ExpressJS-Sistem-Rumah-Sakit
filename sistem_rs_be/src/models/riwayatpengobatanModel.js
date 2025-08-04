@@ -12,7 +12,7 @@ export const getPendaftaranIdByPengobatanId = async (id) => {
 export const getDokterByPoli = async (IDPOLI) => {
   return db('dokter')
     .where('IDPOLI', IDPOLI)
-    .orderBy('IDDOKTER', 'asc') 
+    .orderBy('IDDOKTER', 'asc')
     .first();
 };
 

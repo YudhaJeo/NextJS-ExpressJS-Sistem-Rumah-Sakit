@@ -1,10 +1,8 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\manajemen-kamar\components\tabelKamar.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import React from 'react';
 import { Tag } from "primereact/tag";
 
 const TabelBed = ({ data, loading, onEdit, onDelete }) => {
@@ -20,7 +18,7 @@ const TabelBed = ({ data, loading, onEdit, onDelete }) => {
         header="Bangsal"
         body={(row) => row.NAMABANGSAL}
       />
-      
+
       <Column
         header="Status"
         body={(row) => {
@@ -30,19 +28,19 @@ const TabelBed = ({ data, loading, onEdit, onDelete }) => {
               case "TERSEDIA":
                 return "success";
               case "PENUH":
-                return "danger"; 
+                return "danger";
               case "DIBERSIHKAN":
-                return "warning"; 
+                return "warning";
               default:
-                return "info"; 
+                return "info";
             }
           };
 
-          return <Tag 
-          value={status.toLowerCase().replace(/^\w/, c => c.toUpperCase())} 
-          severity={severity()} 
-        />
-        ;
+          return <Tag
+            value={status.toLowerCase().replace(/^\w/, c => c.toUpperCase())}
+            severity={severity()}
+          />
+            ;
         }}
       />
       <Column field="KETERANGAN" header="Keterangan" />

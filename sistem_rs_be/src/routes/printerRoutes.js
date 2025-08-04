@@ -1,6 +1,5 @@
 import express from 'express';
 import * as PrinterController from '../controllers/printerController.js';
-import { verifyToken } from '../middlewares/jwt.js';
 
 const router = express.Router();
 

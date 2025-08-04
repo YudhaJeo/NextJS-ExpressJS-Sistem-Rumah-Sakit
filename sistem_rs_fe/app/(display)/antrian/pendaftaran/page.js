@@ -66,7 +66,7 @@ function DisplayAntrian() {
   const [screenSize, setScreenSize] = useState({ width: 0, height: 0 });
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [time, setTime] = useState(null);
-  
+
   const toast = useRef(null);
 
   useEffect(() => {
@@ -101,7 +101,7 @@ function DisplayAntrian() {
   useEffect(() => {
     const updateSize = () =>
       setScreenSize({ width: window.innerWidth, height: window.innerHeight });
-    
+
     updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
@@ -111,7 +111,7 @@ function DisplayAntrian() {
     const handleFullScreenChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
     };
-    
+
     document.addEventListener('fullscreenchange', handleFullScreenChange);
     return () => {
       document.removeEventListener('fullscreenchange', handleFullScreenChange);
@@ -157,7 +157,7 @@ function DisplayAntrian() {
     const colors = ['#e8f5e9', '#e3f2fd', '#fffde7', '#fce4ec', '#ede7f6', '#fbe9e7'];
     const borderColors = ['#66bb6a', '#42a5f5', '#fbc02d', '#ec407a', '#7e57c2', '#ff7043'];
     const colorIndex = index % colors.length;
-    
+
     return {
       backgroundColor: colors[colorIndex],
       borderLeft: `6px solid ${borderColors[colorIndex]}`,
@@ -195,17 +195,17 @@ function DisplayAntrian() {
       });
 
       const data = [
-        '\x1B\x40',                
-        '\x1B\x61\x01',            
+        '\x1B\x40',
+        '\x1B\x61\x01',
 
-        '\x1B\x21\x08',          
+        '\x1B\x21\x08',
         '*** BAYZA MEDIKA ***\n',
         '--------------------------\n',
 
-        '\x1B\x21\x18',         
+        '\x1B\x21\x18',
         'NOMOR ANTRIAN ANDA\n',
 
-        '\x1B\x21\x30',            
+        '\x1B\x21\x30',
         `${nomorBaru.toString().toUpperCase()}\n`,
         '----------------\n',
 
@@ -219,7 +219,7 @@ function DisplayAntrian() {
         '--------------------------\n',
 
         'Harap tunggu panggilan\n\n\n',
-        '\x1D\x56\x01'            
+        '\x1D\x56\x01'
       ];
 
       await window.qz.print(config, data);

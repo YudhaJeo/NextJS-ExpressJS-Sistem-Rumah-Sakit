@@ -32,8 +32,8 @@ const TabelDepositPenggunaan = ({ data, loading, onEdit, onDelete }) => {
     >
       <Column field="NODEPOSIT" header="No Deposit" />
       <Column field="NOINVOICE" header="No Invoice" />
-      <Column field="NIK" header="NIK"/>
-      <Column field="NAMAPASIEN" header="Nama"/>
+      <Column field="NIK" header="NIK" />
+      <Column field="NAMAPASIEN" header="Nama" />
       <Column field="TANGGALPEMAKAIAN" header="Tanggal Pemakaian" body={tanggalPemakaianBodyTemplate} />
       <Column field="JUMLAH_PEMAKAIAN" header="Jumlah Pemakaian" body={jumlahPemakaianBodyTemplate} />
       <Column

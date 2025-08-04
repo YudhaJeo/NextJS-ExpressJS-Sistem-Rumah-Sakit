@@ -1,10 +1,8 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\master\obat\components\formObat.js
 'use client';
 
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import React from 'react';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
 

@@ -1,4 +1,3 @@
-// src\routes\tagihanSementaraRoutes.js
 import express from 'express';
 import TagihanSementaraController from '../controllers/tagihanSementaraController.js';
 

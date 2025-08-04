@@ -1,4 +1,3 @@
-// app/(dashboard)/(rawat_inap)/rawat_inap/manajemen-kamar/page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';

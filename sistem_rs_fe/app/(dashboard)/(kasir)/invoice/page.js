@@ -8,7 +8,7 @@ import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Button } from 'primereact/button';
-import FilterTanggal from '@/app/components/filterTanggal'; 
+import FilterTanggal from '@/app/components/filterTanggal';
 import TabelInvoice from './components/tabelInvoice';
 import FormDialogInvoice from './components/formDialogInvoice';
 
@@ -16,10 +16,10 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
   const [data, setData] = useState([]);
-  const [originalData, setOriginalData] = useState([]); 
+  const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [startDate, setStartDate] = useState(null); 
+  const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [pasienOptions, setPasienOptions] = useState([]);
 
@@ -54,7 +54,7 @@ const Page = () => {
     try {
       const res = await axios.get(`${API_URL}/invoice`);
       setData(res.data.data);
-      setOriginalData(res.data.data); 
+      setOriginalData(res.data.data);
     } catch (err) {
       console.error('Gagal ambil data invoice:', err);
     } finally {

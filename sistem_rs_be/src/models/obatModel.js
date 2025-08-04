@@ -4,9 +4,9 @@ export const getAll = () =>
     db('obat').select();
 
 export const getById = (id) =>
-    db('obat').where({ IDOBAT: id}).first();
+    db('obat').where({ IDOBAT: id }).first();
 
-export const createObat = (data) => 
+export const createObat = (data) =>
     db('obat').insert(data);
 
 export const updateObat = (id, data) =>

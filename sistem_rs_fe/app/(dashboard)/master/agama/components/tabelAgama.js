@@ -5,17 +5,17 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import React from 'react';
 
-const TabelAgama = ({ data, loading, onEdit, onDelete  }) => {
+const TabelAgama = ({ data, loading, onEdit, onDelete }) => {
   return (
-    <DataTable 
-      value={data} 
-      paginator rows={10} 
-      loading={loading} 
+    <DataTable
+      value={data}
+      paginator rows={10}
+      loading={loading}
       size="small">
       <Column field="IDAGAMA" header="ID" />
-      
+
       <Column field="NAMAAGAMA" header="Nama Agama" />
-      
+
       <Column
         header="Aksi"
         body={(row) => (

@@ -1,4 +1,3 @@
-// src/models/tindakanInapModel.js
 import db from '../core/config/knex.js';
 
 export const getAll = () =>

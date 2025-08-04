@@ -148,7 +148,7 @@ const Page = () => {
       <ConfirmDialog />
 
       <h3 className="text-xl font-semibold mb-3">Master Metode Pembayaran</h3>
-      
+
       <HeaderBar
         title=""
         placeholder="Cari Nama Metode"

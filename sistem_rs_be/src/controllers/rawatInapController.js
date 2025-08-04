@@ -1,4 +1,3 @@
-// sistem_rs_be\src\controllers\rawatInapController.js
 import * as RawatInap from '../models/rawatInapModel.js';
 import * as RiwayatRawatInap from '../models/riwayatInapModel.js';
 
@@ -30,11 +29,11 @@ const create = async (req, res) => {
   try {
     const { IDPENGOBATAN, IDBED, TANGGALMASUK, TANGGALKELUAR, CATATAN } = req.body;
     const inserted = await RawatInap.create({
-    IDPENGOBATAN,
-    IDBED,
-    TANGGALMASUK,
-    TANGGALKELUAR,
-    CATATAN
+      IDPENGOBATAN,
+      IDBED,
+      TANGGALMASUK,
+      TANGGALKELUAR,
+      CATATAN
     });
     res.status(200).json({ message: 'Data rawat inap berhasil ditambahkan', data: inserted });
   } catch (err) {
@@ -57,18 +56,18 @@ const update = async (req, res) => {
       TANGGALKELUAR: keluarSekarang,
       STATUS: 'SELESAI',
       CATATAN: req.body.CATATAN ?? null
-    });    
-    
-    const updated = await RawatInap.getById(id); 
-    
+    });
+
+    const updated = await RawatInap.getById(id);
+
     if (keluarSekarang && !existing.TANGGALKELUAR) {
       const obat = await RawatInap.getTotalObatInap(updated.IDRAWATINAP);
       const tindakan = await RawatInap.getTotalTindakanInap(updated.IDRAWATINAP);
-    
+
       const TOTALOBAT = Number(obat.total) || 0;
       const TOTALTINDAKAN = Number(tindakan.total) || 0;
       const TOTALBIAYA = (updated.TOTALKAMAR || 0) + TOTALOBAT + TOTALTINDAKAN;
-    
+
       const dataRiwayat = {
         IDRAWATINAP: updated.IDRAWATINAP,
         TANGGALMASUK: updated.TANGGALMASUK,
@@ -79,9 +78,9 @@ const update = async (req, res) => {
         TOTALTINDAKAN,
         TOTALBIAYA,
       };
-    
+
       await RiwayatRawatInap.insertFromRawatInap(dataRiwayat);
-    }        
+    }
 
     res.status(200).json({
       message: 'Data rawat inap berhasil diperbarui',

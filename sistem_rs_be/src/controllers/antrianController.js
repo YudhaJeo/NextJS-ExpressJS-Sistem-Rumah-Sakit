@@ -1,7 +1,6 @@
 import * as Antrian from '../models/antrianModel.js';
 import db from '../core/config/knex.js';
 
-// Ambil semua antrian
 export const getAllAntrian = async (req, res) => {
   try {
     const data = await Antrian.findAllAntrian();
@@ -15,7 +14,6 @@ export const getAllAntrian = async (req, res) => {
   }
 };
 
-// Tambah antrian baru
 export const createAntrian = async (req, res) => {
   try {
     const { LOKET } = req.body;
@@ -54,7 +52,6 @@ export const createAntrian = async (req, res) => {
 
     await Antrian.createAntrian(newAntrian);
 
-    // 🔔 Trigger real-time update
     const broadcastUpdate = req.app.get('broadcastUpdate');
     if (broadcastUpdate) broadcastUpdate();
 
@@ -73,7 +70,6 @@ export const createAntrian = async (req, res) => {
   }
 };
 
-// Panggil antrian tertentu
 export const panggilAntrian = async (req, res) => {
   const { id } = req.params;
   try {
@@ -95,7 +91,6 @@ export const panggilAntrian = async (req, res) => {
   }
 };
 
-// Reset antrian berdasarkan loket
 export const resetByLoket = async (req, res) => {
   const { loket } = req.body;
 

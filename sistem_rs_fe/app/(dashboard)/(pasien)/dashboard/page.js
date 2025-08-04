@@ -66,7 +66,7 @@ const DashboardPasien = () => {
           plugins: { legend: { display: false } },
           scales: {
             x: {
-              min: 0, 
+              min: 0,
               ticks: {
                 stepSize: 1,
                 color: style.getPropertyValue('--text-color'),
@@ -99,7 +99,7 @@ const DashboardPasien = () => {
           scales: {
             r: {
               beginAtZero: false,
-              min: 0, 
+              min: 0,
               ticks: {
                 stepSize: 1,
                 color: style.getPropertyValue('--text-color'),

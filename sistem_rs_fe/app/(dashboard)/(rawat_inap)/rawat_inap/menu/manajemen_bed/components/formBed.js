@@ -1,4 +1,3 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\manajemen-kamar\components\formKamar.js
 'use client';
 
 import { Button } from 'primereact/button';
@@ -7,11 +6,11 @@ import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import React from 'react';
 
-const FormBed = ({ 
-  visible, 
-  onHide, 
-  onSubmit, 
-  form, 
+const FormBed = ({
+  visible,
+  onHide,
+  onSubmit,
+  form,
   setForm,
   errors,
   bangsalOptions

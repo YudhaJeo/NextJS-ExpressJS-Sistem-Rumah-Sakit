@@ -1,4 +1,3 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\master\tindakan_medis\page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -57,7 +56,7 @@ const Page = () => {
 
     if (!(form.NAMATINDAKAN || '').trim())
       newErrors.NAMATINDAKAN = (
-    <span style={{ color: 'red' }}>Nama tindakan wajib diisi</span>
+        <span style={{ color: 'red' }}>Nama tindakan wajib diisi</span>
       );
     if (
       form.HARGA === null ||
@@ -107,8 +106,8 @@ const Page = () => {
 
   const handleEdit = (row) => {
     setForm({
-      IDTINDAKAN: row.IDTINDAKAN, 
-      NAMATINDAKAN: row.NAMATINDAKAN || '', 
+      IDTINDAKAN: row.IDTINDAKAN,
+      NAMATINDAKAN: row.NAMATINDAKAN || '',
       KATEGORI: row.KATEGORI || '',
       HARGA: row.HARGA ?? 0,
       DESKRIPSI: row.DESKRIPSI || ''

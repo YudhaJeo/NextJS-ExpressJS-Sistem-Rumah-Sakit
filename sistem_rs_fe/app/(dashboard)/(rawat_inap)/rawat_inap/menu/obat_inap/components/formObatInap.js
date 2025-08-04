@@ -1,17 +1,15 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\menu\rawat_inap\components\formTindakan.js
 'use client';
 
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
-import React from 'react';
 import { InputNumber } from 'primereact/inputnumber';
 
-const FormObatInap = ({ 
-  visible, 
-  onHide, 
-  onSubmit, 
-  form, 
+const FormObatInap = ({
+  visible,
+  onHide,
+  onSubmit,
+  form,
   setForm,
   errors,
   pasienOptions,
@@ -58,14 +56,14 @@ const FormObatInap = ({
               const selected = obatOptions.find((p) => p.value === e.value);
               const harga = selected?.HARGA || 0;
               const jumlah = form.JUMLAH || 0;
-            
+
               setForm({
                 ...form,
                 IDOBAT: e.value,
                 HARGA: harga,
-                TOTAL: harga * jumlah, 
+                TOTAL: harga * jumlah,
               });
-            }}            
+            }}
             placeholder="Pilih obat yang diberikan ke pasien"
             filter
             showClear
@@ -78,15 +76,15 @@ const FormObatInap = ({
 
         <div className='mt-2'>
           <label>Harga</label>
-          <InputNumber 
-            className="w-full mt-2" 
-            value={form.HARGA || ''} 
+          <InputNumber
+            className="w-full mt-2"
+            value={form.HARGA || ''}
             disabled
             mode='currency'
             currency='IDR'
             locale='id-ID'
           />
-        </div>
+        </div>
 
         <div className="">
           <label htmlFor="stok">Jumlah</label>
@@ -107,15 +105,15 @@ const FormObatInap = ({
 
         <div className='mt-2'>
           <label>Total</label>
-          <InputNumber 
-            className="w-full mt-2" 
-            value={form.TOTAL || ''} 
+          <InputNumber
+            className="w-full mt-2"
+            value={form.TOTAL || ''}
             disabled
             mode='currency'
             currency='IDR'
             locale='id-ID'
           />
-        </div>
+        </div>
 
         <div className="text-right pt-3">
           <Button type="submit" label="Simpan" icon="pi pi-save" />

@@ -47,7 +47,7 @@ const FormPoli = ({ visible, formData, onHide, onChange, onSubmit, errors }) => 
           <InputText
             className={inputClass('ZONA')}
             value={formData.ZONA}
-            onChange={(e) => onChange({ ...formData, ZONA: e.target.value})}
+            onChange={(e) => onChange({ ...formData, ZONA: e.target.value })}
           />
           {errors.ZONA && <small className="text-red-500">{errors.ZONA}</small>}
         </div>

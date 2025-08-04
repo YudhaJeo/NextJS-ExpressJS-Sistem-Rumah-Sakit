@@ -16,9 +16,9 @@ const statusSeverity = {
 };
 
 const asuransiSeverity = {
-  UMUM: 'info',      
-  BPJS: 'success',   
-  DEFAULT: 'warning' 
+  UMUM: 'info',
+  BPJS: 'success',
+  DEFAULT: 'warning'
 };
 
 const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {

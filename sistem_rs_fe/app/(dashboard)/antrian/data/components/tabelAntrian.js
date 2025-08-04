@@ -3,7 +3,6 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import React, { useEffect } from "react";
 import Link from "next/link";
 import "@/styles/customTable.css";
 
@@ -11,7 +10,7 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil, onReset, currentId,
   useEffect(() => {
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
-        fetchData(); 
+        fetchData();
       }
     };
     document.addEventListener("visibilitychange", handleVisibility);

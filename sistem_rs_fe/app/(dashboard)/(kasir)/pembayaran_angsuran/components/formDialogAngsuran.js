@@ -47,7 +47,7 @@ const FormDialogAngsuran = ({
         NOINVOICE: selectedInvoice.label,
         NIK: selectedInvoice.NIK || '',
         NAMAPASIEN: selectedInvoice.NAMAPASIEN || '',
-        NAMA_ASURANSI: selectedInvoice.NAMA_ASURANSI || '',
+        NAMAASURANSI: selectedInvoice.NAMAASURANSI || '',
       });
     } else {
       setForm({
@@ -56,7 +56,7 @@ const FormDialogAngsuran = ({
         NOINVOICE: '',
         NIK: '',
         NAMAPASIEN: '',
-        NAMA_ASURANSI: '',
+        NAMAASURANSI: '',
       });
     }
   };
@@ -99,44 +99,33 @@ const FormDialogAngsuran = ({
 
         <div>
           <label className="font-medium">NIK</label>
-          <InputText
-            className="w-full mt-2"
-            value={form.NIK || ''}
-            readOnly
-          />
+          <InputText className="w-full mt-2" value={form.NIK || ''} readOnly />
         </div>
 
         <div>
           <label className="font-medium">Nama Pasien</label>
-          <InputText
-            className="w-full mt-2"
-            value={form.NAMAPASIEN || ''}   
-            readOnly
-          />
+          <InputText className="w-full mt-2" value={form.NAMAPASIEN || ''} readOnly />
         </div>
 
         <div>
           <label className="font-medium">Asuransi</label>
-          <InputText
-            className="w-full mt-2"
-            value={form.NAMA_ASURANSI || ''}
-            readOnly
-          />
+          <InputText className="w-full mt-2" value={form.NAMAASURANSI || ''} readOnly />
         </div>
 
         <div>
           <label className="font-medium">Tanggal Bayar</label>
           <Calendar
             className={classNames('w-full mt-2', { 'p-invalid': errors.TANGGALBAYAR })}
+            dateFormat="yy-mm-dd"
             value={form.TANGGALBAYAR ? new Date(form.TANGGALBAYAR) : null}
             onChange={(e) =>
               setForm({
                 ...form,
-                TANGGALBAYAR: e.value?.toISOString().split('T')[0],
+                TANGGALBAYAR: e.value?.toISOString().split('T')[0] || '',
               })
             }
             showIcon
-            dateFormat="yy-mm-dd"
+            showButtonBar
             placeholder="Pilih Tanggal"
           />
           {errors.TANGGALBAYAR && <small className="p-error">{errors.TANGGALBAYAR}</small>}

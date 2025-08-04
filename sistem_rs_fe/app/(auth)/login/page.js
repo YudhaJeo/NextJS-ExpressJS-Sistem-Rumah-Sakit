@@ -56,9 +56,6 @@ function LoginPage() {
           router.push("/");
       }
 
-      // setTimeout(() => {
-      //   router.push("/");
-      // }, 500);
     } catch (err) {
       if (toastRef.current) {
         toastRef.current.showToast(

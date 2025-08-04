@@ -24,7 +24,7 @@ const Dashboard = () => {
 
     axios.get(`${API_URL}/dashboard`)
       .then(res => {
-        setData(res.data); 
+        setData(res.data);
         setChartFromData(res.data.chart);
       })
       .catch(err => {

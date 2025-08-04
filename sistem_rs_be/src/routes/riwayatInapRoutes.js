@@ -1,4 +1,3 @@
-// sistem_rs_be\src\routes\riwayatInapRoutes.js
 import express from 'express';
 import * as RiwayatInapController from '../controllers/riwayatInapController.js';
 

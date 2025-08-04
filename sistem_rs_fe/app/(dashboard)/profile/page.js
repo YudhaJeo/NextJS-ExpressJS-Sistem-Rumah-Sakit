@@ -1,4 +1,3 @@
-// sistem_rs_fe\app\(dashboard)\profile\page.js
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
@@ -85,11 +84,11 @@ export default function ProfilePage() {
       if (newData.file) {
         formData.append('file', newData.file)
       }
-  
+
       await axios.put(`${API_URL}/profile`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       })
-  
+
       await fetchData(token)
       setDialogVisible(false)
       toastRef.current?.showToast('00', 'Data berhasil diperbarui')
@@ -97,7 +96,7 @@ export default function ProfilePage() {
       console.error('Update profil error:', err.response?.data || err)
       toastRef.current?.showToast('01', 'Gagal memperbarui profile')
     }
-  }  
+  }
 
   return (
     <div className="card">

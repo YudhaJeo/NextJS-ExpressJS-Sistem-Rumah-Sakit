@@ -21,7 +21,6 @@ const TabelLaporanKomisi = ({ data, loading }) => {
 
   const PDFViewer = dynamic(() => import('./PDFViewer'), { ssr: false })
 
-  // Format tanggal ke format Indonesia
   const formatTanggal = (tanggal) => {
     if (!tanggal) return '-'
     const tgl = new Date(tanggal)
@@ -32,11 +31,9 @@ const TabelLaporanKomisi = ({ data, loading }) => {
     })
   }
 
-  // Format angka menjadi Rupiah
   const formatRupiah = (value) =>
     new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value || 0)
 
-  // Fungsi untuk membuka dialog atur margin dan ambil detail komisi
   const handleOpenAdjust = async (rowData) => {
     try {
       const res = await axios.get(`${API_URL}/komisi_dokter/${rowData.IDKOMISI}`)
@@ -50,7 +47,6 @@ const TabelLaporanKomisi = ({ data, loading }) => {
     }
   }
 
-  // Tombol aksi untuk setiap baris
   const actionBody = (rowData) => (
     <div className="flex gap-2 justify-center">
       <a
@@ -77,25 +73,24 @@ const TabelLaporanKomisi = ({ data, loading }) => {
         <Column field="TANGGALKUNJUNGAN" header="Total Tagihan" body={(r) => formatTanggal(r.TANGGALKUNJUNGAN)} />
         <Column field="NILAIKOMISI" header="Komisi" body={(r) => formatRupiah(r.NILAIKOMISI)} />
         <Column
-                header="Status"
-                body={(row) => {
-                  const status = row.STATUS;
-                  const severity = () => {
-                    switch (status) {
-                      case "Sudah Bayar":
-                        return "success";
-                      default:
-                        return "info";
-                    }
-                  };
-        
-                  return <Tag value={status} severity={severity()} />;
-                }}
-              />
+          header="Status"
+          body={(row) => {
+            const status = row.STATUS;
+            const severity = () => {
+              switch (status) {
+                case "Sudah Bayar":
+                  return "success";
+                default:
+                  return "info";
+              }
+            };
+
+            return <Tag value={status} severity={severity()} />;
+          }}
+        />
         <Column header="Aksi" body={actionBody} style={{ width: '150px', textAlign: 'center' }} />
       </DataTable>
 
-      {/* Dialog untuk atur margin dan cetak */}
       <AdjustPrintMarginLaporan
         adjustDialog={adjustDialog}
         setAdjustDialog={setAdjustDialog}
@@ -105,7 +100,6 @@ const TabelLaporanKomisi = ({ data, loading }) => {
         setJsPdfPreviewOpen={setJsPdfPreviewOpen}
       />
 
-      {/* Dialog Preview PDF */}
       <Dialog
         visible={jsPdfPreviewOpen}
         onHide={() => setJsPdfPreviewOpen(false)}

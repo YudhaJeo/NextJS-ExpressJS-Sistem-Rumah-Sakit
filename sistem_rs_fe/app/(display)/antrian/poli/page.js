@@ -96,7 +96,7 @@ function DisplayAntrianPoli() {
         console.error("QZ Tray belum siap:", err);
       });
     }
-  }, []);  
+  }, []);
 
   useEffect(() => {
     const updateTime = () => setTime(new Date());
@@ -194,17 +194,17 @@ function DisplayAntrianPoli() {
       });
 
       const data = [
-        '\x1B\x40',                
-        '\x1B\x61\x01',            
+        '\x1B\x40',
+        '\x1B\x61\x01',
 
-        '\x1B\x21\x08',          
+        '\x1B\x21\x08',
         '*** BAYZA MEDIKA ***\n',
         '--------------------------\n',
 
-        '\x1B\x21\x18',         
+        '\x1B\x21\x18',
         'NOMOR ANTRIAN ANDA\n',
 
-        '\x1B\x21\x30',            
+        '\x1B\x21\x30',
         `${nomorBaru.toString().toUpperCase()}\n`,
         '----------------\n',
 
@@ -218,7 +218,7 @@ function DisplayAntrianPoli() {
         '--------------------------\n',
 
         'Harap tunggu panggilan\n\n\n',
-        '\x1D\x56\x01'            
+        '\x1D\x56\x01'
       ];
 
       await window.qz.print(config, data);
@@ -363,19 +363,19 @@ function DisplayAntrianPoli() {
           />
         </span>
 
-      {hydrated && (
-        <div className="font-bold text-sm text-right">
-          {time?.toLocaleString('id-ID', {
-            weekday: 'long',
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          })}
-        </div>
-      )}
+        {hydrated && (
+          <div className="font-bold text-sm text-right">
+            {time?.toLocaleString('id-ID', {
+              weekday: 'long',
+              day: '2-digit',
+              month: 'long',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit'
+            })}
+          </div>
+        )}
       </div>
 
       <div className={`px-[${config.containerPadding}] pb-2 shrink-0`} />

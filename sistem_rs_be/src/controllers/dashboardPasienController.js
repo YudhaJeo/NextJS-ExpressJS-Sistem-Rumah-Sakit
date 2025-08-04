@@ -15,7 +15,7 @@ export const getStatistikPasien = async (req, res) => {
       pasienHariIni: pasienHariIni?.total || 0,
       jumlahLaki,
       jumlahPerempuan,
-      bulanan: bulanan.reverse(), 
+      bulanan: bulanan.reverse(),
     });
   } catch (error) {
     console.error('Gagal ambil statistik pasien:', error);

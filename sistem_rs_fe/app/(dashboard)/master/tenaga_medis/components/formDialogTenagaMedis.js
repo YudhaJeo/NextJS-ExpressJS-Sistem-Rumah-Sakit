@@ -30,33 +30,33 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
   const [unitKerjaType, setUnitKerjaType] = useState("Poli");
   const [listPoli, setListPoli] = useState([]);
 
-useEffect(() => {
-  if (visible) {
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/poli`)
-      .then((res) => {
-        const options = res.data.map((poli) => ({
-          label: poli.NAMAPOLI,
-          value: poli.NAMAPOLI,
-        }));
-        setListPoli(options);
-      })
-      .catch((err) => {
-        console.error("Gagal mengambil data poli:", err);
-      });
+  useEffect(() => {
+    if (visible) {
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/poli`)
+        .then((res) => {
+          const options = res.data.map((poli) => ({
+            label: poli.NAMAPOLI,
+            value: poli.NAMAPOLI,
+          }));
+          setListPoli(options);
+        })
+        .catch((err) => {
+          console.error("Gagal mengambil data poli:", err);
+        });
 
-    axios.get(`${process.env.NEXT_PUBLIC_API_URL}/role/tenaga-medis`)
-      .then((res) => {
-        const options = res.data.data.map((role) => ({
-          label: role.NAMAROLE,
-          value: role.NAMAROLE,
-        }));
-        setRoleOptions(options);
-      })
-      .catch((err) => {
-        console.error("Gagal mengambil role tenaga medis:", err);
-      });
-  }
-}, [visible]);
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/role/tenaga-medis`)
+        .then((res) => {
+          const options = res.data.data.map((role) => ({
+            label: role.NAMAROLE,
+            value: role.NAMAROLE,
+          }));
+          setRoleOptions(options);
+        })
+        .catch((err) => {
+          console.error("Gagal mengambil role tenaga medis:", err);
+        });
+    }
+  }, [visible]);
 
   useEffect(() => {
     if (!visible) {

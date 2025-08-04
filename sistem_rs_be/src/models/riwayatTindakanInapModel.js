@@ -1,4 +1,3 @@
-// sistem_rs_be\src\models\riwayatTindakanInapModel.js
 import db from '../core/config/knex.js'
 
 export const insert = async (data) => {

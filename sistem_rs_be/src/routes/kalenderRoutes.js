@@ -1,7 +1,5 @@
 import express from 'express';
 import * as kalenderController from '../controllers/kalenderController.js';
-import { verifyToken } from '../middlewares/jwt.js';
-
 const router = express.Router();
 
 router.get('/', kalenderController.getAllKalender);

@@ -44,24 +44,24 @@ export async function getAllDokter() {
 }
 
 export const getDokterById = async (id) => {
-    const dokter = await db('dokter').where('IDDOKTER', id).first();
-    const jadwal = await db('jadwal_dokter').where('IDDOKTER', id);
-    return dokter ? { ...dokter, JADWAL: jadwal } : null;
+  const dokter = await db('dokter').where('IDDOKTER', id).first();
+  const jadwal = await db('jadwal_dokter').where('IDDOKTER', id);
+  return dokter ? { ...dokter, JADWAL: jadwal } : null;
 };
 
 export const createDokter = async ({ IDTENAGAMEDIS, IDPOLI, JADWAL }) => {
-    const [IDDOKTER] = await db('dokter').insert({ IDTENAGAMEDIS, IDPOLI });
-    const jadwalData = JADWAL.map((j) => ({ ...j, IDDOKTER }));
-    await db('jadwal_dokter').insert(jadwalData);
+  const [IDDOKTER] = await db('dokter').insert({ IDTENAGAMEDIS, IDPOLI });
+  const jadwalData = JADWAL.map((j) => ({ ...j, IDDOKTER }));
+  await db('jadwal_dokter').insert(jadwalData);
 };
 
 export const updateDokter = async (id, { IDTENAGAMEDIS, IDPOLI, JADWAL }) => {
-    await db('dokter').where('IDDOKTER', id).update({ IDTENAGAMEDIS, IDPOLI });
-    await db('jadwal_dokter').where('IDDOKTER', id).del();
-    const newJadwal = JADWAL.map((j) => ({ ...j, IDDOKTER: id }));
-    await db('jadwal_dokter').insert(newJadwal);
+  await db('dokter').where('IDDOKTER', id).update({ IDTENAGAMEDIS, IDPOLI });
+  await db('jadwal_dokter').where('IDDOKTER', id).del();
+  const newJadwal = JADWAL.map((j) => ({ ...j, IDDOKTER: id }));
+  await db('jadwal_dokter').insert(newJadwal);
 };
 
 export const deleteDokter = async (id) => {
-    await db('dokter').where('IDDOKTER', id).del(); 
+  await db('dokter').where('IDDOKTER', id).del();
 };

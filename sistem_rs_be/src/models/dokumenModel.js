@@ -7,11 +7,11 @@ export const getAll = () => {
 };
 
 export const getById = (id) => {
-  return db('dokumen').where('IDDOKUMEN', id ).first();
+  return db('dokumen').where('IDDOKUMEN', id).first();
 };
 
 export const getByNIK = (nik) => {
-  return db('dokumen').where('NIK', nik );
+  return db('dokumen').where('NIK', nik);
 };
 
 export const create = (data) => {
@@ -19,9 +19,9 @@ export const create = (data) => {
 };
 
 export const update = (id, data) => {
-  return db('dokumen').where('IDDOKUMEN', id ).update(data);
+  return db('dokumen').where('IDDOKUMEN', id).update(data);
 };
 
 export const remove = (id) => {
-  return db('dokumen').where('IDDOKUMEN', id ).del();
+  return db('dokumen').where('IDDOKUMEN', id).del();
 };

@@ -28,76 +28,76 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
     setDialogVisible(true);
   };
 
-const listItem = (row, index) => {
-  return (
-    <div className="col-12" key={row.IDTENAGAMEDIS} onClick={() => openDetail(row)}>
-      <div className={classNames('flex flex-column xl:flex-row xl:align-items-start p-4 gap-4', { 'border-top-1 surface-border': index !== 0 })}>
-        <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round"
-          src={row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_URL}${row.FOTOPROFIL}` : "/no-image.png"}
-          alt={row.NAMALENGKAP}
-        />
-        <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-          <div className="flex flex-column align-items-center sm:align-items-start gap-3">
-            <div className="text-2xl font-bold text-900">{row.NAMALENGKAP}</div>
-            <div className="flex align-items-center gap-3">
-              <span className="flex align-items-center gap-2">
-                <i className="pi pi-user"></i>
-                <span className="font-semibold">{row.JENISTENAGAMEDIS}</span>
-              </span>
-              <Tag value={row.STATUSKEPEGAWAIAN} severity={getSeverity(row.STATUSKEPEGAWAIAN)} />
+  const listItem = (row, index) => {
+    return (
+      <div className="col-12" key={row.IDTENAGAMEDIS} onClick={() => openDetail(row)}>
+        <div className={classNames('flex flex-column xl:flex-row xl:align-items-start p-4 gap-4', { 'border-top-1 surface-border': index !== 0 })}>
+          <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round"
+            src={row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_URL}${row.FOTOPROFIL}` : "/no-image.png"}
+            alt={row.NAMALENGKAP}
+          />
+          <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+            <div className="flex flex-column align-items-center sm:align-items-start gap-3">
+              <div className="text-2xl font-bold text-900">{row.NAMALENGKAP}</div>
+              <div className="flex align-items-center gap-3">
+                <span className="flex align-items-center gap-2">
+                  <i className="pi pi-user"></i>
+                  <span className="font-semibold">{row.JENISTENAGAMEDIS}</span>
+                </span>
+                <Tag value={row.STATUSKEPEGAWAIAN} severity={getSeverity(row.STATUSKEPEGAWAIAN)} />
+              </div>
+              <div className="text-sm text-600">{row.UNITKERJA}</div>
             </div>
-            <div className="text-sm text-600">{row.UNITKERJA}</div>
-          </div>
-          <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-            <Button
-              icon="pi pi-pencil"
-              className="p-button-rounded p-button-warning"
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(row);
-              }}
-            />
-            <Button
-              icon="pi pi-trash"
-              className="p-button-rounded p-button-danger"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(row);
-              }}
-            />
+            <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
+              <Button
+                icon="pi pi-pencil"
+                className="p-button-rounded p-button-warning"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(row);
+                }}
+              />
+              <Button
+                icon="pi pi-trash"
+                className="p-button-rounded p-button-danger"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(row);
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 
   const gridItem = (row) => {
     return (
       <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2 cursor-pointer" key={row.IDTENAGAMEDIS} onClick={() => openDetail(row)}>
-          <div className="p-4 border-1 surface-border surface-card border-round-lg h-full flex flex-column justify-content-between transition-all duration-200 hover:surface-hover hover:shadow-3">
-              <div className="flex flex-wrap align-items-center justify-content-between gap-2">
-                  <div className="flex align-items-center gap-2">
-                      <i className="pi pi-user"></i>
-                      <span className="font-semibold">{row.JENISTENAGAMEDIS}</span>
-                  </div>
-                  <Tag value={row.STATUSKEPEGAWAIAN} severity={getSeverity(row.STATUSKEPEGAWAIAN)} />
-              </div>
-              <div className="flex flex-column align-items-center gap-3 py-5">
-                  <img
-                      className="w-12rem h-12rem shadow-2 rounded-xl object-cover"
-                      src={row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_URL}${row.FOTOPROFIL}` : "/no-image.png"}
-                      alt={row.NAMALENGKAP}
-                  />
-                  <div className="text-2xl font-bold text-center">{row.NAMALENGKAP}</div>
-                  <span className="text-sm text-600">{row.UNITKERJA}</span>
-              </div>
-              <div className="flex align-items-center justify-content-between">
-                  <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning" onClick={(e) => { e.stopPropagation(); onEdit(row); }} />
-                  <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={(e) => { e.stopPropagation(); onDelete(row); }} />
-              </div>
+        <div className="p-4 border-1 surface-border surface-card border-round-lg h-full flex flex-column justify-content-between transition-all duration-200 hover:surface-hover hover:shadow-3">
+          <div className="flex flex-wrap align-items-center justify-content-between gap-2">
+            <div className="flex align-items-center gap-2">
+              <i className="pi pi-user"></i>
+              <span className="font-semibold">{row.JENISTENAGAMEDIS}</span>
+            </div>
+            <Tag value={row.STATUSKEPEGAWAIAN} severity={getSeverity(row.STATUSKEPEGAWAIAN)} />
           </div>
+          <div className="flex flex-column align-items-center gap-3 py-5">
+            <img
+              className="w-12rem h-12rem shadow-2 rounded-xl object-cover"
+              src={row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_URL}${row.FOTOPROFIL}` : "/no-image.png"}
+              alt={row.NAMALENGKAP}
+            />
+            <div className="text-2xl font-bold text-center">{row.NAMALENGKAP}</div>
+            <span className="text-sm text-600">{row.UNITKERJA}</span>
+          </div>
+          <div className="flex align-items-center justify-content-between">
+            <Button icon="pi pi-pencil" className="p-button-rounded p-button-warning" onClick={(e) => { e.stopPropagation(); onEdit(row); }} />
+            <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={(e) => { e.stopPropagation(); onDelete(row); }} />
+          </div>
+        </div>
       </div>
     );
   };
@@ -129,7 +129,7 @@ const listItem = (row, index) => {
         header={header()}
         loading={loading}
       />
-      
+
       <Dialog
         header={selectedData?.NAMALENGKAP || "Detail Tenaga Medis"}
         visible={dialogVisible}

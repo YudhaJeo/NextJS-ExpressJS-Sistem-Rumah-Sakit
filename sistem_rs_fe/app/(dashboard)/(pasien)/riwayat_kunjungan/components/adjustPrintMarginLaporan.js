@@ -50,22 +50,22 @@ export default function AdjustPrintMarginLaporanKunjungan({
       unit: 'mm',
       format: adjustConfig.paperSize,
     });
-  
+
     const marginLeft = parseFloat(adjustConfig.marginLeft);
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
-  
+
     let y = marginTop + 10;
-  
+
     const formatTanggal = (tanggal) =>
       tanggal
         ? new Date(tanggal).toLocaleDateString('id-ID', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })
         : '-';
-  
+
     // === HEADER ===
     doc.setFontSize(18);
     doc.text('Detail Riwayat Kunjungan', doc.internal.pageSize.width / 2, y, { align: 'center' });
@@ -93,9 +93,9 @@ export default function AdjustPrintMarginLaporanKunjungan({
       styles: { fontSize: 9 },
       margin: { left: marginLeft, right: marginRight },
     });
-  
+
     return doc.output('datauristring');
-  }  
+  }
 
   const handleExportPdf = async () => {
     if (!selectedRow) return
@@ -109,7 +109,7 @@ export default function AdjustPrintMarginLaporanKunjungan({
     } finally {
       setLoadingExport(false)
     }
-  }  
+  }
 
   const footer = () => (
     <div className="flex flex-row">
