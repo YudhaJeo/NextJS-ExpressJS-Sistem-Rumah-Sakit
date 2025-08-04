@@ -116,7 +116,7 @@ export default function AdjustPrintMarginLaporanKunjungan({
       <Button
         label="Export PDF"
         icon="pi pi-file"
-        className="p-button-danger mr-2"
+        className="p-button-danger"
         onClick={handleExportPdf}
         loading={loadingExport}
       />

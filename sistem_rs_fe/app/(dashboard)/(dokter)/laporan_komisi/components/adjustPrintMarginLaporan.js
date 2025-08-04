@@ -195,25 +195,14 @@ export default function AdjustPrintMarginLaporan({
     }
   }  
 
-  const handleExportExcel = () => {
-    if (!selectedRow) return
-    // diisi export excel
-  }
-
   const footer = () => (
     <div className="flex flex-row">
       <Button
         label="Export PDF"
         icon="pi pi-file"
-        className="p-button-danger mr-2"
+        className="p-button-danger"
         onClick={handleExportPdf}
         loading={loadingExport}
-      />
-      <Button
-        label="Export Excel"
-        icon="pi pi-file"
-        className="p-button-success mr-2"
-        onClick={handleExportExcel}
       />
     </div>
   )
