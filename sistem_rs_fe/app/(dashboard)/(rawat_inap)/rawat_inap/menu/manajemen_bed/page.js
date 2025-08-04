@@ -34,12 +34,6 @@ const Page = () => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-
     fetchData();
     fetchKamar();
   }, []);

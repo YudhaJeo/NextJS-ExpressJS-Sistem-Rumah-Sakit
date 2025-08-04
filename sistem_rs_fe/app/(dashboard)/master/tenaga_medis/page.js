@@ -47,11 +47,6 @@ const Page = () => {
   useEffect(() => {
     fetchData();
     fetchPoli(); 
-
-    const token = Cookies.get("token");
-    if (!token) {
-      router.push("/login");
-    }
   }, []);
 
   const fetchData = async () => {

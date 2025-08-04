@@ -22,8 +22,6 @@ export default function DetailRiwayatKunjunganPage() {
   const toastRef = useRef(null);
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) return router.push('/login');
     fetchDetail();
   }, [id]);
 

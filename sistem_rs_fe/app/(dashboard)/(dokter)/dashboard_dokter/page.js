@@ -19,9 +19,6 @@ const DashboardDokter = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) return router.push('/login');
-
     axios
       .get(`${API_URL}/dashboard_dokter`)
       .then((res) => {
@@ -36,7 +33,7 @@ const DashboardDokter = () => {
           resData.totalDokter ?? 0,
           resData.totalPoli ?? 0,
           resData.jadwalHariIni ?? 0,
-          resData.laporanHariIni ?? 0, // default ke 0 jika belum ada
+          resData.laporanHariIni ?? 0, 
         ];
 
         const backgroundColors = [

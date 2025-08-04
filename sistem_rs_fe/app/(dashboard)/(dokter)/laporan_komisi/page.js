@@ -21,11 +21,6 @@ const LaporanKomisiPage = () => {
   const [endDate, setEndDate] = useState(null);
 
   useEffect(() => {
-    const token = Cookies.get("token");
-    if (!token) {
-      router.push("/login");
-      return;
-    }
     fetchData();
   }, []);
 

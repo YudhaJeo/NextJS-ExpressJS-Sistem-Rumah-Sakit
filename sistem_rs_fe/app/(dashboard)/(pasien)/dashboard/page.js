@@ -17,9 +17,6 @@ const DashboardPasien = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) return router.push('/login');
-
     axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/statistik-pasien`)
       .then((res) => {

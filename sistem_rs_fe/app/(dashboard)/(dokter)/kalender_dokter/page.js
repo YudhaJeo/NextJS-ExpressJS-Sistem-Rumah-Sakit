@@ -33,11 +33,6 @@ const KalenderPage = () => {
   const triggerRefresh = () => setRefresh(prev => !prev);
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
     fetchKalender();
     fetchDokter();
   }, [refresh]);

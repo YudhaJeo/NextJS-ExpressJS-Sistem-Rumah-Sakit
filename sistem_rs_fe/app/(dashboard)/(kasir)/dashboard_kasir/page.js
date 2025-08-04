@@ -17,9 +17,6 @@ const DashboardKasir = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (!token) return router.push('/login');
-
     axios
       .get(`${API_URL}/dashboard_kasir`)
       .then((res) => {
