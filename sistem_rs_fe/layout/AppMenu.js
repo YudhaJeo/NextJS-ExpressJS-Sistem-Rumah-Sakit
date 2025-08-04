@@ -88,7 +88,6 @@ const AppMenu = () => {
                 label: "Laporan",
                 icon: "pi pi-fw pi-chart-bar",
                 items: [
-                  { label: "Pendaftaran Pasien", icon: "pi pi-fw pi-file-arrow-up", to: "/laporan/report_pendaftaran_pasien" },
                   { label: "Statistik Kunjungan", icon: "pi pi-fw pi-chart-line", to: "/laporan/statistik_kunjungan" },
                   { label: "Rekap Kunjungan", icon: "pi pi-fw pi-file-check", to: "/laporan/rekap_kunjungan" },
                   { label: "Histori Transaksi", icon: "pi pi-fw pi-history", to: "/laporan/histori_transaksi" },
