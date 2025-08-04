@@ -1,9 +1,10 @@
 import express from 'express';
-import { deleteObat, getAllObat, insertObat, updateObat, } from '../controllers/obatController.js'
+import { getAllObat, getObatById, insertObat, updateObat, deleteObat } from '../controllers/obatController.js';
 
 const router = express.Router();
 
 router.get('/', getAllObat);
+router.get('/:id', getObatById);
 router.post('/', insertObat);
 router.put('/:id', updateObat);
 router.delete('/:id', deleteObat);

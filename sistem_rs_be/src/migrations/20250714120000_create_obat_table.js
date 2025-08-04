@@ -5,19 +5,21 @@ export const up = function (knex) {
       table.increments('IDOBAT').primary(); 
       table.string('NAMAOBAT', 100).notNullable().unique();
       
-      table.enu('SATUAN', [
+      table.enu('JENISOBAT', [
         'TABLET',
         'KAPSUL',
         'SIRUP',
-        'BOTOL',
-        'AMPUL',
-        'TUBE',
-        'BIJI'
+        'OLES',
+        'LARUTAN',
+        'PUYER',
+        'PIL'
       ]).notNullable().defaultTo('TABLET');      
       
       table.integer('STOK').unsigned().defaultTo(0);
-      table.double('HARGA').notNullable();
-      table.text('KETERANGAN');
+      table.double('HARGABELI').notNullable();
+      table.double('HARGAJUAL').notNullable();
+      table.string('TGLKADALUARSA', 50).notNullable();
+      table.integer("SUPPLIERID").unsigned().references("SUPPLIERID").inTable("master_supplier").onDelete("SET NULL").onUpdate("CASCADE");
   
       table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
       table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());
@@ -27,4 +29,3 @@ export const up = function (knex) {
   export const down = function (knex) {
     return knex.schema.dropTable('obat');
   };
-  

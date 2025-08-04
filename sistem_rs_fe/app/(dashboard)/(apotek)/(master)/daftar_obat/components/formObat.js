@@ -5,8 +5,11 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
+import { classNames } from 'primereact/utils';
+import { Calendar } from 'primereact/calendar';
 
-const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
+
+const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors, supplierOptions }) => {
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
@@ -35,21 +38,21 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
         </div>
 
         <div className="mt-2">
-          <label>Satuan</label>
+          <label>Jenis Obat</label>
           <Dropdown
-            className={inputClass('SATUAN')}
+            className={inputClass('JENISOBAT')}
             options={[
               { label: 'Tablet', value: 'TABLET' },
               { label: 'Kapsul', value: 'KAPSUL' },
               { label: 'Sirup', value: 'SIRUP' },
-              { label: 'Botol', value: 'BOTOL' },
-              { label: 'Ampul', value: 'AMPUL' },
-              { label: 'Tube', value: 'TUBE' },
-              { label: 'Biji', value: 'BIJI' },
+              { label: 'Oles', value: 'OLES' },
+              { label: 'Larutan', value: 'LARUTAN' },
+              { label: 'Puyer', value: 'PUYER' },
+              { label: 'Pil', value: 'PIL' }
             ]}
-            value={form.SATUAN}
-            onChange={(e) => setForm({ ...form, SATUAN: e.value })}
-            placeholder="Pilih"
+            value={form.JENISOBAT}
+            onChange={(e) => setForm({ ...form, JENISOBAT: e.value })}
+            placeholder="Pilih Jenis Obat"
           />
           {errors.SATUAN && <small className="text-red-500">{errors.SATUAN}</small>}
         </div>
@@ -69,30 +72,66 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
         </div>
 
         <div className="mt-2">
-          <label>Harga (Rupiah)</label>
-          <InputNumber
-            inputId="harga"
-            className="w-full mt-2"
-            inputClassName={errors.HARGA ? 'p-invalid' : ''}
-            value={form.HARGA}
-            onValueChange={(e) => setForm({ ...form, HARGA: e.value })}
-            mode="currency"
-            currency="IDR"
-            locale="id-ID"
-          />
-          {errors.HARGA && (
-            <small className="text-red-500">{errors.HARGA}</small>
+          <label>Harga Beli</label>
+            <InputNumber
+              inputId="hargaBeli"
+              className="w-full mt-2"
+              value={form.HARGABELI}
+              onValueChange={(e) => setForm({ ...form, HARGABELI: e.value })}
+              mode="currency" currency="IDR" locale="id-ID"
+            />
+          {errors.HARGABELI && (
+            <small className="text-red-500">{errors.HARGABELI}</small>  
           )}
         </div>
 
         <div className="mt-2">
-          <label>Keterangan</label>
-          <InputText
-            className={inputClass('KETERANGAN')}
-            value={form.KETERANGAN}
-            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
-          />
-          {errors.KETERANGAN && <small className="text-red-500">{errors.KETERANGAN}</small>}
+          <label>Harga Jual</label>
+            <InputNumber
+              inputId="hargaJual"
+              className="w-full mt-2"
+              value={form.HARGAJUAL}
+              onValueChange={(e) => setForm({ ...form, HARGAJUAL: e.value })}
+              mode="currency" currency="IDR" locale="id-ID"
+            />
+          {errors.HARGAJUAL && (
+            <small className="text-red-500">{errors.HARGAJUAL}</small>  
+          )}
+        </div>
+
+        <div className="mt-2">
+          <label>Tanggal Kadaluarsa</label>
+            <Calendar
+              className={classNames('w-full mt-2', { 'p-invalid': errors.TGLKADALUARSA })}
+              dateFormat="yy-mm-dd"
+              value={form.TGLKADALUARSA ? new Date(form.TGLKADALUARSA) : undefined}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  TGLKADALUARSA: e.value?.toISOString().split('T')[0] || '',
+                })
+              }
+              showIcon
+            />
+          {errors.TGLKADALUARSA && (
+            <small className="text-red-500">{errors.TGLKADALUARSA}</small>
+          )}
+        </div>
+
+        <div className="mt-2">
+          <label>Supplier</label> 
+            <Dropdown
+              className={classNames('w-full mt-2', { 'p-invalid': errors.SUPPLIERID })}
+              options={supplierOptions} 
+              value={form.SUPPLIERID}
+              onChange={(e) => setForm({ ...form, SUPPLIERID: e.value })}
+              placeholder="Pilih Supplier"
+              filter
+              showClear
+            />
+            {errors.SUPPLIERID && (
+              <small className="text-red-500">{errors.SUPPLIERID}</small>
+            )}
         </div>
 
         <div className="text-right pt-3">

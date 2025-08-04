@@ -13,18 +13,29 @@ const TabelObat = ({ data, loading, onEdit, onDelete }) => {
       size="small">
       <Column field="IDOBAT" header="ID" />
       <Column field="NAMAOBAT" header="Nama Obat" />
-      <Column field="SATUAN" header="Satuan Obat" />
+      <Column field="JENISOBAT" header="Jenis Obat" />
       <Column field="STOK" header="Stok" />
       <Column
-        header="Harga/hari"
+        header="Harga Beli"
         body={(rowData) =>
           new Intl.NumberFormat('id-ID', {
             style: 'currency',
             currency: 'IDR',
-          }).format(rowData.HARGA || 0)
+          }).format(rowData.HARGABELI || 0)
         }
       />
-      <Column field="KETERANGAN" header="Keterangan" />
+
+      <Column
+        header="Harga Jual"
+        body={(rowData) =>
+          new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+          }).format(rowData.HARGAJUAL || 0)
+        }
+      />
+      <Column field="TGLKADALUARSA" header="Tgl Kadaluarsa" />
+      <Column field="NAMASUPPLIER" header="Supplier" />
 
       <Column
         header="Aksi"
