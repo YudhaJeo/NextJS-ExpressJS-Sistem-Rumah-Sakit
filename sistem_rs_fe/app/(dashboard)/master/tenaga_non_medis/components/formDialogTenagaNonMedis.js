@@ -1,3 +1,4 @@
+// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(dashboard)\master\tenaga_non_medis\components\formDialogTenagaNonMedis.js
 "use client";
 
 import axios from "axios";
@@ -53,7 +54,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
       if (form.FOTOPROFIL) {
         setPreviewImage(
           typeof form.FOTOPROFIL === "string"
-            ? `/uploads/tenaga_medis/${form.FOTOPROFIL}`
+            ? `/uploads/tenaga_non_medis/${form.FOTOPROFIL}`
             : URL.createObjectURL(form.FOTOPROFIL)
         );
       }
@@ -107,7 +108,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
         setPreviewDokumen(file.name);
       }
     }
-  };
+  };  
 
   return (
     <Dialog
@@ -127,7 +128,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           {errors.KODETENAGANONMEDIS && <small className="p-error">{errors.KODETENAGANONMEDIS}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label className="font-medium">Nama Lengkap</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.NAMALENGKAP })}
@@ -137,7 +138,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           {errors.NAMALENGKAP && <small className="p-error">{errors.NAMALENGKAP}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label className="font-medium">Jenis Kelamin</label>
           <Dropdown
             className={classNames("w-full mt-2", { "p-invalid": errors.JENISKELAMIN })}
@@ -149,7 +150,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           {errors.JENISKELAMIN && <small className="p-error">{errors.JENISKELAMIN}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label className="font-medium">Tempat Lahir</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.TEMPATLAHIR })}
@@ -159,7 +160,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           {errors.TEMPATLAHIR && <small className="p-error">{errors.TEMPATLAHIR}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label className="font-medium">Tanggal Lahir</label>
           <Calendar
             className={classNames("w-full mt-2", { "p-invalid": errors.TANGGALLAHIR })}
@@ -171,7 +172,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           {errors.TANGGALLAHIR && <small className="p-error">{errors.TANGGALLAHIR}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label className="font-medium">No. HP</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.NOHP })}
@@ -181,7 +182,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           {errors.NOHP && <small className="p-error">{errors.NOHP}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label className="font-medium">Email</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.EMAIL })}
@@ -191,7 +192,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           {errors.EMAIL && <small className="p-error">{errors.EMAIL}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label className="font-medium">Password</label>
           <Password
             className={classNames("w-full mt-2", { "p-invalid": errors.PASSWORD })}
@@ -205,7 +206,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           {errors.PASSWORD && <small className="p-error">{errors.PASSWORD}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label className="font-medium">Jenis Tenaga Non Medis</label>
           <Dropdown
             className={classNames("w-full mt-2", { "p-invalid": errors.JENISTENAGANONMEDIS })}
@@ -219,7 +220,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           )}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label className="font-medium">Spesialisasi</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.SPESIALISASI })}
@@ -229,7 +230,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           {errors.SPESIALISASI && <small className="p-error">{errors.SPESIALISASI}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label className="font-medium">Unit Kerja</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.UNITKERJA })}
@@ -239,7 +240,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           {errors.UNITKERJA && <small className="p-error">{errors.UNITKERJA}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label className="font-medium">Status Kepegawaian</label>
           <Dropdown
             className={classNames("w-full mt-2", { "p-invalid": errors.STATUSKEPEGAWAIAN })}
@@ -253,21 +254,34 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           )}
         </div>
 
-        <div>
-          <label>Foto Profil</label>
-          <input
-            type="file"
-            onChange={(e) => setForm({ ...form, FOTOPROFIL: e.target.files[0] })}
-          />
+        <div className="mt-2">
+            <label className="font-medium">Foto Profil</label>
+            <FileUpload
+            className="mt-1"
+              mode="basic"
+              accept="image/*"
+              maxFileSize={5000000}
+              customUpload
+              chooseLabel="Pilih Foto"
+              auto={false}
+              onSelect={(e) => handleFileUpload("FOTOPROFIL", e)}
+            />
+            <small className="block text-gray-500 text-sm">Ukuran maksimal file: 5MB</small>
         </div>
 
-        <div>
-          <label>Dokumen Pendukung</label>
-          <input
-            type="file"
-            onChange={(e) => setForm({ ...form, DOKUMENPENDUKUNG: e.target.files[0] })}
-          />
-        </div>
+        <div className="mt-2">
+            <label className="font-medium">Dokumen Pendukung</label>
+            <FileUpload
+              className="mt-1"
+              mode="basic"
+              maxFileSize={5000000}
+              customUpload
+              chooseLabel="Pilih Dokumen"
+              auto={false}
+              onSelect={(e) => handleFileUpload("DOKUMENPENDUKUNG", e)}
+            />
+            <small className="block text-gray-500 text-sm">Ukuran maksimal file: 5MB</small>
+        </div>  
 
         <div className="text-right pt-4">
           <Button type="submit" label="Simpan" icon="pi pi-save" className="p-button-primary" />

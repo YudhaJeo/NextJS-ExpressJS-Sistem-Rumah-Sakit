@@ -1,3 +1,4 @@
+// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_be\src\controllers\tenagaNonMedisController.js
 import * as TenagaNonMedis from '../models/tenagaNonMedisModel.js';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
@@ -44,7 +45,7 @@ export const createTenagaNonMedis = async (req, res) => {
     const data = {
       ...body,
       PASSWORD: hashedPassword,
-      FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_medis/${files.FOTOPROFIL[0].filename}` : null,
+      FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_non_medis/${files.FOTOPROFIL[0].filename}` : null,
       DOKUMENPENDUKUNG: files?.DOKUMENPENDUKUNG?.[0] ? `/uploads/tenaga_medis/${files.DOKUMENPENDUKUNG[0].filename}` : null,
       TANGGALLAHIR: formatDate(body.TANGGALLAHIR),
       CREATED_AT: toMySQLDateTime(),
@@ -72,18 +73,23 @@ export const updateTenagaNonMedis = async (req, res) => {
   try {
     const { body, files } = req;
 
-    const data = {
+    const updateData = {
       ...body,
-      FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_medis/${files.FOTOPROFIL[0].filename}` : null,
-      DOKUMENPENDUKUNG: files?.DOKUMENPENDUKUNG?.[0] ? `/uploads/tenaga_medis/${files.DOKUMENPENDUKUNG[0].filename}` : null,
       TANGGALLAHIR: formatDate(body.TANGGALLAHIR),
       UPDATED_AT: toMySQLDateTime(),
     };
 
-    delete data.PASSWORD;
-    delete data.CREATED_AT;
+    if (files?.FOTOPROFIL?.[0]) {
+      updateData.FOTOPROFIL = `/uploads/tenaga_non_medis/${files.FOTOPROFIL[0].filename}`;
+    }
+    if (files?.DOKUMENPENDUKUNG?.[0]) {
+      updateData.DOKUMENPENDUKUNG = `/uploads/tenaga_non_medis/${files.DOKUMENPENDUKUNG[0].filename}`;
+    }
 
-    const result = await TenagaNonMedis.update(req.params.id, data);
+    delete updateData.PASSWORD;
+    delete updateData.CREATED_AT;
+
+    const result = await TenagaNonMedis.update(req.params.id, updateData);
     if (!result) {
       return res.status(404).json({ success: false, message: 'Tenaga non medis not found' });
     }
@@ -102,6 +108,7 @@ export const updateTenagaNonMedis = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to update tenaga non medis' });
   }
 };
+
 
 export const deleteTenagaNonMedis = async (req, res) => {
   try {
