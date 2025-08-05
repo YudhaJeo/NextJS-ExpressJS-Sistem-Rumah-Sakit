@@ -33,12 +33,6 @@ const TabelRiwayatKunjungan = ({ data, loading }) => {
     setAdjustDialog(true);
   };
 
-  const fotoBodyTemplate = (rowData) => {
-    if (!rowData.FOTOPROFIL) return <span className="text-gray-400">Belum ada foto</span>;
-    const src = `http://localhost:4000/uploads/riwayat_pengobatan/${rowData.FOTOPROFIL}`;
-    return <img src={src} alt="foto" width="80" className="rounded-md" />;
-  };
-
   const actionBody = (rowData) => (
     <div className="flex gap-2 justify-center">
       <a
