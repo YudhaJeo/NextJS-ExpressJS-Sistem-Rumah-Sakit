@@ -48,6 +48,7 @@ import dashboardKasirRoutes from './routes/dashboardKasirRoutes.js';
 import angsuranRoutes from './routes/angsuranRoutes.js';
 import supplierRoutes from './routes/supplierRoutes.js';
 import alkesRoutes from './routes/alkesRoutes.js';
+import kartuRoutes from './routes/kartustokRoutes.js';
 
 const app = express();
 
@@ -106,5 +107,6 @@ app.use('/api/dashboard_kasir', dashboardKasirRoutes);
 app.use('/api/angsuran', angsuranRoutes);
 app.use('/api/supplier', supplierRoutes);
 app.use('/api/alkes', alkesRoutes);
+app.use('/api/kartu_stok', kartuRoutes);
 
 export default app;
