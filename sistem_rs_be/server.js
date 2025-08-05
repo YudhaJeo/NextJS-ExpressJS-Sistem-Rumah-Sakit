@@ -5,11 +5,13 @@ import app from './src/app.js';
 
 config();
 
-const port = 4000;
+const PORT = process.env.PORT;
+const EXPRESS_URL = process.env.EXPRESS_PUBLIC_URL;
+
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: '*',
+    origin: EXPRESS_URL,
     methods: ['GET', 'POST']
   }
 });
@@ -23,6 +25,6 @@ function broadcastUpdate() {
 }
 app.set('broadcastUpdate', broadcastUpdate);
 
-server.listen(port, () => {
-  console.log(`🚀 Server berjalan di http://localhost:${port}`);
+server.listen(PORT, () => {
+  console.log(`🚀 Server berjalan di ${EXPRESS_URL}`);
 });

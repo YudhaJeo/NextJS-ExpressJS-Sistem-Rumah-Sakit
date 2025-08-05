@@ -50,10 +50,12 @@ import supplierRoutes from './routes/supplierRoutes.js';
 import alkesRoutes from './routes/alkesRoutes.js';
 import kartuRoutes from './routes/kartustokRoutes.js';
 
+const NEXT_URL = process.env.NEXT_PUBLIC_URL;
+
 const app = express();
 
 app.use(cors({ 
-    origin: "http://localhost:3000", 
+    origin: `${NEXT_URL}`, 
     credentials: true 
 }));
 

@@ -6,6 +6,8 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 
+const URL_API = process.env.NEXT_PUBLIC_URL;
+
 const TabelPengobatan = ({ data, loading, onEdit, onDelete, onUploadFoto }) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewSrc, setPreviewSrc] = useState(null);
@@ -27,7 +29,7 @@ const TabelPengobatan = ({ data, loading, onEdit, onDelete, onUploadFoto }) => {
   };
 
   const fotoBodyTemplate = (rowData) => {
-    const src = `http://localhost:4000/uploads/riwayat_pengobatan/${rowData.FOTOPROFIL}`;
+    const src = `${URL_API}/uploads/riwayat_pengobatan/${rowData.FOTOPROFIL}`;
     return rowData.FOTOPROFIL ? (
       <img
         src={src}
@@ -95,7 +97,6 @@ const TabelPengobatan = ({ data, loading, onEdit, onDelete, onUploadFoto }) => {
         <Column header="Aksi" body={actionBody} style={{ width: "220px" }} />
       </DataTable>
 
-      {/* Dialog Preview Foto */}
       <Dialog
         header="Preview Foto"
         visible={previewVisible}

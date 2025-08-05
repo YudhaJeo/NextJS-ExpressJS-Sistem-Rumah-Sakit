@@ -26,22 +26,34 @@ export default function ProfilePage() {
   const router = useRouter()
 
   useEffect(() => {
-    fetchData()
+    const token = Cookies.get("token")
+    fetchData(token)
   }, [])
-
-  const fetchData = async () => {
+  
+  const fetchData = async (token) => {
     try {
-      const res = await axios.get(`${API_URL}/profile`)
+      const res = await axios.get(`${API_URL}/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       if (!res.data?.data) throw new Error('Data user kosong')
       const data = res.data.data
       setUser(data)
-      setForm({ NAMALENGKAP: data.NAMALENGKAP, EMAIL: data.EMAIL, NOHP: data.NOHP, FOTOPROFIL: data.FOTOPROFIL, file: null })
+      setForm({
+        NAMALENGKAP: data.NAMALENGKAP,
+        EMAIL: data.EMAIL,
+        NOHP: data.NOHP,
+        FOTOPROFIL: data.FOTOPROFIL,
+        file: null
+      })
     } catch (err) {
       console.error('Gagal ambil data:', err)
     } finally {
       setLoading(false)
     }
   }
+  
 
   const formatTanggal = (tanggal) => {
     if (!tanggal) return "-"

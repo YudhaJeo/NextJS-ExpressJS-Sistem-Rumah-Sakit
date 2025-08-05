@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 import { Card } from 'primereact/card';
 import { Tag } from 'primereact/tag';
@@ -13,11 +12,11 @@ import { Message } from 'primereact/message';
 import ToastNotifier from '@/app/components/toastNotifier';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const URL_API = process.env.NEXT_PUBLIC_URL;
 
 export default function DetailRiwayatKunjunganPage() {
   const [detail, setDetail] = useState(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
   const { id } = useParams();
   const toastRef = useRef(null);
 
@@ -65,7 +64,7 @@ export default function DetailRiwayatKunjunganPage() {
   }
 
   const fotoUrl = detail.FOTOPROFIL
-    ? `http://localhost:4000/uploads/riwayat_pengobatan/${detail.FOTOPROFIL}`
+    ? `${URL_API}/uploads/riwayat_pengobatan/${detail.FOTOPROFIL}`
     : null;
 
   return (

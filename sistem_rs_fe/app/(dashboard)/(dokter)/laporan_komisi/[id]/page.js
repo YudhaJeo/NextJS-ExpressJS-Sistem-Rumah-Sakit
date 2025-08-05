@@ -31,12 +31,12 @@ export default function DetailRiwayatInapPage() {
 
   const fetchDetail = async () => {
     try {
-      const res = await axios.get(`${API_URL}/komisi_dokter/${id}`);
+      const res = await axios.get(`${API_URL}/komisi_dokter/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setDetail(res.data);
 
-
       const servicesData = [];
-
 
       servicesData.push({
         id: 1,
@@ -172,10 +172,6 @@ export default function DetailRiwayatInapPage() {
 
             <div className="mb-4">
               <h3 className="text-xl font-semibold text-900 mb-3">Rincian Komisi</h3>
-
-              <DataTable
-                value={services}
-                stripedRows
 
               <DataTable
                 value={services}
