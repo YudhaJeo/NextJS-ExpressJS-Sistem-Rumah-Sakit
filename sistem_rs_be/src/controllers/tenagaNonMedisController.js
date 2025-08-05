@@ -46,7 +46,7 @@ export const createTenagaNonMedis = async (req, res) => {
       ...body,
       PASSWORD: hashedPassword,
       FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_non_medis/${files.FOTOPROFIL[0].filename}` : null,
-      DOKUMENPENDUKUNG: files?.DOKUMENPENDUKUNG?.[0] ? `/uploads/tenaga_non_medis/${files.DOKUMENPENDUKUNG[0].filename}` : null,
+      DOKUMENPENDUKUNG: files?.DOKUMENPENDUKUNG?.[0] ? `/uploads/tenaga_medis/${files.DOKUMENPENDUKUNG[0].filename}` : null,
       TANGGALLAHIR: formatDate(body.TANGGALLAHIR),
       CREATED_AT: toMySQLDateTime(),
       UPDATED_AT: toMySQLDateTime(),

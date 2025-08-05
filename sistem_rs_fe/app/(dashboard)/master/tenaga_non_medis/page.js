@@ -56,31 +56,17 @@ const Page = () => {
   const handleSubmit = async () => {
     try {
       const formData = new FormData();
-
-      if (form.IDTENAGANONMEDIS) {
-        await axios.put(
-          `${API_URL}/tenaga_non_medis/${form.IDTENAGANONMEDIS}`,
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
-      } else {
-        await axios.post(
-          `${API_URL}/tenaga_non_medis`,
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
-      }      
-
+  
       for (const key in form) {
         if (key === "FOTOPROFIL" || key === "DOKUMENPENDUKUNG") continue;
-
+  
         if (key === "PASSWORD") {
           if (form.IDTENAGANONMEDIS === 0 || form.PASSWORD.trim()) {
             formData.append("PASSWORD", form.PASSWORD);
           }
           continue;
         }
-
+  
         if (form[key] !== undefined && form[key] !== null) {
           if (["TANGGALLAHIR"].includes(key) && form[key]) {
             formData.append(key, new Date(form[key]).toISOString());
@@ -89,30 +75,36 @@ const Page = () => {
           }
         }
       }
-
+  
       if (form.FOTOPROFIL instanceof File) {
         formData.append("FOTOPROFIL", form.FOTOPROFIL);
       }
       if (form.DOKUMENPENDUKUNG instanceof File) {
         formData.append("DOKUMENPENDUKUNG", form.DOKUMENPENDUKUNG);
       }
-
+  
       if (form.IDTENAGANONMEDIS) {
-        await axios.put(`${API_URL}/tenaga_non_medis/${form.IDTENAGANONMEDIS}`, formData);
+        await axios.put(`${API_URL}/tenaga_non_medis/${form.IDTENAGANONMEDIS}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         showToast("success", "Berhasil", "Data berhasil diperbarui");
       } else {
-        await axios.post(`${API_URL}/tenaga_non_medis`, formData);
+        await axios.post(`${API_URL}/tenaga_non_medis`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         showToast("success", "Berhasil", "Data berhasil ditambahkan");
       }
-
+  
       fetchData();
       setDialogVisible(false);
       resetForm();
     } catch (err) {
       console.error("Gagal menyimpan data:", err);
+      console.log(err?.response?.data); // tambahkan ini untuk melihat pesan error backend
       showToast("error", "Gagal", "Terjadi kesalahan saat menyimpan data");
     }
   };
+  
 
   const handleEdit = (row) => {
     setForm({
