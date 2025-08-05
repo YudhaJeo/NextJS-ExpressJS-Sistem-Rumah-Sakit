@@ -257,6 +257,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
         <div className="mt-2">
             <label className="font-medium">Foto Profil</label>
             <FileUpload
+            className="mt-1"
               mode="basic"
               accept="image/*"
               maxFileSize={5000000}
@@ -265,12 +266,13 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
               auto={false}
               onSelect={(e) => handleFileUpload("FOTOPROFIL", e)}
             />
-
+            <small className="block text-gray-500 text-sm">Ukuran maksimal file: 5MB</small>
         </div>
 
         <div className="mt-2">
             <label className="font-medium">Dokumen Pendukung</label>
             <FileUpload
+              className="mt-1"
               mode="basic"
               maxFileSize={5000000}
               customUpload
@@ -278,6 +280,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
               auto={false}
               onSelect={(e) => handleFileUpload("DOKUMENPENDUKUNG", e)}
             />
+            <small className="block text-gray-500 text-sm">Ukuran maksimal file: 5MB</small>
         </div>  
 
         <div className="text-right pt-4">
