@@ -5,7 +5,7 @@ import fs from 'fs';
 const getUploadPath = (req) => {
   let folder = 'uploads/other';
 
-  console.log('[DEBUG] baseUrl:', req.baseUrl); 
+  // console.log('[DEBUG] baseUrl:', req.baseUrl); 
 
   if (req.baseUrl.includes('tenaga_non_medis')) {
     folder = 'uploads/tenaga_non_medis';

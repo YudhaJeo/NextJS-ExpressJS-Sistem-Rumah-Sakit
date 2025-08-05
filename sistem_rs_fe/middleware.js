@@ -19,7 +19,7 @@ export async function middleware(request) {
     await jwtVerify(token, SECRET_KEY, { algorithms: ["HS512"] });
     return NextResponse.next();
   } catch (err) {
-    console.log("[DEBUG] Login Error!", err);
+    // console.log("[DEBUG] Login Error!", err);
     return NextResponse.redirect(new URL("/login", request.url));
   }
 }
