@@ -48,10 +48,12 @@ import dashboardKasirRoutes from './routes/dashboardKasirRoutes.js';
 import angsuranRoutes from './routes/angsuranRoutes.js';
 import supplierRoutes from './routes/supplierRoutes.js';
 
+const NEXT_URL = process.env.NEXT_PUBLIC_URL;
+
 const app = express();
 
 app.use(cors({ 
-    origin: "http://localhost:3000", 
+    origin: `${NEXT_URL}`, 
     credentials: true 
 }));
 

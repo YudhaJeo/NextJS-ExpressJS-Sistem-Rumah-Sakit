@@ -1,5 +1,7 @@
 import * as ProfileModel from '../models/profileModel.js';
 
+const EXPRESS_URL = process.env.EXPRESS_PUBLIC_URL;
+
 export async function getUser(req, res) {
   try {
     const { id, sumber } = req.user;
@@ -16,7 +18,7 @@ export async function getUser(req, res) {
     }
 
     user.FOTOPROFIL = user.FOTOPROFIL
-      ? `http://localhost:4000${user.FOTOPROFIL}`
+      ? `${EXPRESS_URL}${user.FOTOPROFIL}`
       : null;
 
     res.json({

@@ -3,6 +3,8 @@ import { generateToken } from '../utils/jwt.js';
 import { loginSchema } from '../schemas/authSchema.js';
 import bcrypt from 'bcrypt';
 
+const EXPRESS_URL = process.env.EXPRESS_PUBLIC_URL;
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -33,7 +35,7 @@ export const login = async (req, res) => {
       email: user.EMAIL,
       role: user.ROLE,
       unitKerja: user.UNITKERJA,
-      profile: user.FOTOPROFIL ? `http://localhost:4000${user.FOTOPROFIL}` : null
+      profile: user.FOTOPROFIL ? `${EXPRESS_URL}${user.FOTOPROFIL}` : null
     });
 
   } catch (err) {
