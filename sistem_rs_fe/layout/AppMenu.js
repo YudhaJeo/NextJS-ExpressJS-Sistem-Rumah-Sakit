@@ -177,7 +177,8 @@ const AppMenu = () => {
           {
             label: "Master",
             items: [
-              { label: "Daftar Obat dan Alkes", icon: "pi pi-fw pi-database", to: "/daftar_obat" },
+              { label: "Daftar Obat", icon: "pi pi-fw pi-database", to: "/daftar_obat" },
+              { label: "Alat Kesehatan", icon: "pi pi-fw pi-briefcase", to: "/alkes" },
               { label: "Supplier", icon: "pi pi-fw pi-user", to: "/supplier" },
               
               

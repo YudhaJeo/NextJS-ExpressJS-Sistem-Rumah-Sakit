@@ -47,6 +47,7 @@ import riwayatInapRoutes from './routes/riwayatInapRoutes.js';
 import dashboardKasirRoutes from './routes/dashboardKasirRoutes.js';
 import angsuranRoutes from './routes/angsuranRoutes.js';
 import supplierRoutes from './routes/supplierRoutes.js';
+import alkesRoutes from './routes/alkesRoutes.js';
 
 const app = express();
 
@@ -104,5 +105,6 @@ app.use('/api/riwayat_inap', riwayatInapRoutes);
 app.use('/api/dashboard_kasir', dashboardKasirRoutes);
 app.use('/api/angsuran', angsuranRoutes);
 app.use('/api/supplier', supplierRoutes);
+app.use('/api/alkes', alkesRoutes);
 
 export default app;
