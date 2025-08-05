@@ -100,7 +100,6 @@ const Page = () => {
       resetForm();
     } catch (err) {
       console.error("Gagal menyimpan data:", err);
-      console.log(err?.response?.data); // tambahkan ini untuk melihat pesan error backend
       showToast("error", "Gagal", "Terjadi kesalahan saat menyimpan data");
     }
   };

@@ -6,7 +6,6 @@ import { Button } from "primereact/button";
 import { Tag } from "primereact/tag";
 import { Dialog } from "primereact/dialog";
 import { Card } from "primereact/card";
-import { Avatar } from "primereact/avatar";
 import { Divider } from "primereact/divider";
 import { Panel } from "primereact/panel";
 import { Chip } from "primereact/chip";
