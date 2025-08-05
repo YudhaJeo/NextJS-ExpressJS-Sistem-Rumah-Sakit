@@ -2,12 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
-import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import { Button } from 'primereact/button';
 import FilterTanggal from '@/app/components/filterTanggal';
 import TabelInvoice from './components/tabelInvoice';
 import FormDialogInvoice from './components/formDialogInvoice';
@@ -188,6 +185,7 @@ const Page = () => {
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onPrint={(row) => window.open(`/invoice/cetak/${row.IDINVOICE}`, '_blank')}
       />
 
       <FormDialogInvoice
@@ -205,4 +203,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default Page; 
