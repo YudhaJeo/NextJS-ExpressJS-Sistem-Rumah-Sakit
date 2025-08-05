@@ -63,6 +63,7 @@ const Page = () => {
       const options = res.data.data.map((obat) => ({
         label: `${obat.NAMAOBAT}`,
         value: obat.IDOBAT,
+        STOKOBAT: obat.STOK
       }));
 
       setObatOptions(options);
@@ -78,6 +79,7 @@ const Page = () => {
       const options = res.data.data.map((alkes) => ({
         label: `${alkes.NAMAALKES}`,
         value: alkes.IDALKES,
+        STOKALKES: alkes.STOK
       }));
 
       setAlkesOptions(options);
@@ -113,27 +115,47 @@ const Page = () => {
   };
 
   const handleSubmit = async () => {
-    const isEdit = !!form.IDKARTU;
-    const url = isEdit
-      ? `${API_URL}/kartu_stok/${form.IDKARTU}`
-      : `${API_URL}/kartu_stok`;
+  const isEdit = !!form.IDKARTU;
+  const url = isEdit
+    ? `${API_URL}/kartu_stok/${form.IDKARTU}`
+    : `${API_URL}/kartu_stok`;
 
-    try {
-      if (isEdit) {
-        await axios.put(url, form);
-        toastRef.current?.showToast('00', 'Data berhasil diperbarui');
-      } else {
-        await axios.post(url, form);
-        toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
-      }
-      fetchData();
-      setDialogVisible(false);
-      resetForm();
-    } catch (err) {
-      console.error('Gagal simpan data:', err);
-      toastRef.current?.showToast('01', 'Gagal menyimpan data');
+  try {
+    // ✅ Validasi minimal salah satu ID (obat atau alkes harus dipilih)
+    if (!form.IDOBAT && !form.IDALKES) {
+      toastRef.current?.showToast('01', 'Pilih obat atau alkes terlebih dahulu');
+      return;
     }
-  };
+
+    // ✅ Pastikan nilai jumlah tidak undefined
+    const payload = {
+      ...form,
+      JUMLAHOBAT: form.JUMLAHOBAT ? Number(form.JUMLAHOBAT) : 0,
+      JUMLAHALKES: form.JUMLAHALKES ? Number(form.JUMLAHALKES) : 0,
+    };
+
+    if (isEdit) {
+      await axios.put(url, payload);
+      toastRef.current?.showToast('00', 'Data berhasil diperbarui');
+    } else {
+      await axios.post(url, payload);
+      toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
+    }
+
+    // ✅ Refresh data & reset form setelah backend selesai update stok
+    await fetchData();
+    resetForm();
+    setDialogVisible(false);
+
+  } catch (err) {
+    console.error('Gagal simpan data:', err);
+
+    // ✅ Ambil pesan error dari backend jika ada
+    const errorMessage = err.response?.data?.error || 'Gagal menyimpan data';
+    toastRef.current?.showToast('01', errorMessage);
+  }
+};
+
 
   const handleEdit = (row) => {
     setForm({

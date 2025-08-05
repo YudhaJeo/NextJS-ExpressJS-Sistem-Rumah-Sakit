@@ -7,7 +7,9 @@ export const getAll = () =>
     .select(
       'kartu_stok.*',
       'obat.NAMAOBAT',
-      'master_alkes.NAMAALKES'
+      'obat.STOK as STOKOBAT',
+      'master_alkes.NAMAALKES',
+      'master_alkes.STOK as STOKALKES'
     );
 
 
