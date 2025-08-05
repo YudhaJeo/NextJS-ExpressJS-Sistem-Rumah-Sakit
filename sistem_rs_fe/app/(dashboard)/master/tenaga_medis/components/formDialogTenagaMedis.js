@@ -146,7 +146,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.KODETENAGAMEDIS && <small className="p-error">{errors.KODETENAGAMEDIS}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">Nama Lengkap</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.NAMALENGKAP })}
@@ -156,7 +156,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.NAMALENGKAP && <small className="p-error">{errors.NAMALENGKAP}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">Jenis Kelamin</label>
           <Dropdown
             className={classNames("w-full mt-2", { "p-invalid": errors.JENISKELAMIN })}
@@ -168,7 +168,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.JENISKELAMIN && <small className="p-error">{errors.JENISKELAMIN}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">Tempat Lahir</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.TEMPATLAHIR })}
@@ -178,7 +178,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.TEMPATLAHIR && <small className="p-error">{errors.TEMPATLAHIR}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">Tanggal Lahir</label>
           <Calendar
             className={classNames("w-full mt-2", { "p-invalid": errors.TANGGALLAHIR })}
@@ -190,7 +190,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.TANGGALLAHIR && <small className="p-error">{errors.TANGGALLAHIR}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">No. HP</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.NOHP })}
@@ -200,7 +200,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.NOHP && <small className="p-error">{errors.NOHP}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">Email</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.EMAIL })}
@@ -210,7 +210,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.EMAIL && <small className="p-error">{errors.EMAIL}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">Password</label>
           <Password
             className={classNames("w-full mt-2", { "p-invalid": errors.PASSWORD })}
@@ -224,7 +224,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.PASSWORD && <small className="p-error">{errors.PASSWORD}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">Jenis Tenaga Medis</label>
           <Dropdown
             className={classNames("w-full mt-2", { "p-invalid": errors.JENISTENAGAMEDIS })}
@@ -238,7 +238,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           )}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">Spesialisasi</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.SPESIALISASI })}
@@ -248,7 +248,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.SPESIALISASI && <small className="p-error">{errors.SPESIALISASI}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">No. STR</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.NOSTR })}
@@ -258,7 +258,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.NOSTR && <small className="p-error">{errors.NOSTR}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">Tgl Exp STR</label>
           <Calendar
             className={classNames("w-full mt-2", { "p-invalid": errors.TGLEXPSTR })}
@@ -270,7 +270,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.TGLEXPSTR && <small className="p-error">{errors.TGLEXPSTR}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">No. SIP</label>
           <InputText
             className={classNames("w-full mt-2", { "p-invalid": errors.NOSIP })}
@@ -280,7 +280,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.NOSIP && <small className="p-error">{errors.NOSIP}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">Tgl Exp SIP</label>
           <Calendar
             className={classNames("w-full mt-2", { "p-invalid": errors.TGLEXPSIP })}
@@ -292,7 +292,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           {errors.TGLEXPSIP && <small className="p-error">{errors.TGLEXPSIP}</small>}
         </div>
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">Tipe Unit Kerja</label>
           <Dropdown
             className="w-full mt-2"
@@ -310,7 +310,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
         </div>
 
         {unitKerjaType === "Poli" ? (
-          <div>
+          <div className="mt-3">
             <label className="font-medium">Pilih Poli</label>
             <Dropdown
               className={classNames("w-full mt-2", { "p-invalid": errors.UNITKERJA })}
@@ -322,7 +322,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
             {errors.UNITKERJA && <small className="p-error">{errors.UNITKERJA}</small>}
           </div>
         ) : (
-          <div>
+          <div className="mt-3">
             <label className="font-medium">Nama Unit Kerja (Manual)</label>
             <InputText
               className={classNames("w-full mt-2", { "p-invalid": errors.UNITKERJA })}
@@ -334,7 +334,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           </div>
         )}
 
-        <div>
+        <div className="mt-3">
           <label className="font-medium">Status Kepegawaian</label>
           <Dropdown
             className={classNames("w-full mt-2", { "p-invalid": errors.STATUSKEPEGAWAIAN })}
@@ -348,21 +348,34 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
           )}
         </div>
 
-        <div>
-          <label>Foto Profil</label>
-          <input
-            type="file"
-            onChange={(e) => setForm({ ...form, FOTOPROFIL: e.target.files[0] })}
-          />
+        <div className="mt-2">
+            <label className="font-medium">Foto Profil</label>
+            <FileUpload
+            className="mt-1"
+              mode="basic"
+              accept="image/*"
+              maxFileSize={5000000}
+              customUpload
+              chooseLabel="Pilih Foto"
+              auto={false}
+              onSelect={(e) => handleFileUpload("FOTOPROFIL", e)}
+            />
+            <small className="block text-gray-500 text-sm">Ukuran maksimal file: 5MB</small>
         </div>
 
-        <div>
-          <label>Dokumen Pendukung</label>
-          <input
-            type="file"
-            onChange={(e) => setForm({ ...form, DOKUMENPENDUKUNG: e.target.files[0] })}
-          />
-        </div>
+        <div className="mt-2">
+            <label className="font-medium">Dokumen Pendukung</label>
+            <FileUpload
+              className="mt-1"
+              mode="basic"
+              maxFileSize={5000000}
+              customUpload
+              chooseLabel="Pilih Dokumen"
+              auto={false}
+              onSelect={(e) => handleFileUpload("DOKUMENPENDUKUNG", e)}
+            />
+            <small className="block text-gray-500 text-sm">Ukuran maksimal file: 5MB</small>
+        </div> 
 
         <div className="text-right pt-4">
           <Button type="submit" label="Simpan" icon="pi pi-save" className="p-button-primary" />
