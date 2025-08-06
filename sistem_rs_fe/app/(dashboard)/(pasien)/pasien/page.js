@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import TabelPasien from './components/tabelPasien';
 import FormDialogPasien from './components/formDialogPasien';
@@ -54,6 +52,7 @@ const Page = () => {
     IDASURANSI: '',
     ALAMAT: '',
     NOHP: '',
+    USIA: '',
     IDAGAMA: '',
     GOLDARAH: '',
     NOASURANSI: '',
@@ -113,6 +112,11 @@ const Page = () => {
       newErrors.NOHP =
         <span style={{ color: 'red' }}>
           No HP harus 9–13 digit angka
+        </span>;
+    } else if (!/^\d{1,3}$/.test(form.USIA)) {
+      newErrors.USIA =
+        <span style={{ color: 'red' }}>
+          No HP harus 1–3 digit angka
         </span>;
     }
 
@@ -231,6 +235,7 @@ const Page = () => {
       IDASURANSI: '',
       ALAMAT: '',
       NOHP: '',
+      USIA: '',
       IDAGAMA: '',
       GOLDARAH: '',
       NOASURANSI: '',
