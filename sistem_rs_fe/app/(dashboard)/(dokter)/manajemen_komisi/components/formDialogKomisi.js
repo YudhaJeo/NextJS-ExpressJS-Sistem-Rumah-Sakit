@@ -53,12 +53,12 @@ const FormDialogKomisi = ({
           <Dropdown
             className="w-full mt-1"
             options={riwayatOptions}
-            value={formData.IDPENGOBATAN}
+            value={formData.IDRAWATJALAN}
             onChange={(e) => {
               const selected = allRiwayatOptions.find((opt) => opt.value === e.value);
               onChange({
                 ...formData,
-                IDPENGOBATAN: e.value,
+                IDRAWATJALAN: e.value,
                 NIK: selected ? selected.NIK : formData.NIK,
                 NAMAPASIEN: selected ? selected.NAMAPASIEN : formData.NAMAPASIEN,
                 NAMADOKTER: selected ? selected.NAMADOKTER : formData.NAMADOKTER,

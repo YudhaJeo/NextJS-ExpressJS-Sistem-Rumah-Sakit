@@ -3,8 +3,8 @@ import db from '../core/config/knex.js';
 export async function getAllRiwayatInap() {
   return await db('riwayat_rawat_inap')
     .join('rawat_inap', 'riwayat_rawat_inap.IDRAWATINAP', 'rawat_inap.IDRAWATINAP')
-    .join('riwayat_pengobatan', 'rawat_inap.IDPENGOBATAN', 'riwayat_pengobatan.IDPENGOBATAN')
-    .join('pendaftaran', 'riwayat_pengobatan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+    .join('rawat_jalan', 'rawat_inap.IDRAWATJALAN', 'rawat_jalan.IDRAWATJALAN')
+    .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
     .select(
@@ -18,8 +18,8 @@ export async function getAllRiwayatInap() {
 export async function getRiwayatInapById(id) {
   return await db('riwayat_rawat_inap')
     .join('rawat_inap', 'riwayat_rawat_inap.IDRAWATINAP', 'rawat_inap.IDRAWATINAP')
-    .join('riwayat_pengobatan', 'rawat_inap.IDPENGOBATAN', 'riwayat_pengobatan.IDPENGOBATAN')
-    .join('pendaftaran', 'riwayat_pengobatan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+    .join('rawat_jalan', 'rawat_inap.IDRAWATJALAN', 'rawat_jalan.IDRAWATJALAN')
+    .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
     .select(

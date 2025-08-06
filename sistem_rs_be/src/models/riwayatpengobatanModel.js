@@ -1,9 +1,9 @@
 import db from '../core/config/knex.js';
 
 export const getPendaftaranIdByPengobatanId = async (id) => {
-  const row = await db('riwayat_pengobatan')
+  const row = await db('rawat_jalan')
     .select('IDPENDAFTARAN')
-    .where('IDPENGOBATAN', id)
+    .where('IDRAWATJALAN', id)
     .first();
 
   return row?.IDPENDAFTARAN;
@@ -21,7 +21,7 @@ export const getPendaftaranById = (id) => {
 };
 
 export const getAllPengobatan = () => {
-  return db('riwayat_pengobatan as r')
+  return db('rawat_jalan as r')
     .join('pendaftaran as p', 'r.IDPENDAFTARAN', 'p.IDPENDAFTARAN')
     .join('pasien as ps', 'p.NIK', 'ps.NIK')
     .join('dokter as d', 'r.IDDOKTER', 'd.IDDOKTER')
@@ -29,7 +29,7 @@ export const getAllPengobatan = () => {
     .join('poli as pl', 'p.IDPOLI', 'pl.IDPOLI')
     .select(
       'r.IDPENDAFTARAN',
-      db.raw('MAX(r.IDPENGOBATAN) as IDPENGOBATAN'),
+      db.raw('MAX(r.IDRAWATJALAN) as IDRAWATJALAN'),
       'r.IDDOKTER',
       'ps.NAMALENGKAP',
       'ps.NIK',
@@ -97,28 +97,28 @@ export const createPengobatan = async ({
     FOTOPROFIL
   };
 
-  return trx('riwayat_pengobatan').insert(data);
+  return trx('rawat_jalan').insert(data);
 };
 
 export const updatePengobatan = (id, data) => {
-  return db('riwayat_pengobatan')
-    .where('IDPENGOBATAN', id)
+  return db('rawat_jalan')
+    .where('IDRAWATJALAN', id)
     .update({ ...data, UPDATED_AT: db.fn.now() });
 };
 
 export const deletePengobatan = (id) => {
-  return db('riwayat_pengobatan')
-    .where('IDPENGOBATAN', id)
+  return db('rawat_jalan')
+    .where('IDRAWATJALAN', id)
     .del();
 };
 
 export const updateFotoProfil = async (id, filename) => {
-  return await db('riwayat_pengobatan')
-    .where('IDPENGOBATAN', id)
+  return await db('rawat_jalan')
+    .where('IDRAWATJALAN', id)
     .update({ FOTOPROFIL: filename, UPDATED_AT: db.fn.now() });
 };
 
 export const getRiwayatById = async (id) => {
-  return await db('riwayat_pengobatan').where('IDPENGOBATAN', id).first();
+  return await db('rawat_jalan').where('IDRAWATJALAN', id).first();
 };
 
