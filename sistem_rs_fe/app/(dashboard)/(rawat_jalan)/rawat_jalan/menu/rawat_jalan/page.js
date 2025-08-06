@@ -15,7 +15,7 @@ import { Toast } from "primereact/toast";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const initialForm = () => ({
-  IDPENGOBATAN: "",
+  IDRAWATJALAN: "",
   IDDOKTER: "",
   IDPENDAFTARAN: "",
   STATUSKUNJUNGAN: "Dalam Antrian",
@@ -58,7 +58,7 @@ const RiwayatPengobatanPage = () => {
   const fetchData = async (poliFilter) => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
+      const res = await axios.get(`${API_URL}/rawat_jalan`);
       let list = res.data.data || [];
 
       if (poliFilter) {
@@ -135,8 +135,8 @@ const RiwayatPengobatanPage = () => {
     };
 
     try {
-      if (form.IDPENGOBATAN) {
-        await axios.put(`${API_URL}/riwayat_pengobatan/${form.IDPENGOBATAN}`, payload);
+      if (form.IDRAWATJALAN) {
+        await axios.put(`${API_URL}/rawat_jalan/${form.IDRAWATJALAN}`, payload);
         toastRef.current?.showToast("00", "Data berhasil diperbarui");
       }
       fetchData(unitKerja);
@@ -150,7 +150,7 @@ const RiwayatPengobatanPage = () => {
 
   const handleEdit = (row) => {
     setForm({
-      IDPENGOBATAN: row.IDPENGOBATAN,
+      IDRAWATJALAN: row.IDRAWATJALAN,
       IDDOKTER: row.IDDOKTER || "",
       IDPENDAFTARAN: row.IDPENDAFTARAN || "",
       STATUSKUNJUNGAN: row.STATUSKUNJUNGAN || "Dalam Antrian",
@@ -163,14 +163,14 @@ const RiwayatPengobatanPage = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Hapus data pengobatan untuk ${row.IDPENGOBATAN}?`,
+      message: `Hapus data pengobatan untuk ${row.IDRAWATJALAN}?`,
       header: "Konfirmasi Hapus",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Ya",
       rejectLabel: "Batal",
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/riwayat_pengobatan/${row.IDPENGOBATAN}`);
+          await axios.delete(`${API_URL}/rawat_jalan/${row.IDRAWATJALAN}`);
           await axios.delete(`${API_URL}/pendaftaran/${row.IDPENDAFTARAN}`);
           toastRef.current?.showToast("00", "Data berhasil dihapus");
           fetchData(unitKerja);
@@ -195,7 +195,7 @@ const RiwayatPengobatanPage = () => {
     const formData = new FormData();
     formData.append("foto", file);
     try {
-      await axios.put(`${API_URL}/riwayat_pengobatan/${selectedRow.IDPENGOBATAN}/upload`, formData, {
+      await axios.put(`${API_URL}/rawat_jalan/${selectedRow.IDRAWATJALAN}/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toastUpload.current.show({ severity: "success", summary: "Sukses", detail: "Foto berhasil diupload!" });

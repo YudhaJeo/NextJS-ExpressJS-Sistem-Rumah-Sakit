@@ -3,8 +3,8 @@
  * @returns { Promise<void> }
  */
 export const up = function (knex) {
-  return knex.schema.createTable('riwayat_pengobatan', (table) => {
-    table.increments('IDPENGOBATAN').primary();
+  return knex.schema.createTable('rawat_jalan', (table) => {
+    table.increments('IDRAWATJALAN').primary();
     table.integer('IDDOKTER').unsigned().notNullable()
       .references('IDDOKTER').inTable('dokter').onDelete('CASCADE');
     table.integer('IDPENDAFTARAN').unsigned().notNullable()
@@ -25,5 +25,6 @@ export const up = function (knex) {
  */
 
 export const down = function (knex) {
-  return knex.schema.dropTable('riwayat_pengobatan');
+  return knex.schema.dropTable('rawat_jalan');
 };
+

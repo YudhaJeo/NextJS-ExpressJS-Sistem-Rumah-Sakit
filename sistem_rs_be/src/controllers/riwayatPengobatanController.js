@@ -12,7 +12,7 @@ export async function getAllPengobatan(req, res) {
 
     res.json({ data });
   } catch (err) {
-    console.error('🔥 ERROR GET /riwayat_pengobatan:', err);
+    console.error('🔥 ERROR GET /rawat_jalan:', err);
     res.status(500).json({ error: err.message });
   }
 }
