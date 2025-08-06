@@ -1,13 +1,11 @@
 import express from 'express';
-import * as PengobatanController from '../controllers/rawatJalanController.js';
-import { upload } from '../middlewares/riwayatMulter.js';
+import * as RawatJalanController from '../controllers/rawatJalanController.js';
 
 const router = express.Router();
 
-router.get('/', PengobatanController.getAllPengobatan);
-router.post('/', PengobatanController.createPengobatan);
-router.put('/:id', PengobatanController.updatePengobatan);
-router.delete('/:id', PengobatanController.deletePengobatan);
-router.put('/:id/upload', upload.single('foto'), PengobatanController.uploadFoto);
+router.get('/', RawatJalanController.getAllRawatJalan);
+router.post('/', RawatJalanController.createRawatJalan);
+router.put('/:id', RawatJalanController.updateRawatJalan);
+router.delete('/:id', RawatJalanController.deleteRawatJalan);
 
 export default router;

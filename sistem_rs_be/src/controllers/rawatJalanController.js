@@ -1,10 +1,9 @@
-import * as PengobatanModel from '../models/rawatJalanModel.js';
-import * as PendaftaranModel from '../models/pendaftaranModel.js';
+import * as RawatJalanModel from '../models/rawatJalanModel.js';
 
-export async function getAllPengobatan(req, res) {
+export async function getAllRawatJalan(req, res) {
   try {
     const poli = req.query.poli;
-    let data = await PengobatanModel.getAllPengobatan();
+    let data = await RawatJalanModel.getAllRawatJalan();
 
     if (poli) {
       data = data.filter((item) => item.POLI === poli);
@@ -17,81 +16,60 @@ export async function getAllPengobatan(req, res) {
   }
 }
 
-export async function createPengobatan(req, res) {
+export async function createRawatJalan(req, res) {
   try {
-    const { IDPENDAFTARAN, IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT, FOTOPROFIL } = req.body;
-    await PengobatanModel.createPengobatan({
+    const { IDPENDAFTARAN, IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
+    await RawatJalanModel.createRawatJalan({
       IDPENDAFTARAN,
       IDDOKTER,
       STATUSKUNJUNGAN,
       STATUSRAWAT,
       DIAGNOSA,
-      OBAT,
-      FOTOPROFIL
+      OBAT
     });
-    res.json({ message: 'Pengobatan berhasil ditambahkan' });
+    res.json({ message: 'RawatJalan berhasil ditambahkan' });
   } catch (err) {
     console.error('Insert Error:', err);
     res.status(500).json({ error: err.message });
   }
 }
 
-export async function updatePengobatan(req, res) {
+export async function updateRawatJalan(req, res) {
   try {
     const id = req.params.id;
-    const { IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT, FOTOPROFIL } = req.body;
+    const { IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
 
-    await PengobatanModel.updatePengobatan(id, {
+    await RawatJalanModel.updateRawatJalan(id, {
       IDDOKTER,
       STATUSKUNJUNGAN,
       STATUSRAWAT,
       DIAGNOSA,
-      OBAT,
-      FOTOPROFIL
+      OBAT
     });
 
-    const IDPENDAFTARAN = await PengobatanModel.getPendaftaranIdByPengobatanId(id);
-
-    if (STATUSKUNJUNGAN && IDPENDAFTARAN) {
-      const result = await PendaftaranModel.update(IDPENDAFTARAN, { STATUSKUNJUNGAN });
-    }
-
-    res.json({ message: 'Pengobatan dan status pendaftaran berhasil diperbarui' });
+    res.json({ message: 'RawatJalan dan status pendaftaran berhasil diperbarui' });
   } catch (err) {
     console.error('Update Error:', err);
     res.status(500).json({ error: err.message });
   }
 }
 
-export async function deletePengobatan(req, res) {
+export async function deleteRawatJalan(req, res) {
   try {
     const id = req.params.id;
-    await PengobatanModel.deletePengobatan(id);
-    res.json({ message: 'Pengobatan berhasil dihapus' });
+    await RawatJalanModel.deleteRawatJalan(id);
+    res.json({ message: 'RawatJalan berhasil dihapus' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 }
 
-export const getMonitoringPengobatan = async (req, res) => {
+export const getMonitoringRawatJalan = async (req, res) => {
   try {
-    const data = await PengobatanModel.getAllPengobatan();
+    const data = await RawatJalanModel.getAllRawatJalan();
     res.json(data);
   } catch (error) {
-    console.error('Error getMonitoringPengobatan:', error);
-    res.status(500).json({ message: 'Gagal mengambil data monitoring pengobatan' });
+    console.error('Error getMonitoringRawatJalan:', error);
+    res.status(500).json({ message: 'Gagal mengambil data rawat jalan' });
   }
 }
-
-export const uploadFoto = async (req, res) => {
-  try {
-    if (!req.file) return res.status(400).json({ message: 'Tidak ada file yang diupload' });
-
-    await PengobatanModel.updateFotoProfil(req.params.id, req.file.filename);
-
-    res.json({ message: 'Foto berhasil diupload', filename: req.file.filename });
-  } catch (err) {
-    console.error('Upload error:', err);
-    res.status(500).json({ message: 'Gagal upload foto' });
-  }
-};

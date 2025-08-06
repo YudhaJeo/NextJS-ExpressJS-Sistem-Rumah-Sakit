@@ -1,6 +1,6 @@
 import db from '../core/config/knex.js';
 
-export const getPendaftaranIdByPengobatanId = async (id) => {
+export const getPendaftaranIdByRawatJalanId = async (id) => {
   const row = await db('rawat_jalan')
     .select('IDPENDAFTARAN')
     .where('IDRAWATJALAN', id)
@@ -20,7 +20,7 @@ export const getPendaftaranById = (id) => {
   return db('pendaftaran').where('IDPENDAFTARAN', id).first();
 };
 
-export const getAllPengobatan = () => {
+export const getAllRawatJalan = () => {
   return db('rawat_jalan as r')
     .join('pendaftaran as p', 'r.IDPENDAFTARAN', 'p.IDPENDAFTARAN')
     .join('pasien as ps', 'p.NIK', 'ps.NIK')
@@ -40,7 +40,6 @@ export const getAllPengobatan = () => {
       'r.STATUSRAWAT',
       'r.DIAGNOSA',
       'r.OBAT',
-      'r.FOTOPROFIL',
       'tm.NAMALENGKAP as NAMADOKTER'
     )
     .groupBy(
@@ -55,22 +54,19 @@ export const getAllPengobatan = () => {
       'r.STATUSRAWAT',
       'r.DIAGNOSA',
       'r.OBAT',
-      'r.FOTOPROFIL',
       'tm.NAMALENGKAP'
     );
 };
 
 
-export const createPengobatan = async ({
+export const createRawatJalan = async ({
   IDPENDAFTARAN,
   IDDOKTER,
   STATUSKUNJUNGAN,
   STATUSRAWAT,
   DIAGNOSA,
-  OBAT,
-  FOTOPROFIL
+  OBAT
 }, trx = db) => {
-  // Cek pendaftaran
   const pendaftaran = await trx('pendaftaran')
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .select('pendaftaran.STATUSKUNJUNGAN')
@@ -79,7 +75,6 @@ export const createPengobatan = async ({
 
   if (!pendaftaran) throw new Error('Data pendaftaran tidak ditemukan');
 
-  // Ambil info dokter
   const dokter = await trx('dokter')
     .select('IDDOKTER')
     .where('IDDOKTER', IDDOKTER)
@@ -93,32 +88,25 @@ export const createPengobatan = async ({
     STATUSKUNJUNGAN: STATUSKUNJUNGAN || pendaftaran.STATUSKUNJUNGAN,
     STATUSRAWAT,
     DIAGNOSA,
-    OBAT,
-    FOTOPROFIL
+    OBAT
   };
 
   return trx('rawat_jalan').insert(data);
 };
 
-export const updatePengobatan = (id, data) => {
+export const updateRawatJalan = (id, data) => {
   return db('rawat_jalan')
     .where('IDRAWATJALAN', id)
     .update({ ...data, UPDATED_AT: db.fn.now() });
 };
 
-export const deletePengobatan = (id) => {
+export const deleteRawatJalan = (id) => {
   return db('rawat_jalan')
     .where('IDRAWATJALAN', id)
     .del();
 };
 
-export const updateFotoProfil = async (id, filename) => {
-  return await db('rawat_jalan')
-    .where('IDRAWATJALAN', id)
-    .update({ FOTOPROFIL: filename, UPDATED_AT: db.fn.now() });
-};
-
-export const getRiwayatById = async (id) => {
+export const getRawatById = async (id) => {
   return await db('rawat_jalan').where('IDRAWATJALAN', id).first();
 };
 

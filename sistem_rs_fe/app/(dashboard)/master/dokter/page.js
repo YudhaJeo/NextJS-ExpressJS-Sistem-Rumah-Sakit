@@ -188,7 +188,7 @@ const DokterPage = () => {
             <ToastNotifier ref={toastRef} />
             <ConfirmDialog />
 
-            <h3 className="text-xl font-semibold mb-3">Master Dokter</h3>
+            <h3 className="text-xl font-semibold mb-3">Master Jadwal Dokter</h3>
 
             <HeaderBar
                 title=""

@@ -4,11 +4,10 @@ import React, { useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
 
 const URL_API = process.env.NEXT_PUBLIC_URL;
 
-const TabelPengobatan = ({ data, loading, onEdit, onDelete, onUploadFoto }) => {
+const TabelRawatJalan = ({ data, loading, onEdit, onDelete }) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewSrc, setPreviewSrc] = useState(null);
 
@@ -28,30 +27,8 @@ const TabelPengobatan = ({ data, loading, onEdit, onDelete, onUploadFoto }) => {
     setPreviewVisible(true);
   };
 
-  const fotoBodyTemplate = (rowData) => {
-    const src = `${URL_API}/uploads/rawat_jalan/${rowData.FOTOPROFIL}`;
-    return rowData.FOTOPROFIL ? (
-      <img
-        src={src}
-        alt="foto"
-        width="100"
-        style={{ borderRadius: '5px', cursor: 'pointer' }}
-        onClick={() => handlePreview(src)}
-      />
-    ) : (
-      <span className="text-gray-400">Belum ada foto</span>
-    );
-  };
-
   const actionBody = (row) => (
     <div className="flex gap-2">
-      <Button
-        icon="pi pi-upload"
-        size="small"
-        severity="success"
-        tooltip="Upload Foto"
-        onClick={() => onUploadFoto(row)}
-      />
       <Button
         icon="pi pi-pencil"
         size="small"
@@ -93,21 +70,10 @@ const TabelPengobatan = ({ data, loading, onEdit, onDelete, onUploadFoto }) => {
         <Column field="STATUSRAWAT" header="Status Rawat" />
         <Column field="DIAGNOSA" header="Diagnosa" />
         <Column field="OBAT" header="Obat" />
-        <Column header="Foto Profil" body={fotoBodyTemplate} style={{ width: "120px" }} />
         <Column header="Aksi" body={actionBody} style={{ width: "220px" }} />
       </DataTable>
-
-      <Dialog
-        header="Preview Foto"
-        visible={previewVisible}
-        style={{ width: '400px' }}
-        modal
-        onHide={() => setPreviewVisible(false)}
-      >
-        {previewSrc && <img src={previewSrc} alt="Preview" style={{ width: '100%', borderRadius: '8px' }} />}
-      </Dialog>
     </>
   );
 };
 
-export default TabelPengobatan;
+export default TabelRawatJalan;

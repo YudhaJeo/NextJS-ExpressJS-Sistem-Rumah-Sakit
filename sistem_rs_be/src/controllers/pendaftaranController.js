@@ -1,5 +1,5 @@
 import * as PendaftaranModel from '../models/pendaftaranModel.js';
-import * as PengobatanModel from '../models/rawatJalanModel.js'; 
+import * as RawatJalanModel from '../models/rawatJalanModel.js'; 
 import { generateNoInvoice } from '../utils/generateNoInvoice.js';
 import db from '../core/config/knex.js';
 
@@ -8,24 +8,24 @@ export async function createPendaftaran(req, res) {
   try {
     const { NIK, TANGGALKUNJUNGAN, IDPOLI, KELUHAN, STATUSKUNJUNGAN } = req.body;
 
-    const result = await trx('pendaftaran').insert({
+    const [idPendaftaran] = await trx('pendaftaran').insert({
       NIK,
       TANGGALKUNJUNGAN,
       IDPOLI,
       KELUHAN,
       STATUSKUNJUNGAN,
-    });
+    }, ['IDPENDAFTARAN']);
 
-    const idPendaftaran = result[0];
+    const insertedId = typeof idPendaftaran === 'object' ? idPendaftaran.IDPENDAFTARAN : idPendaftaran;
 
     const dokter = await trx('dokter')
-      .where('IDPOLI', IDPOLI)
+      .where({ IDPOLI })
       .orderBy('IDDOKTER')
       .first();
 
     if (dokter) {
-      await PengobatanModel.createPengobatan({
-        IDPENDAFTARAN: idPendaftaran,
+      await RawatJalanModel.createRawatJalan({
+        IDPENDAFTARAN: insertedId,
         IDDOKTER: dokter.IDDOKTER,
         STATUSKUNJUNGAN,
         STATUSRAWAT: 'Rawat Jalan',
@@ -33,10 +33,10 @@ export async function createPendaftaran(req, res) {
         OBAT: '',
       }, trx);
     } else {
-      console.warn('⚠️ Tidak ada dokter di poli ini. Rawat Inap tidak dibuat otomatis.');
+      console.warn('⚠️ Tidak ada dokter di poli ini. Rawat Jalan tidak dibuat otomatis.');
     }
 
-    const pasien = await trx('pasien').where('NIK', NIK).first();
+    const pasien = await trx('pasien').where({ NIK }).first();
     if (!pasien) {
       throw new Error('Pasien tidak ditemukan untuk pembuatan invoice.');
     }
@@ -54,10 +54,10 @@ export async function createPendaftaran(req, res) {
     });
 
     await trx.commit();
-    res.json({ message: 'Pendaftaran, Rawat Inap, dan invoice berhasil dibuat.' });
+    res.json({ message: 'Pendaftaran, Rawat Jalan, dan Invoice berhasil dibuat.' });
   } catch (err) {
     await trx.rollback();
-    console.error('❌ Gagal membuat data:', err);
+    console.error('❌ Gagal membuat data:', err.message);
     res.status(500).json({ error: err.message });
   }
 }
@@ -79,8 +79,14 @@ export async function updatePendaftaran(req, res) {
     console.log('Update ID:', id);
     console.log('Update Data:', req.body); 
 
-    const result = await PendaftaranModel.update(id, { NIK, TANGGALKUNJUNGAN, IDPOLI, KELUHAN, STATUSKUNJUNGAN });
-
+    const [idPendaftaran] = await trx('pendaftaran').insert({
+      NIK,
+      TANGGALKUNJUNGAN,
+      IDPOLI,
+      KELUHAN,
+      STATUSKUNJUNGAN,
+    });
+    
     res.json({ message: 'Pendaftaran berhasil diperbarui' });
   } catch (err) {
     console.error('Update Error:', err);
