@@ -28,6 +28,16 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
       >
 
         <div className="mt-2">
+          <label>Kode Alat Kesehatan</label>
+          <InputText
+            className={inputClass('KODEALKES')}
+            value={form.KODEALKES}
+            onChange={(e) => setForm({ ...form, KODEALKES: e.target.value })}
+          />
+          {errors.KODEALKES && <small className="text-red-500">{errors.KODEALKES}</small>}
+        </div>
+
+        <div className="mt-2">
           <label>Nama Alat Kesehatan</label>
           <InputText
             className={inputClass('NAMAALKES')}
@@ -35,6 +45,16 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
             onChange={(e) => setForm({ ...form, NAMAALKES: e.target.value })}
           />
           {errors.NAMAALKES && <small className="text-red-500">{errors.NAMAALKES}</small>}
+        </div>
+
+        <div className="mt-2">
+          <label>Merk Alat Kesehatan</label>  
+          <InputText
+            className={inputClass('MERKALKES')}
+            value={form.MERKALKES || ''}
+            onChange={(e) => setForm({ ...form, MERKALKES: e.target.value })}
+          />
+          {errors.MERKALKES && <small className="text-red-500">{errors.MERKALKES}</small>}
         </div>
 
         <div className="mt-2">
@@ -105,6 +125,16 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
             <small className="text-red-500">{errors.TGLKADALUARSA}</small>
           )}
         </div>
+
+        <div className="mt-2">
+          <label>Lokasi</label>
+          <InputText
+            className={inputClass('LOKASI')}
+            value={form.LOKASI || ''}
+            onChange={(e) => setForm({ ...form, LOKASI: e.target.value })}
+          />
+          {errors.LOKASI && <small className="text-red-500">{errors.LOKASI}</small>}
+        </div>
         
         <div className="mt-2">
           <label>Supplier</label>
@@ -116,6 +146,16 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
             placeholder="Pilih Supplier"
           />
           {errors.SUPPLIERID && <small className="text-red-500">{errors.SUPPLIERID}</small>}
+        </div>
+
+        <div className="mt-2">
+          <label>Keterangan</label>
+          <InputText
+            className={inputClass('KETERANGAN')}
+            value={form.KETERANGAN || ''}
+            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
+          />
+          {errors.KETERANGAN && <small className="text-red-500">{errors.KETERANGAN}</small>}
         </div>
 
         <div className="text-right pt-3">

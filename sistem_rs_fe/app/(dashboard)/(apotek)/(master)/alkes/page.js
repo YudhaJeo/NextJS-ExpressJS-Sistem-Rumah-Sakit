@@ -12,13 +12,17 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const defaultForm = {
   IDALKES: '',
+  KODEALKES: '',
   NAMAALKES: '',
+  MERKALKES: '',
   JENISALKES: '',
   STOK: 0,
   HARGABELI: null,
   HARGAJUAL: null,
   TGLKADALUARSA: '',
+  LOKASI: '',
   SUPPLIERID: null,
+  KETERANGAN: '',
 };
 
 const Page = () => {
@@ -63,27 +67,16 @@ const Page = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!(form.NAMAALKES || '').trim())
-      newErrors.NAMAALKES = <span style={{ color: "red" }}>Nama alkes wajib diisi</span>;
-
-    if (!form.JENISALKES)
-      newErrors.JENISALKES = <span style={{ color: "red" }}>Jenis alkes wajib diisi</span>;
-
-    if (form.STOK === null || isNaN(form.STOK))
-      newErrors.STOK = <span style={{ color: "red" }}>Stok wajib diisi</span>;
-
-    if (form.HARGABELI === null || isNaN(form.HARGABELI))
-      newErrors.HARGABELI = <span style={{ color: "red" }}>Harga beli wajib diisi</span>;
-
-    if (form.HARGAJUAL === null || isNaN(form.HARGAJUAL))
-      newErrors.HARGAJUAL = <span style={{ color: "red" }}>Harga jual wajib diisi</span>;
-
-    if (!(form.TGLKADALUARSA || '').trim())
-      newErrors.TGLKADALUARSA = <span style={{ color: "red" }}>Tanggal kadaluarsa wajib diisi</span>;
-
-    if (!form.SUPPLIERID)
-      newErrors.SUPPLIERID = <span style={{ color: "red" }}>Supplier wajib dipilih</span>;
+    if (!form.KODEALKES.trim()) newErrors.KODEALKES = "Kode alkes wajib diisi";
+    if (!form.NAMAALKES.trim()) newErrors.NAMAALKES = "Nama alkes wajib diisi";
+    if (!form.MERKALKES.trim()) newErrors.MERKALKES = "Merk wajib diisi";
+    if (!form.JENISALKES.trim()) newErrors.JENISALKES = "Jenis wajib diisi";
+    if (form.STOK === null || isNaN(form.STOK)) newErrors.STOK = "Stok wajib diisi";
+    if (form.HARGABELI === null || isNaN(form.HARGABELI)) newErrors.HARGABELI = "Harga beli wajib diisi";
+    if (form.HARGAJUAL === null || isNaN(form.HARGAJUAL)) newErrors.HARGAJUAL = "Harga jual wajib diisi";
+    if (!form.TGLKADALUARSA.trim()) newErrors.TGLKADALUARSA = "Tanggal kadaluarsa wajib diisi";
+    if (!form.LOKASI.trim()) newErrors.LOKASI = "Lokasi wajib diisi";
+    if (!form.SUPPLIERID) newErrors.SUPPLIERID = "Supplier wajib dipilih";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -118,13 +111,17 @@ const Page = () => {
   const handleEdit = (row) => {
     setForm({
       IDALKES: row.IDALKES,
+      KODEALKES: row.KODEALKES || '',
       NAMAALKES: row.NAMAALKES || '',
+      MERKALKES: row.MERKALKES || '',
       JENISALKES: row.JENISALKES || '',
       STOK: row.STOK ?? 0,
       HARGABELI: row.HARGABELI ?? 0,
       HARGAJUAL: row.HARGAJUAL ?? 0,
       TGLKADALUARSA: row.TGLKADALUARSA || '',
+      LOKASI: row.LOKASI || '',
       SUPPLIERID: row.SUPPLIERID ?? null,
+      KETERANGAN: row.KETERANGAN || '',
     });
     setDialogVisible(true);
   };

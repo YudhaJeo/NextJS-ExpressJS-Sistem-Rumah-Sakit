@@ -16,15 +16,28 @@ export async function getAlkesById(req, res) {
     const alkes = await Alkes.getById(id);
     if (!alkes) return res.status(404).json({ error: 'Data alkes tidak ditemukan' });
     res.json(alkes);
-    } catch (err) {
+  } catch (err) {
     console.error('Gagal ambil data alkes:', err);
     res.status(500).json({ error: err.message });
-    }
+  }
 }
 
 export async function insertAlkes(req, res) {
   try {
-    const { NAMAALKES, JENISALKES, STOK, HARGABELI, HARGAJUAL, TGLKADALUARSA, SUPPLIERID } = req.body;
+    const {
+      KODEALKES,
+      NAMAALKES,
+      MERKALKES,
+      JENISALKES,
+      STOK,
+      HARGABELI,
+      HARGAJUAL,
+      TGLKADALUARSA,
+      LOKASI,
+      SUPPLIERID,
+      KETERANGAN,
+    } = req.body;
+
     await Alkes.createAlkes(req.body);
     res.json({ message: 'Alkes berhasil ditambahkan' });
   } catch (err) {
@@ -35,13 +48,11 @@ export async function insertAlkes(req, res) {
 
 export async function updateAlkes(req, res) {
   try {
-    const id = req.params.id;
-    const { NAMAALKES, JENISALKES, STOK, HARGABELI, HARGAJUAL, TGLKADALUARSA, SUPPLIERID } = req.body;
-
+    const { id } = req.params;
     const existing = await Alkes.getById(id);
     if (!existing) return res.status(404).json({ error: 'Data alkes tidak ditemukan' });
 
-    await Alkes.updateAlkes(id, { NAMAALKES, JENISALKES, STOK, HARGABELI, HARGAJUAL, TGLKADALUARSA, SUPPLIERID});
+    await Alkes.updateAlkes(id, req.body);
     res.json({ message: 'Alkes berhasil diperbarui' });
   } catch (err) {
     console.error('Gagal update alkes:', err);
@@ -51,7 +62,7 @@ export async function updateAlkes(req, res) {
 
 export async function deleteAlkes(req, res) {
   try {
-    const id = req.params.id;
+    const { id } = req.params;
     const existing = await Alkes.getById(id);
     if (!existing) return res.status(404).json({ error: 'Data tidak ditemukan' });
 

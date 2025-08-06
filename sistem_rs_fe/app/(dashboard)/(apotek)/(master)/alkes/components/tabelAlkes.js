@@ -12,7 +12,9 @@ const TabelAlkes = ({ data, loading, onEdit, onDelete }) => {
       loading={loading}
       size="small">
       <Column field="IDALKES" header="ID" />
+      <Column field="KODEALKES" header="Kode Alat Kesehatan" />
       <Column field="NAMAALKES" header="Nama Alat Kesehatan" />
+      <Column field="MERKALKES" header="Merk Alat Kesehatan" />
       <Column field="JENISALKES" header="Jenis Alat Kesehatan" />
       <Column field="STOK" header="Stok" />
       <Column
@@ -34,7 +36,9 @@ const TabelAlkes = ({ data, loading, onEdit, onDelete }) => {
             }
         />
         <Column field="TGLKADALUARSA" header="Tgl Kadaluarsa" />
-        <Column field="NAMASUPPLIER" header="Supplier" />   
+        <Column field="LOKASI" header="Lokasi" />
+        <Column field="NAMASUPPLIER" header="Supplier" /> 
+        <Column field="KETERANGAN" header="Keterangan" />  
 
         <Column
           header="Aksi"
