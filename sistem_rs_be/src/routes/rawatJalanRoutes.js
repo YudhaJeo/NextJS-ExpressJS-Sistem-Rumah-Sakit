@@ -1,5 +1,5 @@
 import express from 'express';
-import * as PengobatanController from '../controllers/riwayatPengobatanController.js';
+import * as PengobatanController from '../controllers/rawatJalanController.js';
 import { upload } from '../middlewares/riwayatMulter.js';
 
 const router = express.Router();

@@ -1,4 +1,4 @@
-import * as PengobatanModel from '../models/riwayatpengobatanModel.js';
+import * as PengobatanModel from '../models/rawatJalanModel.js';
 import * as PendaftaranModel from '../models/pendaftaranModel.js';
 
 export async function getAllPengobatan(req, res) {

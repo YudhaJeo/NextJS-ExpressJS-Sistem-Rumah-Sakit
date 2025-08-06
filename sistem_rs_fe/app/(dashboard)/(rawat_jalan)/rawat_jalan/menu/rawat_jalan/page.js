@@ -24,7 +24,7 @@ const initialForm = () => ({
   OBAT: "",
 });
 
-const RiwayatPengobatanPage = () => {
+const rawatJalanPage = () => {
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -258,4 +258,4 @@ const RiwayatPengobatanPage = () => {
   );
 };
 
-export default RiwayatPengobatanPage;
+export default rawatJalanPage;

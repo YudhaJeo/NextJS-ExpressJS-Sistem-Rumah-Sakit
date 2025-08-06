@@ -1,5 +1,5 @@
 import * as PendaftaranModel from '../models/pendaftaranModel.js';
-import * as PengobatanModel from '../models/riwayatpengobatanModel.js'; 
+import * as PengobatanModel from '../models/rawatJalanModel.js'; 
 import { generateNoInvoice } from '../utils/generateNoInvoice.js';
 import db from '../core/config/knex.js';
 

@@ -28,7 +28,7 @@ import dashboardRawatInapRoutes from './routes/dashboardRawatInapRoutes.js';
 import jadwaldokterRoutes from './routes/jadwaldokterRoutes.js';
 import dashboardDokterRoutes from './routes/dashboardDokterRoutes.js';
 import obatRoutes from './routes/obatRoutes.js';
-import riwayatpengobatanRoutes from './routes/riwayatpengobatanRoutes.js';
+import rawatJalanRoutes from './routes/rawatJalanRoutes.js';
 import kalenderRoutes from './routes/kalenderRoutes.js';
 import riwayatKunjunganRoutes from './routes/riwayatKunjunganRoutes.js';
 import komisidokterRoutes from './routes/komisidokterRoutes.js'
@@ -89,7 +89,7 @@ app.use('/api/dashboard_rawat_inap', dashboardRawatInapRoutes)
 app.use('/api/jadwal_dokter', jadwaldokterRoutes);
 app.use('/api/dashboard_dokter', dashboardDokterRoutes);
 app.use('/api/obat', obatRoutes);
-app.use('/api/rawat_jalan', riwayatpengobatanRoutes);
+app.use('/api/rawat_jalan', rawatJalanRoutes);
 app.use('/api/kalender', kalenderRoutes);
 app.use('/api/tindakan_medis', tindakanRoutes);
 app.use('/api/riwayat_kunjungan', riwayatKunjunganRoutes);
