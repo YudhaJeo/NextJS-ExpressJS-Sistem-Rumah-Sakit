@@ -3,8 +3,8 @@
 export const up = function (knex) {
   return knex.schema.createTable('rawat_inap', (table) => {
     table.increments('IDRAWATINAP').primary();
-    table.integer('IDPENGOBATAN').unsigned().notNullable()
-       .references('IDPENGOBATAN').inTable('riwayat_pengobatan').onDelete('CASCADE');
+    table.integer('IDRAWATJALAN').unsigned().notNullable()
+       .references('IDRAWATJALAN').inTable('rawat_jalan').onDelete('CASCADE');
     table.integer('IDBED').unsigned().notNullable()
       .references('IDBED').inTable('bed').onDelete('CASCADE');
     table.date('TANGGALMASUK').notNullable();

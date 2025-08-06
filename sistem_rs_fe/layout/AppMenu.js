@@ -254,7 +254,7 @@ const AppMenu = () => {
             label: "Menu",
             items: [
               { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
-              { label: "Riwayat Pengobatan", icon: "pi pi-fw pi-folder-open", to: "/riwayat_pengobatan" },
+              { label: "Riwayat Pengobatan", icon: "pi pi-fw pi-folder-open", to: "/rawat_jalan" },
               { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/manajemen_komisi" },
               {
                 label: "Laporan",
@@ -288,7 +288,7 @@ const AppMenu = () => {
             label: "Menu",
             items: [
               { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
-              { label: "Riwayat Pengobatan", icon: "pi pi-fw pi-folder-open", to: "/riwayat_pengobatan" },
+              { label: "Riwayat Pengobatan", icon: "pi pi-fw pi-folder-open", to: "/rawat_jalan" },
             ],
           },
         ],

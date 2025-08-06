@@ -4,7 +4,7 @@ export const getRiwayatKunjungan = () => {
   return db('pendaftaran as p')
     .join('pasien as ps', 'p.NIK', 'ps.NIK')
     .join('poli as pl', 'p.IDPOLI', 'pl.IDPOLI')
-    .leftJoin('riwayat_pengobatan as r', 'p.IDPENDAFTARAN', 'r.IDPENDAFTARAN')
+    .leftJoin('rawat_jalan as r', 'p.IDPENDAFTARAN', 'r.IDPENDAFTARAN')
     .leftJoin('master_tenaga_medis as d', 'r.IDDOKTER', 'd.IDTENAGAMEDIS')
     .select(
       'p.IDPENDAFTARAN',

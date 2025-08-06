@@ -2,7 +2,7 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-const uploadPath = path.join(process.cwd(), 'uploads', 'riwayat_pengobatan');
+const uploadPath = path.join(process.cwd(), 'uploads', 'rawat_jalan');
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
 }

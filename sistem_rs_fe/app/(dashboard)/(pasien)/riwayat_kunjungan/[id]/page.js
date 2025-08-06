@@ -64,7 +64,7 @@ export default function DetailRiwayatKunjunganPage() {
   }
 
   const fotoUrl = detail.FOTOPROFIL
-    ? `${URL_API}/uploads/riwayat_pengobatan/${detail.FOTOPROFIL}`
+    ? `${URL_API}/uploads/rawat_jalan/${detail.FOTOPROFIL}`
     : null;
 
   return (
