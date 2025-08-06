@@ -1,9 +1,16 @@
-'use client';
+"use client";
 
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { Button } from 'primereact/button';
-import { Tag } from 'primereact/tag';
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Tag } from "primereact/tag";
+import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
+import AdjustPrintMarginLaporan from "./adjustPrintMarginLaporan";
+import { useState } from "react";
+import axios from 'axios'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 const statusLabels = {
   BELUM_LUNAS: 'Belum Dibayar',
@@ -22,115 +29,166 @@ const asuransiSeverity = {
 };
 
 const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
-  const statusBodyTemplate = (row) => (
+  const [adjustDialog, setAdjustDialog] = useState(false)
+  const [selectedRow, setSelectedRow] = useState(null)
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false)
+  const [pdfUrl, setPdfUrl] = useState('')
+  const [fileName, setFileName] = useState('')
+
+  const PDFViewer = dynamic(() => import('./PDFViewer'), { ssr: false });
+
+  const handleOpenAdjust = async (rowData) => {
+    try {
+      const res = await axios.get(`${API_URL}/invoice/${rowData.IDINVOICE}`)
+      const detail = res.data.data
+
+      console.log("[DEBUG] Detail:", detail)
+
+      setSelectedRow(detail)
+      setAdjustDialog(true)
+    } catch (err) {
+      console.error('Gagal ambil detail:', err)
+      alert('Gagal mengambil detail invoice')
+    }
+  }
+  
+const statusBody = (rowData) => (
     <Tag
-      value={statusLabels[row.STATUS] || row.STATUS}
-      severity={statusSeverity[row.STATUS] || 'info'}
+      value={statusLabels[rowData.STATUS] || rowData.STATUS}
+      severity={statusSeverity[rowData.STATUS] || 'info'}
     />
   );
 
-  const asuransiBodyTemplate = (row) => {
+  const asuransiBody = (rowData) => {
     const severity =
-      asuransiSeverity[row.ASURANSI?.toUpperCase()] || asuransiSeverity.DEFAULT;
+      asuransiSeverity[rowData.ASURANSI?.toUpperCase()] || asuransiSeverity.DEFAULT;
 
     return (
       <Tag
-        value={row.ASURANSI}
+        value={rowData.ASURANSI}
         severity={severity}
       />
     );
   };
 
-  return (
-    <DataTable
-      value={data}
-      paginator
-      rows={10}
-      loading={loading}
+  const actionBody = (rowData) => (
+  <div className="flex gap-2">
+    {rowData.STATUS === 'LUNAS' && (
+      <Button
+        icon="pi pi-sliders-h"
+        className="p-button-sm p-button-warning"
+        onClick={() => handleOpenAdjust(rowData)}
+        tooltip="Atur Margin"
+      />
+    )}
+    <a
+        href={`/invoice/${rowData.IDINVOICE}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Button icon="pi pi-eye" className="p-button-sm" tooltip="Lihat Detail" />
+      </a>
+    <Button
+      icon="pi pi-pencil"
       size="small"
-      scrollable
-    >
-      <Column field="NOINVOICE" header="No Invoice" />
-      <Column field="NIK" header="NIK" />
-      <Column field="NAMAPASIEN" header="Nama Pasien" />
-      <Column
-        field="ASURANSI"
-        header="Asuransi"
-        body={asuransiBodyTemplate}
+      severity="warning"
+      onClick={() => onEdit(rowData)}
+    />
+    <Button
+      icon="pi pi-trash"
+      size="small"
+      severity="danger"
+      onClick={() => onDelete(rowData)}
+    />
+  </div>
+);
+
+
+  return (
+    <>
+      <DataTable
+        value={data}
+        paginator
+        rows={10}
+        loading={loading}
+        size="small"
+        scrollable
+      >
+        <Column field="NOINVOICE" header="No Invoice" />
+        <Column field="NIK" header="NIK" />
+        <Column field="NAMAPASIEN" header="Nama Pasien" />
+        <Column
+          field="ASURANSI"
+          header="Asuransi"
+          body={asuransiBody}
+        />
+        <Column
+          field="TANGGALINVOICE"
+          header="Tgl Invoice"
+          body={(rowData) => {
+            const tgl = new Date(rowData.TANGGALINVOICE);
+            return tgl.toLocaleDateString('id-ID', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            });
+          }}
+        />
+        <Column
+          field="TOTALTAGIHAN"
+          header="Total Tagihan"
+          body={(rowData) =>
+            `Rp ${Number(rowData.TOTALTAGIHAN).toLocaleString('id-ID')}`
+          }
+        />
+        <Column
+          field="TOTALDEPOSIT"
+          header="Total Deposit"
+          body={(rowData) =>
+            `Rp ${Number(rowData.TOTALDEPOSIT).toLocaleString('id-ID')}`
+          }
+        />
+        <Column
+          field="TOTALANGSURAN"
+          header="Total Angsuran"
+          body={(rowData) =>
+            `Rp ${Number(rowData.TOTALANGSURAN).toLocaleString('id-ID')}`
+          }
+        />
+        <Column
+          field="SISA_TAGIHAN"
+          header="Sisa Tagihan"
+          body={(rowData) =>
+            `Rp ${Number(rowData.SISA_TAGIHAN || 0).toLocaleString('id-ID')}`
+          }
+        />
+        <Column field="STATUS" header="Status" body={statusBody} />
+        <Column header="Aksi" body={actionBody} />
+      </DataTable>
+    
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={selectedRow}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
       />
-      <Column
-        field="TANGGALINVOICE"
-        header="Tgl Invoice"
-        body={(row) => {
-          const tgl = new Date(row.TANGGALINVOICE);
-          return tgl.toLocaleDateString('id-ID', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          });
-        }}
-      />
-      <Column
-        field="TOTALTAGIHAN"
-        header="Total Tagihan"
-        body={(row) =>
-          `Rp ${Number(row.TOTALTAGIHAN).toLocaleString('id-ID', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          })}`
-        }
-      />
-      <Column
-        field="TOTALDEPOSIT"
-        header="Total Deposit"
-        body={(row) =>
-          `Rp ${Number(row.TOTALDEPOSIT).toLocaleString('id-ID', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          })}`
-        }
-      />
-      <Column
-        field="TOTALANGSURAN"
-        header="Total Angsuran"
-        body={(row) =>
-          `Rp ${Number(row.TOTALANGSURAN).toLocaleString('id-ID', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          })}`
-        }
-      />
-      <Column
-        field="SISA_TAGIHAN"
-        header="Sisa Tagihan"
-        body={(row) =>
-          `Rp ${Number(row.SISA_TAGIHAN || 0).toLocaleString('id-ID', {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          })}`
-        }
-      />
-      <Column field="STATUS" header="Status" body={statusBodyTemplate} />
-      <Column
-        header="Aksi"
-        body={(row) => (
-          <div className="flex gap-2">
-            <Button
-              icon="pi pi-pencil"
-              size="small"
-              severity="warning"
-              onClick={() => onEdit(row)}
-            />
-            <Button
-              icon="pi pi-trash"
-              size="small"
-              severity="danger"
-              onClick={() => onDelete(row)}
-            />
-          </div>
-        )}
-      />
-    </DataTable>
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: '90vw', height: '90vh' }}
+        header="Preview PDF"
+      >
+        <PDFViewer
+          pdfUrl={pdfUrl}
+          fileName={fileName}
+          paperSize={selectedRow?.paperSize || 'A4'}
+        />
+      </Dialog>
+    </>
   );
 };
 

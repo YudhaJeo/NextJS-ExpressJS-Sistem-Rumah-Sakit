@@ -178,7 +178,8 @@ const AppMenu = () => {
           {
             label: "Master",
             items: [
-              { label: "Daftar Obat dan Alkes", icon: "pi pi-fw pi-database", to: "/daftar_obat" },
+              { label: "Daftar Obat", icon: "pi pi-fw pi-database", to: "/daftar_obat" },
+              { label: "Alat Kesehatan", icon: "pi pi-fw pi-briefcase", to: "/alkes" },
               { label: "Supplier", icon: "pi pi-fw pi-user", to: "/supplier" },
               
               
@@ -191,6 +192,7 @@ const AppMenu = () => {
               { label: "First Expired First Out", icon: "pi pi-fw pi-chart-line", to: "/FEFO" },
               { label: "Order Pengambilan Obat", icon: "pi pi-fw pi-history", to: "/order_pengambilan_obat" },
               { label: "Penjualan/POS Kasir", icon: "pi pi-fw pi-shopping-cart", to: "/penjualan" },
+              { label: "Pembelian Obat", icon: "pi pi-fw pi-dollar", to: "/pembelian" },
             ],
           },
           {
