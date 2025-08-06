@@ -49,6 +49,7 @@ import angsuranRoutes from './routes/angsuranRoutes.js';
 import supplierRoutes from './routes/supplierRoutes.js';
 import alkesRoutes from './routes/alkesRoutes.js';
 import kartuRoutes from './routes/kartustokRoutes.js';
+import pemesananRoutes from './routes/pemesananRoutes.js';
 
 const NEXT_URL = process.env.NEXT_PUBLIC_URL;
 
@@ -110,5 +111,6 @@ app.use('/api/angsuran', angsuranRoutes);
 app.use('/api/supplier', supplierRoutes);
 app.use('/api/alkes', alkesRoutes);
 app.use('/api/kartu_stok', kartuRoutes);
+app.use('/api/pemesanan', pemesananRoutes);
 
 export default app;
