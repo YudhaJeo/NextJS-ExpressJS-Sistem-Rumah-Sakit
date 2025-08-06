@@ -49,6 +49,7 @@ const AppMenu = () => {
               { label: "Poli", icon: "pi pi-fw pi-warehouse", to: "/master/poli" },
               { label: "Jadwal Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/dokter" },
               { label: "Role", icon: "pi pi-fw pi-users", to: "/master/role" },
+              { label: "Tindakan Medis", icon: "pi pi-fw pi-heart", to: "/master/tindakan_medis" },
               { label: "Tenaga Medis", icon: "pi pi-fw pi-users", to: "/master/tenaga_medis" },
               { label: "Tenaga Non Medis", icon: "pi pi-fw pi-users", to: "/master/tenaga_non_medis" },
             ],
@@ -152,7 +153,6 @@ const AppMenu = () => {
           {
             label: "Master",
             items: [
-              { label: "Tindakan Medis", icon: "pi pi-fw pi-heart", to: "/rawat_inap/master/tindakan_medis" },
               { label: "Jenis Bangsal", icon: "pi pi-fw pi-tag", to: "/rawat_inap/master/jenis_bangsal" },
               { label: "Manajemen Bangsal", icon: "pi pi-fw pi-th-large", to: "/rawat_inap/master/manajemen_bangsal" },
               { label: "Manajemen Kamar", icon: "pi pi-fw pi-table", to: "/rawat_inap/master/manajemen_kamar" },
