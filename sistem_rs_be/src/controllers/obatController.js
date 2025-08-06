@@ -24,8 +24,18 @@ export async function getObatById(req, res) {
 
 export async function insertObat(req, res) {
     try {
-        const { NAMAOBAT, JENISOBAT, STOK, HARGABELI, HARGAJUAL, TGLKADALUARSA, SUPPLIERID } = req.body;
-        await Obat.createObat({ NAMAOBAT, JENISOBAT, STOK, HARGABELI, HARGAJUAL, TGLKADALUARSA, SUPPLIERID });
+        const {
+            KODEOBAT, NAMAOBAT, MEREK, JENISOBAT, STOK,
+            HARGABELI, HARGAJUAL, TGLKADALUARSA,
+            SUPPLIERID, LOKASIRAK, DESKRIPSI
+        } = req.body;
+
+        await Obat.createObat({
+            KODEOBAT, NAMAOBAT, MEREK, JENISOBAT, STOK,
+            HARGABELI, HARGAJUAL, TGLKADALUARSA,
+            SUPPLIERID, LOKASIRAK, DESKRIPSI
+        });
+
         res.json({ message: 'Data obat berhasil ditambahkan' });
     } catch (err) {
         console.error('Gagal insert data obat: ', err);
@@ -36,12 +46,21 @@ export async function insertObat(req, res) {
 export async function updateObat(req, res) {
     try {
         const id = req.params.id;
-        const { NAMAOBAT, JENISOBAT, STOK, HARGABELI, HARGAJUAL, TGLKADALUARSA, SUPPLIERID } = req.body;
+        const {
+            KODEOBAT, NAMAOBAT, MEREK, JENISOBAT, STOK,
+            HARGABELI, HARGAJUAL, TGLKADALUARSA,
+            SUPPLIERID, LOKASIRAK, DESKRIPSI
+        } = req.body;
 
         const existing = await Obat.getById(id);
         if (!existing) return res.status(404).json({ error: 'Data obat tidak ditemukan' });
 
-        await Obat.updateObat(id, { NAMAOBAT, JENISOBAT, STOK, HARGABELI, HARGAJUAL, TGLKADALUARSA, SUPPLIERID });
+        await Obat.updateObat(id, {
+            KODEOBAT, NAMAOBAT, MEREK, JENISOBAT, STOK,
+            HARGABELI, HARGAJUAL, TGLKADALUARSA,
+            SUPPLIERID, LOKASIRAK, DESKRIPSI
+        });
+
         res.json({ message: 'Data obat berhasil diperbarui' });
     } catch (err) {
         console.error('Gagal update data obat: ', err);

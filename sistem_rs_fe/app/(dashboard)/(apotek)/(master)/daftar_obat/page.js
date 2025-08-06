@@ -12,13 +12,17 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const defaultForm = {
   IDOBAT: '',
+  KODEOBAT: '',
   NAMAOBAT: '',
+  MEREK: '',
   JENISOBAT: 'TABLET',
   STOK: 0,
   HARGABELI: null,
   HARGAJUAL: null,
   TGLKADALUARSA: '',
-  SUPPLIERID: null
+  SUPPLIERID: null,
+  LOKASIRAK: '',
+  DESKRIPSI: ''
 };
 
 const Page = () => {
@@ -64,8 +68,14 @@ const Page = () => {
   const validateForm = () => {
     const newErrors = {};
 
+    if (!(form.KODEOBAT || '').trim())
+      newErrors.KODEOBAT = <span style={{ color: 'red' }}>Kode obat wajib diisi</span>;
+
     if (!(form.NAMAOBAT || '').trim())
       newErrors.NAMAOBAT = <span style={{ color: 'red' }}>Nama obat wajib diisi</span>;
+
+    if (!(form.MEREK || '').trim())
+      newErrors.MEREK = <span style={{ color: 'red' }}>Merek wajib diisi</span>;
 
     if (!form.JENISOBAT)
       newErrors.JENISOBAT = <span style={{ color: 'red' }}>Jenis obat wajib diisi</span>;
@@ -81,6 +91,9 @@ const Page = () => {
 
     if (!(form.TGLKADALUARSA || '').trim())
       newErrors.TGLKADALUARSA = <span style={{ color: 'red' }}>Tanggal kadaluarsa wajib diisi</span>;
+
+    if (!(form.LOKASIRAK || '').trim())
+      newErrors.LOKASIRAK = <span style={{ color: 'red' }}>Lokasi rak wajib diisi</span>;
 
     if (!form.SUPPLIERID)
       newErrors.SUPPLIERID = <span style={{ color: 'red' }}>Supplier wajib dipilih</span>;
@@ -118,13 +131,17 @@ const Page = () => {
   const handleEdit = (row) => {
     setForm({
       IDOBAT: row.IDOBAT,
+      KODEOBAT: row.KODEOBAT || '',
       NAMAOBAT: row.NAMAOBAT || '',
+      MEREK: row.MEREK || '',
       JENISOBAT: row.JENISOBAT || 'TABLET',
       STOK: row.STOK ?? 0,
       HARGABELI: row.HARGABELI ?? 0,
       HARGAJUAL: row.HARGAJUAL ?? 0,
       TGLKADALUARSA: row.TGLKADALUARSA || '',
-      SUPPLIERID: row.SUPPLIERID ?? null
+      SUPPLIERID: row.SUPPLIERID ?? null,
+      LOKASIRAK: row.LOKASIRAK || '',
+      DESKRIPSI: row.DESKRIPSI || ''
     });
     setDialogVisible(true);
   };
