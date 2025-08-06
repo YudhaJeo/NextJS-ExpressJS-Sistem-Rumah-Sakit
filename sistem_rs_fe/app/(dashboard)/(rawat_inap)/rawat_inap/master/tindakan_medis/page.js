@@ -15,6 +15,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const defaultForm = {
   IDTINDAKAN: '',
   NAMATINDAKAN: '',
+  JENISRAWAT: '',
   KATEGORI: '',
   HARGA: null,
   DESKRIPSI: ''
@@ -28,7 +29,6 @@ const Page = () => {
   const [errors, setErrors] = useState({});
 
   const toastRef = useRef(null);
-  const router = useRouter();
 
   useEffect(() => {
     fetchData();
@@ -67,6 +67,11 @@ const Page = () => {
       newErrors.KATEGORI = (
         <span style={{ color: 'red' }}>Satuan tindakan wajib diisi</span>
       );
+    
+    if (!(form.JENISRAWAT || '').trim())
+      newErrors.JENISRAWAT = (
+        <span style={{ color: 'red' }}>Jenis tindakan wajib diisi</span>
+      );
 
 
     setErrors(newErrors);
@@ -104,6 +109,7 @@ const Page = () => {
       IDTINDAKAN: row.IDTINDAKAN,
       NAMATINDAKAN: row.NAMATINDAKAN || '',
       KATEGORI: row.KATEGORI || '',
+      JENISRAWAT: row.JENISRAWAT || '',
       HARGA: row.HARGA ?? 0,
       DESKRIPSI: row.DESKRIPSI || ''
     });
@@ -139,11 +145,12 @@ const Page = () => {
 
       <HeaderBar
         title=""
-        placeholder="Cari nama tindakan"
+        placeholder="Cari tindakan"
         onSearch={(keyword) => {
           if (!keyword) return fetchData();
           const filtered = data.filter((item) =>
             item.NAMATINDAKAN.toLowerCase().includes(keyword.toLowerCase()) ||
+            item.JENISRAWAT.toLowerCase().includes(keyword.toLowerCase()) ||
             item.KATEGORI.toLowerCase().includes(keyword.toLowerCase())
           );
           setData(filtered);
