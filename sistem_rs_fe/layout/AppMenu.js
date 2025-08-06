@@ -125,21 +125,22 @@ const AppMenu = () => {
       {
         label: "Fitur Rawat Jalan",
         items: [
-          { label: "Dashboard Rawat Jalan", icon: "pi pi-fw pi-home", to: "/rawat_jalan/dashboard" },
+          { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/rawat_jalan/dashboard" },
+          {
+            label: "Reservasi & Kalender",
+            items: [
+              { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/reservasi/kalender_reservasi" },
+              { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi" },
+              { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/riwayat_reservasi" },
+            ],
+          },
           {
             label: "Menu",
             items: [
-              { label: "Tindakan & Layanan Medis", icon: "pi pi-fw pi-heart", to: "/rawat_jalan/tindakan_layanan" },
-              { label: "Resep Obat", icon: "pi pi-fw pi-briefcase", to: "/rawat_jalan/resep" },
-              { label: "Perjanjian", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/perjanjian" },
-              { label: "Kalender Perjanjian", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/kalender_perjanjian" },
-              { label: "Riwayat Perjanjian", icon: "pi pi-fw pi-history", to: "/rawat_jalan/riwayat_perjanjian" },
-              { label: "Kalender Ruangan", icon: "pi pi-fw pi-building", to: "/rawat_jalan/kalender_ruangan" },
-              { label: "Riwayat Pasien", icon: "pi pi-fw pi-users", to: "/rawat_jalan/riwayat_pasien" },
-              { label: "Laporan Tindakan Medis", icon: "pi pi-fw pi-file", to: "/rawat_jalan/laporan_tindakan" },
-              { label: "Cetak Rekam Medis", icon: "pi pi-fw pi-print", to: "/rawat_jalan/cetak_rm" },
-              { label: "Resep Obat Pasien", icon: "pi pi-fw pi-book-medical", to: "/rawat_jalan/resep_pasien" },
-              { label: "Report Resep Pasien", icon: "pi pi-fw pi-chart-bar", to: "/rawat_jalan/report_resep" },
+              { label: "Obat Rawat Jalan", icon: "pi pi-fw pi-chart-pie", to: "/rawat_jalan/menu/resep_pasien" },
+              { label: "Tindakan Rawat Jalan", icon: "pi pi-fw pi-chart-scatter", to: "/rawat_jalan/menu/laporan_tindakan" },
+              { label: "Rawat Jalan", icon: "pi pi-fw pi-users", to: "/rawat_jalan/menu/riwayat_pengobatan" },
+              { label: "Riwayat Rawat Jalan", icon: "pi pi-fw pi-users", to: "/rawat_jalan/menu/riwayat_rawat_jalan" },
             ],
           },
         ],

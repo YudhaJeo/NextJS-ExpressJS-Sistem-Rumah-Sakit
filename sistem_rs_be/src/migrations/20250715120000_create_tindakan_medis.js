@@ -5,6 +5,7 @@ export const up = function (knex) {
     table.increments('IDTINDAKAN').primary();
     table.string('NAMATINDAKAN', 100).notNullable();
     table.double('HARGA').notNullable();
+    table.enu('JENISRAWAT', ['INAP', 'JALAN']).notNullable();
     table.enu('KATEGORI', ['OPERASI', 'PERAWATAN', 'DIAGNOSTIK', 'LAINNYA']).notNullable();
     table.text('DESKRIPSI');
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now());

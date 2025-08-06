@@ -3,6 +3,7 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { Tag } from "primereact/tag";
 
 const MyTabel = ({ data, loading, onEdit, onDelete }) => {
   return (
@@ -22,6 +23,24 @@ const MyTabel = ({ data, loading, onEdit, onDelete }) => {
           }).format(rowData.HARGA || 0)
         }
       />
+      <Column
+          header="Jenis Rawat"
+          body={(row) => {
+            const JENISRAWAT = row.JENISRAWAT;
+            const severity = () => {
+              switch (JENISRAWAT) {
+                case "INAP":
+                  return "info";
+                case "JALAN":
+                  return "success";
+                default:
+                  return "danger";
+              }
+            };
+
+            return <Tag value={JENISRAWAT} severity={severity()} />;
+          }}
+        />
       <Column field="KATEGORI" header="Kategori" />
       <Column field="DESKRIPSI" header="Deskripsi" />
 

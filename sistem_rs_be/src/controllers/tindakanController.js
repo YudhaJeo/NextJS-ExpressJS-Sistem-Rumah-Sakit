@@ -12,8 +12,8 @@ export async function getAllTindakan(req, res) {
 
 export async function insertTindakan(req, res) {
     try {
-        const { NAMATINDAKAN, HARGA, KATEGORI, DESKRIPSI } = req.body;
-        await Tindakan.createTindakan({ NAMATINDAKAN, HARGA, KATEGORI, DESKRIPSI });
+        const { NAMATINDAKAN, HARGA, JENISRAWAT, KATEGORI, DESKRIPSI } = req.body;
+        await Tindakan.createTindakan({ NAMATINDAKAN, HARGA, JENISRAWAT, KATEGORI, DESKRIPSI });
         res.json({ message: 'Jenis bangsal berhasil ditambahkan' });
     } catch (err) {
         console.error('Gagal insert data tindakan: ', err)
@@ -24,14 +24,14 @@ export async function insertTindakan(req, res) {
 export async function updateTindakan(req, res) {
     try {
         const id = req.params.id;
-        const { NAMATINDAKAN, HARGA, KATEGORI, DESKRIPSI } = req.body;
+        const { NAMATINDAKAN, HARGA, JENISRAWAT, KATEGORI, DESKRIPSI } = req.body;
         const existing = await Tindakan.getById(id);
 
         if (!existing) {
             return res.status(404).json({ error: 'Data tindakan tidak ditemukan' });
         }
 
-        await Tindakan.updateTindakan(id, { NAMATINDAKAN, HARGA, KATEGORI, DESKRIPSI });
+        await Tindakan.updateTindakan(id, { NAMATINDAKAN, HARGA, JENISRAWAT, KATEGORI, DESKRIPSI });
         res.json({ message: 'Jenis tindakan berhasil diperbarui' });
     } catch (err) {
         res.status(500).json({ error: err.message })
