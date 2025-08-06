@@ -20,7 +20,7 @@ const KomisiPage = () => {
   const [allRiwayatOptions, setAllRiwayatOptions] = useState([]);
   const [formData, setFormData] = useState({
     IDKOMISI: 0,
-    IDPENGOBATAN: "",
+    IDRAWATJALAN: "",
     NIK: "",
     NAMAPASIEN: "",
     NAMADOKTER: "",
@@ -40,9 +40,9 @@ const KomisiPage = () => {
   }, []);
 
   useEffect(() => {
-    if (formData.IDPENGOBATAN && allRiwayatOptions.length > 0) {
+    if (formData.IDRAWATJALAN && allRiwayatOptions.length > 0) {
       const selected = allRiwayatOptions.find(
-        (opt) => String(opt.value) === String(formData.IDPENGOBATAN)
+        (opt) => String(opt.value) === String(formData.IDRAWATJALAN)
       );
       if (selected) {
         setFormData((prev) => ({
@@ -54,7 +54,7 @@ const KomisiPage = () => {
         }));
       }
     }
-  }, [formData.IDPENGOBATAN, allRiwayatOptions]);
+  }, [formData.IDRAWATJALAN, allRiwayatOptions]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -82,11 +82,11 @@ const KomisiPage = () => {
 
   const fetchRiwayat = async () => {
     try {
-      const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
-      console.log("riwayat_pengobatan:", res.data);
+      const res = await axios.get(`${API_URL}/rawat_jalan`);
+      console.log("rawat_jalan:", res.data);
       const options = res.data.data.map((item) => ({
         label: `${item.NAMADOKTER} - ${item.NAMALENGKAP} (${formatTanggal(item.TANGGALKUNJUNGAN)})`,
-        value: item.IDPENGOBATAN,
+        value: item.IDRAWATJALAN,
         NIK: item.NIK,
         NAMAPASIEN: item.NAMALENGKAP,
         NAMADOKTER: item.NAMADOKTER,
@@ -112,13 +112,13 @@ const KomisiPage = () => {
 
   const handleSubmit = async () => {
     const {
-      IDPENGOBATAN,
+      IDRAWATJALAN,
       NILAIKOMISI,
       STATUS,
       KETERANGAN,
     } = formData;
 
-    if (!IDPENGOBATAN || !NILAIKOMISI || !STATUS || !KETERANGAN) {
+    if (!IDRAWATJALAN || !NILAIKOMISI || !STATUS || !KETERANGAN) {
       toastRef.current?.showToast("01", "Field wajib tidak boleh kosong!");
       return;
     }
@@ -147,11 +147,11 @@ const KomisiPage = () => {
 
   const handleEdit = (row) => {
     const selected = allRiwayatOptions.find(
-      (opt) => String(opt.value) === String(row.IDPENGOBATAN)
+      (opt) => String(opt.value) === String(row.IDRAWATJALAN)
     );
     setFormData({
       IDKOMISI: row.IDKOMISI,
-      IDPENGOBATAN: row.IDPENGOBATAN,
+      IDRAWATJALAN: row.IDRAWATJALAN,
       NIK: selected?.NIK || row.NIK || "",
       NAMAPASIEN: selected?.NAMAPASIEN || row.NAMAPASIEN || "",
       NAMADOKTER: selected?.NAMADOKTER || row.NAMADOKTER || "",
@@ -186,7 +186,7 @@ const KomisiPage = () => {
   const resetForm = () => {
     setFormData({
       IDKOMISI: 0,
-      IDPENGOBATAN: "",
+      IDRAWATJALAN: "",
       NIK: "",
       NAMAPASIEN: "",
       NAMADOKTER: "",

@@ -90,7 +90,7 @@ app.use('/api/dashboard_rawat_inap', dashboardRawatInapRoutes)
 app.use('/api/jadwal_dokter', jadwaldokterRoutes);
 app.use('/api/dashboard_dokter', dashboardDokterRoutes);
 app.use('/api/obat', obatRoutes);
-app.use('/api/riwayat_pengobatan', riwayatpengobatanRoutes);
+app.use('/api/rawat_jalan', riwayatpengobatanRoutes);
 app.use('/api/kalender', kalenderRoutes);
 app.use('/api/tindakan_medis', tindakanRoutes);
 app.use('/api/riwayat_kunjungan', riwayatKunjunganRoutes);

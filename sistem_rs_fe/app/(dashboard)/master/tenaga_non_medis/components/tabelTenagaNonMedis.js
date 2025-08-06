@@ -44,14 +44,14 @@ const TabelTenagaNonMedis = ({ data, loading, onEdit, onDelete }) => {
         <Card className="mb-3 cursor-pointer hover:shadow-3 transition-all transition-duration-300">
           <div className="flex flex-column xl:flex-row xl:align-items-start gap-4">
             <div className="flex justify-content-center xl:justify-content-start">
-              <img
-                className="w-9rem h-9rem sm:w-12rem sm:h-12rem border-round-lg shadow-2 object-cover"
-                src={
-                  row.FOTOPROFIL
-                    ? `${process.env.NEXT_PUBLIC_URL}${row.FOTOPROFIL}`
-                    : "/no-image.png"
-                }
-                alt={row.NAMALENGKAP}
+              <div
+                className="w-9rem h-9rem sm:w-12rem sm:h-12rem border-round-lg shadow-2 cursor-pointer"
+                style={{
+                  backgroundImage: `url(${row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_URL}${row.FOTOPROFIL}` : "/no-image.png"})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat'
+                }}
                 onClick={() => openDetail(row)}
               />
             </div>
@@ -138,14 +138,14 @@ const TabelTenagaNonMedis = ({ data, loading, onEdit, onDelete }) => {
               className="flex flex-column align-items-center gap-3 py-3 flex-1"
               onClick={() => openDetail(row)}
             >
-              <img
-                className="w-10rem h-10rem border-round-lg shadow-2 object-cover"
-                src={
-                  row.FOTOPROFIL
-                    ? `${process.env.NEXT_PUBLIC_URL}${row.FOTOPROFIL}`
-                    : "/no-image.png"
-                }
-                alt={row.NAMALENGKAP}
+              <div
+                className="w-10rem h-10rem border-round-lg shadow-2 cursor-pointer"
+                style={{
+                  backgroundImage: `url(${row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_URL}${row.FOTOPROFIL}` : "/no-image.png"})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat'
+                }}
               />
               <h4 className="text-xl font-bold text-center m-0 line-height-3">
                 {row.NAMALENGKAP}
@@ -316,14 +316,14 @@ const TabelTenagaNonMedis = ({ data, loading, onEdit, onDelete }) => {
           <div className="flex flex-column gap-4">
             {/* Foto Profil */}
             <div className="flex justify-content-center">
-              <img
-                className="w-12rem h-12rem mt-4 border-circle shadow-3 object-cover"
-                src={
-                  selectedData.FOTOPROFIL
-                    ? `${process.env.NEXT_PUBLIC_URL}${selectedData.FOTOPROFIL}`
-                    : "/no-image.png"
-                }
-                alt={selectedData.NAMALENGKAP}
+              <div
+                className="w-12rem h-12rem mt-4 border-circle shadow-3"
+                style={{
+                  backgroundImage: `url(${selectedData.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_URL}${selectedData.FOTOPROFIL}` : "/no-image.png"})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat'
+                }}
               />
             </div>
 

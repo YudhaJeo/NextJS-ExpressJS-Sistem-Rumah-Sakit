@@ -27,9 +27,9 @@ const getById = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const { IDPENGOBATAN, IDBED, TANGGALMASUK, TANGGALKELUAR, CATATAN } = req.body;
+    const { IDRAWATJALAN, IDBED, TANGGALMASUK, TANGGALKELUAR, CATATAN } = req.body;
     const inserted = await RawatInap.create({
-      IDPENGOBATAN,
+      IDRAWATJALAN,
       IDBED,
       TANGGALMASUK,
       TANGGALKELUAR,

@@ -29,7 +29,7 @@ const Page = () => {
 
   const defaultForm = {
     IDRAWATINAP: '',
-    IDPENGOBATAN: '',
+    IDRAWATJALAN: '',
     IDBED: '',
     TANGGALMASUK: '',
     TANGGALKELUAR: '',
@@ -59,12 +59,12 @@ const Page = () => {
 
   const fetchPengobatan = async () => {
     try {
-      const res = await axios.get(`${API_URL}/riwayat_pengobatan`);
+      const res = await axios.get(`${API_URL}/rawat_jalan`);
       const options = res.data.data
         .filter((item) => item.STATUSRAWAT === 'Rawat Inap')  
         .map((item) => ({
           label: `${item.NAMALENGKAP} - ${item.POLI}`,
-          value: item.IDPENGOBATAN,
+          value: item.IDRAWATJALAN,
       }));
       setPengobatanOptions(options);
     } catch (err) {
@@ -92,7 +92,7 @@ const Page = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!form.IDPENGOBATAN) newErrors.IDPENGOBATAN = 'Riwayat pengobatan harus dipilih';
+    if (!form.IDRAWATJALAN) newErrors.IDRAWATJALAN = 'Riwayat pengobatan harus dipilih';
     if (!form.IDBED) newErrors.IDBED = 'Bed harus dipilih';
     if (!form.TANGGALMASUK) newErrors.TANGGALMASUK = 'Tanggal masuk wajib';
     setErrors(newErrors);
@@ -152,7 +152,7 @@ const Page = () => {
   const handleEdit = (row) => {
     setForm({
       IDRAWATINAP: row.IDRAWATINAP,
-      IDPENGOBATAN: row.IDPENGOBATAN,
+      IDRAWATJALAN: row.IDRAWATJALAN,
       IDBED: row.IDBED,
       TANGGALMASUK: row.TANGGALMASUK,
       TANGGALKELUAR: row.TANGGALKELUAR || '',

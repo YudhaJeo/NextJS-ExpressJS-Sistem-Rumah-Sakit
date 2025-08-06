@@ -36,16 +36,16 @@ const FormRawatInap = ({
         <div className="mt-2">
           <label>Riwayat Pengobatan</label>
           <Dropdown
-            className={inputClass('IDPENGOBATAN')}
-            value={form.IDPENGOBATAN}
+            className={inputClass('IDRAWATJALAN')}
+            value={form.IDRAWATJALAN}
             options={pengobatanOptions}
-            onChange={(e) => setForm({ ...form, IDPENGOBATAN: e.value })}
+            onChange={(e) => setForm({ ...form, IDRAWATJALAN: e.value })}
             placeholder="Pilih Riwayat Pengobatan"
             filter
             showClear
             optionLabel="label"
           />
-          {errors.IDPENGOBATAN && <small className="text-red-500">{errors.IDPENGOBATAN}</small>}
+          {errors.IDRAWATJALAN && <small className="text-red-500">{errors.IDRAWATJALAN}</small>}
         </div>
 
         <div className="mt-2">

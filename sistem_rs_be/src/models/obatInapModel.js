@@ -3,8 +3,8 @@ import db from '../core/config/knex.js';
 export const getAll = () =>
   db('obat_inap')
     .join('rawat_inap', 'obat_inap.IDRAWATINAP', 'rawat_inap.IDRAWATINAP')
-    .join('riwayat_pengobatan', 'rawat_inap.IDPENGOBATAN', 'riwayat_pengobatan.IDPENGOBATAN')
-    .join('pendaftaran', 'riwayat_pengobatan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+    .join('rawat_jalan', 'rawat_inap.IDRAWATJALAN', 'rawat_jalan.IDRAWATJALAN')
+    .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
     .join('obat', 'obat_inap.IDOBAT', 'obat.IDOBAT')
