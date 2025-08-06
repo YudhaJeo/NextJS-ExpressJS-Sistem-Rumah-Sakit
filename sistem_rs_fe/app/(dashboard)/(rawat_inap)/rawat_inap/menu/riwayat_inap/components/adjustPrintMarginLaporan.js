@@ -126,7 +126,7 @@ export default function AdjustPrintMarginLaporan({
       services.push([
         services.length + 1,
         o.NAMAOBAT,
-        o.SATUAN || '-',
+        o.JENISOBAT || '-',
         o.JUMLAH,
         'Obat',
         formatRupiah(o.HARGA),

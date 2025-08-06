@@ -13,7 +13,7 @@ const TabelObat = ({ data, loading, onEdit, onDelete }) => {
       size="small">
       <Column field="IDOBAT" header="ID" />
       <Column field="NAMAOBAT" header="Nama Obat" />
-      <Column field="SATUAN" header="Satuan Obat" />
+      <Column field="JENISOBAT" header="Satuan Obat" />
       <Column field="STOK" header="Stok" />
       <Column
         header="Harga/hari"

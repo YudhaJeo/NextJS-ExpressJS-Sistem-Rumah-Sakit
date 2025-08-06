@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import TabelObat from './components/tabelObat';
 import FormObat from './components/formObat';
@@ -15,7 +13,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const defaultForm = {
   IDOBAT: '',
   NAMAOBAT: '',
-  SATUAN: '',
+  JENISOBAT: '',
   STOK: 0,
   HARGA: null,
   KETERANGAN: ''
@@ -54,8 +52,8 @@ const Page = () => {
         <span style={{ color: 'red' }}>Nama obat wajib diisi</span>
       );
 
-    if (!(form.SATUAN || '').trim())
-      newErrors.SATUAN = (
+    if (!(form.JENISOBAT || '').trim())
+      newErrors.JENISOBAT = (
         <span style={{ color: 'red' }}>Satuan obat wajib diisi</span>
       );
 
@@ -113,7 +111,7 @@ const Page = () => {
     setForm({
       IDOBAT: row.IDOBAT,
       NAMAOBAT: row.NAMAOBAT || '',
-      SATUAN: row.SATUAN || '',
+      JENISOBAT: row.JENISOBAT || '',
       STOK: row.STOK ?? 0,
       HARGA: row.HARGA ?? 0,
       KETERANGAN: row.KETERANGAN || ''
@@ -155,7 +153,7 @@ const Page = () => {
           if (!keyword) return fetchData();
           const filtered = data.filter((item) =>
             item.NAMAOBAT.toLowerCase().includes(keyword.toLowerCase()) ||
-            item.SATUAN.toLowerCase().includes(keyword.toLowerCase())
+            item.JENISOBAT.toLowerCase().includes(keyword.toLowerCase())
           );
           setData(filtered);
         }}

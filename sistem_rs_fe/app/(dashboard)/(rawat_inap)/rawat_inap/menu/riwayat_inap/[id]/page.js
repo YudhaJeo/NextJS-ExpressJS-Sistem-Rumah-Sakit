@@ -49,7 +49,7 @@ export default function DetailRiwayatInapPage() {
         servicesData.push({
           id: index + 2,
           layanan: obat.NAMAOBAT,
-          satuan: obat.SATUAN,
+          satuan: obat.JENISOBAT,
           qty: obat.JUMLAH,
           jenis: 'Obat',
           hargaSatuan: obat.HARGA,
