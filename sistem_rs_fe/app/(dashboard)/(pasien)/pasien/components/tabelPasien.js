@@ -24,6 +24,7 @@ const TabelPasien = ({ data, loading, onEdit, onDelete }) => {
       <Column field="JENISKELAMIN" header="JK" />
       <Column field="ALAMAT" header="Alamat" />
       <Column field="NOHP" header="No HP" />
+      <Column field="USIA" header="Usia" />
       <Column field="NAMAAGAMA" header="Agama" />
       <Column field="GOLDARAH" header="Gol. Darah" />
       <Column field="NAMAASURANSI" header="Asuransi" />

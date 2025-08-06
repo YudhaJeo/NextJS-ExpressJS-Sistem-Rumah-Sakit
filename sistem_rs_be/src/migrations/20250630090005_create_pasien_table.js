@@ -7,6 +7,7 @@ export const up = function (knex) {
     table.enu('JENISKELAMIN', ['L', 'P']).notNullable();
     table.text('ALAMAT');
     table.string('NOHP', 15);
+    table.string('USIA', 3);
 
     table.integer('IDAGAMA').unsigned().references('IDAGAMA').inTable('agama').onDelete('SET NULL');
     table.string('GOLDARAH', 3);
