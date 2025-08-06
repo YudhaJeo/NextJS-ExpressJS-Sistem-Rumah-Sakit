@@ -28,6 +28,16 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors, supplierOp
         }}
       >
         <div className="mt-2">
+          <label>Kode Obat</label>
+          <InputText
+            className={inputClass('KODEOBAT')}
+            value={form.KODEOBAT}
+            onChange={(e) => setForm({ ...form, KODEOBAT: e.target.value })}
+          />
+          {errors.KODEOBAT && <small className="text-red-500">{errors.KODEOBAT}</small>}
+        </div>
+
+        <div className="mt-2">
           <label>Nama Obat</label>
           <InputText
             className={inputClass('NAMAOBAT')}
@@ -35,6 +45,16 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors, supplierOp
             onChange={(e) => setForm({ ...form, NAMAOBAT: e.target.value })}
           />
           {errors.NAMAOBAT && <small className="text-red-500">{errors.NAMAOBAT}</small>}
+        </div>
+
+        <div className="mt-2">
+          <label>Merek</label>
+          <InputText
+            className={inputClass('MEREK')}
+            value={form.MEREK}
+            onChange={(e) => setForm({ ...form, MEREK: e.target.value })}
+          />
+          {errors.MEREK && <small className="text-red-500">{errors.MEREK}</small>}
         </div>
 
         <div className="mt-2">
@@ -119,6 +139,16 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors, supplierOp
         </div>
 
         <div className="mt-2">
+          <label>Lokasi Rak</label>
+          <InputText
+            className={inputClass('LOKASIRAK')}
+            value={form.LOKASIRAK}
+            onChange={(e) => setForm({ ...form, LOKASIRAK: e.target.value })}
+          />
+          {errors.LOKASIRAK && <small className="text-red-500">{errors.LOKASIRAK}</small>}
+        </div>
+
+        <div className="mt-2">
           <label>Supplier</label> 
             <Dropdown
               className={classNames('w-full mt-2', { 'p-invalid': errors.SUPPLIERID })}
@@ -132,6 +162,16 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors, supplierOp
             {errors.SUPPLIERID && (
               <small className="text-red-500">{errors.SUPPLIERID}</small>
             )}
+        </div>
+
+        <div className="mt-2">
+          <label>Deskripsi</label>
+          <InputText
+            className={inputClass('DESKRIPSI')}
+            value={form.DESKRIPSI}
+            onChange={(e) => setForm({ ...form, DESKRIPSI: e.target.value })}
+          />
+          {errors.DESKRIPSI && <small className="text-red-500">{errors.DESKRIPSI}</small>}
         </div>
 
         <div className="text-right pt-3">
