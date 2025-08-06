@@ -52,6 +52,7 @@ const AppMenu = () => {
               { label: "Tindakan Medis", icon: "pi pi-fw pi-heart", to: "/master/tindakan_medis" },
               { label: "Tenaga Medis", icon: "pi pi-fw pi-users", to: "/master/tenaga_medis" },
               { label: "Tenaga Non Medis", icon: "pi pi-fw pi-users", to: "/master/tenaga_non_medis" },
+              { label: "Metode Pembayaran", icon: "pi pi-fw pi-credit-card", to: "/master/metode_pembayaran" },
             ],
           },
         ],
@@ -107,7 +108,6 @@ const AppMenu = () => {
             label: "Menu",
             items: [
               { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
-              { label: "Riwayat Pengobatan", icon: "pi pi-fw pi-folder-open", to: "/riwayat_pengobatan" },
               { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/manajemen_komisi" },
               {
                 label: "Laporan",
@@ -126,22 +126,22 @@ const AppMenu = () => {
       {
         label: "Fitur Rawat Jalan",
         items: [
-          { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/rawat_jalan/dashboard" },
-          {
-            label: "Reservasi & Kalender",
-            items: [
-              { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/reservasi/kalender_reservasi" },
-              { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi" },
-              { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/riwayat_reservasi" },
-            ],
-          },
+          // { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/rawat_jalan/dashboard" },
+          // {
+          //   label: "Reservasi & Kalender",
+          //   items: [
+          //     { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/reservasi/kalender_reservasi" },
+          //     { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi" },
+          //     { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/riwayat_reservasi" },
+          //   ],
+          // },
           {
             label: "Menu",
             items: [
-              { label: "Obat Rawat Jalan", icon: "pi pi-fw pi-chart-pie", to: "/rawat_jalan/menu/resep_pasien" },
-              { label: "Tindakan Rawat Jalan", icon: "pi pi-fw pi-chart-scatter", to: "/rawat_jalan/menu/laporan_tindakan" },
-              { label: "Rawat Jalan", icon: "pi pi-fw pi-users", to: "/rawat_jalan/menu/riwayat_pengobatan" },
-              { label: "Riwayat Rawat Jalan", icon: "pi pi-fw pi-users", to: "/rawat_jalan/menu/riwayat_rawat_jalan" },
+              { label: "Rawat Jalan", icon: "pi pi-fw pi-users", to: "/rawat_jalan/menu/rawat_jalan" },
+              // { label: "Obat Rawat Jalan", icon: "pi pi-fw pi-chart-pie", to: "/rawat_jalan/menu/obat_jalan" },
+              // { label: "Tindakan Rawat Jalan", icon: "pi pi-fw pi-chart-scatter", to: "/rawat_jalan/menu/tindakan_jalan" },
+              // { label: "Riwayat Rawat Jalan", icon: "pi pi-fw pi-users", to: "/rawat_jalan/menu/riwayat_rawat_jalan" },
             ],
           },
         ],
@@ -215,7 +215,6 @@ const AppMenu = () => {
             label: "Master",
             items: [
               { label: "Bank Account", icon: "pi pi-fw pi-building", to: "/bank_account" },
-              { label: "Metode Pembayaran", icon: "pi pi-fw pi-credit-card", to: "/metode_pembayaran" },
             ],
           },
           {
