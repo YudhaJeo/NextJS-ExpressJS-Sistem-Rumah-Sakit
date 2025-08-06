@@ -2,9 +2,9 @@ import db from '../core/config/knex.js';
 
 export const getAllKomisi = () =>
   db('komisi_dokter')
-    .join('riwayat_pengobatan', 'komisi_dokter.IDPENGOBATAN', 'riwayat_pengobatan.IDPENGOBATAN')
-    .join('pendaftaran', 'riwayat_pengobatan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
-    .join('dokter', 'riwayat_pengobatan.IDDOKTER', 'dokter.IDDOKTER')
+    .join('rawat_jalan', 'komisi_dokter.IDRAWATJALAN', 'rawat_jalan.IDRAWATJALAN')
+    .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+    .join('dokter', 'rawat_jalan.IDDOKTER', 'dokter.IDDOKTER')
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .join('master_tenaga_medis', 'dokter.IDTENAGAMEDIS', 'master_tenaga_medis.IDTENAGAMEDIS')
     .select(
@@ -12,17 +12,17 @@ export const getAllKomisi = () =>
       'pendaftaran.NIK',
       'pendaftaran.TANGGALKUNJUNGAN',
       'pendaftaran.KELUHAN',
-      'riwayat_pengobatan.DIAGNOSA',
-      'riwayat_pengobatan.OBAT',
+      'rawat_jalan.DIAGNOSA',
+      'rawat_jalan.OBAT',
       'pasien.NAMALENGKAP as NAMAPASIEN',
       'master_tenaga_medis.NAMALENGKAP as NAMADOKTER'
     );
 
 export const getByIdKomisi = (id) =>
   db('komisi_dokter')
-    .join('riwayat_pengobatan', 'komisi_dokter.IDPENGOBATAN', 'riwayat_pengobatan.IDPENGOBATAN')
-    .join('pendaftaran', 'riwayat_pengobatan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
-    .join('dokter', 'riwayat_pengobatan.IDDOKTER', 'dokter.IDDOKTER')
+    .join('rawat_jalan', 'komisi_dokter.IDRAWATJALAN', 'rawat_jalan.IDRAWATJALAN')
+    .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+    .join('dokter', 'rawat_jalan.IDDOKTER', 'dokter.IDDOKTER')
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .join('master_tenaga_medis', 'dokter.IDTENAGAMEDIS', 'master_tenaga_medis.IDTENAGAMEDIS')
     .select(
@@ -30,8 +30,8 @@ export const getByIdKomisi = (id) =>
       'pendaftaran.NIK',
       'pendaftaran.TANGGALKUNJUNGAN',
       'pendaftaran.KELUHAN',
-      'riwayat_pengobatan.DIAGNOSA',
-      'riwayat_pengobatan.OBAT',
+      'rawat_jalan.DIAGNOSA',
+      'rawat_jalan.OBAT',
       'pasien.NAMALENGKAP as NAMAPASIEN',
       'master_tenaga_medis.NAMALENGKAP as NAMADOKTER'
     )

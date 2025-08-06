@@ -29,7 +29,7 @@ const TabelPengobatan = ({ data, loading, onEdit, onDelete, onUploadFoto }) => {
   };
 
   const fotoBodyTemplate = (rowData) => {
-    const src = `${URL_API}/uploads/riwayat_pengobatan/${rowData.FOTOPROFIL}`;
+    const src = `${URL_API}/uploads/rawat_jalan/${rowData.FOTOPROFIL}`;
     return rowData.FOTOPROFIL ? (
       <img
         src={src}

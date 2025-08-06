@@ -25,14 +25,14 @@ export async function getByIdKomisi(req, res) {
 export async function createKomisi(req, res) {
   try {
     const {
-      IDPENGOBATAN,
+      IDRAWATJALAN,
       NILAIKOMISI,
       STATUS,
       KETERANGAN
     } = req.body;
 
     if (
-      !IDPENGOBATAN ||
+      !IDRAWATJALAN ||
       !NILAIKOMISI ||
       !STATUS ||
       !KETERANGAN
@@ -41,7 +41,7 @@ export async function createKomisi(req, res) {
     }
 
     await KomisiModel.createKomisi({
-      IDPENGOBATAN,
+      IDRAWATJALAN,
       NILAIKOMISI,
       STATUS,
       KETERANGAN,
@@ -58,14 +58,14 @@ export async function updateKomisi(req, res) {
   try {
     const id = req.params.id;
     const {
-      IDPENGOBATAN,
+      IDRAWATJALAN,
       NILAIKOMISI,
       STATUS,
       KETERANGAN,
     } = req.body;
 
     const updated = await KomisiModel.updateKomisi(id, {
-      IDPENGOBATAN,
+      IDRAWATJALAN,
       NILAIKOMISI,
       STATUS,
       KETERANGAN,

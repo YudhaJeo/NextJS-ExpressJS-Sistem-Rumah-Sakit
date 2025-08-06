@@ -1,8 +1,8 @@
 export const up = function (knex) {
   return knex.schema.createTable('komisi_dokter', (table) => {
     table.increments('IDKOMISI').primary();
-    table.integer('IDPENGOBATAN').unsigned().notNullable()
-      .references('IDPENGOBATAN').inTable('riwayat_pengobatan').onDelete('CASCADE');
+    table.integer('IDRAWATJALAN').unsigned().notNullable()
+      .references('IDRAWATJALAN').inTable('rawat_jalan').onDelete('CASCADE');
     table.decimal('NILAIKOMISI', 10, 2).notNullable();
     table.enu('STATUS', ['Belum Dibayar', 'Sudah Dibayar']).defaultTo('Belum Dibayar');
     table.text('KETERANGAN').notNullable();
