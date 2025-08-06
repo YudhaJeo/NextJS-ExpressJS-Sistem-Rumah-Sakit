@@ -106,6 +106,17 @@ const FormDialogPasien = ({
           />
           {errors.NOHP && <small className="text-red-500">{errors.NOHP}</small>}
         </div>
+        
+        <div>
+          <label>Usia</label>
+          <InputText
+            className={inputClass('USIA')}
+            value={form.USIA}
+            maxLength={3}
+            onChange={(e) => setForm({ ...form, USIA: e.target.value })}
+          />
+          {errors.USIA && <small className="text-red-500">{errors.USIA}</small>}
+        </div>
 
         <div>
           <label>Agama</label>
