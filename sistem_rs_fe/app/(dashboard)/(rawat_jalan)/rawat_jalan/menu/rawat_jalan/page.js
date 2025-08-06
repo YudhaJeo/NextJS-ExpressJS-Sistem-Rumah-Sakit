@@ -213,7 +213,7 @@ const rawatJalanPage = () => {
       <Toast ref={toastUpload} />
       <ConfirmDialog />
 
-      <h3 className="text-xl font-semibold mb-3">Monitoring Riwayat Pengobatan</h3>
+      <h3 className="text-xl font-semibold mb-3">Monitoring Rawat Inap</h3>
 
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
         <FilterTanggal

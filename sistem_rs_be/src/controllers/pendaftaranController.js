@@ -33,7 +33,7 @@ export async function createPendaftaran(req, res) {
         OBAT: '',
       }, trx);
     } else {
-      console.warn('⚠️ Tidak ada dokter di poli ini. Riwayat pengobatan tidak dibuat otomatis.');
+      console.warn('⚠️ Tidak ada dokter di poli ini. Rawat Inap tidak dibuat otomatis.');
     }
 
     const pasien = await trx('pasien').where('NIK', NIK).first();
@@ -54,7 +54,7 @@ export async function createPendaftaran(req, res) {
     });
 
     await trx.commit();
-    res.json({ message: 'Pendaftaran, riwayat pengobatan, dan invoice berhasil dibuat.' });
+    res.json({ message: 'Pendaftaran, Rawat Inap, dan invoice berhasil dibuat.' });
   } catch (err) {
     await trx.rollback();
     console.error('❌ Gagal membuat data:', err);

@@ -61,7 +61,7 @@ const FormDialogPengobatan = ({
 
   return (
     <Dialog
-      header="Edit Riwayat Pengobatan"
+      header="Edit Rawat Inap"
       visible={visible}
       onHide={handleHide}
       style={{ width: '40vw' }}

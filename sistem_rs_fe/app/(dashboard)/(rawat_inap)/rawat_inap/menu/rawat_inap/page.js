@@ -68,7 +68,7 @@ const Page = () => {
       }));
       setPengobatanOptions(options);
     } catch (err) {
-      console.error('Gagal ambil data riwayat pengobatan:', err);
+      console.error('Gagal ambil data Rawat Inap:', err);
     }
   };
 
@@ -92,7 +92,7 @@ const Page = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!form.IDRAWATJALAN) newErrors.IDRAWATJALAN = 'Riwayat pengobatan harus dipilih';
+    if (!form.IDRAWATJALAN) newErrors.IDRAWATJALAN = 'Rawat Inap harus dipilih';
     if (!form.IDBED) newErrors.IDBED = 'Bed harus dipilih';
     if (!form.TANGGALMASUK) newErrors.TANGGALMASUK = 'Tanggal masuk wajib';
     setErrors(newErrors);

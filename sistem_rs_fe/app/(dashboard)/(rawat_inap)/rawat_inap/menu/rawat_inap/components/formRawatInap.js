@@ -34,13 +34,13 @@ const FormRawatInap = ({
         }}
       >
         <div className="mt-2">
-          <label>Riwayat Pengobatan</label>
+          <label>Rawat Inap</label>
           <Dropdown
             className={inputClass('IDRAWATJALAN')}
             value={form.IDRAWATJALAN}
             options={pengobatanOptions}
             onChange={(e) => setForm({ ...form, IDRAWATJALAN: e.value })}
-            placeholder="Pilih Riwayat Pengobatan"
+            placeholder="Pilih Rawat Inap"
             filter
             showClear
             optionLabel="label"
