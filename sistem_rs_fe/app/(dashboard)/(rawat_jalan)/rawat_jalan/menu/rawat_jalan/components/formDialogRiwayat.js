@@ -20,7 +20,7 @@ const statusRawatOptions = [
   { label: 'Rawat Inap', value: 'Rawat Inap' },
 ];
 
-const FormDialogPengobatan = ({
+const FormDialogRawatJalan = ({
   visible,
   onHide,
   onSubmit,
@@ -152,4 +152,4 @@ const FormDialogPengobatan = ({
   );
 };
 
-export default FormDialogPengobatan;
+export default FormDialogRawatJalan;
