@@ -38,7 +38,7 @@ const TabelRiwayatInap = ({ data, loading }) => {
       const res = await axios.get(`${API_URL}/riwayat_inap/${rowData.IDRIWAYATINAP}`)
       const detail = res.data.data
 
-      console.log("[DEBUG] Detail:", detail)
+      //console.log("[DEBUG] Detail:", detail)
 
       setSelectedRow(detail)
       setAdjustDialog(true)
