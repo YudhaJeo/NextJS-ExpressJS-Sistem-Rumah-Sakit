@@ -3,13 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Dialog } from "primereact/dialog";
-import { Button } from "primereact/button";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import ToastNotifier from "@/app/components/toastNotifier";
 import FilterTanggal from "@/app/components/filterTanggal";
-import FormDialogPengobatan from "./components/formDialogRiwayat";
-import TabelPengobatan from "./components/tabelRiwayat";
+import FormDialogRawatJalan from "./components/formDialogRiwayat";
+import TabelRawatJalan from "./components/tabelRiwayat";
 import { Toast } from "primereact/toast";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -24,7 +22,7 @@ const initialForm = () => ({
   OBAT: "",
 });
 
-const RiwayatPengobatanPage = () => {
+const RawatJalanPage = () => {
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -36,7 +34,6 @@ const RiwayatPengobatanPage = () => {
   const [pendaftaranOptions, setPendaftaranOptions] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [visibleUpload, setVisibleUpload] = useState(false);
-  const [file, setFile] = useState(null);
   const [unitKerja, setUnitKerja] = useState(null);
 
   const toastRef = useRef(null);
@@ -163,7 +160,7 @@ const RiwayatPengobatanPage = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Hapus data pengobatan untuk ${row.IDRAWATJALAN}?`,
+      message: `Hapus data RawatJalan untuk ${row.IDRAWATJALAN}?`,
       header: "Konfirmasi Hapus",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Ya",
@@ -182,38 +179,13 @@ const RiwayatPengobatanPage = () => {
     });
   };
 
-  const handleUploadFoto = (row) => {
-    setSelectedRow(row);
-    setVisibleUpload(true);
-  };
-
-  const handleSubmitUpload = async () => {
-    if (!file) {
-      toastUpload.current.show({ severity: "warn", summary: "Warning", detail: "Pilih file terlebih dahulu!" });
-      return;
-    }
-    const formData = new FormData();
-    formData.append("foto", file);
-    try {
-      await axios.put(`${API_URL}/rawat_jalan/${selectedRow.IDRAWATJALAN}/upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      toastUpload.current.show({ severity: "success", summary: "Sukses", detail: "Foto berhasil diupload!" });
-      setVisibleUpload(false);
-      setFile(null);
-      fetchData(unitKerja);
-    } catch (error) {
-      toastUpload.current.show({ severity: "error", summary: "Error", detail: "Gagal upload foto!" });
-    }
-  };
-
   return (
     <div className="card p-4">
       <ToastNotifier ref={toastRef} />
       <Toast ref={toastUpload} />
       <ConfirmDialog />
 
-      <h3 className="text-xl font-semibold mb-3">Monitoring Riwayat Pengobatan</h3>
+      <h3 className="text-xl font-semibold mb-3">Monitoring Rawat Jalan</h3>
 
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
         <FilterTanggal
@@ -226,15 +198,14 @@ const RiwayatPengobatanPage = () => {
         />
       </div>
 
-      <TabelPengobatan
+      <TabelRawatJalan
         data={data}
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        onUploadFoto={handleUploadFoto}
       />
 
-      <FormDialogPengobatan
+      <FormDialogRawatJalan
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);
@@ -246,16 +217,8 @@ const RiwayatPengobatanPage = () => {
         dokterOptions={dokterOptions}
         pendaftaranOptions={pendaftaranOptions}
       />
-
-      <Dialog header="Upload Foto" visible={visibleUpload} style={{ width: "30vw" }} onHide={() => setVisibleUpload(false)}>
-        <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
-        <div className="flex justify-end gap-2 mt-3">
-          <Button label="Batal" icon="pi pi-times" className="p-button-text" onClick={() => setVisibleUpload(false)} />
-          <Button label="Upload" icon="pi pi-check" className="p-button-success" onClick={handleSubmitUpload} />
-        </div>
-      </Dialog>
     </div>
   );
 };
 
-export default RiwayatPengobatanPage;
+export default RawatJalanPage;

@@ -20,7 +20,7 @@ const statusRawatOptions = [
   { label: 'Rawat Inap', value: 'Rawat Inap' },
 ];
 
-const FormDialogPengobatan = ({
+const FormDialogRawatJalan = ({
   visible,
   onHide,
   onSubmit,
@@ -61,7 +61,7 @@ const FormDialogPengobatan = ({
 
   return (
     <Dialog
-      header="Edit Riwayat Pengobatan"
+      header="Edit Rawat Inap"
       visible={visible}
       onHide={handleHide}
       style={{ width: '40vw' }}
@@ -152,4 +152,4 @@ const FormDialogPengobatan = ({
   );
 };
 
-export default FormDialogPengobatan;
+export default FormDialogRawatJalan;

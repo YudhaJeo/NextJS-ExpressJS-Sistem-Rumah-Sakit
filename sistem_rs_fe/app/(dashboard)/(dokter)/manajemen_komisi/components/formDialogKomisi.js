@@ -49,7 +49,7 @@ const FormDialogKomisi = ({
         }}
       >
         <div>
-          <label>Riwayat Pengobatan</label>
+          <label>Rawat Inap</label>
           <Dropdown
             className="w-full mt-1"
             options={riwayatOptions}
