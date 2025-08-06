@@ -42,7 +42,6 @@ const FormDialogRawatJalan = ({
     if (!form.STATUSKUNJUNGAN) newErrors.STATUSKUNJUNGAN = 'Status kunjungan wajib diisi';
     if (!form.STATUSRAWAT) newErrors.STATUSRAWAT = 'Status rawat wajib diisi';
     if (!form.DIAGNOSA || form.DIAGNOSA.trim() === '') newErrors.DIAGNOSA = 'Diagnosa wajib diisi';
-    if (!form.OBAT || form.OBAT.trim() === '') newErrors.OBAT = 'Obat wajib diisi';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -126,17 +125,6 @@ const FormDialogRawatJalan = ({
             placeholder="Masukkan diagnosa"
           />
           {errors.DIAGNOSA && <small className="p-error">{errors.DIAGNOSA}</small>}
-        </div>
-
-        <div>
-          <label className="font-medium">Obat</label>
-          <InputText
-            className={classNames('w-full mt-2', { 'p-invalid': errors.OBAT })}
-            value={form.OBAT || ''}
-            onChange={(e) => setForm({ ...form, OBAT: e.target.value })}
-            placeholder="Masukkan nama obat"
-          />
-          {errors.OBAT && <small className="p-error">{errors.OBAT}</small>}
         </div>
 
         <div className="text-right pt-4">

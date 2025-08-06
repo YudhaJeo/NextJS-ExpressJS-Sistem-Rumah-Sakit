@@ -12,7 +12,6 @@ export const up = function (knex) {
     table.enu('STATUSKUNJUNGAN', ['Diperiksa', 'Batal', 'Selesai', 'Dalam Antrian']).defaultTo('Dalam Antrian');
     table.enu('STATUSRAWAT', ['Rawat Jalan', 'Rawat Inap']).defaultTo('Rawat Jalan');
     table.string('DIAGNOSA', 255).nullable();
-    table.string('OBAT', 255).nullable();
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now()).notNullable();
     table.timestamp('UPDATED_AT').defaultTo(knex.fn.now()).notNullable();
   });

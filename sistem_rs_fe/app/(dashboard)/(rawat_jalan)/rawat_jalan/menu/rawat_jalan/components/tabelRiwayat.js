@@ -69,7 +69,6 @@ const TabelRawatJalan = ({ data, loading, onEdit, onDelete }) => {
         <Column field="NAMADOKTER" header="Dokter" />
         <Column field="STATUSRAWAT" header="Status Rawat" />
         <Column field="DIAGNOSA" header="Diagnosa" />
-        <Column field="OBAT" header="Obat" />
         <Column header="Aksi" body={actionBody} style={{ width: "220px" }} />
       </DataTable>
     </>

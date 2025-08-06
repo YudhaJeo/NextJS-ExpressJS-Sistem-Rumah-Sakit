@@ -18,14 +18,13 @@ export async function getAllRawatJalan(req, res) {
 
 export async function createRawatJalan(req, res) {
   try {
-    const { IDPENDAFTARAN, IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
+    const { IDPENDAFTARAN, IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA} = req.body;
     await RawatJalanModel.createRawatJalan({
       IDPENDAFTARAN,
       IDDOKTER,
       STATUSKUNJUNGAN,
       STATUSRAWAT,
-      DIAGNOSA,
-      OBAT
+      DIAGNOSA
     });
     res.json({ message: 'RawatJalan berhasil ditambahkan' });
   } catch (err) {
@@ -37,14 +36,13 @@ export async function createRawatJalan(req, res) {
 export async function updateRawatJalan(req, res) {
   try {
     const id = req.params.id;
-    const { IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, OBAT } = req.body;
+    const { IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA} = req.body;
 
     await RawatJalanModel.updateRawatJalan(id, {
       IDDOKTER,
       STATUSKUNJUNGAN,
       STATUSRAWAT,
-      DIAGNOSA,
-      OBAT
+      DIAGNOSA
     });
 
     res.json({ message: 'RawatJalan dan status pendaftaran berhasil diperbarui' });

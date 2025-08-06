@@ -39,7 +39,6 @@ export const getAllRawatJalan = () => {
       'r.STATUSKUNJUNGAN',
       'r.STATUSRAWAT',
       'r.DIAGNOSA',
-      'r.OBAT',
       'tm.NAMALENGKAP as NAMADOKTER'
     )
     .groupBy(
@@ -53,7 +52,6 @@ export const getAllRawatJalan = () => {
       'r.STATUSKUNJUNGAN',
       'r.STATUSRAWAT',
       'r.DIAGNOSA',
-      'r.OBAT',
       'tm.NAMALENGKAP'
     );
 };
@@ -64,8 +62,7 @@ export const createRawatJalan = async ({
   IDDOKTER,
   STATUSKUNJUNGAN,
   STATUSRAWAT,
-  DIAGNOSA,
-  OBAT
+  DIAGNOSA
 }, trx = db) => {
   const pendaftaran = await trx('pendaftaran')
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
@@ -87,8 +84,7 @@ export const createRawatJalan = async ({
     IDDOKTER: dokter.IDDOKTER,
     STATUSKUNJUNGAN: STATUSKUNJUNGAN || pendaftaran.STATUSKUNJUNGAN,
     STATUSRAWAT,
-    DIAGNOSA,
-    OBAT
+    DIAGNOSA
   };
 
   return trx('rawat_jalan').insert(data);
