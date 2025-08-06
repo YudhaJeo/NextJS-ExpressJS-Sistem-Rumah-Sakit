@@ -19,7 +19,6 @@ const initialForm = () => ({
   STATUSKUNJUNGAN: "Dalam Antrian",
   STATUSRAWAT: "Rawat Jalan",
   DIAGNOSA: "",
-  OBAT: "",
 });
 
 const RawatJalanPage = () => {
@@ -32,8 +31,6 @@ const RawatJalanPage = () => {
   const [endDate, setEndDate] = useState(null);
   const [dokterOptions, setDokterOptions] = useState([]);
   const [pendaftaranOptions, setPendaftaranOptions] = useState([]);
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [visibleUpload, setVisibleUpload] = useState(false);
   const [unitKerja, setUnitKerja] = useState(null);
 
   const toastRef = useRef(null);
@@ -128,7 +125,6 @@ const RawatJalanPage = () => {
       STATUSKUNJUNGAN: form.STATUSKUNJUNGAN,
       STATUSRAWAT: form.STATUSRAWAT,
       DIAGNOSA: form.DIAGNOSA,
-      OBAT: form.OBAT,
     };
 
     try {
@@ -153,7 +149,6 @@ const RawatJalanPage = () => {
       STATUSKUNJUNGAN: row.STATUSKUNJUNGAN || "Dalam Antrian",
       STATUSRAWAT: row.STATUSRAWAT || "Rawat Jalan",
       DIAGNOSA: row.DIAGNOSA || "",
-      OBAT: row.OBAT || "",
     });
     setDialogVisible(true);
   };

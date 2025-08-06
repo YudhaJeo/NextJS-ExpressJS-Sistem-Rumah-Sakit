@@ -37,7 +37,7 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
         <div className="mt-2">
           <label>Satuan</label>
           <Dropdown
-            className={inputClass('SATUAN')}
+            className={inputClass('JENISOBAT')}
             options={[
               { label: 'Tablet', value: 'TABLET' },
               { label: 'Kapsul', value: 'KAPSUL' },
@@ -47,11 +47,11 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
               { label: 'Tube', value: 'TUBE' },
               { label: 'Biji', value: 'BIJI' },
             ]}
-            value={form.SATUAN}
-            onChange={(e) => setForm({ ...form, SATUAN: e.value })}
+            value={form.JENISOBAT}
+            onChange={(e) => setForm({ ...form, JENISOBAT: e.value })}
             placeholder="Pilih"
           />
-          {errors.SATUAN && <small className="text-red-500">{errors.SATUAN}</small>}
+          {errors.JENISOBAT && <small className="text-red-500">{errors.JENISOBAT}</small>}
         </div>
 
         <div className="mt-2">

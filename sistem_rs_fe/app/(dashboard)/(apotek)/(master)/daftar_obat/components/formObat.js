@@ -74,7 +74,7 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors, supplierOp
             onChange={(e) => setForm({ ...form, JENISOBAT: e.value })}
             placeholder="Pilih Jenis Obat"
           />
-          {errors.SATUAN && <small className="text-red-500">{errors.SATUAN}</small>}
+          {errors.JENISOBAT && <small className="text-red-500">{errors.JENISOBAT}</small>}
         </div>
 
         <div className="mt-2">

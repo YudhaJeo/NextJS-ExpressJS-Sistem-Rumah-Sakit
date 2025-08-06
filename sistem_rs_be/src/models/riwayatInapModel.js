@@ -36,7 +36,7 @@ export async function getRiwayatInapById(id) {
 export async function getRiwayatObatByIdRiwayat(id) {
   return await db('riwayat_obat_inap')
     .join('obat', 'riwayat_obat_inap.IDOBAT', 'obat.IDOBAT')
-    .select('obat.NAMAOBAT', 'obat.SATUAN', 'riwayat_obat_inap.JUMLAH', 'riwayat_obat_inap.HARGA', 'riwayat_obat_inap.TOTAL')
+    .select('obat.NAMAOBAT', 'obat.JENISOBAT', 'riwayat_obat_inap.JUMLAH', 'riwayat_obat_inap.HARGA', 'riwayat_obat_inap.TOTAL')
     .where('riwayat_obat_inap.IDRIWAYATINAP', id);
 }
 

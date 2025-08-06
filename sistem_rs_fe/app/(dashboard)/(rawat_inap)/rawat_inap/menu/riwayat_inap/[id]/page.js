@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Axios } from '@/utils/axios';
 
 import { Card } from 'primereact/card';
 import { DataTable } from 'primereact/datatable';
@@ -12,6 +11,8 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Message } from 'primereact/message';
 import { Divider } from 'primereact/divider';
 import { Panel } from 'primereact/panel';
+import axios from 'axios';
+
 
 import ToastNotifier from '@/app/components/toastNotifier';
 
@@ -49,7 +50,7 @@ export default function DetailRiwayatInapPage() {
         servicesData.push({
           id: index + 2,
           layanan: obat.NAMAOBAT,
-          satuan: obat.SATUAN,
+          satuan: obat.JENISOBAT,
           qty: obat.JUMLAH,
           jenis: 'Obat',
           hargaSatuan: obat.HARGA,
