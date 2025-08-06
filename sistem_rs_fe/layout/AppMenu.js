@@ -191,6 +191,7 @@ const AppMenu = () => {
               { label: "First Expired First Out", icon: "pi pi-fw pi-chart-line", to: "/FEFO" },
               { label: "Order Pengambilan Obat", icon: "pi pi-fw pi-history", to: "/order_pengambilan_obat" },
               { label: "Penjualan/POS Kasir", icon: "pi pi-fw pi-shopping-cart", to: "/penjualan" },
+              { label: "Pembelian Obat", icon: "pi pi-fw pi-dollar", to: "/pembelian" },
             ],
           },
           {
