@@ -42,6 +42,7 @@ const FormObatJalan = ({
             filter
             showClear
             optionLabel="label"
+            disabled={!!form.IDOBATJALAN}
           />
           {errors.IDRAWATJALAN && <small className="text-red-500">{errors.IDRAWATJALAN}</small>}
         </div>

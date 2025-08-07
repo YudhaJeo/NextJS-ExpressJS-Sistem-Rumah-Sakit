@@ -42,6 +42,7 @@ const FormObatInap = ({
             filter
             showClear
             optionLabel="label"
+            disabled={!!form.IDOBATINAP}
           />
           {errors.IDRAWATINAP && <small className="text-red-500">{errors.IDRAWATINAP}</small>}
         </div>

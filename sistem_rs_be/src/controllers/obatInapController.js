@@ -36,21 +36,36 @@ export async function insertObatInap(req, res) {
     }
   }
   
-
   export async function updateObatInap(req, res) {
     try {
       const id = req.params.id;
-      const { JUMLAH } = req.body;
+      const { IDOBAT, JUMLAH } = req.body;
   
       const existing = await ObatInap.getById(id);
       if (!existing) return res.status(404).json({ error: 'Data tidak ditemukan' });
   
-      const HARGA = existing.HARGA;
+      let obat = null;
+      let HARGA = existing.HARGA;
+      let idObatFinal = existing.IDOBAT;
+  
+      if (IDOBAT && IDOBAT !== existing.IDOBAT) {
+        obat = await Obat.getById(IDOBAT);
+        if (!obat) return res.status(404).json({ error: 'Obat tidak ditemukan' });
+  
+        HARGA = obat.HARGAJUAL;
+        idObatFinal = IDOBAT;
+      }
+  
       const TOTAL = HARGA * JUMLAH;
   
-      const data = { JUMLAH, TOTAL };
+      const data = {
+        IDOBAT: idObatFinal,
+        JUMLAH,
+        HARGA,
+        TOTAL,
+      };
   
-      await ObatInap.update(id, data); 
+      await ObatInap.update(id, data);
   
       res.json({ message: 'Data obat inap berhasil diperbarui' });
     } catch (err) {

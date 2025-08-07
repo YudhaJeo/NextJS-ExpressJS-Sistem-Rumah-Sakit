@@ -42,6 +42,7 @@ const FormTindakanJalan = ({
             filter
             showClear
             optionLabel="label"
+            disabled={!!form.IDTINDAKANJALAN}
           />
           {errors.IDRAWATJALAN && <small className="text-red-500">{errors.IDRAWATJALAN}</small>}
         </div>

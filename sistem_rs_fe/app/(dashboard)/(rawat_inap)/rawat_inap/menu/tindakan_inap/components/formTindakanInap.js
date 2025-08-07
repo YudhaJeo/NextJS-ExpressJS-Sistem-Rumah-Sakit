@@ -42,20 +42,27 @@ const FormTindakanInap = ({
             filter
             showClear
             optionLabel="label"
+            disabled={!!form.IDTINDAKANINAP}
           />
           {errors.IDRAWATINAP && <small className="text-red-500">{errors.IDRAWATINAP}</small>}
         </div>
 
         <div className='mt-2'>
-          <label className="">Pilih tindakan untuk pasien</label>
+          <label className="">Pilih Tindakan</label>
           <Dropdown
             className={inputClass('IDTINDAKAN')}
             value={form.IDTINDAKAN}
             options={tindakanOptions}
             onChange={(e) => {
+              const selected = tindakanOptions.find((p) => p.value === e.value);
+              const harga = selected?.HARGA || 0;
+              const jumlah = form.JUMLAH || 0;
+
               setForm({
                 ...form,
                 IDTINDAKAN: e.value,
+                HARGA: harga,
+                TOTAL: harga * jumlah,
               });
             }}
             placeholder="Pilih tindakan yang diberikan ke pasien"
@@ -68,6 +75,18 @@ const FormTindakanInap = ({
           )}
         </div>
 
+        <div className='mt-2'>
+          <label>Harga</label>
+          <InputNumber
+            className="w-full mt-2"
+            value={form.HARGA || ''}
+            disabled
+            mode='currency'
+            currency='IDR'
+            locale='id-ID'
+          />
+        </div>
+
         <div className="">
           <label htmlFor="stok">Jumlah</label>
           <InputNumber
@@ -78,11 +97,22 @@ const FormTindakanInap = ({
             onValueChange={(e) => {
               setForm({ ...form, JUMLAH: e.value });
             }}
-
           />
           {errors.JUMLAH && (
             <small className="text-red-500">{errors.JUMLAH}</small>
           )}
+        </div>
+
+        <div className='mt-2'>
+          <label>Total</label>
+          <InputNumber
+            className="w-full mt-2"
+            value={form.TOTAL || ''}
+            disabled
+            mode='currency'
+            currency='IDR'
+            locale='id-ID'
+          />
         </div>
 
         <div className="text-right pt-3">

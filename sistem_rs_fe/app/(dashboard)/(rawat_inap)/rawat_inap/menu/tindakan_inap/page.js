@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import TabelTindakanInap from './components/tabelTindakanInap';
 import FormTindakanInap from './components/formTindakanInap';
@@ -14,7 +12,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
   const toastRef = useRef(null);
-  const router = useRouter();
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,6 +19,7 @@ const Page = () => {
   const [errors, setErrors] = useState({});
   const [pasienOptions, setPasienOptions] = useState([]);
   const [tindakanOptions, setTindakanOptions] = useState([]);
+  const [originalData, setOriginalData] = useState([]);
 
   const defaultForm = {
     IDTINDAKANINAP: '',

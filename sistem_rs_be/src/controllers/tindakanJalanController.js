@@ -39,15 +39,31 @@ export async function insertTindakanJalan(req, res) {
 export async function updateTindakanJalan(req, res) {
   try {
     const id = req.params.id;
-    const { JUMLAH } = req.body;
+    const { IDTINDAKAN, JUMLAH } = req.body;
 
     const existing = await TindakanJalan.getById(id);
     if (!existing) return res.status(404).json({ error: 'Data tidak ditemukan' });
 
-    const HARGA = existing.HARGA;
+    let tindakan = null;
+    let HARGA = existing.HARGA;
+    let idTindakanFinal = existing.IDTINDAKAN;
+
+    if (IDTINDAKAN && IDTINDAKAN !== existing.IDTINDAKAN) {
+      tindakan = await Tindakan.getById(IDTINDAKAN);
+      if (!tindakan) return res.status(404).json({ error: 'Tindakan tidak ditemukan' });
+
+      HARGA = tindakan.HARGA;
+      idTindakanFinal = IDTINDAKAN;
+    }
+
     const TOTAL = HARGA * JUMLAH;
 
-    const data = { JUMLAH, TOTAL };
+    const data = {
+      IDTINDAKAN: idTindakanFinal,
+      JUMLAH,
+      HARGA,
+      TOTAL,
+    };
 
     await TindakanJalan.update(id, data);
 
