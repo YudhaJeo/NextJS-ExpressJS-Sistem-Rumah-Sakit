@@ -18,7 +18,7 @@ export async function insertObatInap(req, res) {
       const obat = await Obat.getById(IDOBAT);
       if (!obat) return res.status(404).json({ error: 'Obat tidak ditemukan' });
   
-      if (HARGA !== obat.HARGA) {
+      if (HARGA !== obat.HARGAJUAL) {
         return res.status(400).json({ error: 'Harga satuan tidak sesuai dengan data obat' });
       }
   

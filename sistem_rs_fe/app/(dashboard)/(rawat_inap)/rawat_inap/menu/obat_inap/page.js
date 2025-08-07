@@ -72,7 +72,7 @@ const Page = () => {
       const options = res.data.data.map((item) => ({
         label: item.NAMAOBAT,
         value: item.IDOBAT,
-        HARGA: item.HARGA,
+        HARGA: item.HARGAJUAL,
       }));
       setObatOptions(options);
     } catch (err) {
