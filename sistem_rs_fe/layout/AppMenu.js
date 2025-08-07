@@ -140,7 +140,7 @@ const AppMenu = () => {
             items: [
               { label: "Rawat Jalan", icon: "pi pi-fw pi-users", to: "/rawat_jalan/menu/rawat_jalan" },
               { label: "Obat Rawat Jalan", icon: "pi pi-fw pi-chart-pie", to: "/rawat_jalan/menu/obat_jalan" },
-              // { label: "Tindakan Rawat Jalan", icon: "pi pi-fw pi-chart-scatter", to: "/rawat_jalan/menu/tindakan_jalan" },
+              { label: "Tindakan Rawat Jalan", icon: "pi pi-fw pi-chart-scatter", to: "/rawat_jalan/menu/tindakan_jalan" },
               // { label: "Riwayat Rawat Jalan", icon: "pi pi-fw pi-users", to: "/rawat_jalan/menu/riwayat_rawat_jalan" },
             ],
           },

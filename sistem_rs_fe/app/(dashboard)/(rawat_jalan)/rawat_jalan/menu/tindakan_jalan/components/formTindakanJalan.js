@@ -5,7 +5,7 @@ import { Dialog } from 'primereact/dialog';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
 
-const FormTindakanInap = ({
+const FormTindakanJalan = ({
   visible,
   onHide,
   onSubmit,
@@ -19,7 +19,7 @@ const FormTindakanInap = ({
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
   return (
     <Dialog
-      header={form.IDTINDAKANINAP ? 'Edit Data Tindakan pada Pasien' : 'Tambah Tindakan pada Pasien'}
+      header={form.IDTINDAKANJALAN ? 'Edit Data Tindakan pada Pasien' : 'Tambah Tindakan pada Pasien'}
       visible={visible}
       onHide={onHide}
       style={{ width: '30vw' }}
@@ -34,17 +34,17 @@ const FormTindakanInap = ({
         <div className="mt-2">
           <label>Pasien</label>
           <Dropdown
-            className={inputClass('IDRAWATINAP')}
-            value={form.IDRAWATINAP}
+            className={inputClass('IDRAWATJALAN')}
+            value={form.IDRAWATJALAN}
             options={pasienOptions}
-            onChange={(e) => setForm({ ...form, IDRAWATINAP: e.target.value })}
+            onChange={(e) => setForm({ ...form, IDRAWATJALAN: e.target.value })}
             placeholder="Pilih pasien yang sedang dirawat"
             filter
             showClear
             optionLabel="label"
-            disabled={!!form.IDTINDAKANINAP}
+            disabled={!!form.IDTINDAKANJALAN}
           />
-          {errors.IDRAWATINAP && <small className="text-red-500">{errors.IDRAWATINAP}</small>}
+          {errors.IDRAWATJALAN && <small className="text-red-500">{errors.IDRAWATJALAN}</small>}
         </div>
 
         <div className='mt-2'>
@@ -123,4 +123,4 @@ const FormTindakanInap = ({
   );
 };
 
-export default FormTindakanInap;
+export default FormTindakanJalan;

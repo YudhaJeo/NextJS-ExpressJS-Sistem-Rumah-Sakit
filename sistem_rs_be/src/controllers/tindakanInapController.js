@@ -38,16 +38,27 @@ export async function insertTindakanInap(req, res) {
 
 export async function updateTindakanInap(req, res) {
   try {
-    const id = req.params.id;
-    const { JUMLAH } = req.body;
+    const { id } = req.params;
+    const { IDTINDAKAN, JUMLAH } = req.body;
 
-    const existing = await TindakanInap.getById(id);
-    if (!existing) return res.status(404).json({ error: 'Data tidak ditemukan' });
+    if (!IDTINDAKAN || !JUMLAH || isNaN(JUMLAH)) {
+      return res.status(400).json({ error: 'IDTINDAKAN dan JUMLAH wajib diisi dan jumlah harus angka' });
+    }
 
-    const HARGA = existing.HARGA;
+    const tindakanBaru = await Tindakan.getById(IDTINDAKAN);
+    if (!tindakanBaru) {
+      return res.status(404).json({ error: 'Tindakan tidak ditemukan' });
+    }
+
+    const HARGA = tindakanBaru.HARGA;
     const TOTAL = HARGA * JUMLAH;
 
-    const data = { JUMLAH, TOTAL };
+    const data = {
+      IDTINDAKAN,
+      JUMLAH,
+      HARGA,
+      TOTAL,
+    };
 
     await TindakanInap.update(id, data);
 

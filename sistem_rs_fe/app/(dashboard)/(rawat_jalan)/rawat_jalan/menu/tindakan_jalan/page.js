@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import HeaderBar from '@/app/components/headerbar';
-import TabelTindakanInap from './components/tabelTindakanInap';
-import FormTindakanInap from './components/formTindakanInap';
+import TabelTindakanJalan from './components/tabelTindakanjalan';
+import FormTindakanJalan from './components/formTindakanJalan';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
@@ -22,8 +22,8 @@ const Page = () => {
   const [originalData, setOriginalData] = useState([]);
 
   const defaultForm = {
-    IDTINDAKANINAP: '',
-    IDRAWATINAP: '',
+    IDTINDAKANJALAN: '',
+    IDRAWATJALAN: '',
     IDTINDAKAN: '',
     JUMLAH: '1',
   };
@@ -38,11 +38,11 @@ const Page = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(`${API_URL}/tindakan_inap`);
+      const res = await axios.get(`${API_URL}/tindakan_jalan`);
       setData(res.data.data);
       setOriginalData(res.data.data);
     } catch (err) {
-      console.error('Gagal ambil data tindakan pasien rawat inap:', err);
+      console.error('Gagal ambil data tindakan pasien rawat jalan:', err);
     } finally {
       setLoading(false);
     }
@@ -50,26 +50,28 @@ const Page = () => {
 
   const fetchPasien = async () => {
     try {
-      const res = await axios.get(`${API_URL}/rawat_inap`);
+      const res = await axios.get(`${API_URL}/rawat_jalan`);
       const options = res.data.data
-        .filter((item) => item.STATUS === 'AKTIF')
+        .filter((item) => item.STATUSKUNJUNGAN !== 'Selesai')
         .map((pasien) => ({
           label: pasien.NAMALENGKAP,
-          value: pasien.IDRAWATINAP,
+          value: pasien.IDRAWATJALAN,
         }));
       setPasienOptions(options);
     } catch (err) {
-      console.error('Gagal ambil data pasien:', err);
+      console.error('Gagal ambil data rawat jalan:', err);
     }
   };
 
   const fetchTindakan = async () => {
     try {
       const res = await axios.get(`${API_URL}/tindakan_medis`);
-      const options = res.data.data.map((item) => ({
-        label: item.NAMATINDAKAN,
-        value: item.IDTINDAKAN,
-        HARGA: item.HARGA,
+      const options = res.data.data
+        .filter((item) => item.JENISRAWAT === 'JALAN')
+        .map((item) => ({
+          label: item.NAMATINDAKAN,
+          value: item.IDTINDAKAN,
+          HARGA: item.HARGA,
       }));
       setTindakanOptions(options);
     } catch (err) {
@@ -79,7 +81,7 @@ const Page = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!form.IDRAWATINAP) newErrors.IDRAWATINAP = 'Pasien harus dipilih';
+    if (!form.IDRAWATJALAN) newErrors.IDRAWATJALAN = 'Pasien harus dipilih';
     if (!form.IDTINDAKAN) newErrors.IDTINDAKAN = 'Tindakan harus dipilih';
     if (
       form.JUMLAH === null ||
@@ -103,10 +105,10 @@ const Page = () => {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    const isEdit = !!form.IDTINDAKANINAP;
+    const isEdit = !!form.IDTINDAKANJALAN;
     const url = isEdit
-      ? `${API_URL}/tindakan_inap/${form.IDTINDAKANINAP}`
-      : `${API_URL}/tindakan_inap`;
+      ? `${API_URL}/tindakan_jalan/${form.IDTINDAKANJALAN}`
+      : `${API_URL}/tindakan_jalan`;
 
     const selectedTindakan = tindakanOptions.find((o) => o.value === form.IDTINDAKAN);
     const harga = selectedTindakan?.HARGA || form.HARGA || 0;
@@ -114,7 +116,7 @@ const Page = () => {
     const total = harga * jumlah;
 
     const payload = {
-      IDRAWATINAP: form.IDRAWATINAP,
+      IDRAWATJALAN: form.IDRAWATJALAN,
       IDTINDAKAN: form.IDTINDAKAN,
       JUMLAH: jumlah,
       HARGA: harga,
@@ -146,8 +148,8 @@ const Page = () => {
     const harga = selectedTindakan?.HARGA || 0;
 
     setForm({
-      IDTINDAKANINAP: row.IDTINDAKANINAP,
-      IDRAWATINAP: row.IDRAWATINAP,
+      IDTINDAKANJALAN: row.IDTINDAKANJALAN,
+      IDRAWATJALAN: row.IDRAWATJALAN,
       IDTINDAKAN: row.IDTINDAKAN,
       JUMLAH: row.JUMLAH,
       HARGA: harga,
@@ -158,14 +160,14 @@ const Page = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Yakin hapus data rawat inap ini?`,
+      message: `Yakin hapus data rawat jalan ini?`,
       header: 'Konfirmasi Hapus',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Ya',
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/tindakan_inap/${row.IDTINDAKANINAP}`);
+          await axios.delete(`${API_URL}/tindakan_jalan/${row.IDTINDAKANJALAN}`);
           fetchData();
           toastRef.current?.showToast('00', 'Data berhasil dihapus');
         } catch (err) {
@@ -180,7 +182,7 @@ const Page = () => {
     <div className="card">
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
-      <h3 className="text-xl font-semibold mb-3">Manajemen Tindakan Inap</h3>
+      <h3 className="text-xl font-semibold mb-3">Manajemen Tindakan Pasien Rawat Jalan</h3>
 
       <HeaderBar
         title=""
@@ -199,14 +201,14 @@ const Page = () => {
         }}
       />
 
-      <TabelTindakanInap
+      <TabelTindakanJalan
         data={data}
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
 
-      <FormTindakanInap
+      <FormTindakanJalan
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);
