@@ -6,7 +6,25 @@ export const getAllPemesanan = () =>
     .select('p.*', 's.NAMASUPPLIER');
 
 export const getPemesananDetail = (id) =>
-  db('pemesanan_detail').where({ IDPEMESANAN: id });
+  db('pemesanan_detail as pd')
+    .leftJoin('obat as o', function () {
+      this.on('pd.IDBARANG', '=', 'o.IDOBAT')
+          .andOn('pd.JENISBARANG', '=', db.raw('?', ['OBAT']));
+    })
+    .leftJoin('master_alkes as a', function () {
+      this.on('pd.IDBARANG', '=', 'a.IDALKES')
+          .andOn('pd.JENISBARANG', '!=', db.raw('?', ['OBAT']));
+    })
+    .select(
+      'pd.*',
+      db.raw(`
+        CASE 
+          WHEN pd.JENISBARANG = 'OBAT' THEN o.NAMAOBAT
+          ELSE a.NAMAALKES
+        END as NAMABARANG
+      `)
+    )
+    .where('pd.IDPEMESANAN', id);
 
 export const createPemesanan = (data) =>
   db('pemesanan').insert(data);
@@ -29,12 +47,12 @@ export const updatePemesananStatus = async (id, status) => {
     for (const item of details) {
       if (item.JENISBARANG === 'OBAT') {
         await db('obat')
-          .where('IDOBAT', item.IDBARANG)
+          .where('IDOBAT', item.NAMABARANG)
           .increment('STOK', item.QTY)
           .update({ HARGABELI: item.HARGABELI });
       } else {
         await db('master_alkes')
-          .where('IDALKES', item.IDBARANG)
+          .where('IDALKES', item.NAMABARANG)
           .increment('STOK', item.QTY)
           .update({ HARGABELI: item.HARGABELI });
       }
