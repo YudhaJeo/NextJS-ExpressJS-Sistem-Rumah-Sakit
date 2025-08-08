@@ -86,6 +86,9 @@ export default function AdjustPrintMarginLaporan({
 
   const labelX = marginLeft;
   const valueX = marginLeft + 25;
+  const statusRawHeader = pemesanan.STATUS ?? '-';
+  const statusHeader = statusRawHeader === 'DITERIMA' ? 'MASUK' : statusRawHeader;
+
 
   // Informasi Penjualan/Pembelian
 doc.setFontSize(12);
@@ -97,8 +100,8 @@ doc.text('Nama Supplier', labelX, y);
 doc.text(`: ${pemesanan.NAMASUPPLIER ?? '-'}`, valueX - 2, y);
 y += 6;
 
-doc.text('Status', labelX, y); // <-- Tambah baris status
-doc.text(`: ${pemesanan.STATUS ?? '-'}`, valueX - 2, y);
+doc.text('Status', labelX, y);
+doc.text(`: ${statusHeader}`, valueX - 2, y);
 y += 6;
 
 doc.setFontSize(12);
