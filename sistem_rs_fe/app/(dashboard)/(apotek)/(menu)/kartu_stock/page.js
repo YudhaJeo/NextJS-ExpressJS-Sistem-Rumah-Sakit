@@ -84,8 +84,7 @@ const MonitoringPemesananPage = () => {
       setData(originalData);
     } else {
       const filtered = originalData.filter((item) =>
-        item.NAMASUPPLIER?.toLowerCase().includes(keyword.toLowerCase()) ||
-        item.IDPEMESANAN?.toLowerCase().includes(keyword.toLowerCase())
+        item.NAMASUPPLIER?.toLowerCase().includes(keyword.toLowerCase())
       );
       setData(filtered);
     }

@@ -87,71 +87,83 @@ export default function AdjustPrintMarginLaporan({
   const labelX = marginLeft;
   const valueX = marginLeft + 25;
 
-  doc.setFontSize(12);
-  doc.text('Informasi Penjualan/Pembelian', labelX, y);
-  y += 6;
+  // Informasi Penjualan/Pembelian
+doc.setFontSize(12);
+doc.text('Informasi Penjualan/Pembelian', labelX, y);
+y += 6;
 
-  doc.setFontSize(10);
-  doc.text('Nama Supplier', labelX, y);
-  doc.text(`: ${pemesanan.NAMASUPPLIER ?? '-'}`, valueX - 2, y);
-  y += 6;
+doc.setFontSize(10);
+doc.text('Nama Supplier', labelX, y);
+doc.text(`: ${pemesanan.NAMASUPPLIER ?? '-'}`, valueX - 2, y);
+y += 6;
 
-  doc.setFontSize(12);
-  doc.text('Tangal Pembelian', labelX, y);
-  y += 6;
+doc.text('Status', labelX, y); // <-- Tambah baris status
+doc.text(`: ${pemesanan.STATUS ?? '-'}`, valueX - 2, y);
+y += 6;
 
-  doc.setFontSize(10);
-  doc.text('Tanggal', labelX, y);
-  doc.text(`: ${formatTanggal(pemesanan.TGLPEMESANAN)}`, valueX - 2, y);
-  y += 6;
+doc.setFontSize(12);
+doc.text('Tanggal Pembelian', labelX, y);
+y += 6;
+
+doc.setFontSize(10);
+doc.text('Tanggal', labelX, y);
+doc.text(`: ${formatTanggal(pemesanan.TGLPEMESANAN)}`, valueX - 2, y);
+y += 6;
+
 
   // Build services array from details (one row per item)
-  const services = details.length
-    ? details.map((d, idx) => {
-        const harga = Number(d.HARGABELI ?? d.HARGA ?? 0);
-        const qty = Number(d.QTY ?? d.QTY_BARANG ?? 0);
-        const jenis = d.JENISBARANG ?? d.JENIS ?? '-';
-        const nama = d.NAMABARANG ?? d.KETERANGAN ?? `Item ${idx + 1}`;
-        const total = harga * qty;
+  // Build services array from details (one row per item)
+const services = details.length
+  ? details.map((d, idx) => {
+      const harga = Number(d.HARGABELI ?? d.HARGA ?? 0);
+      const qty = Number(d.QTY ?? d.QTY_BARANG ?? 0);
+      const jenis = d.JENISBARANG ?? d.JENIS ?? '-';
+      const nama = d.NAMABARANG ?? d.KETERANGAN ?? `Item ${idx + 1}`;
+      const total = harga * qty;
+      const statusRaw = pemesanan.STATUS ?? '-';
+      const status = statusRaw === 'DITERIMA' ? 'MASUK' : statusRaw;
 
-        return [
-          idx + 1,
-          `${nama} ${harga ? `(${formatRupiah(harga)})` : ''}`,
-          `${qty}`,
-          `${jenis}`,
-          formatRupiah(harga),
-          formatRupiah(total),
-        ];
-      })
-    : [
-        // fallback jika tidak ada details
-        [1, 'Biaya Pembelian', '(0)', '-', formatRupiah(0), formatRupiah(0)]
+      return [
+        idx + 1,
+        `${nama} ${harga ? `(${formatRupiah(harga)})` : ''}`,
+        `${qty}`,
+        `${jenis}`,
+        status, // kolom baru
+        formatRupiah(harga),
+        formatRupiah(total),
       ];
+    })
+  : [
+      [1, 'Biaya Pembelian', '(0)', '-', pemesanan.STATUS ?? '-', formatRupiah(0), formatRupiah(0)]
+    ];
 
-  autoTable(doc, {
-    startY: y,
-    head: [['#', 'Layanan', 'Qty', 'Jenis', 'Harga Satuan', 'Total']],
-    body: services,
-    styles: { fontSize: 9, lineColor: [200, 200, 200], lineWidth: 0.1 },
-    headStyles: {
-      fillColor: [245, 246, 250],
-      textColor: 20,
-      halign: 'center',
-      fontStyle: 'bold',
-    },
-    bodyStyles: {
-      fillColor: [255, 255, 255],
-      textColor: 20,
-    },
-    columnStyles: {
-      0: { halign: 'center', cellWidth: 8 },
-      2: { halign: 'center', cellWidth: 25 },
-      3: { halign: 'center', cellWidth: 30 },
-      4: { halign: 'right', cellWidth: 30 },
-      5: { halign: 'right', cellWidth: 30 },
-    },
-    margin: { left: marginLeft, right: marginRight },
-  });
+autoTable(doc, {
+  startY: y,
+  head: [['#', 'Layanan', 'Qty', 'Jenis', 'Status', 'Harga Satuan', 'Total']], // tambah kolom Status
+  body: services,
+  styles: { fontSize: 9, lineColor: [200, 200, 200], lineWidth: 0.1 },
+  headStyles: {
+    fillColor: [245, 246, 250],
+    textColor: 20,
+    halign: 'center',
+    fontStyle: 'bold',
+  },
+  bodyStyles: {
+    fillColor: [255, 255, 255],
+    textColor: 20,
+  },
+  columnStyles: {
+    0: { halign: 'center', cellWidth: 8 },   // #
+    1: { halign: 'left', cellWidth: 45 },    // Layanan
+    2: { halign: 'center', cellWidth: 20 },  // Qty
+    3: { halign: 'center', cellWidth: 20 },  // Jenis
+    4: { halign: 'center', cellWidth: 20 },  // Status
+    5: { halign: 'right', cellWidth: 30 },   // Harga Satuan
+    6: { halign: 'right', cellWidth: 30 },   // Total
+  },
+  margin: { left: marginLeft, right: marginRight },
+});
+
 
   // After table, ringkasan biaya (total)
   let y2 = doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : y + 60;
