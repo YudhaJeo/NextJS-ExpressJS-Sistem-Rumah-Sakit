@@ -106,3 +106,17 @@ export const getRawatById = async (id) => {
   return await db('rawat_jalan').where('IDRAWATJALAN', id).first();
 };
 
+
+export const getTotalObatInap = async (IDRAWATJALAN) => {
+  const result = await db('obat_jalan')
+    .where({ IDRAWATJALAN })
+    .sum('TOTAL as total');
+  return result[0];
+};
+
+export const getTotalTindakanInap = async (IDRAWATJALAN) => {
+  const result = await db('tindakan_jalan')
+    .where({ IDRAWATJALAN })
+    .sum('TOTAL as total');
+  return result[0];
+};

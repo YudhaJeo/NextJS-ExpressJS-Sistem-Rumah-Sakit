@@ -1,4 +1,5 @@
 import * as RawatJalanModel from '../models/rawatJalanModel.js';
+import * as RiwayatRawatJalan from '../models/riwayatJalanModel.js';
 
 export async function getAllRawatJalan(req, res) {
   try {
@@ -34,8 +35,9 @@ export async function createRawatJalan(req, res) {
 }
 
 export async function updateRawatJalan(req, res) {
+  const id = req.params.id;
+
   try {
-    const id = req.params.id;
     const { IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA} = req.body;
 
     await RawatJalanModel.updateRawatJalan(id, {
@@ -44,6 +46,29 @@ export async function updateRawatJalan(req, res) {
       STATUSRAWAT,
       DIAGNOSA
     });
+
+    const updated = await RawatJalanModel.getRawatById(id);
+
+    if(STATUSKUNJUNGAN === "Selesai"){
+      const obat = await RawatJalanModel.getTotalObatInap(updated.IDRAWATJALAN);
+      const tindakan = await RawatJalanModel.getTotalTindakanInap(updated.IDRAWATJALAN);
+      
+      const TOTALOBAT = Number(obat.total) || 0;
+      const TOTALTINDAKAN = Number(tindakan.total) || 0;
+
+      const TOTALBIAYA = TOTALOBAT + TOTALTINDAKAN;
+
+      const dataRiwayat = {
+        IDRAWATJALAN: updated.IDRAWATJALAN,
+        IDDOKTER: updated.IDDOKTER,
+        DIAGNOSA: updated.DIAGNOSA,
+        TOTALOBAT,
+        TOTALTINDAKAN,
+        TOTALBIAYA,
+      };
+      
+      await RiwayatRawatJalan.insertFromRawatJalan(dataRiwayat);
+    }
 
     res.json({ message: 'RawatJalan dan status pendaftaran berhasil diperbarui' });
   } catch (err) {
