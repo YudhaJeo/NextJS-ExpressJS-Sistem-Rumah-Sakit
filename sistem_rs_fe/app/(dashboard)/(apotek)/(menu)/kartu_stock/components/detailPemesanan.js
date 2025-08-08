@@ -18,7 +18,7 @@ const DetailPemesanan = ({ visible, onHide, data }) => {
 
       <DataTable value={data.details} paginator rows={5}>
         <Column field="JENISBARANG" header="Jenis" />
-        <Column field="IDBARANG" header="ID Barang" />
+        <Column field="NAMABARANG" header="ID Barang" />
         <Column field="QTY" header="Qty" />
         <Column field="HARGABELI" header="Harga Beli" body={(row) => 
           new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.HARGABELI)
