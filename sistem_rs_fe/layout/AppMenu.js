@@ -83,19 +83,16 @@ const AppMenu = () => {
                 icon: "pi pi-fw pi-folder-open",
                 items: [
                   { label: "File Dokumen", icon: "pi pi-fw pi-file", to: "/rekam_medis/dokumen" },
-                  { label: "Tracer Rekam Medis", icon: "pi pi-fw pi-notes", to: "/rekam_medis/tracer" },
                 ],
               },
               {
                 label: "Laporan",
                 icon: "pi pi-fw pi-chart-bar",
                 items: [
-                  { label: "Statistik Kunjungan", icon: "pi pi-fw pi-chart-line", to: "/laporan/statistik_kunjungan" },
-                  { label: "Rekap Kunjungan", icon: "pi pi-fw pi-file-check", to: "/laporan/rekap_kunjungan" },
+                  { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/riwayat_kunjungan" },
                   { label: "Histori Transaksi", icon: "pi pi-fw pi-history", to: "/laporan/histori_transaksi" },
                 ],
               },
-              { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/riwayat_kunjungan" },
             ],
           },
         ],
@@ -189,8 +186,7 @@ const AppMenu = () => {
             label: "Menu",
             items: [
               { label: "Kartu Stock", icon: "pi pi-fw pi-bars", to: "/kartu_stock" },
-              { label: "First Expired First Out", icon: "pi pi-fw pi-chart-line", to: "/FEFO" },
-              { label: "Order Pengambilan Obat", icon: "pi pi-fw pi-history", to: "/order_pengambilan_obat" },
+              { label: "Order Pengambilan Obat", icon: "pi pi-fw pi-history", to: "/order_pengambilan" },
               { label: "Penjualan/POS Kasir", icon: "pi pi-fw pi-shopping-cart", to: "/penjualan" },
               { label: "Pemesanan", icon: "pi pi-fw pi-dollar", to: "/pemesanan" },
             ],
@@ -198,11 +194,7 @@ const AppMenu = () => {
           {
             label: "Laporan",
             items: [
-              // { label: "Penjualan Obat", icon: "pi pi-fw pi-shopping-cart", to: "/apotek/penjualan" },
-              // { label: "Pembelian Obat", icon: "pi pi-fw pi-dollar", to: "/apotek/pembelian" },
-              // { label: "Retur Obat", icon: "pi pi-fw pi-undo", to: "/apotek/retur" },
               { label: "Laporan Penjualan", icon: "pi pi-fw pi-chart-bar", to: "/apotek/laporan_penjualan_obat" },
-              // { label: "Laporan Pembelian", icon: "pi pi-fw pi-chart-bar", to: "/apotek/laporan_pembelian" },
             ],
           },
         ],
