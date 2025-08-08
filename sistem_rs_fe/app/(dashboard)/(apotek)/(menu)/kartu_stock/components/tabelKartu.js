@@ -21,19 +21,6 @@ const TabelKartu = ({ data, loading, onDetail }) => {
 
   const PDFViewer = dynamic(() => import('./PDFViewer'), { ssr: false })
 
-  const formatTanggal = (tanggal) => {
-    if (!tanggal) return '-'
-    const tgl = new Date(tanggal)
-    return tgl.toLocaleDateString('id-ID', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    })
-  }
-
-  const formatRupiah = (value) =>
-    new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value || 0)
-
   const handleOpenAdjust = async (rowData) => {
     try {
       const res = await axios.get(`${API_URL}/pemesanan/${rowData.IDPEMESANAN}`)

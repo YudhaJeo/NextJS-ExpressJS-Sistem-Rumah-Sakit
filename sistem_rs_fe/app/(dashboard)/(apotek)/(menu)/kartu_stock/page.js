@@ -20,8 +20,6 @@ const MonitoringPemesananPage = () => {
   const router = useRouter();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-
-  // modal detail
   const [detailVisible, setDetailVisible] = useState(false);
   const [detailData, setDetailData] = useState(null);
 

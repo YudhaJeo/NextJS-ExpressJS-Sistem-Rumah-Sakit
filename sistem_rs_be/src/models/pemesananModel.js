@@ -16,7 +16,7 @@ export const getPemesananDetail = (id) =>
           .andOn('pd.JENISBARANG', '!=', db.raw('?', ['OBAT']));
     })
     .select(
-      'pd.IDBARANG', // tetap dikirim
+      'pd.IDBARANG', 
       'pd.JENISBARANG',
       'pd.QTY',
       'pd.HARGABELI',

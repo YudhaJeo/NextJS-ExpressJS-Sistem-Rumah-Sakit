@@ -113,9 +113,6 @@ doc.text('Tanggal', labelX, y);
 doc.text(`: ${formatTanggal(pemesanan.TGLPEMESANAN)}`, valueX - 2, y);
 y += 6;
 
-
-  // Build services array from details (one row per item)
-  // Build services array from details (one row per item)
 const services = details.length
   ? details.map((d, idx) => {
       const harga = Number(d.HARGABELI ?? d.HARGA ?? 0);
@@ -131,7 +128,7 @@ const services = details.length
         `${nama} ${harga ? `(${formatRupiah(harga)})` : ''}`,
         `${qty}`,
         `${jenis}`,
-        status, // kolom baru
+        status, 
         formatRupiah(harga),
         formatRupiah(total),
       ];
@@ -142,7 +139,7 @@ const services = details.length
 
 autoTable(doc, {
   startY: y,
-  head: [['#', 'Layanan', 'Qty', 'Jenis', 'Status', 'Harga Satuan', 'Total']], // tambah kolom Status
+  head: [['#', 'Layanan', 'Qty', 'Jenis', 'Status', 'Harga Satuan', 'Total']], 
   body: services,
   styles: { fontSize: 9, lineColor: [200, 200, 200], lineWidth: 0.1 },
   headStyles: {
@@ -156,19 +153,18 @@ autoTable(doc, {
     textColor: 20,
   },
   columnStyles: {
-    0: { halign: 'center', cellWidth: 8 },   // #
-    1: { halign: 'left', cellWidth: 45 },    // Layanan
-    2: { halign: 'center', cellWidth: 20 },  // Qty
-    3: { halign: 'center', cellWidth: 20 },  // Jenis
-    4: { halign: 'center', cellWidth: 20 },  // Status
-    5: { halign: 'right', cellWidth: 30 },   // Harga Satuan
-    6: { halign: 'right', cellWidth: 30 },   // Total
+    0: { halign: 'center', cellWidth: 8 },  
+    1: { halign: 'left', cellWidth: 45 },    
+    2: { halign: 'center', cellWidth: 25 },  
+    3: { halign: 'center', cellWidth: 25 },  
+    4: { halign: 'center', cellWidth: 25 },  
+    5: { halign: 'right', cellWidth: 30 },   
+    6: { halign: 'right', cellWidth: 30 },   
   },
   margin: { left: marginLeft, right: marginRight },
 });
 
 
-  // After table, ringkasan biaya (total)
   let y2 = doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : y + 60;
 
   const grandTotal = details.reduce((s, d) => {
