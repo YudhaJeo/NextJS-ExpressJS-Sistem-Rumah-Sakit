@@ -1,111 +1,65 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
-import TabelKartu from './components/tabelKartu';
-import FormDialogKartu from './components/formDialogKartu';
-import HeaderBar from '@/app/components/headerbar';
-import ToastNotifier from '@/app/components/toastNotifier';
-import FilterTanggal from '@/app/components/filterTanggal';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import HeaderBar from "@/app/components/headerbar";
+import ToastNotifier from "@/app/components/toastNotifier";
+import TabelPemesanan from "./components/tabelKartu"; // <-- gunakan tabel pemesanan
+import DetailPemesanan from "./components/detailPemesanan"; // <-- modal detail
+import FilterTanggal from "@/app/components/filterTanggal";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const Page = () => {
+const MonitoringPemesananPage = () => {
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [dialogVisible, setDialogVisible] = useState(false);
+  const toastRef = useRef(null);
+  const router = useRouter();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [obatOptions, setObatOptions] = useState([]);
-  const [alkesOptions, setAlkesOptions] = useState([]);
 
-  const [form, setForm] = useState({
-    IDKARTU: '',
-    IDOBAT: '',
-    IDALKES: '',
-    TANGGAL: '',
-    JENISTRANSAKSI: '',
-    JUMLAHOBAT: '',
-    JUMLAHALKES: '',
-    SISASTOK: '',
-    KETERANGAN: '',
-  });
-
-  const toastRef = useRef(null);
+  // modal detail
+  const [detailVisible, setDetailVisible] = useState(false);
+  const [detailData, setDetailData] = useState(null);
 
   useEffect(() => {
     fetchData();
-    fetchObat();
-    fetchAlkes();
   }, []);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/kartu_stok`);
-      setData(res.data);
-      setOriginalData(res.data);
+      const res = await axios.get(`${API_URL}/pemesanan`);
+      const apiData = Array.isArray(res.data) ? res.data : res.data.data;
+
+      const filteredData = (apiData || [])
+      .filter(item => item.STATUS === 'DITERIMA')
+      .map(item => ({
+        ...item,
+        STATUS: 'MASUK'
+      }));
+
+      setData(filteredData);
+      setOriginalData(filteredData);
     } catch (err) {
-      console.error('Gagal ambil data:', err);
+      console.error("Gagal mengambil data pemesanan:", err);
+      toastRef.current?.showToast("01", "Gagal memuat data pemesanan");
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchObat = async () => {
+  const handleDetail = async (row) => {
     try {
-      const res = await axios.get(`${API_URL}/obat`);
-
-      const options = res.data.data.map((obat) => ({
-        label: `${obat.NAMAOBAT}`,
-        value: obat.IDOBAT,
-        STOKOBAT: obat.STOK
-      }));
-
-      setObatOptions(options);
+      const res = await axios.get(`${API_URL}/pemesanan/${row.IDPEMESANAN}`);
+      setDetailData(res.data);
+      setDetailVisible(true);
     } catch (err) {
-      console.error('Gagal ambil data obat:', err);
+      toastRef.current?.showToast("01", "Gagal memuat detail pemesanan");
     }
-  };
-
-  const fetchAlkes = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/alkes`);
-
-      const options = res.data.data.map((alkes) => ({
-        label: `${alkes.NAMAALKES}`,
-        value: alkes.IDALKES,
-        STOKALKES: alkes.STOK
-      }));
-
-      setAlkesOptions(options);
-    } catch (err) {
-      console.error('Gagal ambil data obat:', err);
-    }
-  };
-
-  const handleSearch = (keyword) => {
-    if (!keyword) return setData(originalData);
-    const filtered = originalData.filter(
-      (item) =>
-        item.NAMAOBAT.toLowerCase().includes(keyword.toLowerCase())
-    );
-    setData(filtered);
-  };
-
-  const handleDateFilter = () => {
-    if (!startDate && !endDate) return setData(originalData);
-    const filtered = originalData.filter((item) => {
-      const visitDate = new Date(item.TANGGAL);
-      const from = startDate ? new Date(startDate.setHours(0, 0, 0, 0)) : null;
-      const to = endDate ? new Date(endDate.setHours(23, 59, 59, 999)) : null;
-      return (!from || visitDate >= from) && (!to || visitDate <= to);
-    });
-    setData(filtered);
   };
 
   const resetFilter = () => {
@@ -114,100 +68,35 @@ const Page = () => {
     setData(originalData);
   };
 
-  const handleSubmit = async () => {
-  const isEdit = !!form.IDKARTU;
-  const url = isEdit
-    ? `${API_URL}/kartu_stok/${form.IDKARTU}`
-    : `${API_URL}/kartu_stok`;
+  const handleDateFilter = () => {
+    if (!startDate && !endDate) return setData(originalData);
+    const filtered = originalData.filter((item) => {
+      const visitDate = new Date(item.TGLPEMESANAN);
+      const from = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+      const to = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+      return (!from || visitDate >= from) && (!to || visitDate <= to);
+    });
+    setData(filtered);
+  };
 
-  try {
-    // ✅ Validasi minimal salah satu ID (obat atau alkes harus dipilih)
-    if (!form.IDOBAT && !form.IDALKES) {
-      toastRef.current?.showToast('01', 'Pilih obat atau alkes terlebih dahulu');
-      return;
-    }
-
-    // ✅ Pastikan nilai jumlah tidak undefined
-    const payload = {
-      ...form,
-      JUMLAHOBAT: form.JUMLAHOBAT ? Number(form.JUMLAHOBAT) : 0,
-      JUMLAHALKES: form.JUMLAHALKES ? Number(form.JUMLAHALKES) : 0,
-    };
-
-    if (isEdit) {
-      await axios.put(url, payload);
-      toastRef.current?.showToast('00', 'Data berhasil diperbarui');
+  const handleSearch = (keyword) => {
+    if (!keyword) {
+      setData(originalData);
     } else {
-      await axios.post(url, payload);
-      toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
+      const filtered = originalData.filter((item) =>
+        item.NAMASUPPLIER?.toLowerCase().includes(keyword.toLowerCase()) ||
+        item.IDPEMESANAN?.toLowerCase().includes(keyword.toLowerCase())
+      );
+      setData(filtered);
     }
-
-    // ✅ Refresh data & reset form setelah backend selesai update stok
-    await fetchData();
-    resetForm();
-    setDialogVisible(false);
-
-  } catch (err) {
-    console.error('Gagal simpan data:', err);
-
-    // ✅ Ambil pesan error dari backend jika ada
-    const errorMessage = err.response?.data?.error || 'Gagal menyimpan data';
-    toastRef.current?.showToast('01', errorMessage);
-  }
-};
-
-
-  const handleEdit = (row) => {
-    setForm({
-      ...row,
-      TANGGAL: row.TANGGAL?.split('T')[0] || '',
-    });
-    setDialogVisible(true);
-  };
-
-  const handleDelete = (row) => {
-    confirmDialog({
-      message: `Apakah Anda yakin ingin menghapus data milik ${row.NAMAOBAT}?`,
-      header: 'Konfirmasi Hapus',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Ya',
-      rejectLabel: 'Batal',
-      accept: async () => {
-        try {
-          await axios.delete(`${API_URL}/kartu_stok/${row.IDKARTU}`);
-          fetchData();
-          toastRef.current?.showToast('00', 'Data berhasil dihapus');
-        } catch (err) {
-          console.error('Gagal hapus data:', err);
-          toastRef.current?.showToast('01', 'Gagal menghapus data');
-        }
-      },
-    });
-  };
-
-  const resetForm = () => {
-    const today = new Date().toISOString().split('T')[0];
-    setForm({
-    IDKARTU: 0,
-    IDOBAT: '',
-    IDALKES: '',
-    TANGGAL: '',
-    JENISTRANSAKSI: '',
-    JUMLAHOBAT: '',
-    JUMLAHALKES: '',
-    SISASTOK: '',
-    KETERANGAN: '',
-    });
   };
 
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
-      <ConfirmDialog />
+      <h3 className="text-xl font-semibold mb-3">Kartu Stok Obat dan Alat Kesehatan</h3>
 
-      <h3 className="text-xl font-semibold mb-3">Kartu Stok Apotek</h3>
-
-      <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
         <FilterTanggal
           startDate={startDate}
           endDate={endDate}
@@ -217,37 +106,20 @@ const Page = () => {
           resetFilter={resetFilter}
         />
         <HeaderBar
-          title=""
-          placeholder="Cari nama atau NIK..."
+          placeholder="Cari berdasarkan supplier atau ID pemesanan..."
           onSearch={handleSearch}
-          onAddClick={() => {
-            resetForm();
-            setDialogVisible(true);
-          }}
         />
       </div>
 
-      <TabelKartu
-        data={data}
-        loading={loading}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <TabelPemesanan data={data} loading={loading} onDetail={handleDetail} />
 
-      <FormDialogKartu
-        visible={dialogVisible}
-        onHide={() => {
-          setDialogVisible(false);
-          resetForm();
-        }}
-        onSubmit={handleSubmit}
-        form={form}
-        setForm={setForm}
-        obatOptions={obatOptions}
-        alkesOptions={alkesOptions}
+      <DetailPemesanan
+        visible={detailVisible}
+        onHide={() => setDetailVisible(false)}
+        data={detailData}
       />
     </div>
   );
-}
+};
 
-export default Page;
+export default MonitoringPemesananPage;

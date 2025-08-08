@@ -6,7 +6,29 @@ export const getAllPemesanan = () =>
     .select('p.*', 's.NAMASUPPLIER');
 
 export const getPemesananDetail = (id) =>
-  db('pemesanan_detail').where({ IDPEMESANAN: id });
+  db('pemesanan_detail as pd')
+    .leftJoin('obat as o', function () {
+      this.on('pd.IDBARANG', '=', 'o.IDOBAT')
+          .andOn('pd.JENISBARANG', '=', db.raw('?', ['OBAT']));
+    })
+    .leftJoin('master_alkes as a', function () {
+      this.on('pd.IDBARANG', '=', 'a.IDALKES')
+          .andOn('pd.JENISBARANG', '!=', db.raw('?', ['OBAT']));
+    })
+    .select(
+      'pd.IDBARANG', // tetap dikirim
+      'pd.JENISBARANG',
+      'pd.QTY',
+      'pd.HARGABELI',
+      db.raw(`
+        CASE 
+          WHEN pd.JENISBARANG = 'OBAT' THEN o.NAMAOBAT
+          ELSE a.NAMAALKES
+        END as NAMABARANG
+      `)
+    )
+    .where('pd.IDPEMESANAN', id);
+
 
 export const createPemesanan = (data) =>
   db('pemesanan').insert(data);
