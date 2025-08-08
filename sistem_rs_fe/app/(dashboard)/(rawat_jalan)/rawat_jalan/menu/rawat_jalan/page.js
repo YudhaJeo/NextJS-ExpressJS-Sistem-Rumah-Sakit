@@ -9,6 +9,7 @@ import FilterTanggal from "@/app/components/filterTanggal";
 import FormDialogRawatJalan from "./components/formDialogRiwayat";
 import TabelRawatJalan from "./components/tabelRiwayat";
 import { Toast } from "primereact/toast";
+import HeaderBar from "@/app/components/headerbar";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -182,7 +183,7 @@ const RawatJalanPage = () => {
 
       <h3 className="text-xl font-semibold mb-3">Monitoring Rawat Jalan</h3>
 
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+      <div className="flex flex-col md:flex-row justify-content-between items-center gap-4 mb-4">
         <FilterTanggal
           startDate={startDate}
           endDate={endDate}
@@ -190,6 +191,19 @@ const RawatJalanPage = () => {
           setEndDate={setEndDate}
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
+        />
+        <HeaderBar
+          title=""
+          placeholder="Cari nama pasien atau status kunjungan"
+          onSearch={(keyword) => {
+            if (!keyword) return fetchData();
+            const filtered = data.filter(
+              (item) =>
+                item.STATUSKUNJUNGAN.toLowerCase().includes(keyword.toLowerCase()) ||
+                item.NAMALENGKAP.toLowerCase().includes(keyword.toLowerCase())
+            );
+            setData(filtered);
+          }}
         />
       </div>
 
