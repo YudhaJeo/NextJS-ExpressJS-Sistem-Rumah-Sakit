@@ -52,6 +52,7 @@ import supplierRoutes from './routes/supplierRoutes.js';
 import alkesRoutes from './routes/alkesRoutes.js';
 import kartuRoutes from './routes/kartustokRoutes.js';
 import pemesananRoutes from './routes/pemesananRoutes.js';
+import penjualanRoutes from './routes/penjualanRoutes.js';
 
 const NEXT_URL = process.env.NEXT_PUBLIC_URL;
 
@@ -116,5 +117,6 @@ app.use('/api/supplier', supplierRoutes);
 app.use('/api/alkes', alkesRoutes);
 app.use('/api/kartu_stok', kartuRoutes);
 app.use('/api/pemesanan', pemesananRoutes);
+app.use('/api/penjualan', penjualanRoutes);
 
 export default app;
