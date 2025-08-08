@@ -171,7 +171,7 @@ const AppMenu = () => {
       {
         label: "Apotek & Farmasi",
         items: [
-          { label: "Dashboard Apotek", icon: "pi pi-fw pi-chart-bar", to: "/dashboard" },
+          { label: "Dashboard Apotek", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_apotek" },
           {
             label: "Master",
             items: [
