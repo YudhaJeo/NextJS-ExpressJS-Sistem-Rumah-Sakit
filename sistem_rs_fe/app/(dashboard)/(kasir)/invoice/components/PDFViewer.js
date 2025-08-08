@@ -12,215 +12,164 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     import.meta.url,
 ).toString()
 
+function PDFViewer({ pdfUrl, paperSize, fileName }) {
+    const [numPages, setNumPages] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageWidth, setPageWidth] = useState(0);
+    const [pageHeight, setPageHeight] = useState(0);
+    const [scale, setScale] = useState(1);
 
-function PDFViewer({ pdfUrl, paperSize = 'A4', fileName = 'document' }) {
-    const [numPages, setNumPages] = useState(null)
-    const [currentPage, setCurrentPage] = useState(1)
-    const [pageWidth, setPageWidth] = useState(0)
-    const [scale, setScale] = useState(1)
-    const [error, setError] = useState(null)
-    const [isLoading, setIsLoading] = useState(true)
+    const handleFirstPage = () => {
+        if (currentPage !== 1) {
+            setCurrentPage(1);
+        }
+    };
 
-    // Fungsi navigasi halaman
-    const handleFirstPage = () => setCurrentPage(1)
-    const handlePrevPage = () => currentPage > 1 && setCurrentPage(currentPage - 1)
-    const handleNextPage = () => currentPage < numPages && setCurrentPage(currentPage + 1)
-    const handleLastPage = () => setCurrentPage(numPages)
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
 
-    // Fungsi zoom
-    const handleZoomIn = () => scale < 2.0 && setScale(scale + 0.1)
-    const handleZoomOut = () => scale > 0.5 && setScale(scale - 0.1)
+    const handleNextPage = () => {
+        if (currentPage < numPages) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
 
-    // Fungsi download
+    const handleLastPage = () => {
+        if (currentPage !== numPages) {
+            setCurrentPage(numPages);
+        }
+    };
+
+    const handleZoomIn = () => {
+        if (scale < 2.0) {
+            setScale(scale + 0.1);
+        }
+    };
+
+    const handleZoomOut = () => {
+        if (scale > 0.5) {
+            setScale(scale - 0.1);
+        }
+    };
+
     const handleDownloadPDF = () => {
-        const downloadLink = document.createElement('a')
-        downloadLink.href = pdfUrl
-        downloadLink.download = `${fileName}.pdf`
-        downloadLink.click()
-    }
+        const downloadLink = document.createElement('a');
+        downloadLink.href = pdfUrl;
+        downloadLink.download = fileName + '.pdf';
+        downloadLink.click();
+    };
 
-    // Fungsi print
     const handlePrint = () => {
-        if (!pdfUrl) return
+        if (!pdfUrl) return;
 
-        const printWindow = window.open('', '_blank')
-        printWindow.document.write(`
-            <html>
-                <head>
-                    <title>Print PDF</title>
-                    <style>
-                        body { margin: 0; padding: 0; }
-                        iframe { width: 100%; height: 100vh; border: none; }
-                    </style>
-                </head>
-                <body>
-                    <iframe src="${pdfUrl}"></iframe>
-                    <script>
-                        window.onload = function() {
-                            setTimeout(function() {
-                                window.print()
-                                window.close()
-                            }, 1000)
-                        }
-                    </script>
-                </body>
-            </html>
-        `)
-        printWindow.document.close()
-    }
+        if (pdfUrl.startsWith('data:application/pdf')) {
+            const base64Data = pdfUrl.split(',')[1];
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: 'application/pdf' });
 
-    // Load PDF dan atur ukuran halaman
+            const blobUrl = URL.createObjectURL(blob);
+            window.open(blobUrl, '_blank');
+        } else {
+            window.open(pdfUrl, '_blank');
+        }
+    };
+
     useEffect(() => {
         const loadPdf = async () => {
             try {
-                setIsLoading(true)
-                setError(null)
-                
-                if (!pdfUrl) {
-                    throw new Error('URL PDF tidak valid')
+                const loadingTask = pdfjs.getDocument({ url: pdfUrl });
+                const pdf = await loadingTask.promise;
+                const pages = pdf.numPages;
+                setNumPages(pages);
+
+
+                const mmToPixel = 3.7795275591;
+                let paperWidthInMm, paperHeightInMm;
+
+                if (paperSize === 'A4') {
+                    paperWidthInMm = 210;
+                    paperHeightInMm = 297;
+                } else if (paperSize === 'Letter') {
+                    paperWidthInMm = 216;
+                    paperHeightInMm = 279;
+                } else if (paperSize === 'Legal') {
+                    // Tambahkan pilihan Legal
+                    paperWidthInMm = 216;
+                    paperHeightInMm = 356;
+                } else {
+                    paperWidthInMm = 216;
+                    paperHeightInMm = 279;
                 }
 
-                const loadingTask = pdfjs.getDocument({ url: pdfUrl })
-                const pdf = await loadingTask.promise
-                setNumPages(pdf.numPages)
-
-                // Konversi ukuran kertas ke pixel
-                const mmToPixel = 3.7795275591
-                const paperSizes = {
-                    A4: { width: 210, height: 297 },
-                    Letter: { width: 216, height: 279 },
-                    Legal: { width: 216, height: 356 }
-                }
-
-                const size = paperSizes[paperSize] || paperSizes.A4
-                setPageWidth(size.width * mmToPixel)
-                
-            } catch (err) {
-                console.error('Gagal memuat PDF:', err)
-                setError(`Gagal memuat PDF: ${err.message}`)
-            } finally {
-                setIsLoading(false)
+                setPageWidth(paperWidthInMm * mmToPixel);
+                setPageHeight(paperHeightInMm * mmToPixel);
+            } catch (error) {
             }
-        }
+        };
 
-        loadPdf()
-    }, [pdfUrl, paperSize])
+        if (pdfUrl) {
+            loadPdf();
+        }
+    }, [pdfUrl, paperSize]);
 
     return (
-        <div className="pdf-viewer-container" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-            {/* Toolbar */}
-            <div style={{
-                backgroundColor: '#f0f0f0',
-                padding: '10px',
-                borderRadius: '5px',
-                boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.3)',
-                position: 'sticky',
-                top: '0',
-                zIndex: '1000',
-                display: 'flex',
-                justifyContent: 'center',
-                flexWrap: 'wrap',
-                gap: '5px'
-            }}>
-                <Button 
-                    icon="pi pi-angle-double-left" 
-                    onClick={handleFirstPage} 
-                    disabled={currentPage === 1} 
-                    tooltip="Halaman pertama"
-                    tooltipOptions={{ position: 'bottom' }}
-                />
-                <Button 
-                    icon="pi pi-angle-left" 
-                    onClick={handlePrevPage} 
-                    disabled={currentPage === 1} 
-                    tooltip="Halaman sebelumnya"
-                    tooltipOptions={{ position: 'bottom' }}
-                />
-                <Button 
-                    icon="pi pi-search-plus" 
-                    onClick={handleZoomIn} 
-                    disabled={scale >= 2.0} 
-                    tooltip="Zoom in"
-                    tooltipOptions={{ position: 'bottom' }}
-                />
-                <Button 
-                    icon="pi pi-search-minus" 
-                    onClick={handleZoomOut} 
-                    disabled={scale <= 0.5} 
-                    tooltip="Zoom out"
-                    tooltipOptions={{ position: 'bottom' }}
-                />
-                <Button 
-                    icon="pi pi-angle-right" 
-                    onClick={handleNextPage} 
-                    disabled={currentPage === numPages} 
-                    tooltip="Halaman berikutnya"
-                    tooltipOptions={{ position: 'bottom' }}
-                />
-                <Button 
-                    icon="pi pi-angle-double-right" 
-                    onClick={handleLastPage} 
-                    disabled={currentPage === numPages} 
-                    tooltip="Halaman terakhir"
-                    tooltipOptions={{ position: 'bottom' }}
-                />
-                <Button 
-                    icon="pi pi-download" 
-                    onClick={handleDownloadPDF} 
-                    tooltip="Download PDF"
-                    tooltipOptions={{ position: 'bottom' }}
-                    severity="success"
-                />
-                <Button 
-                    icon="pi pi-print" 
-                    onClick={handlePrint} 
-                    tooltip="Print PDF"
-                    tooltipOptions={{ position: 'bottom' }}
-                    severity="success"
-                />
-            </div>
-
-            {/* Area PDF */}
-            <div style={{ 
-                flex: 1, 
-                overflow: 'auto', 
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center',
-                backgroundColor: '#f5f5f5',
-                margin: '10px 0'
-            }}>
-                {isLoading ? (
-                    <div>Memuat PDF...</div>
-                ) : error ? (
-                    <div style={{ color: 'red', padding: '20px' }}>{error}</div>
-                ) : (
-                    <Document 
-                        file={pdfUrl}
-                        loading={<div>Memuat dokumen...</div>}
-                        error={<div style={{ color: 'red' }}>Gagal memuat dokumen</div>}
+        <div>
+            {pdfUrl && numPages !== null && (
+                <div>
+                    <div
+                        style={{
+                            // display: 'flex',
+                            backgroundColor: '#f0f0f0',
+                            padding: '10px',
+                            borderRadius: '5px',
+                            boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.3)',
+                            position: 'sticky',
+                            top: '0',
+                            zIndex: '1000',
+                            width: '100%'
+                        }}
                     >
-                        <Page 
-                            pageNumber={currentPage} 
-                            width={pageWidth} 
-                            scale={scale}
-                            loading={<div>Memuat halaman...</div>}
-                        />
-                    </Document>
-                )}
-            </div>
-
-            {/* Info halaman */}
-            <div style={{
-                textAlign: 'center',
-                padding: '10px',
-                color: '#666',
-                fontSize: '14px'
-            }}>
-                {numPages ? `Halaman ${currentPage} dari ${numPages}` : 'Memuat informasi halaman...'}
-            </div>
+                        <Button label="" icon="pi pi-angle-double-left" style={{ margin: '5px' }} onClick={handleFirstPage} disabled={currentPage === 1} className="p-button-secondary pdf-toolbar-button" />
+                        <Button label="" icon="pi pi-angle-left" style={{ margin: '5px' }} onClick={handlePrevPage} disabled={currentPage === 1} className="p-button-secondary pdf-toolbar-button" />
+                        <Button label="" icon="pi pi-search-plus" style={{ margin: '5px' }} onClick={handleZoomIn} disabled={scale >= 2.0} className="p-button-info pdf-toolbar-button" />
+                        <Button label="" icon="pi pi-search-minus" style={{ margin: '5px' }} onClick={handleZoomOut} disabled={scale <= 0.5} className="p-button-info pdf-toolbar-button" />
+                        <Button label="" icon="pi pi-angle-right" style={{ margin: '5px' }} onClick={handleNextPage} disabled={currentPage === numPages} className="p-button-secondary pdf-toolbar-button" />
+                        <Button label="" icon="pi pi-angle-double-right" style={{ margin: '5px' }} onClick={handleLastPage} disabled={currentPage === numPages} className="p-button-secondary pdf-toolbar-button" />
+                        <Button label="" icon="pi pi-download" style={{ margin: '5px' }} onClick={handleDownloadPDF} className="p-button-success pdf-toolbar-button" />
+                        <Button label="" icon="pi pi-print" style={{ margin: '5px' }} onClick={handlePrint} className="p-button-success pdf-toolbar-button" />
+                    </div>
+                    <div style={{ overflow: 'auto', height: '59vh', display: 'flex', paddingTop: '10%', justifyContent: 'center', alignItems: 'center' }}>
+                        <div className="pdf-canvas" style={{ background: 'lightgray', marginTop: '640px', padding: '10px' }}>
+                            <div className="pdf-frame" style={{ border: 'none', padding: '0px', maxWidth: '100%', maxHeight: '100%' }}>
+                                <Document file={pdfUrl}>
+                                    <Page pageNumber={currentPage} width={pageWidth} height={pageHeight} scale={scale} />
+                                </Document>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        className="pdf-page-info"
+                        style={{
+                            textAlign: 'center',
+                            marginTop: '10px',
+                            color: 'gray',
+                            fontSize: '12px'
+                        }}
+                    >
+                        Page {currentPage} of {numPages}
+                    </div>
+                </div>
+            )}
         </div>
-    )
+    );
 }
 
-export default PDFViewer
+export default PDFViewer;
