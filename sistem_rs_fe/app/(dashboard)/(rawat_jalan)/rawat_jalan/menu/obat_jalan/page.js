@@ -52,7 +52,7 @@ const Page = () => {
     try {
       const res = await axios.get(`${API_URL}/rawat_jalan`);
       const options = res.data.data
-        .filter((item) => item.STATUSKUNJUNGAN === 'Selesai')
+        .filter((item) => item.STATUSKUNJUNGAN !== 'Selesai')
         .map((pasien) => ({
           label: pasien.NAMALENGKAP,
           value: pasien.IDRAWATJALAN,
