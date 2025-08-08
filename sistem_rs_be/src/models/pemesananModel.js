@@ -16,7 +16,10 @@ export const getPemesananDetail = (id) =>
           .andOn('pd.JENISBARANG', '!=', db.raw('?', ['OBAT']));
     })
     .select(
-      'pd.*',
+      'pd.IDBARANG', // tetap dikirim
+      'pd.JENISBARANG',
+      'pd.QTY',
+      'pd.HARGABELI',
       db.raw(`
         CASE 
           WHEN pd.JENISBARANG = 'OBAT' THEN o.NAMAOBAT
@@ -25,6 +28,7 @@ export const getPemesananDetail = (id) =>
       `)
     )
     .where('pd.IDPEMESANAN', id);
+
 
 export const createPemesanan = (data) =>
   db('pemesanan').insert(data);
@@ -47,12 +51,12 @@ export const updatePemesananStatus = async (id, status) => {
     for (const item of details) {
       if (item.JENISBARANG === 'OBAT') {
         await db('obat')
-          .where('IDOBAT', item.NAMABARANG)
+          .where('IDOBAT', item.IDBARANG)
           .increment('STOK', item.QTY)
           .update({ HARGABELI: item.HARGABELI });
       } else {
         await db('master_alkes')
-          .where('IDALKES', item.NAMABARANG)
+          .where('IDALKES', item.IDBARANG)
           .increment('STOK', item.QTY)
           .update({ HARGABELI: item.HARGABELI });
       }
