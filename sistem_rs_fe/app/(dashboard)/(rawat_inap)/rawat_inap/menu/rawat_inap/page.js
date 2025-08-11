@@ -1,9 +1,8 @@
+// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(dashboard)\(rawat_inap)\rawat_inap\menu\rawat_inap\page.js
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import TabelRawatInap from './components/tabelRawatInap';
 import FormRawatInap from './components/formRawatInap';
@@ -15,7 +14,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
   const toastRef = useRef(null);
-  const router = useRouter();
 
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
@@ -30,12 +28,22 @@ const Page = () => {
   const defaultForm = {
     IDRAWATINAP: '',
     IDRAWATJALAN: '',
+    POLI: '',
+    NAMAPASIEN: '',
+    UMUR: '',
+    JENISKELAMIN: '',
+    NIK: '',
+    ALAMAT_PASIEN: '',
     IDBED: '',
+    NAMAKAMAR: '',
+    NAMABANGSAL: '',
+    HARGAPERHARI: '',
     TANGGALMASUK: '',
     TANGGALKELUAR: '',
     STATUS: 'AKTIF',
+    STATUSBED: '',
     CATATAN: ''
-  };  
+  };
   
   const [form, setForm] = useState(defaultForm);
 
@@ -50,6 +58,7 @@ const Page = () => {
       const res = await axios.get(`${API_URL}/rawat_inap`);
       setData(res.data.data); 
       setOriginalData(res.data.data);
+      console.log("[DEBUG] Data Rawat Inap:", res.data.data)
     } catch (err) {
       console.error('Gagal ambil data rawat inap:', err);
     } finally {
@@ -63,9 +72,14 @@ const Page = () => {
       const options = res.data.data
         .filter((item) => item.STATUSRAWAT === 'Rawat Inap')  
         .map((item) => ({
-          label: `${item.NAMALENGKAP} - ${item.POLI}`,
+          label: `${item.NAMALENGKAP}`,
           value: item.IDRAWATJALAN,
+          POLI: item.POLI,
+          JENISKELAMIN: item.JENISKELAMIN,
+          NIK: item.NIK,
+          ALAMAT_PASIEN: item.ALAMAT_PASIEN,
       }));
+      console.log("[DEBUG] Data Pasien:", options)
       setPengobatanOptions(options);
     } catch (err) {
       console.error('Gagal ambil data Rawat Inap:', err);
@@ -79,11 +93,14 @@ const Page = () => {
       const options = res.data.data
         .filter((item) => item.STATUS === 'TERSEDIA')
         .map((item) => ({
-          label: `${item.NOMORBED} - ${item.NAMAKAMAR} - ${item.NAMABANGSAL}`,
+          label: `${item.NOMORBED}`,
           value: item.IDBED,
           NAMAKAMAR: item.NAMAKAMAR, 
           NAMABANGSAL: item.NAMABANGSAL,
+          HARGAPERHARI: item.HARGAPERHARI,
+          STATUSBED: item.STATUS,
         }));
+      console.log("[DEBUG] Data Kamar:", options)
       setBedOptions(options);
     } catch (err) {
       console.error('Gagal ambil bed:', err);
@@ -154,6 +171,13 @@ const Page = () => {
       IDRAWATINAP: row.IDRAWATINAP,
       IDRAWATJALAN: row.IDRAWATJALAN,
       IDBED: row.IDBED,
+      POLI: row.POLI || '',
+      JENISKELAMIN: row.JENISKELAMIN || '',
+      NIK: row.PASIEN_NIK || '',
+      ALAMAT_PASIEN: row.ALAMAT_PASIEN || '',
+      NAMAKAMAR: row.NAMAKAMAR || '',
+      NAMABANGSAL: row.NAMABANGSAL || '',
+      HARGAPERHARI: row.HARGAPERHARI || '',
       TANGGALMASUK: row.TANGGALMASUK,
       TANGGALKELUAR: row.TANGGALKELUAR || '',
       CATATAN: row.CATATAN || ''
