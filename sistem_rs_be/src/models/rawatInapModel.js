@@ -4,6 +4,7 @@ export const getAll = () =>
   db('rawat_inap')
     .join('rawat_jalan', 'rawat_inap.IDRAWATJALAN', 'rawat_jalan.IDRAWATJALAN')
     .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+    .join('poli as pl', 'pendaftaran.IDPOLI', 'pl.IDPOLI')
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
     .join('kamar', 'bed.IDKAMAR', 'kamar.IDKAMAR')
@@ -11,10 +12,19 @@ export const getAll = () =>
     .join('jenis_bangsal', 'bangsal.IDJENISBANGSAL', 'jenis_bangsal.IDJENISBANGSAL')
     .select(
       'rawat_inap.*',
+      'pasien.NIK as PASIEN_NIK',
       'pasien.NAMALENGKAP',
+      'pasien.USIA',
+      'pasien.JENISKELAMIN',
+      'pasien.ALAMAT as ALAMAT_PASIEN',
+      'pl.NAMAPOLI as POLI',
       'bed.NOMORBED',
+      'kamar.NAMAKAMAR',
+      'bangsal.NAMABANGSAL',
+      'jenis_bangsal.NAMAJENIS',
       'jenis_bangsal.HARGAPERHARI'
-    );
+    )
+    
 
 
 export const getById = (id) =>

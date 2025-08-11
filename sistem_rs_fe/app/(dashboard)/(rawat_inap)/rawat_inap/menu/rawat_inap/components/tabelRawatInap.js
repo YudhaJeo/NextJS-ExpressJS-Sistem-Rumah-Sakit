@@ -1,3 +1,4 @@
+// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(dashboard)\(rawat_inap)\rawat_inap\menu\rawat_inap\components\tabelRawatInap.js
 'use client';
 
 import { DataTable } from 'primereact/datatable';
@@ -75,7 +76,7 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete }) => {
         body={(row) => (
           <div className="flex gap-2">
             <Button
-              icon="pi pi-pencil"
+              icon="pi pi-eye"
               size="small"
               severity="warning"
               onClick={() => onEdit(row)}
