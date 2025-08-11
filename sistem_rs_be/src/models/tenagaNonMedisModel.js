@@ -18,6 +18,10 @@ export const getById = (id) => {
   return db(TABLE).where('IDTENAGANONMEDIS', id).first();
 };
 
+export const getLastKode = () => {
+  return db(TABLE).orderBy('IDTENAGANONMEDIS', 'desc').first('KODETENAGANONMEDIS');
+};
+
 export const create = (data) => {
   return db(TABLE).insert(data);
 };
