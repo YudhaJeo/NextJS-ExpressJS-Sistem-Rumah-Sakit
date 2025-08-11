@@ -36,17 +36,30 @@ export const getTenagaNonMedisById = async (req, res) => {
   }
 };
 
+const generateKodeTenaga = async () => {
+  const prefix = 'TNM';
+  const lastData = await TenagaNonMedis.getLastKode();
+  let nextNumber = 1;
+  if (lastData?.KODETENAGANONMEDIS) {
+    const lastNumber = parseInt(lastData.KODETENAGANONMEDIS.replace(prefix, '')) || 0;
+    nextNumber = lastNumber + 1;
+  }
+  return `${prefix}${String(nextNumber).padStart(4, '0')}`;
+};
+
 export const createTenagaNonMedis = async (req, res) => {
   try {
     const { body, files } = req;
 
+    const kodeOtomatis = await generateKodeTenaga();
     const hashedPassword = await bcrypt.hash(body.PASSWORD, 10);
 
     const data = {
       ...body,
+      KODETENAGANONMEDIS: kodeOtomatis,
       PASSWORD: hashedPassword,
       FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_non_medis/${files.FOTOPROFIL[0].filename}` : null,
-      DOKUMENPENDUKUNG: files?.DOKUMENPENDUKUNG?.[0] ? `/uploads/tenaga_medis/${files.DOKUMENPENDUKUNG[0].filename}` : null,
+      DOKUMENPENDUKUNG: files?.DOKUMENPENDUKUNG?.[0] ? `/uploads/tenaga_non_medis/${files.DOKUMENPENDUKUNG[0].filename}` : null,
       TANGGALLAHIR: formatDate(body.TANGGALLAHIR),
       CREATED_AT: toMySQLDateTime(),
       UPDATED_AT: toMySQLDateTime(),
@@ -57,14 +70,6 @@ export const createTenagaNonMedis = async (req, res) => {
     res.status(201).json({ success: true, message: 'Tenaga non medis created' });
   } catch (err) {
     console.error(err);
-
-    if (err instanceof multer.MulterError) {
-      return res.status(400).json({ success: false, message: `Upload error: ${err.message}` });
-    }
-    if (err.message.includes('Hanya file gambar') || err.message.includes('file terlalu besar')) {
-      return res.status(400).json({ success: false, message: err.message });
-    }
-
     res.status(500).json({ success: false, message: 'Failed to create tenaga medis' });
   }
 };

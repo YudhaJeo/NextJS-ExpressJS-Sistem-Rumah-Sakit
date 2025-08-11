@@ -35,14 +35,27 @@ export const getTenagaMedisById = async (req, res) => {
   }
 };
 
+const generateKodeTenaga = async () => {
+  const prefix = 'TM';
+  const lastData = await TenagaMedis.getLastKode();
+  let nextNumber = 1;
+  if (lastData?.KODETENAGAMEDIS) {
+    const lastNumber = parseInt(lastData.KODETENAGAMEDIS.replace(prefix, '')) || 0;
+    nextNumber = lastNumber + 1;
+  }
+  return `${prefix}${String(nextNumber).padStart(4, '0')}`;
+};
+
 export const createTenagaMedis = async (req, res) => {
   try {
     const { body, files } = req;
 
+    const kodeOtomatis = await generateKodeTenaga();
     const hashedPassword = await bcrypt.hash(body.PASSWORD, 10);
 
     const data = {
       ...body,
+      KODETENAGAMEDIS: kodeOtomatis,
       PASSWORD: hashedPassword,
       FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_medis/${files.FOTOPROFIL[0].filename}` : null,
       DOKUMENPENDUKUNG: files?.DOKUMENPENDUKUNG?.[0] ? `/uploads/tenaga_medis/${files.DOKUMENPENDUKUNG[0].filename}` : null,

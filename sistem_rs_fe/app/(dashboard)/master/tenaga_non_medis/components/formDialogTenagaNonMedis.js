@@ -70,8 +70,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
 
   const validate = () => {
     const newErrors = {};
-
-    if (!form.KODETENAGANONMEDIS) newErrors.KODETENAGANONMEDIS = "Kode wajib diisi";
+    if (form.STATUSKEPEGAWAIAN === "Tetap" && form.NIP) { if (!/^[0-9]{18}$/.test(form.NIP)) {newErrors.NIP = "NIP harus 18 digit angka";}}
     if (!form.NAMALENGKAP) newErrors.NAMALENGKAP = "Nama wajib diisi";
     if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = "Jenis kelamin wajib dipilih";
     if (!form.TEMPATLAHIR) newErrors.TEMPATLAHIR = "Tempat lahir wajib diisi";
@@ -121,12 +120,31 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
         <div>
           <label className="font-medium">Kode Tenaga Non Medis</label>
           <InputText
-            className={classNames("w-full mt-2", { "p-invalid": errors.KODETENAGANONMEDIS })}
             value={form.KODETENAGANONMEDIS || ""}
-            onChange={(e) => setForm({ ...form, KODETENAGANONMEDIS: e.target.value })}
+            className="w-full mt-2"
+            disabled
           />
-          {errors.KODETENAGANONMEDIS && <small className="p-error">{errors.KODETENAGANONMEDIS}</small>}
         </div>
+
+        {form.STATUSKEPEGAWAIAN === "Tetap" && (
+          <div className="mt-3">
+            <label className="font-medium">NIP</label>
+            <InputText
+              value={form.NIP || ""}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^[0-9]*$/.test(value) && value.length <= 18) {
+                  setForm({ ...form, NIP: value });
+                }
+              }}
+              className={classNames("w-full mt-2", {
+                "p-invalid": errors.NIP,
+              })}
+              placeholder="Isi jika ada"
+            />
+            {errors.NIP && <small className="p-error">{errors.NIP}</small>}
+          </div>
+        )}
 
         <div className="mt-3">
           <label className="font-medium">Nama Lengkap</label>
