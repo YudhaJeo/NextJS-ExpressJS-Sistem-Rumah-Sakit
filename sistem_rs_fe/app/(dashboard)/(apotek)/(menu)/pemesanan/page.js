@@ -5,7 +5,7 @@ import HeaderBar from "@/app/components/headerbar";
 import TabelPemesanan from "./components/tabelPemesanan";
 import FormPemesanan from "./components/formPemesanan";
 import DetailPemesanan from "./components/detailPemesanan";
-import { Toast } from "primereact/toast"; // ✅ ganti ToastNotifier dengan Toast PrimeReact
+import { Toast } from "primereact/toast"; 
 import { ConfirmDialog } from "primereact/confirmdialog";
 import FilterTanggal from "@/app/components/filterTanggal";
 
@@ -120,7 +120,7 @@ const PagePemesanan = () => {
 
   return (
     <div className="card">
-      <Toast ref={toastRef} /> {/* ✅ Ganti ToastNotifier */}
+      <Toast ref={toastRef} /> 
       <ConfirmDialog />
 
       <h3 className="text-xl font-semibold mb-3">Pemesanan</h3>
