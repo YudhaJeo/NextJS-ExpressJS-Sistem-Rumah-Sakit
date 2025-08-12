@@ -5,6 +5,7 @@ import 'primeicons/primeicons.css';
 import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
 import '/public/themes/lara-light-indigo/theme.css';
+import './globals.css';
 
 export const metadata = {
   title: 'Rumah Sakit',

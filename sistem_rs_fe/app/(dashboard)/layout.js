@@ -1,4 +1,13 @@
 import Layout from '../../layout/layout';
+import Providers from '../providers';
+import 'primereact/resources/primereact.css';
+import 'primeflex/primeflex.css';
+import 'primeicons/primeicons.css';
+import '../../styles/layout/layout.scss';
+import '../../styles/demo/Demos.scss';
+import '/public/themes/lara-light-indigo/theme.css';
+import '../globals.css';
+
 
 export const metadata = {
   title: 'Sistem Rumah Sakit',
@@ -8,5 +17,11 @@ export const metadata = {
 };
 
 export default function AppLayout({ children }) {
-  return <Layout>{children}</Layout>;
+  return (
+    <Providers>
+      <Layout>
+        {children}
+      </Layout>
+    </Providers>
+  );
 }
