@@ -50,7 +50,6 @@ const FormDialogInvoice = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
-        {/* No Invoice */}
         <div>
           <label className="font-medium">No Invoice</label>
           <InputText
