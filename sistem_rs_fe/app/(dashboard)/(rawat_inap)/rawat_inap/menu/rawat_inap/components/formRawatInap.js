@@ -43,6 +43,9 @@ const FormRawatInap = ({
     return gender === "L" ? "Laki-Laki" : "Perempuan";
   }
 
+  // Check if form is in edit mode
+  const isEditMode = !!form.IDRAWATINAP;
+
   return (
     <Dialog
       header={form.IDRAWATINAP ? 'Edit Rawat Inap' : 'Tambah Rawat Inap'}
@@ -85,7 +88,7 @@ const FormRawatInap = ({
                     DIAGNOSA: selected?.DIAGNOSA || '',
                   })
                 }}
-                disabled
+                disabled={isEditMode}
                 placeholder="Pilih Rawat Inap"
                 filter
                 showClear
@@ -99,8 +102,8 @@ const FormRawatInap = ({
               <InputText
                 className={inputClass('POLI')}
                 value={form.POLI}
-                onChange={(e) => setForm({ ...form, POLI: e.value })}
-                disabled={!!form.POLI}
+                onChange={(e) => setForm({ ...form, POLI: e.target.value })}
+                disabled={isEditMode}
               />
             </div>
 
@@ -109,15 +112,15 @@ const FormRawatInap = ({
               <InputText
                 className={inputClass('DIAGNOSA')}
                 value={form.DIAGNOSA}
-                onChange={(e) => setForm({ ...form, DIAGNOSA: e.value })}
-                disabled
+                onChange={(e) => setForm({ ...form, DIAGNOSA: e.target.value })}
+                disabled={isEditMode}
               />
             </div>
             
             <div className="mt-2">
               <label>Jenis Kelamin</label>    
               <InputText
-                disabled
+                disabled={isEditMode}
                 className={inputClass('JENISKELAMIN')}
                 value={formatGender(form.JENISKELAMIN)}
               />
@@ -126,7 +129,7 @@ const FormRawatInap = ({
             <div className="mt-2">
               <label>NIK</label>
               <InputText
-                disabled
+                disabled={isEditMode}
                 className={inputClass('NIK')}
                 value={form.NIK}
               />
@@ -135,7 +138,7 @@ const FormRawatInap = ({
             <div className="mt-2">
               <label>Alamat</label>
               <InputText
-                disabled
+                disabled={isEditMode}
                 className={inputClass('ALAMAT_PASIEN')}
                 value={form.ALAMAT_PASIEN}
               />
@@ -149,7 +152,7 @@ const FormRawatInap = ({
             <div className="mt-2">
               <label>Bed</label>
               <Dropdown
-                className={inputClass('NOMORBED')}
+                className={inputClass('IDBED')}
                 value={form.IDBED}
                 options={bedOptions}
                 onChange={(e) => {
@@ -165,7 +168,6 @@ const FormRawatInap = ({
                 }}
                 placeholder="Pilih Bed"
                 filter
-                disabled
                 showClear
                 optionLabel="label"
               />
@@ -175,7 +177,7 @@ const FormRawatInap = ({
             <div className="mt-2">
               <label>Kamar</label>
               <InputText
-                disabled
+                disabled={isEditMode}
                 className={inputClass('NAMAKAMAR')}
                 value={form.NAMAKAMAR}
               />
@@ -184,7 +186,7 @@ const FormRawatInap = ({
             <div className="mt-2">
               <label>Bangsal</label>
               <InputText
-                disabled
+                disabled={isEditMode}
                 className={inputClass('NAMABANGSAL')}
                 value={form.NAMABANGSAL}
               />
@@ -193,7 +195,7 @@ const FormRawatInap = ({
             <div className="mt-2">
               <label>Harga Bangsal (Hari)</label>
               <InputText
-                disabled
+                disabled={isEditMode}
                 className={inputClass('HARGAPERHARI')}
                 value={formatRupiah(form.HARGAPERHARI)}
                 mode='currency'

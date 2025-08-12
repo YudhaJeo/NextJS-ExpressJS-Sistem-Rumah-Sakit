@@ -54,6 +54,12 @@ const Page = () => {
     fetchBed();
   }, []);
 
+  useEffect(() => {
+    if (form.IDRAWATINAP) {
+      fetchBed();
+    }
+  }, [form.IDRAWATINAP]);
+
   const fetchRawatInap = async () => {
     try {
       const res = await axios.get(`${API_URL}/rawat_inap`);
@@ -93,9 +99,12 @@ const Page = () => {
     try {
       const res = await axios.get(`${API_URL}/bed`);
       const options = res.data.data
-        .filter((item) => item.STATUS === 'TERSEDIA')
+        .filter((item) => {
+          return item.STATUS === 'TERSEDIA' || 
+                 (form.IDRAWATINAP && item.IDBED === form.IDBED);
+        })
         .map((item) => ({
-          label: `${item.NOMORBED}`,
+          label: `${item.NOMORBED} - ${item.NAMAKAMAR} (${item.NAMABANGSAL})`,
           value: item.IDBED,
           NAMAKAMAR: item.NAMAKAMAR, 
           NAMABANGSAL: item.NAMABANGSAL,
@@ -143,6 +152,13 @@ const Page = () => {
             : null,        
         CATATAN: form.CATATAN?.trim() || null,
       };
+
+      if (isEdit) {
+        payload.IDBED = form.IDBED;
+        payload.TANGGALMASUK = form.TANGGALMASUK
+          ? new Date(form.TANGGALMASUK).toISOString().slice(0, 19).replace("T", " ")
+          : null;
+      }
       
       try {
         let response;
