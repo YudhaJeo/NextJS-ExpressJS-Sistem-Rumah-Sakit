@@ -20,7 +20,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [errors, setErrors] = useState({});
-  const [pengobatanOptions, setPengobatanOptions] = useState([]);
+  const [rawatJalanOptions, setRawatJalanOptions] = useState([]);
   const [bedOptions, setBedOptions] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -29,6 +29,7 @@ const Page = () => {
     IDRAWATINAP: '',
     IDRAWATJALAN: '',
     POLI: '',
+    DIAGNOSA: '',
     NAMAPASIEN: '',
     UMUR: '',
     JENISKELAMIN: '',
@@ -48,12 +49,12 @@ const Page = () => {
   const [form, setForm] = useState(defaultForm);
 
   useEffect(() => {
-    fetchData();
-    fetchPengobatan();
+    fetchRawatInap();
+    fetchRawatJalan();
     fetchBed();
   }, []);
 
-  const fetchData = async () => {
+  const fetchRawatInap = async () => {
     try {
       const res = await axios.get(`${API_URL}/rawat_inap`);
       setData(res.data.data); 
@@ -66,7 +67,7 @@ const Page = () => {
     }
   };
 
-  const fetchPengobatan = async () => {
+  const fetchRawatJalan = async () => {
     try {
       const res = await axios.get(`${API_URL}/rawat_jalan`);
       const options = res.data.data
@@ -78,9 +79,10 @@ const Page = () => {
           JENISKELAMIN: item.JENISKELAMIN,
           NIK: item.NIK,
           ALAMAT_PASIEN: item.ALAMAT_PASIEN,
+          DIAGNOSA: item.DIAGNOSA,
       }));
-      console.log("[DEBUG] Data Pasien:", options)
-      setPengobatanOptions(options);
+      console.log("[DEBUG] Rawat Jalan:", options)
+      setRawatJalanOptions(options);
     } catch (err) {
       console.error('Gagal ambil data Rawat Inap:', err);
     }
@@ -156,7 +158,7 @@ const Page = () => {
           throw new Error('Respons tidak valid');
         }
       
-        fetchData();
+        fetchRawatInap();
         setDialogVisible(false);
         resetForm();
       } catch (err) {
@@ -172,6 +174,7 @@ const Page = () => {
       IDRAWATJALAN: row.IDRAWATJALAN,
       IDBED: row.IDBED,
       POLI: row.POLI || '',
+      DIAGNOSA: row.DIAGNOSA || '',
       JENISKELAMIN: row.JENISKELAMIN || '',
       NIK: row.PASIEN_NIK || '',
       ALAMAT_PASIEN: row.ALAMAT_PASIEN || '',
@@ -197,7 +200,7 @@ const Page = () => {
       accept: async () => {
         try {
           await axios.delete(`${API_URL}/rawat_inap/${row.IDRAWATINAP}`);
-          fetchData();
+          fetchRawatInap();
           toastRef.current?.showToast('00', 'Data berhasil dihapus');
         } catch (err) {
           console.error('Gagal hapus data:', err);
@@ -228,7 +231,7 @@ const Page = () => {
   };
 
   const handleSearch = (keyword) => {
-    if (!keyword) return fetchData();
+    if (!keyword) return fetchRawatInap();
     const filtered = data.filter((item) =>
       item.NAMALENGKAP?.toLowerCase().includes(keyword.toLowerCase()) ||
       item.NOMORBED?.toLowerCase().includes(keyword.toLowerCase()) ||
@@ -280,7 +283,7 @@ const Page = () => {
         form={form}
         setForm={setForm}
         errors={errors}
-        pengobatanOptions={pengobatanOptions}
+        rawatJalanOptions={rawatJalanOptions}
         bedOptions={bedOptions}
       />
     </div>

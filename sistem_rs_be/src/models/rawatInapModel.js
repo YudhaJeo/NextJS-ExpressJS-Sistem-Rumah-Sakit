@@ -22,7 +22,8 @@ export const getAll = () =>
       'kamar.NAMAKAMAR',
       'bangsal.NAMABANGSAL',
       'jenis_bangsal.NAMAJENIS',
-      'jenis_bangsal.HARGAPERHARI'
+      'jenis_bangsal.HARGAPERHARI',
+      'rawat_jalan.DIAGNOSA'
     )
     
 

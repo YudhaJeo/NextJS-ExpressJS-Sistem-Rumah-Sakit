@@ -17,7 +17,7 @@ const FormRawatInap = ({
   form,
   setForm,
   errors,
-  pengobatanOptions,
+  rawatJalanOptions,
   bedOptions
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -25,10 +25,10 @@ const FormRawatInap = ({
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
-  const items = [
-    { label: 'Data Pasien', icon: 'pi pi-id-card' },
-    { label: 'Ruang', icon: 'pi pi-objects-column' },
-    { label: 'Perawatan', icon: 'pi pi-clone' },
+  const tabMenu = [
+    { label: 'Data Pasien', icon: 'pi pi-address-book' },
+    { label: 'Ruangan', icon: 'pi pi-objects-column' },
+    { label: 'Perawatan', icon: 'pi pi-briefcase' },
   ];
 
   const formatRupiah = (value) =>
@@ -37,12 +37,18 @@ const FormRawatInap = ({
       currency: 'IDR',
     }).format(value || 0);
 
+  const formatGender = (gender) => {
+    if(!gender) return "-";
+
+    return gender === "L" ? "Laki-Laki" : "Perempuan";
+  }
+
   return (
     <Dialog
       header={form.IDRAWATINAP ? 'Edit Rawat Inap' : 'Tambah Rawat Inap'}
       visible={visible}
       onHide={onHide}
-      style={{ width: '50vw' }}
+      style={{ width: '60vw' }}
     >
       <form
         className="space-y-3"
@@ -53,7 +59,7 @@ const FormRawatInap = ({
       >
 
         <TabMenu 
-          model={items} 
+          model={tabMenu} 
           activeIndex={activeIndex}
           onTabChange={(e) => setActiveIndex(e.index)}  
         />
@@ -66,9 +72,9 @@ const FormRawatInap = ({
               <Dropdown
                 className={inputClass('IDRAWATJALAN')}
                 value={form.IDRAWATJALAN}
-                options={pengobatanOptions}
+                options={rawatJalanOptions}
                 onChange={(e) => {
-                  const selected = pengobatanOptions.find((o) => o.value === e.value);
+                  const selected = rawatJalanOptions.find((o) => o.value === e.value);
                   setForm({
                     ...form,
                     IDRAWATJALAN: e.value,
@@ -76,6 +82,7 @@ const FormRawatInap = ({
                     JENISKELAMIN: selected?.JENISKELAMIN || '',
                     NIK: selected?.NIK || '',
                     ALAMAT_PASIEN: selected?.ALAMAT_PASIEN || '',
+                    DIAGNOSA: selected?.DIAGNOSA || '',
                   })
                 }}
                 disabled
@@ -96,13 +103,23 @@ const FormRawatInap = ({
                 disabled={!!form.POLI}
               />
             </div>
+
+            <div className="mt-2">
+              <label>Diagnosa</label>
+              <InputText
+                className={inputClass('DIAGNOSA')}
+                value={form.DIAGNOSA}
+                onChange={(e) => setForm({ ...form, DIAGNOSA: e.value })}
+                disabled
+              />
+            </div>
             
             <div className="mt-2">
               <label>Jenis Kelamin</label>    
               <InputText
                 disabled
                 className={inputClass('JENISKELAMIN')}
-                value={form.JENISKELAMIN}
+                value={formatGender(form.JENISKELAMIN)}
               />
             </div>
             
