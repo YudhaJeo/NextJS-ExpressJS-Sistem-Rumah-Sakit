@@ -132,10 +132,10 @@ const FormDialogDeposit = ({
               const saldoSisa = nominal;
 
               let status = form.STATUS;
-              if (saldoSisa === 0) {
-                status = 'HABIS';
-              } else if (status === 'HABIS') {
-                status = 'AKTIF';
+              if (saldoSisa === 0 && form.STATUS !== 'HABIS') {
+                status = 'HABIS'; // set default Habis kalau saldo 0
+              } else if (saldoSisa > 0 && form.STATUS === 'HABIS') {
+                status = 'AKTIF'; // set balik ke Aktif kalau saldo > 0
               }
 
               setForm({
@@ -205,10 +205,9 @@ const FormDialogDeposit = ({
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUS })}
             options={statusOptions}
-            value={form.SALDO_SISA === 0 ? 'HABIS' : form.STATUS}
+            value={form.STATUS ?? null}
             onChange={(e) => setForm({ ...form, STATUS: e.value })}
             placeholder="Pilih Status"
-            disabled={form.SALDO_SISA === 0}
           />
           {errors.STATUS && <small className="p-error">{errors.STATUS}</small>}
         </div>

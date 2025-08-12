@@ -21,7 +21,7 @@ const Page = () => {
   const [form, setForm] = useState({
     IDMETODE: null,
     NAMA: '',
-    STATUS: 'AKTIF',
+    STATUS: null,
     KETERANGAN: '',
     FEE_PERSEN: 0,
   });
@@ -94,7 +94,7 @@ const Page = () => {
     setForm({
       IDMETODE: row.IDMETODE ?? null,
       NAMA: row.NAMA ?? '',
-      STATUS: row.STATUS ?? 'AKTIF',
+      STATUS: row.STATUS ?? null,
       KETERANGAN: row.KETERANGAN ?? '',
       FEE_PERSEN: row.FEE_PERSEN ?? 0,
     });
@@ -126,7 +126,7 @@ const Page = () => {
       IDMETODE: null,
       NAMA: '',
       TIPE: '',
-      STATUS: 'AKTIF',
+      STATUS: null,
       KETERANGAN: '',
       FEE_PERSEN: 0,
       IDBANK: null,

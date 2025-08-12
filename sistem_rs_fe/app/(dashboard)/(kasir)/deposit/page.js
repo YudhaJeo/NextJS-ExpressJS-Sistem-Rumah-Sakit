@@ -34,7 +34,7 @@ const Page = () => {
     IDBANK: '',
     NOMINAL: 0,
     SALDO_SISA: 0,
-    STATUS: 'AKTIF',
+    STATUS: null,
     KETERANGAN: '',
   });
 
@@ -199,7 +199,7 @@ const Page = () => {
       IDBANK: '',
       NOMINAL: 0,
       SALDO_SISA: 0,
-      STATUS: 'AKTIF',
+      STATUS: null,
       KETERANGAN: '',
     });
   };

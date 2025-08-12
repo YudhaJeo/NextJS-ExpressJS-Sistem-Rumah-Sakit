@@ -80,10 +80,10 @@ const FormDialogMetodePembayaran = ({
           <Dropdown
             className={inputClass('STATUS')}
             options={[
-              { label: 'AKTIF', value: 'AKTIF' },
-              { label: 'NONAKTIF', value: 'NONAKTIF' },
+              { label: 'Aktif', value: 'AKTIF' },
+              { label: 'Nonaktif', value: 'NONAKTIF' },
             ]}
-            value={form.STATUS ?? ''}
+            value={form.STATUS ?? null}
             onChange={(e) => setForm({ ...form, STATUS: e.value })}
             placeholder="Pilih Status"
           />
