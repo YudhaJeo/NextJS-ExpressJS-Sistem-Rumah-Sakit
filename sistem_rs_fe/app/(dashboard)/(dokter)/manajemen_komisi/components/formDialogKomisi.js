@@ -124,7 +124,7 @@ const FormDialogKomisi = ({
           <label>Keterangan</label>
           <InputText
             value={formData.KETERANGAN || ''}
-            placeholder="Tulis keterangan tambahan"
+            placeholder="Tulis keterangan tambahan (opsional)"
             className="w-full"
             onChange={(e) =>
               onChange({ ...formData, KETERANGAN: e.target.value })

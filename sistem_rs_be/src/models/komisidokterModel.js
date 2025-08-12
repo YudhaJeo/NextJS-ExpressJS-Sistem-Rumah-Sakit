@@ -12,8 +12,6 @@ export const getAllKomisi = () =>
       'pendaftaran.NIK',
       'pendaftaran.TANGGALKUNJUNGAN',
       'pendaftaran.KELUHAN',
-      'rawat_jalan.DIAGNOSA',
-      'rawat_jalan.OBAT',
       'pasien.NAMALENGKAP as NAMAPASIEN',
       'master_tenaga_medis.NAMALENGKAP as NAMADOKTER'
     );
@@ -30,8 +28,6 @@ export const getByIdKomisi = (id) =>
       'pendaftaran.NIK',
       'pendaftaran.TANGGALKUNJUNGAN',
       'pendaftaran.KELUHAN',
-      'rawat_jalan.DIAGNOSA',
-      'rawat_jalan.OBAT',
       'pasien.NAMALENGKAP as NAMAPASIEN',
       'master_tenaga_medis.NAMALENGKAP as NAMADOKTER'
     )

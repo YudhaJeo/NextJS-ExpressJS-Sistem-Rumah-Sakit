@@ -118,7 +118,7 @@ const KomisiPage = () => {
       KETERANGAN,
     } = formData;
 
-    if (!IDRAWATJALAN || !NILAIKOMISI || !STATUS || !KETERANGAN) {
+    if (!IDRAWATJALAN || !NILAIKOMISI || !STATUS) {
       toastRef.current?.showToast("01", "Field wajib tidak boleh kosong!");
       return;
     }
