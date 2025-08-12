@@ -105,4 +105,34 @@ export async function insertFromRawatInap(rawatInap) {
   if (rawatData?.IDBED) {
     await db('bed').where({ IDBED: rawatData.IDBED }).update({ STATUS: 'TERSEDIA' });
   }
+
+  if (rawatData) {
+    const pasienData = await db('rawat_inap')
+      .join('rawat_jalan', 'rawat_inap.IDRAWATJALAN', 'rawat_jalan.IDRAWATJALAN')
+      .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+      .select('pendaftaran.NIK')
+      .where('rawat_inap.IDRAWATINAP', IDRAWATINAP)
+      .first();
+
+    if (pasienData?.NIK) {
+      const invoice = await db('invoice')
+        .where('NIK', pasienData.NIK)
+        .orderBy('IDINVOICE', 'desc')
+        .first();
+
+      if (invoice) {
+        const SISA_TAGIHAN = (TOTALBIAYA || 0) - (invoice.TOTALDEPOSIT || 0) - (invoice.TOTALANGSURAN || 0);
+        const statusFinal = SISA_TAGIHAN <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
+
+        await db('invoice')
+          .where('IDINVOICE', invoice.IDINVOICE)
+          .update({
+            TOTALTAGIHAN: TOTALBIAYA,
+            SISA_TAGIHAN,
+            STATUS: statusFinal,
+            UPDATED_AT: db.fn.now()
+          });
+      }
+    }
+  }
 }
