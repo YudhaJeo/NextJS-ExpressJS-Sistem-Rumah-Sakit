@@ -168,37 +168,37 @@ const AppMenu = () => {
           },
         ],
       },
-      {
-        label: "Apotek & Farmasi",
-        items: [
-          { label: "Dashboard Apotek", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_apotek" },
-          {
-            label: "Master",
-            items: [
-              { label: "Daftar Obat", icon: "pi pi-fw pi-database", to: "/daftar_obat" },
-              { label: "Alat Kesehatan", icon: "pi pi-fw pi-briefcase", to: "/alkes" },
-              { label: "Supplier", icon: "pi pi-fw pi-user", to: "/supplier" },
+      // {
+      //   label: "Apotek & Farmasi",
+      //   items: [
+      //     { label: "Dashboard Apotek", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_apotek" },
+      //     {
+      //       label: "Master",
+      //       items: [
+      //         { label: "Daftar Obat", icon: "pi pi-fw pi-database", to: "/daftar_obat" },
+      //         { label: "Alat Kesehatan", icon: "pi pi-fw pi-briefcase", to: "/alkes" },
+      //         { label: "Supplier", icon: "pi pi-fw pi-user", to: "/supplier" },
               
               
-            ],
-          },
-          {
-            label: "Menu",
-            items: [
-              { label: "Kartu Stock", icon: "pi pi-fw pi-bars", to: "/kartu_stock" },
-              { label: "Order Pengambilan Obat", icon: "pi pi-fw pi-history", to: "/order_pengambilan" },
-              { label: "Penjualan/POS Kasir", icon: "pi pi-fw pi-shopping-cart", to: "/penjualan" },
-              { label: "Pemesanan", icon: "pi pi-fw pi-dollar", to: "/pemesanan" },
-            ],
-          },
-          {
-            label: "Laporan",
-            items: [
-              { label: "Laporan Penjualan", icon: "pi pi-fw pi-chart-bar", to: "/apotek/laporan_penjualan_obat" },
-            ],
-          },
-        ],
-      },
+      //       ],
+      //     },
+      //     {
+      //       label: "Menu",
+      //       items: [
+      //         { label: "Kartu Stock", icon: "pi pi-fw pi-bars", to: "/kartu_stock" },
+      //         { label: "Order Pengambilan Obat", icon: "pi pi-fw pi-history", to: "/order_pengambilan" },
+      //         { label: "Penjualan/POS Kasir", icon: "pi pi-fw pi-shopping-cart", to: "/penjualan" },
+      //         { label: "Pemesanan", icon: "pi pi-fw pi-dollar", to: "/pemesanan" },
+      //       ],
+      //     },
+      //     {
+      //       label: "Laporan",
+      //       items: [
+      //         { label: "Laporan Penjualan", icon: "pi pi-fw pi-chart-bar", to: "/apotek/laporan_penjualan_obat" },
+      //       ],
+      //     },
+      //   ],
+      // },
       {
         label: "Fitur Kasir & Sales",
         items: [
