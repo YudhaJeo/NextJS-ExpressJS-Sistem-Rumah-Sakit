@@ -6,6 +6,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import { Button } from 'primereact/button';
+import { FileUpload } from 'primereact/fileupload';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -31,9 +32,13 @@ const FormDialogRawatJalan = ({
   pendaftaranOptions,
 }) => {
   const [errors, setErrors] = useState({});
+  const [fotoPreview, setFotoPreview] = useState(null);
 
   useEffect(() => {
-    if (!visible) setErrors({});
+    if (!visible) {
+      setErrors({});
+      setFotoPreview(null);
+    }
   }, [visible]);
 
   const validate = () => {
@@ -56,6 +61,7 @@ const FormDialogRawatJalan = ({
 
   const handleHide = () => {
     setErrors({});
+    setFotoPreview(null);
     onHide();
   };
 
@@ -140,14 +146,31 @@ const FormDialogRawatJalan = ({
 
         <div>
           <label className="font-medium">Upload Foto Resep</label>
-          <input
-            type="file"
+          <FileUpload
+            mode="basic"
+            name="FOTORESEP"
             accept="image/*"
-            className="mt-2"
-            onChange={(e) => setForm({ ...form, FOTORESEP: e.target.files[0] })}
+            maxFileSize={10000000}
+            auto
+            chooseLabel="Pilih Foto"
+            onSelect={(e) => {
+              if (e.files && e.files.length > 0) {
+                const file = e.files[0];
+                setForm({ ...form, FOTORESEP: file });
+                setFotoPreview(URL.createObjectURL(file));
+              }
+            }}
           />
         </div>
-        {form.fotoResepLama && !form.FOTORESEP && (
+
+        {fotoPreview && (
+          <img
+            src={fotoPreview}
+            alt="Preview Foto Resep"
+            className="w-16 h-16 object-cover mt-2 rounded"
+          />
+        )}
+        {!fotoPreview && form.fotoResepLama && !form.FOTORESEP && (
           <img
             src={`${API_URL}/uploads/rawat_jalan/${form.fotoResepLama}`}
             alt="Foto Resep Lama"
