@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
 
 const URL_API = process.env.NEXT_PUBLIC_URL;
 
@@ -71,22 +72,44 @@ const TabelRawatJalan = ({ data, loading, onEdit, onDelete }) => {
         <Column field="DIAGNOSA" header="Diagnosa" />
         <Column field="KETERANGAN" header="Keterangan" />
         <Column
-          field="FOTORESEP"
-          header="Foto Resep"
-          style={{ width: '120px', textAlign: 'center' }} // ✅ batasi lebar kolom
-          body={(row) => (
-            row.FOTORESEP ? (
-              <img
-                src={`${URL_API}/uploads/rawat_jalan/${row.FOTORESEP}`}
-                alt="Foto Resep"
-                className="w-12 h-12 object-cover rounded cursor-pointer" // ✅ kecilin ukuran jadi 48px
-                onClick={() => handlePreview(`${URL_API}/uploads/rawat_jalan/${row.FOTORESEP}`)}
-              />
-            ) : "-"
-          )}
-        />
+            field="FOTORESEP"
+            header="Foto Resep"
+            style={{ width: '120px', textAlign: 'center' }}
+            body={(row) =>
+              row.FOTORESEP ? (
+                <div className="w-12 aspect-square overflow-hidden rounded cursor-pointer bg-gray-100">
+                  <img
+                    src={`${URL_API}/uploads/rawat_jalan/${row.FOTORESEP}`}
+                    alt="Foto Resep"
+                    className="w-full h-full object-cover"
+                    onClick={() =>
+                      handlePreview(`${URL_API}/uploads/rawat_jalan/${row.FOTORESEP}`)
+                    }
+                  />
+                </div>
+              ) : (
+                "-"
+              )
+            }
+          />
         <Column header="Aksi" body={actionBody} style={{ width: "220px" }} />
       </DataTable>
+
+      <Dialog
+        header="Preview Foto Resep"
+        visible={previewVisible}
+        style={{ width: '50vw', maxWidth: '600px' }}
+        modal
+        onHide={() => setPreviewVisible(false)}
+      >
+        {previewSrc && (
+          <img
+            src={previewSrc}
+            alt="Preview Foto Resep"
+            className="w-full h-auto object-contain rounded"
+          />
+        )}
+      </Dialog>
     </>
   );
 };

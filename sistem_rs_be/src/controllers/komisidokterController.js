@@ -34,8 +34,7 @@ export async function createKomisi(req, res) {
     if (
       !IDRAWATJALAN ||
       !NILAIKOMISI ||
-      !STATUS ||
-      !KETERANGAN
+      !STATUS
     ) {
       return res.status(400).json({ error: 'Field wajib tidak boleh kosong' });
     }

@@ -31,9 +31,7 @@ export default function DetailRiwayatInapPage() {
 
   const fetchDetail = async () => {
     try {
-      const res = await axios.get(`${API_URL}/komisi_dokter/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(`${API_URL}/komisi_dokter/${id}`);
       setDetail(res.data);
 
       const servicesData = [];
