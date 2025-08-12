@@ -8,7 +8,7 @@ import { Dialog } from 'primereact/dialog';
 
 const URL_API = process.env.NEXT_PUBLIC_URL;
 
-const TabelRawatJalan = ({ data, loading, onEdit, onDelete }) => {
+const TabelRawatJalan = ({ data, loading, onEdit, onDelete, onDetail }) => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewSrc, setPreviewSrc] = useState(null);
 
@@ -30,6 +30,12 @@ const TabelRawatJalan = ({ data, loading, onEdit, onDelete }) => {
 
   const actionBody = (row) => (
     <div className="flex gap-2">
+      <Button
+        label="Detail"
+        icon="pi pi-search"
+        size="small"
+        onClick={() => onDetail(row)}
+      />
       <Button
         icon="pi pi-pencil"
         size="small"

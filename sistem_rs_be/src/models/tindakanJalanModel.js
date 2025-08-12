@@ -1,5 +1,18 @@
 import db from '../core/config/knex.js';
 
+export const getAllByRawatJalan = (idRawatJalan) =>
+  db("tindakan_jalan as tj")
+    .join("tindakan_medis as tm", "tj.IDTINDAKAN", "tm.IDTINDAKAN")
+    .select(
+      "tj.IDTINDAKANJALAN",
+      "tj.IDTINDAKAN",
+      "tm.NAMATINDAKAN",
+      "tj.JUMLAH",
+      "tj.HARGA",
+      "tj.TOTAL"
+    )
+    .where("tj.IDRAWATJALAN", idRawatJalan);
+    
 export const getAll = () =>
   db('tindakan_jalan')
     .join('rawat_jalan', 'tindakan_jalan.IDRAWATJALAN', 'rawat_jalan.IDRAWATJALAN')

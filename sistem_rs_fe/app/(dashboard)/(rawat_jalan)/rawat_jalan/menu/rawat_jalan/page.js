@@ -10,6 +10,7 @@ import FormDialogRawatJalan from "./components/formDialogRiwayat";
 import TabelRawatJalan from "./components/tabelRiwayat";
 import { Toast } from "primereact/toast";
 import HeaderBar from "@/app/components/headerbar";
+import DetailRawatJalan from "./components/detailRawatJalan";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -36,6 +37,8 @@ const RawatJalanPage = () => {
   const [dokterOptions, setDokterOptions] = useState([]);
   const [pendaftaranOptions, setPendaftaranOptions] = useState([]);
   const [unitKerja, setUnitKerja] = useState(null);
+  const [detailVisible, setDetailVisible] = useState(false);
+  const [selectedRawat, setSelectedRawat] = useState(null); 
 
   const toastRef = useRef(null);
   const toastUpload = useRef(null);
@@ -109,6 +112,11 @@ const RawatJalanPage = () => {
     setStartDate(null);
     setEndDate(null);
     setData(originalData);
+  };
+
+  const handleDetail = (row) => {
+    setSelectedRawat(row);
+    setDetailVisible(true);
   };
 
   const handleDateFilter = () => {
@@ -227,7 +235,13 @@ const RawatJalanPage = () => {
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
-
+        onDetail={handleDetail}
+      />
+      
+      <DetailRawatJalan
+        visible={detailVisible}
+        onHide={() => setDetailVisible(false)}
+        rawatJalan={selectedRawat}
       />
 
       <FormDialogRawatJalan
