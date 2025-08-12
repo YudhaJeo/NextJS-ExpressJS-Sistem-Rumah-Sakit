@@ -7,6 +7,7 @@ import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import { Button } from 'primereact/button';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const statusKunjunganOptions = [
   { label: 'Diperiksa', value: 'Diperiksa' },
@@ -126,6 +127,33 @@ const FormDialogRawatJalan = ({
           />
           {errors.DIAGNOSA && <small className="p-error">{errors.DIAGNOSA}</small>}
         </div>
+
+        <div>
+          <label className="font-medium">Keterangan</label>
+          <InputText
+            className="w-full mt-2"
+            value={form.KETERANGAN || ''}
+            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
+            placeholder="Masukkan keterangan tambahan"
+          />
+        </div>
+
+        <div>
+          <label className="font-medium">Upload Foto Resep</label>
+          <input
+            type="file"
+            accept="image/*"
+            className="mt-2"
+            onChange={(e) => setForm({ ...form, FOTORESEP: e.target.files[0] })}
+          />
+        </div>
+        {form.fotoResepLama && !form.FOTORESEP && (
+          <img
+            src={`${API_URL}/uploads/rawat_jalan/${form.fotoResepLama}`}
+            alt="Foto Resep Lama"
+            className="w-16 h-16 object-cover mt-2 rounded"
+          />
+        )}
 
         <div className="text-right pt-4">
           <Button

@@ -19,13 +19,16 @@ export async function getAllRawatJalan(req, res) {
 
 export async function createRawatJalan(req, res) {
   try {
-    const { IDPENDAFTARAN, IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA} = req.body;
+    const { IDPENDAFTARAN, IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, KETERANGAN } = req.body;
+    const FOTORESEP = req.file ? req.file.filename : null;
     await RawatJalanModel.createRawatJalan({
       IDPENDAFTARAN,
       IDDOKTER,
       STATUSKUNJUNGAN,
       STATUSRAWAT,
-      DIAGNOSA
+      DIAGNOSA,
+      KETERANGAN,
+      FOTORESEP
     });
     res.json({ message: 'RawatJalan berhasil ditambahkan' });
   } catch (err) {
@@ -38,13 +41,16 @@ export async function updateRawatJalan(req, res) {
   const id = req.params.id;
 
   try {
-    const { IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA} = req.body;
+    const { IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, KETERANGAN } = req.body;
+    const FOTORESEP = req.file ? req.file.filename : null;
 
     await RawatJalanModel.updateRawatJalan(id, {
       IDDOKTER,
       STATUSKUNJUNGAN,
       STATUSRAWAT,
-      DIAGNOSA
+      DIAGNOSA,
+      KETERANGAN,
+      FOTORESEP
     });
 
     const updated = await RawatJalanModel.getRawatById(id);
@@ -62,6 +68,8 @@ export async function updateRawatJalan(req, res) {
         IDRAWATJALAN: updated.IDRAWATJALAN,
         IDDOKTER: updated.IDDOKTER,
         DIAGNOSA: updated.DIAGNOSA,
+        KETERANGAN: updated.KETERANGAN,
+        FOTORESEP: updated.FOTORESEP,
         TOTALOBAT,
         TOTALTINDAKAN,
         TOTALBIAYA,

@@ -69,6 +69,22 @@ const TabelRawatJalan = ({ data, loading, onEdit, onDelete }) => {
         <Column field="NAMADOKTER" header="Dokter" />
         <Column field="STATUSRAWAT" header="Status Rawat" />
         <Column field="DIAGNOSA" header="Diagnosa" />
+        <Column field="KETERANGAN" header="Keterangan" />
+        <Column
+          field="FOTORESEP"
+          header="Foto Resep"
+          style={{ width: '120px', textAlign: 'center' }} // ✅ batasi lebar kolom
+          body={(row) => (
+            row.FOTORESEP ? (
+              <img
+                src={`${URL_API}/uploads/rawat_jalan/${row.FOTORESEP}`}
+                alt="Foto Resep"
+                className="w-12 h-12 object-cover rounded cursor-pointer" // ✅ kecilin ukuran jadi 48px
+                onClick={() => handlePreview(`${URL_API}/uploads/rawat_jalan/${row.FOTORESEP}`)}
+              />
+            ) : "-"
+          )}
+        />
         <Column header="Aksi" body={actionBody} style={{ width: "220px" }} />
       </DataTable>
     </>

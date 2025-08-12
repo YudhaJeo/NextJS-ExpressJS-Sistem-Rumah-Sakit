@@ -20,6 +20,9 @@ const initialForm = () => ({
   STATUSKUNJUNGAN: "Dalam Antrian",
   STATUSRAWAT: "Rawat Jalan",
   DIAGNOSA: "",
+  KETERANGAN: "",
+  FOTORESEP: null,
+  fotoResepLama: null,
 });
 
 const RawatJalanPage = () => {
@@ -120,19 +123,28 @@ const RawatJalanPage = () => {
   };
 
   const handleSubmit = async () => {
-    const payload = {
-      IDDOKTER: form.IDDOKTER,
-      IDPENDAFTARAN: form.IDPENDAFTARAN,
-      STATUSKUNJUNGAN: form.STATUSKUNJUNGAN,
-      STATUSRAWAT: form.STATUSRAWAT,
-      DIAGNOSA: form.DIAGNOSA,
-    };
-
     try {
+      const formData = new FormData();
+      formData.append("IDDOKTER", form.IDDOKTER);
+      formData.append("IDPENDAFTARAN", form.IDPENDAFTARAN);
+      formData.append("STATUSKUNJUNGAN", form.STATUSKUNJUNGAN);
+      formData.append("STATUSRAWAT", form.STATUSRAWAT);
+      formData.append("DIAGNOSA", form.DIAGNOSA);
+      formData.append("KETERANGAN", form.KETERANGAN);
+      if (!form.FOTORESEP && form.fotoResepLama) {
+        formData.append("fotoResepLama", form.fotoResepLama);
+      }
+      if (form.FOTORESEP) {
+        formData.append("FOTORESEP", form.FOTORESEP);
+      }
+
       if (form.IDRAWATJALAN) {
-        await axios.put(`${API_URL}/rawat_jalan/${form.IDRAWATJALAN}`, payload);
+        await axios.put(`${API_URL}/rawat_jalan/${form.IDRAWATJALAN}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         toastRef.current?.showToast("00", "Data berhasil diperbarui");
       }
+
       fetchData(unitKerja);
       setDialogVisible(false);
       resetForm();
@@ -150,6 +162,9 @@ const RawatJalanPage = () => {
       STATUSKUNJUNGAN: row.STATUSKUNJUNGAN || "Dalam Antrian",
       STATUSRAWAT: row.STATUSRAWAT || "Rawat Jalan",
       DIAGNOSA: row.DIAGNOSA || "",
+      KETERANGAN: row.KETERANGAN || "",
+      FOTORESEP: null,
+      fotoResepLama: row.FOTORESEP || null,
     });
     setDialogVisible(true);
   };
@@ -212,6 +227,7 @@ const RawatJalanPage = () => {
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
+
       />
 
       <FormDialogRawatJalan

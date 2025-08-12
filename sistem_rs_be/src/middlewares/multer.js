@@ -11,6 +11,8 @@ const getUploadPath = (req) => {
     folder = 'uploads/tenaga_non_medis';
   } else if (req.baseUrl.includes('tenaga_medis')) {
     folder = 'uploads/tenaga_medis';
+  } else if (req.baseUrl.includes('rawat_jalan')) {
+    folder = 'uploads/rawat_jalan';
   }
 
   const uploadPath = path.join(process.cwd(), folder);
