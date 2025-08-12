@@ -122,6 +122,7 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
           <InputText
             value={form.KODETENAGANONMEDIS || ""}
             className="w-full mt-2"
+            placeholder="Kode Otomatis"
             disabled
           />
         </div>

@@ -83,6 +83,7 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
 
   const validate = () => {
     const newErrors = {};
+    if (form.STATUSKEPEGAWAIAN === "Tetap" && form.NIP) { if (!/^[0-9]{18}$/.test(form.NIP)) {newErrors.NIP = "NIP harus 18 digit angka";}}
     if (!form.NAMALENGKAP) newErrors.NAMALENGKAP = "Nama wajib diisi";
     if (!form.JENISKELAMIN) newErrors.JENISKELAMIN = "Jenis kelamin wajib dipilih";
     if (!form.TEMPATLAHIR) newErrors.TEMPATLAHIR = "Tempat lahir wajib diisi";
