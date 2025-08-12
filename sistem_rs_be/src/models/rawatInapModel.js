@@ -25,8 +25,6 @@ export const getAll = () =>
       'jenis_bangsal.HARGAPERHARI',
       'rawat_jalan.DIAGNOSA'
     )
-    
-
 
 export const getById = (id) =>
   db('rawat_inap')
@@ -80,7 +78,8 @@ export const update = async (id, data) => {
   const { TANGGALMASUK, TANGGALKELUAR, IDBED, CATATAN } = data;
 
   const rawat = await db('rawat_inap').where({ IDRAWATINAP: id }).first();
-  const bed = IDBED || rawat.IDBED;
+  const oldBedId = rawat.IDBED;
+  const newBedId = IDBED || rawat.IDBED;
   const tanggalMasuk = new Date(TANGGALMASUK || rawat.TANGGALMASUK);
   const tanggalKeluar = TANGGALKELUAR ? new Date(TANGGALKELUAR) : null;
 
@@ -92,7 +91,7 @@ export const update = async (id, data) => {
       .join('kamar', 'bed.IDKAMAR', 'kamar.IDKAMAR')
       .join('bangsal', 'kamar.IDBANGSAL', 'bangsal.IDBANGSAL')
       .join('jenis_bangsal', 'bangsal.IDJENISBANGSAL', 'jenis_bangsal.IDJENISBANGSAL')
-      .where('bed.IDBED', bed)
+      .where('bed.IDBED', newBedId)
       .select('jenis_bangsal.HARGAPERHARI')
       .first();
 
@@ -101,24 +100,39 @@ export const update = async (id, data) => {
     status = 'SELESAI';
   }
 
+  const updateData = {
+    TANGGALMASUK: tanggalMasuk,
+    TANGGALKELUAR: tanggalKeluar,
+    STATUS: status,
+    TOTALKAMAR: totalHarga,
+    CATATAN,
+    UPDATED_AT: db.fn.now(),
+  };
+
+  if (IDBED && IDBED !== oldBedId) {
+    updateData.IDBED = IDBED;
+  }
+
   await db('rawat_inap')
     .where({ IDRAWATINAP: id })
-    .update({
-      TANGGALMASUK: tanggalMasuk,
-      TANGGALKELUAR: tanggalKeluar,
-      STATUS: status,
-      TOTALKAMAR: totalHarga,
-      CATATAN,
-      UPDATED_AT: db.fn.now(),
-    });
+    .update(updateData);
 
-  // ambil data setelah update
   const updatedRawat = await db('rawat_inap').where({ IDRAWATINAP: id }).first();
 
-  if (status === 'SELESAI') {
-    await db('bed').where({ IDBED: bed }).update({ STATUS: 'TERSEDIA' });
+  if (oldBedId !== newBedId) {
+    if (oldBedId) {
+      await db('bed').where({ IDBED: oldBedId }).update({ STATUS: 'TERSEDIA' });
+    }
+    
+    if (newBedId) {
+      await db('bed').where({ IDBED: newBedId }).update({ STATUS: 'TERISI' });
+    }
   } else {
-    await db('bed').where({ IDBED: bed }).update({ STATUS: 'TERISI' });
+    if (status === 'SELESAI') {
+      await db('bed').where({ IDBED: newBedId }).update({ STATUS: 'TERSEDIA' });
+    } else {
+      await db('bed').where({ IDBED: newBedId }).update({ STATUS: 'TERISI' });
+    }
   }
 
   return updatedRawat;

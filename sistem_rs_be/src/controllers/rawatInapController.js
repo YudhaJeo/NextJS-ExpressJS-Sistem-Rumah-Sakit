@@ -52,11 +52,21 @@ const update = async (req, res) => {
       return res.status(404).json({ message: 'Data tidak ditemukan' });
     }
 
-    await RawatInap.update(id, {
+    const updateData = {
       TANGGALKELUAR: keluarSekarang,
       STATUS: 'SELESAI',
       CATATAN: req.body.CATATAN ?? null
-    });
+    };
+
+    if (req.body.IDBED) {
+      updateData.IDBED = req.body.IDBED;
+    }
+
+    if (req.body.TANGGALMASUK) {
+      updateData.TANGGALMASUK = req.body.TANGGALMASUK;
+    }
+
+    await RawatInap.update(id, updateData);
 
     const updated = await RawatInap.getById(id);
 
