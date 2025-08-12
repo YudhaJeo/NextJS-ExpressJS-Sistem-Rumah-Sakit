@@ -56,8 +56,8 @@ const MyForm = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
           <Dropdown
             className={inputClass('JENISRAWAT')}
             options={[
-              { label: 'Jalan', value: 'INAP' },
-              { label: 'Inap', value: 'JALAN' },
+              { label: 'Jalan', value: 'JALAN' },
+              { label: 'Inap', value: 'INAP' },
             ]}
             value={form.JENISRAWAT}
             onChange={(e) => setForm({ ...form, JENISRAWAT: e.value })}
