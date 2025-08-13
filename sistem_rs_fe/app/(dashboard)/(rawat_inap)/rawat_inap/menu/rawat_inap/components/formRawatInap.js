@@ -4,11 +4,13 @@
 import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { Dropdown } from 'primereact/dropdown';
-import { Calendar } from 'primereact/calendar';
-import { InputTextarea } from 'primereact/inputtextarea';
 import { TabMenu } from 'primereact/tabmenu';
-import { InputText } from 'primereact/inputtext';
+import {
+  TabDataPasien,
+  TabRuangan,
+  TabTindakan,
+  TabObat
+} from './tabs';
 
 const FormRawatInap = ({
   visible,
@@ -18,7 +20,8 @@ const FormRawatInap = ({
   setForm,
   errors,
   rawatJalanOptions,
-  bedOptions
+  bedOptions,
+  tenagaMedisOptions,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -28,22 +31,10 @@ const FormRawatInap = ({
   const tabMenu = [
     { label: 'Data Pasien', icon: 'pi pi-address-book' },
     { label: 'Ruangan', icon: 'pi pi-objects-column' },
-    { label: 'Perawatan', icon: 'pi pi-briefcase' },
+    { label: 'Riwayat Tindakan', icon: 'pi pi-briefcase' },
+    { label: 'Riwayat Obat', icon: 'pi pi-chart-pie' },
   ];
 
-  const formatRupiah = (value) =>
-    new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-    }).format(value || 0);
-
-  const formatGender = (gender) => {
-    if(!gender) return "-";
-
-    return gender === "L" ? "Laki-Laki" : "Perempuan";
-  }
-
-  // Check if form is in edit mode
   const isEditMode = !!form.IDRAWATINAP;
 
   return (
@@ -51,7 +42,7 @@ const FormRawatInap = ({
       header={form.IDRAWATINAP ? 'Edit Rawat Inap' : 'Tambah Rawat Inap'}
       visible={visible}
       onHide={onHide}
-      style={{ width: '60vw' }}
+      style={{ width: '80vw' }}
     >
       <form
         className="space-y-3"
@@ -69,194 +60,48 @@ const FormRawatInap = ({
         
         {/* TAB 0: Data Pasien */}
         {activeIndex === 0 && (
-          <>
-            <div className="mt-2">
-              <label>Rawat Inap</label>
-              <Dropdown
-                className={inputClass('IDRAWATJALAN')}
-                value={form.IDRAWATJALAN}
-                options={rawatJalanOptions}
-                onChange={(e) => {
-                  const selected = rawatJalanOptions.find((o) => o.value === e.value);
-                  setForm({
-                    ...form,
-                    IDRAWATJALAN: e.value,
-                    POLI: selected?.POLI || '',
-                    JENISKELAMIN: selected?.JENISKELAMIN || '',
-                    NIK: selected?.NIK || '',
-                    ALAMAT_PASIEN: selected?.ALAMAT_PASIEN || '',
-                    DIAGNOSA: selected?.DIAGNOSA || '',
-                  })
-                }}
-                disabled={isEditMode}
-                placeholder="Pilih Rawat Inap"
-                filter
-                showClear
-                optionLabel="label"
-              />
-              {errors.IDRAWATJALAN && <small className="text-red-500">{errors.IDRAWATJALAN}</small>}
-            </div>
-
-            <div className="mt-2">
-              <label>Poli</label>
-              <InputText
-                className={inputClass('POLI')}
-                value={form.POLI}
-                onChange={(e) => setForm({ ...form, POLI: e.target.value })}
-                disabled={isEditMode}
-              />
-            </div>
-
-            <div className="mt-2">
-              <label>Diagnosa</label>
-              <InputText
-                className={inputClass('DIAGNOSA')}
-                value={form.DIAGNOSA}
-                onChange={(e) => setForm({ ...form, DIAGNOSA: e.target.value })}
-                disabled={isEditMode}
-              />
-            </div>
-            
-            <div className="mt-2">
-              <label>Jenis Kelamin</label>    
-              <InputText
-                disabled={isEditMode}
-                className={inputClass('JENISKELAMIN')}
-                value={formatGender(form.JENISKELAMIN)}
-              />
-            </div>
-            
-            <div className="mt-2">
-              <label>NIK</label>
-              <InputText
-                disabled={isEditMode}
-                className={inputClass('NIK')}
-                value={form.NIK}
-              />
-            </div>
-
-            <div className="mt-2">
-              <label>Alamat</label>
-              <InputText
-                disabled={isEditMode}
-                className={inputClass('ALAMAT_PASIEN')}
-                value={form.ALAMAT_PASIEN}
-              />
-            </div>
-          </>
+          <TabDataPasien
+            form={form}
+            setForm={setForm}
+            errors={errors}
+            rawatJalanOptions={rawatJalanOptions}
+            isEditMode={isEditMode}
+            inputClass={inputClass}
+          />
         )}
         
         {/* TAB 1: Data Ruangan  */}
         {activeIndex === 1 && (
-          <>
-            <div className="mt-2">
-              <label>Bed</label>
-              <Dropdown
-                className={inputClass('IDBED')}
-                value={form.IDBED}
-                options={bedOptions}
-                onChange={(e) => {
-                  const selected = bedOptions.find((o) => o.value === e.value);
-                  setForm({
-                    ...form,
-                    IDBED: e.value,
-                    NAMAKAMAR: selected?.NAMAKAMAR || '',
-                    NAMABANGSAL: selected?.NAMABANGSAL || '',
-                    HARGAPERHARI: selected?.HARGAPERHARI || '',
-                    STATUSBED: selected?.STATUSBED || '',
-                  })
-                }}
-                placeholder="Pilih Bed"
-                filter
-                showClear
-                optionLabel="label"
-              />
-              {errors.IDBED && <small className="text-red-500">{errors.IDBED}</small>}
-            </div>
-
-            <div className="mt-2">
-              <label>Kamar</label>
-              <InputText
-                disabled={isEditMode}
-                className={inputClass('NAMAKAMAR')}
-                value={form.NAMAKAMAR}
-              />
-            </div>
-
-            <div className="mt-2">
-              <label>Bangsal</label>
-              <InputText
-                disabled={isEditMode}
-                className={inputClass('NAMABANGSAL')}
-                value={form.NAMABANGSAL}
-              />
-            </div>
-          
-            <div className="mt-2">
-              <label>Harga Bangsal (Hari)</label>
-              <InputText
-                disabled={isEditMode}
-                className={inputClass('HARGAPERHARI')}
-                value={formatRupiah(form.HARGAPERHARI)}
-                mode='currency'
-              />
-            </div>
-          </>
+          <TabRuangan
+            form={form}
+            setForm={setForm}
+            errors={errors}
+            bedOptions={bedOptions}
+            isEditMode={isEditMode}
+            inputClass={inputClass}
+          />
         )}
-        
 
-        {/* TAB 2: Perawatan  */}
-        {activeIndex === 2 && (
-          <>
-            <div className="mt-2">
-              <label>Tanggal Masuk</label>
-              <Calendar
-                className={inputClass('TANGGALMASUK')}
-                value={form.TANGGALMASUK ? new Date(form.TANGGALMASUK) : null}
-                onChange={(e) => setForm({ ...form, TANGGALMASUK: e.value })}
-                showIcon
-                dateFormat="yy-mm-dd"
-              />
-              {errors.TANGGALMASUK && <small className="text-red-500">{errors.TANGGALMASUK}</small>}
-            </div>
+         {/* TAB 2: Riwayat Tindakan */}
+         {activeIndex === 2 && (
+           <TabTindakan
+             form={form}
+             setForm={setForm}
+             tindakanInapData={form.tindakanInap || []}
+             tenagaMedisOptions={tenagaMedisOptions}
+           />
+         )}
 
-            <div className="mt-2">
-              <label className="mb-1">Tanggal Keluar</label>
-              <div className="flex items-center gap-2">
-                <Calendar
-                  className={inputClass('TANGGALKELUAR')}
-                  value={form.TANGGALKELUAR ? new Date(form.TANGGALKELUAR) : null}
-                  onChange={(e) => setForm({ ...form, TANGGALKELUAR: e.value })}
-                  showIcon
-                  dateFormat="yy-mm-dd"
-                />
-                {form.TANGGALKELUAR && (
-                  <Button
-                    type="button"
-                    icon="pi pi-times"
-                    className="p-button-text p-button-danger"
-                    tooltip="Hapus Tanggal"
-                    onClick={() => setForm({ ...form, TANGGALKELUAR: null })}
-                  />
-                )}
-              </div>
-              {errors.TANGGALKELUAR && (
-                <small className="text-red-500">{errors.TANGGALKELUAR}</small>
-              )}
-            </div>
-
-
-            <div className="mt-2">
-              <label>Catatan</label>
-              <InputTextarea
-                className={inputClass('CATATAN')}
-                value={form.CATATAN || ''}
-                onChange={(e) => setForm({ ...form, CATATAN: e.target.value })}
-                placeholder="Masukkan catatan (Opsional)"
-              />
-            </div>
-          </>
-        )}
+         {/* TAB 3: Riwayat Obat */}
+         {activeIndex === 3 && (
+           <TabObat
+             form={form}
+             setForm={setForm}
+             idRawatInap={form.IDRAWATINAP}
+             obatInapData={form.obatInap || []}
+             tenagaMedisOptions={tenagaMedisOptions}
+           />
+         )}
         
         <div className="text-right pt-3">
           <Button type="submit" label="Simpan" icon="pi pi-save" />

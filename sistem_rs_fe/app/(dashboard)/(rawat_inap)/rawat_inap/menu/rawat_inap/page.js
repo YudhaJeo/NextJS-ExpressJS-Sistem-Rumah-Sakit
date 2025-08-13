@@ -22,6 +22,7 @@ const Page = () => {
   const [errors, setErrors] = useState({});
   const [rawatJalanOptions, setRawatJalanOptions] = useState([]);
   const [bedOptions, setBedOptions] = useState([]);
+  const [tenagaMedisOptions, setTenagaMedisOptions] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -48,10 +49,12 @@ const Page = () => {
   
   const [form, setForm] = useState(defaultForm);
 
+
   useEffect(() => {
     fetchRawatInap();
     fetchRawatJalan();
     fetchBed();
+    fetchTenagaMedis();
   }, []);
 
   useEffect(() => {
@@ -65,7 +68,7 @@ const Page = () => {
       const res = await axios.get(`${API_URL}/rawat_inap`);
       setData(res.data.data); 
       setOriginalData(res.data.data);
-      console.log("[DEBUG] Data Rawat Inap:", res.data.data)
+      // console.log("[DEBUG] Data Rawat Inap:", res.data.data)
     } catch (err) {
       console.error('Gagal ambil data rawat inap:', err);
     } finally {
@@ -86,8 +89,9 @@ const Page = () => {
           NIK: item.NIK,
           ALAMAT_PASIEN: item.ALAMAT_PASIEN,
           DIAGNOSA: item.DIAGNOSA,
+          NAMALENGKAP: item.NAMALENGKAP,
       }));
-      console.log("[DEBUG] Rawat Jalan:", options)
+      // console.log("[DEBUG] Rawat Jalan:", options)
       setRawatJalanOptions(options);
     } catch (err) {
       console.error('Gagal ambil data Rawat Inap:', err);
@@ -111,10 +115,26 @@ const Page = () => {
           HARGAPERHARI: item.HARGAPERHARI,
           STATUSBED: item.STATUS,
         }));
-      console.log("[DEBUG] Data Kamar:", options)
+      // console.log("[DEBUG] Data Kamar:", options)
       setBedOptions(options);
     } catch (err) {
       console.error('Gagal ambil bed:', err);
+    }
+  };
+
+  const fetchTenagaMedis = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/tenaga_medis`);
+      const options = res.data.data.map((item) => ({
+        label: item.NAMALENGKAP,
+        value: item.IDTENAGAMEDIS,
+        JENISTENAGAMEDIS: item.JENISTENAGAMEDIS,
+        NAMATENAGAMEDIS: item.NAMALENGKAP,
+      }));
+      // console.log("[DEBUG] Tenaga Medis:", options)
+      setTenagaMedisOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil data tenaga medis:', err);
     }
   };
 
@@ -140,49 +160,52 @@ const Page = () => {
       ? `${API_URL}/rawat_inap/${form.IDRAWATINAP}`
       : `${API_URL}/rawat_inap`;
   
-      const payload = {
-        ...form,
-        STATUS: form.TANGGALKELUAR ? 'SELESAI' : 'AKTIF',
-        TANGGALMASUK: form.TANGGALMASUK
-          ? new Date(form.TANGGALMASUK).toISOString().slice(0, 19).replace("T", " ")
-          : null,
-          TANGGALKELUAR:
-          form.TANGGALKELUAR && form.TANGGALKELUAR !== ''
-            ? new Date(form.TANGGALKELUAR).toISOString().slice(0, 19).replace("T", " ")
-            : null,        
-        CATATAN: form.CATATAN?.trim() || null,
-      };
+    const payload = {
+      ...form,
+      STATUS: form.TANGGALKELUAR ? 'SELESAI' : 'AKTIF',
+      TANGGALMASUK: form.TANGGALMASUK
+        ? new Date(form.TANGGALMASUK).toISOString().slice(0, 19).replace("T", " ")
+        : null,
+      TANGGALKELUAR:
+        form.TANGGALKELUAR && form.TANGGALKELUAR !== ''
+          ? new Date(form.TANGGALKELUAR).toISOString().slice(0, 19).replace("T", " ")
+          : null,        
+      CATATAN: form.CATATAN?.trim() || null,
+    };
 
+    if (isEdit) {
+      payload.IDBED = form.IDBED;
+      payload.TANGGALMASUK = form.TANGGALMASUK
+        ? new Date(form.TANGGALMASUK).toISOString().slice(0, 19).replace("T", " ")
+        : null;
+    }
+    
+    try {
+      let response;
       if (isEdit) {
-        payload.IDBED = form.IDBED;
-        payload.TANGGALMASUK = form.TANGGALMASUK
-          ? new Date(form.TANGGALMASUK).toISOString().slice(0, 19).replace("T", " ")
-          : null;
+        response = await axios.put(url, payload);
+      } else {
+        response = await axios.post(url, payload);
       }
-      
-      try {
-        let response;
-        if (isEdit) {
-          response = await axios.put(url, payload);
-        } else {
-          response = await axios.post(url, payload);
-        }
-      
-        if (response.status === 200 && response.data?.message) {
-          toastRef.current?.showToast('00', response.data.message);
-        } else {
-          throw new Error('Respons tidak valid');
-        }
-      
+    
+      if (response.status === 200 && response.data?.message) {
+        
+        toastRef.current?.showToast('00', response.data.message);
         fetchRawatInap();
-        setDialogVisible(false);
         resetForm();
-      } catch (err) {
-        console.error('Gagal simpan data:', err);
-        toastRef.current?.showToast('01', 'Gagal menyimpan data');
-      }      
+
+        fetchBed();
+        fetchRawatInap();
+        fetchRawatJalan();
+        fetchTenagaMedis();
+      } else {
+        throw new Error('Respons tidak valid');
+      }
+    } catch (err) {
+      console.error('Gagal simpan data:', err);
+      toastRef.current?.showToast('01', 'Gagal menyimpan data');
+    }      
   };
-  
 
   const handleEdit = (row) => {
     setForm({
@@ -199,11 +222,37 @@ const Page = () => {
       HARGAPERHARI: row.HARGAPERHARI || '',
       TANGGALMASUK: row.TANGGALMASUK,
       TANGGALKELUAR: row.TANGGALKELUAR || '',
-      CATATAN: row.CATATAN || ''
+      CATATAN: row.CATATAN || '',
+      tindakanInap: [],
+      obatInap: []
     });    
     setDialogVisible(true);
+    
+    fetchTindakanInapByRawatInapId(row.IDRAWATINAP);
+    fetchObatInapByRawatInapId(row.IDRAWATINAP);
   };
   
+  const fetchObatInapByRawatInapId = async (idRawatInap) => {
+    try {
+      const res = await axios.get(`${API_URL}/obat_inap/rawat_inap/${idRawatInap}`);
+      // console.log("Data obat ID:", res.data.data)
+      return res.data.data || [];
+    } catch (err) {
+      console.error('Gagal ambil data obat inap:', err);
+      return [];
+    }
+  };  
+
+  const fetchTindakanInapByRawatInapId = async (idRawatInap) => {
+    try {
+      const res = await axios.get(`${API_URL}/tindakan_inap/rawat_inap/${idRawatInap}`);
+      console.log("Data tindakan ID:", res.data.data)
+      return res.data.data || [];
+    } catch (err) {
+      console.error('Gagal ambil data tindakan inap:', err);
+      return [];
+    }
+  };  
   
 
   const handleDelete = (row) => {
@@ -301,6 +350,7 @@ const Page = () => {
         errors={errors}
         rawatJalanOptions={rawatJalanOptions}
         bedOptions={bedOptions}
+        tenagaMedisOptions={tenagaMedisOptions}
       />
     </div>
   );
