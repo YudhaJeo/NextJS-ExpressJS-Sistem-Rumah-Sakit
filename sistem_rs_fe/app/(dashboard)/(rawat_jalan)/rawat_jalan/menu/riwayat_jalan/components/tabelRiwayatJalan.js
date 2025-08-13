@@ -11,7 +11,7 @@ import axios from 'axios'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
-const TabelRiwayatInap = ({ data, loading }) => {
+const TabelRiwayatJalan = ({ data, loading }) => {
   const [adjustDialog, setAdjustDialog] = useState(false)
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false)
   const [pdfUrl, setPdfUrl] = useState('')
@@ -38,13 +38,11 @@ const TabelRiwayatInap = ({ data, loading }) => {
   const handleOpenAdjust = async (rowData) => {
     try {
       const res = await axios.get(`${API_URL}/riwayat_jalan/${rowData.IDRIWAYATJALAN}`)
-      const detail = res.data.data
-
-      setSelectedRow(detail)
+      setSelectedRow(res.data.data)
       setAdjustDialog(true)
     } catch (err) {
       console.error('Gagal ambil detail:', err)
-      alert('Gagal mengambil detail rawat jalan')
+      alert('Gagal mengambil detail riwayat rawat jalan')
     }
   }
 
@@ -61,7 +59,7 @@ const TabelRiwayatInap = ({ data, loading }) => {
         icon="pi pi-sliders-h"
         className="p-button-sm p-button-warning"
         onClick={() => handleOpenAdjust(rowData)}
-        tooltip="Atur Margin"
+        tooltip="Atur Margin & Cetak"
       />
     </div>
   )
@@ -69,43 +67,14 @@ const TabelRiwayatInap = ({ data, loading }) => {
   return (
     <>
       <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
-        <Column
-          field="NAMALENGKAP"
-          header="Pasien"
-        />
-        <Column
-          field="NAMADOKTER"
-          header="Dokter"
-        />
-        <Column
-          field="DIAGNOSA"
-          header="Hasil Diagnosa"
-        />
-        <Column
-          field="TOTALOBAT"
-          header="Total Obat"
-          body={(r) => formatRupiah(r.TOTALOBAT)}
-        />
-        <Column
-          field="TOTALTINDAKAN"
-          header="Total Tindakan"
-          body={(r) => formatRupiah(r.TOTALTINDAKAN)}
-        />
-        <Column
-          field="TOTALBIAYA"
-          header="Tagihan Total"
-          body={(r) => formatRupiah(r.TOTALBIAYA)}
-        />
-        <Column
-          field="TANGGALRAWAT"
-          header="Tanggal Masuk"
-          body={(r) => formatTanggal(r.TANGGALRAWAT)}
-        />
-        <Column
-          header="Aksi"
-          body={actionBody}
-          style={{ width: '150px', textAlign: 'center' }}
-        />
+        <Column field="NAMALENGKAP" header="Pasien" />
+        <Column field="NAMADOKTER" header="Dokter" />
+        <Column field="DIAGNOSA" header="Hasil Diagnosa" />
+        <Column field="TOTALOBAT" header="Total Obat" body={(r) => formatRupiah(r.TOTALOBAT)} />
+        <Column field="TOTALTINDAKAN" header="Total Tindakan" body={(r) => formatRupiah(r.TOTALTINDAKAN)} />
+        <Column field="TOTALBIAYA" header="Tagihan Total" body={(r) => formatRupiah(r.TOTALBIAYA)} />
+        <Column field="TANGGALRAWAT" header="Tanggal Rawat" body={(r) => formatTanggal(r.TANGGALRAWAT)} />
+        <Column header="Aksi" body={actionBody} style={{ width: '150px', textAlign: 'center' }} />
       </DataTable>
 
       <AdjustPrintMarginLaporan
@@ -134,4 +103,4 @@ const TabelRiwayatInap = ({ data, loading }) => {
   )
 }
 
-export default TabelRiwayatInap
+export default TabelRiwayatJalan
