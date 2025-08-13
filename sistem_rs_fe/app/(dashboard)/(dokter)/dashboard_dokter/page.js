@@ -7,6 +7,8 @@ import { Tag } from 'primereact/tag';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -172,7 +174,7 @@ const DashboardDokter = () => {
 
       <div className="col-12 md:col-6">
         <Card>
-          <div className="flex justify-content-between mb-3">
+          <div className="flex justify-content-between mb-5">
             <span className="font-medium text-lg text-900">Perbandingan Data Dokter</span>
             <Tag value="Live" severity="info" />
           </div>
@@ -187,6 +189,44 @@ const DashboardDokter = () => {
             <Tag value="Live" severity="info" />
           </div>
           <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
+        </Card>
+        <Card>
+          <div className="flex justify-content-between mb-3">
+            <span className="font-medium text-lg text-900">Kalender Dokter</span>
+            <Tag value="Live" severity="info" />
+          </div>
+          <DataTable value={data?.kalender ?? []} paginator rows={3} responsiveLayout="scroll">
+            <Column field="NAMA_DOKTER" header="Nama Dokter" sortable />
+            <Column
+                field="TANGGAL"
+                header="Tanggal"
+                sortable
+                body={(rowData) => {
+                  const date = new Date(rowData.TANGGAL);
+                  return date.toLocaleDateString('id-ID', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric',
+                  });
+                }}
+              />
+            <Column
+              field="STATUS"
+              header="Status"
+              sortable
+              body={(rowData) => {
+                switch (rowData.STATUS) {
+                  case "info":
+                    return <Tag severity="info" value="perjanjian" />;
+                  case "warning":
+                    return <Tag severity="warning" value="libur" />;
+                  default:
+                    return <Tag severity="secondary" value={rowData.STATUS} />;
+                }
+              }}
+            />
+            <Column field="KETERANGAN" header="Keterangan" />
+          </DataTable>
         </Card>
       </div>
     </div>
