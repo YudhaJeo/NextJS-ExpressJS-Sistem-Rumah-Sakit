@@ -22,15 +22,16 @@ export const getById = (id) =>
 
 export const getByRawatInapId = (idRawatInap) =>
   db('tindakan_inap')
-    .where({ IDRAWATINAP: idRawatInap });
+    .join('tindakan_medis', 'tindakan_inap.IDTINDAKAN', 'tindakan_medis.IDTINDAKAN')
+    .where({ 'tindakan_inap.IDRAWATINAP': idRawatInap })
+    .select(
+      'tindakan_inap.*',
+      'tindakan_medis.NAMATINDAKAN',
+      'tindakan_medis.HARGA as HARGA_TINDAKAN'
+    );
 
 export const create = (data) =>
   db('tindakan_inap').insert(data);
-
-export const update = (id, data) =>
-  db('tindakan_inap')
-    .where({ IDTINDAKANINAP: id })
-    .update({ ...data, UPDATED_AT: db.fn.now() });
 
 export const remove = (id) =>
   db('tindakan_inap').where({ IDTINDAKANINAP: id }).delete();

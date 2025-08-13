@@ -1,16 +1,16 @@
 import express from 'express';
 import {
   getAllObatInap,
+  getObatInapByRawatInapId,
   insertObatInap,
-  updateObatInap,
   deleteObatInap
 } from '../controllers/obatInapController.js';
 
 const router = express.Router();
 
 router.get('/', getAllObatInap);
+router.get('/rawat_inap/:idRawatInap', getObatInapByRawatInapId);
 router.post('/', insertObatInap);
-router.put('/:id', updateObatInap);
 router.delete('/:id', deleteObatInap);
 
 export default router;

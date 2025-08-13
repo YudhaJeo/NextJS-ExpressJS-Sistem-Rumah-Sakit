@@ -23,15 +23,16 @@ export const getById = (id) =>
 
 export const getByRawatInapId = (idRawatInap) =>
   db('obat_inap')
-    .where({ IDRAWATINAP: idRawatInap });
+    .join('obat', 'obat_inap.IDOBAT', 'obat.IDOBAT')
+    .where({ 'obat_inap.IDRAWATINAP': idRawatInap })
+    .select(
+      'obat_inap.*',
+      'obat.NAMAOBAT',
+      'obat.HARGAJUAL as HARGA_OBAT'
+    );
 
 export const create = (data) =>
   db('obat_inap').insert(data);
-
-export const update = (id, data) =>
-  db('obat_inap')
-    .where({ IDOBATINAP: id })
-    .update({ ...data, UPDATED_AT: db.fn.now() });
 
 export const remove = (id) =>
   db('obat_inap').where({ IDOBATINAP: id }).delete();
