@@ -35,9 +35,8 @@ export default function InvoiceDetailPage() {
 
   const fetchInvoice = async () => {
     try {
-      const res = await axios.get(`${API_URL}/invoice`);
-      const found = res.data.data.find(item => item.IDINVOICE == id);
-      setInvoice(found || null);
+      const res = await axios.get(`${API_URL}/invoice/${id}`);
+      setInvoice(res.data.data || null);
     } catch (err) {
       console.error('Gagal ambil invoice:', err);
       toastRef.current?.showToast('01', 'Gagal mengambil data invoice');
@@ -104,8 +103,14 @@ export default function InvoiceDetailPage() {
               </div>
 
               <div className="col-12 md:col-6">
-                <h4>Informasi Invoice</h4>
                 <Divider />
+                <h4>Rincian Biaya Riwayat</h4>
+                <p><b>Biaya Kamar:</b> {formatCurrency(invoice.TOTALKAMAR)}</p>
+                <p><b>Total Obat:</b> {formatCurrency(invoice.TOTALOBAT)}</p>
+                <p><b>Total Tindakan:</b> {formatCurrency(invoice.TOTALTINDAKAN)}</p>
+                <p><b>Total Biaya:</b> {formatCurrency(invoice.TOTALBIAYA)}</p>
+                <Divider />
+                <h4>Informasi Invoice</h4>
                 <p><b>Tanggal Invoice:</b> {formatTanggal(invoice.TANGGALINVOICE)}</p>
                 <p><b>Total Tagihan:</b> {formatCurrency(invoice.TOTALTAGIHAN)}</p>
                 <p><b>Total Deposit:</b> {formatCurrency(invoice.TOTALDEPOSIT)}</p>

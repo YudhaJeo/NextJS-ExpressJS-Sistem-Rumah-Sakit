@@ -45,80 +45,182 @@ export default function AdjustPrintMarginLaporan({
     setDataAdjust((prev) => ({ ...prev, [name]: e.value }));
   };
 
-  async function exportPDF(detail, adjustConfig) {
-    const doc = new jsPDF({
-      orientation: adjustConfig.orientation,
-      unit: 'mm',
-      format: adjustConfig.paperSize,
-    });
+ async function exportPDF(detail, adjustConfig) {
+  const doc = new jsPDF({
+    orientation: adjustConfig.orientation,
+    unit: 'mm',
+    format: adjustConfig.paperSize,
+  });
 
-    const marginLeft = parseFloat(adjustConfig.marginLeft);
-    const marginTop = parseFloat(adjustConfig.marginTop);
-    const marginRight = parseFloat(adjustConfig.marginRight);
+  const marginLeft = parseFloat(adjustConfig.marginLeft);
+  const marginTop = parseFloat(adjustConfig.marginTop);
+  const marginRight = parseFloat(adjustConfig.marginRight);
 
-    let y = marginTop + 10;
+  let y = marginTop + 10;
 
-    const formatTanggal = (tanggal) =>
-      tanggal
-        ? new Date(tanggal).toLocaleDateString('id-ID', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })
-        : '-';
+  const num = (v) => Number.isFinite(Number(v)) ? Number(v) : 0;
 
-    const formatDateTime = (tanggal) =>
-      tanggal
-        ? new Date(tanggal).toLocaleString('id-ID', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          })
-        : '-';
+  const formatTanggal = (tanggal) =>
+    tanggal
+      ? new Date(tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+      : '-';
 
-    // === HEADER ===
-    doc.setFontSize(18);
-    doc.text('Detail Invoice', doc.internal.pageSize.width / 2, y, {
-      align: 'center',
-    });
-    y += 10;
+  const formatDateTime = (tanggal) =>
+    tanggal
+      ? new Date(tanggal).toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+      : '-';
 
-    doc.setFontSize(12);
-    doc.text(`No Invoice : ${detail.NOINVOICE}`, marginLeft, y);
-    y += 6;
-    doc.text(`Nama Pasien : ${detail.NAMAPASIEN}`, marginLeft, y);
-    y += 6;
-    doc.text(`NIK : ${detail.NIK}`, marginLeft, y);
-    y += 6;
-    doc.text(`Tanggal Invoice : ${formatTanggal(detail.TANGGALINVOICE)}`, marginLeft, y);
-    y += 6;
-    doc.text(`Status : ${detail.STATUS}`, marginLeft, y);
-    y += 10;
+  const formatRupiah = (val) =>
+    new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num(val));
 
-    autoTable(doc, {
-      startY: y,
-      head: [['Keterangan', 'Isi']],
-      body: [
-        ['No Invoice', detail.NOINVOICE],
-        ['Nama Pasien', detail.NAMAPASIEN],
-        ['NIK', detail.NIK],
-        ['Asuransi', detail.ASURANSI || '-'],
-        ['Tanggal Invoice', formatTanggal(detail.TANGGALINVOICE)],
-        ['Tanggal Dibuat', formatDateTime(detail.CREATED_AT)],
-        ['Status', detail.STATUS],
-        ['Total Tagihan', `Rp ${detail.TOTALTAGIHAN.toLocaleString('id-ID')}`],
-        ['Total Deposit', `Rp ${detail.TOTALDEPOSIT.toLocaleString('id-ID')}`],
-        ['Total Angsuran', `Rp ${detail.TOTALANGSURAN.toLocaleString('id-ID')}`],
-        ['Sisa Tagihan', `Rp ${detail.SISA_TAGIHAN.toLocaleString('id-ID')}`],
-      ],
-      styles: { fontSize: 9 },
-      margin: { left: marginLeft, right: marginRight },
-    });
+  // --- Totals dari backend (fallback ke 0 bila null) ---
+  const totalKamar = num(detail.TOTALKAMAR);
+  const totalObat = num(detail.TOTALOBAT);
+  const totalTindakan = num(detail.TOTALTINDAKAN);
+  const totalBiaya = num(detail.TOTALBIAYA) || (totalKamar + totalObat + totalTindakan);
 
-    return doc.output('datauristring');
-  }
+  const totalTagihan = num(detail.TOTALTAGIHAN) || totalBiaya;
+  const totalDeposit = num(detail.TOTALDEPOSIT);
+  const totalAngsuran = num(detail.TOTALANGSURAN);
+  const sisaTagihan = num(detail.SISA_TAGIHAN) || (totalTagihan - totalDeposit - totalAngsuran);
+
+  // === HEADER ===
+  doc.setFontSize(18);
+  doc.text('Detail Invoice', doc.internal.pageSize.width / 2, y, { align: 'center' });
+  y += 10;
+
+  doc.setFontSize(10);
+  doc.text(`ID Transaksi: #${detail.IDINVOICE ?? '-'}`, doc.internal.pageSize.width / 2, y, { align: 'center' });
+  y += 15;
+
+  const labelX = marginLeft;
+  const valueX = marginLeft + 25;
+
+  doc.setFontSize(12);
+  doc.text('Informasi Pasien', labelX, y);
+  y += 6;
+
+  doc.setFontSize(10);
+  doc.text('Nama Pasien', labelX, y);
+  doc.text(`: ${detail.NAMALENGKAP ?? '-'}`, valueX - 2, y);
+  y += 6;
+
+  doc.text('Nomor Bed', labelX, y);
+  doc.text(`: ${detail.NOMORBED ?? '-'}`, valueX - 2, y);
+  y += 10;
+
+  doc.setFontSize(12);
+  doc.text('Periode Rawat Inap', labelX, y);
+  y += 6;
+
+  doc.setFontSize(10);
+  doc.text('Masuk', labelX, y);
+  doc.text(`: ${formatTanggal(detail.TANGGALMASUK)}`, valueX - 2, y);
+  y += 6;
+
+  doc.text('Keluar', labelX, y);
+  doc.text(`: ${formatTanggal(detail.TANGGALKELUAR)}`, valueX - 2, y);
+  y += 10;
+
+  // === TABEL LAYANAN ===
+  const services = [];
+
+  // Baris kamar
+  services.push([
+    1,
+    `Biaya Kamar Rawat Inap${detail.NOMORBED ? ` (Bed ${detail.NOMORBED})` : ''}`,
+    '-',
+    1,
+    'Kamar',
+    formatRupiah(totalKamar),
+    formatRupiah(totalKamar)
+  ]);
+
+  // Obat
+  (detail.obat || []).forEach((o, i) => {
+    const harga = num(o.HARGA);
+    const jumlah = num(o.JUMLAH);
+    const total = num(o.TOTAL) || (harga * jumlah);
+    services.push([i + 2, o.NAMAOBAT ?? '-', o.JENISOBAT ?? '-', jumlah, 'Obat', formatRupiah(harga), formatRupiah(total)]);
+  });
+
+  // Tindakan
+  (detail.tindakan || []).forEach((t, i) => {
+    const harga = num(t.HARGA);
+    const jumlah = num(t.JUMLAH);
+    const total = num(t.TOTAL) || (harga * jumlah);
+    services.push([services.length + 1, t.NAMATINDAKAN ?? '-', t.KATEGORI ?? '-', jumlah, 'Tindakan', formatRupiah(harga), formatRupiah(total)]);
+  });
+
+  autoTable(doc, {
+    startY: y,
+    head: [['#', 'Layanan', 'Satuan/Kategori', 'Qty', 'Jenis', 'Harga Satuan', 'Total']],
+    body: services,
+    styles: { fontSize: 9 },
+    headStyles: { fillColor: [245, 246, 250], textColor: 20, halign: 'center', fontStyle: 'bold' },
+    columnStyles: {
+      0: { halign: 'center', cellWidth: 8 },
+      2: { halign: 'center', cellWidth: 25 },
+      3: { halign: 'center', cellWidth: 12 },
+      4: { halign: 'center', cellWidth: 25 },
+      5: { halign: 'right' },
+      6: { halign: 'right' },
+    },
+    margin: { left: marginLeft, right: marginRight },
+  });
+
+  let y2 = doc.lastAutoTable.finalY + 10;
+
+  // === RINGKASAN BIAYA ===
+  doc.setFontSize(12);
+  doc.text('Ringkasan Biaya', marginLeft, y2);
+  y2 += 6;
+
+  const summary = [
+    ['Biaya Kamar', totalKamar],
+    ['Total Obat', totalObat],
+    ['Total Tindakan', totalTindakan],
+    ['Total Biaya', totalBiaya],
+  ];
+
+  summary.forEach(([label, val]) => {
+    doc.setFontSize(10);
+    doc.text(label, marginLeft, y2);
+    doc.text(formatRupiah(val), doc.internal.pageSize.width - marginRight, y2, { align: 'right' });
+    y2 += 6;
+  });
+
+  y2 += 10;
+
+  // === TABEL DETAIL INVOICE ===
+  autoTable(doc, {
+    startY: y2,
+    head: [['Keterangan', 'Isi']],
+    body: [
+      ['No Invoice', detail.NOINVOICE ?? '-'],
+      ['Nama Pasien', detail.NAMALENGKAP ?? '-'],
+      ['NIK', detail.NIK ?? '-'],
+      ['Asuransi', detail.ASURANSI ?? '-'],
+      ['Tanggal Invoice', formatTanggal(detail.TANGGALINVOICE)],
+      ['Tanggal Dibuat', formatDateTime(detail.CREATED_AT)],
+      ['Status', detail.STATUS ?? '-'],
+      ['Total Tagihan', formatRupiah(totalTagihan)],
+      ['Total Deposit', formatRupiah(totalDeposit)],
+      ['Total Angsuran', formatRupiah(totalAngsuran)],
+      ['Sisa Tagihan', formatRupiah(sisaTagihan)],
+    ],
+    styles: { fontSize: 9 },
+    margin: { left: marginLeft, right: marginRight },
+  });
+
+  const y3 = doc.lastAutoTable.finalY + 10;
+  doc.setFontSize(9);
+  doc.text('Terima kasih atas kepercayaan anda menggunakan layanan kami.', doc.internal.pageSize.width / 2, y3, { align: 'center' });
+
+  return doc.output('datauristring');
+}
+
+
 
   const handleExportPdf = async () => {
     if (!selectedRow) return;
