@@ -19,13 +19,12 @@ export default function EditableData({ user, loading }) {
     <div className="col-12 md:col-4">
       <div className="card align-items-center text-center">
         {/* foto profil */}
-        <div className="relative">
+        <div className="flex justify-center mb-4">
           {user.FOTOPROFIL ? (
             <img
               src={user.FOTOPROFIL}
               alt="Preview"
-              style={{ maxWidth: '200px', maxHeight: '200px', objectFit: 'cover', borderRadius: '50%' }}
-              className="w-24 h-24 rounded-full object-cover border shadow"
+              className="w-32 h-32 rounded-full object-cover border shadow"
             />
           ) : (
             <div className="w-32 h-32 flex items-center justify-center rounded-full bg-gray-100 border border-gray-300 shadow-inner">

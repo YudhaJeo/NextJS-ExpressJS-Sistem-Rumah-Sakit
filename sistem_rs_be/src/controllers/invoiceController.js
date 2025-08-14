@@ -20,6 +20,8 @@ export async function getInvoiceById(req, res) {
     if (!invoice) {
       return res.status(404).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
+    
+    invoice.TOTALTAGIHAN = invoice.TOTALTAGIHAN || invoice.TOTALBIAYA;
 
     res.status(200).json({ success: true, data: invoice });
   } catch (err) {
@@ -27,6 +29,7 @@ export async function getInvoiceById(req, res) {
     res.status(500).json({ success: false, message: err.message });
   }
 }
+
 
 export async function updateInvoice(req, res) {
   try {

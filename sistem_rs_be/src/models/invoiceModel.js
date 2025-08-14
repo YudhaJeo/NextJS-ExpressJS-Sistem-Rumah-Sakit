@@ -1,26 +1,43 @@
 import db from '../core/config/knex.js';
 
 export const getAll = () => {
-  return db('invoice')
-    .join('pasien', 'invoice.NIK', 'pasien.NIK')
-    .leftJoin('asuransi', 'pasien.IDASURANSI', 'asuransi.IDASURANSI')
+  return db('invoice as i')
+    .join('pasien as p', 'i.NIK', 'p.NIK')
+    .leftJoin('asuransi as a', 'p.IDASURANSI', 'a.IDASURANSI')
+    .leftJoin('riwayat_rawat_inap as rri', 'i.IDRIWAYATINAP', 'rri.IDRIWAYATINAP')
     .select(
-      'invoice.*',
-      'pasien.NAMALENGKAP as NAMAPASIEN',
-      'asuransi.NAMAASURANSI as ASURANSI'
-    );
+      'i.*',
+      'p.NAMALENGKAP as NAMAPASIEN',
+      'a.NAMAASURANSI as ASURANSI',
+      'rri.NOMORBED',
+      'rri.TANGGALMASUK',
+      'rri.TANGGALKELUAR',
+      'rri.TOTALKAMAR',
+      'rri.TOTALOBAT',
+      'rri.TOTALTINDAKAN',
+      'rri.TOTALBIAYA'
+    )
+    .orderBy('i.TANGGALINVOICE', 'desc');
 };
 
 export const getById = (id) => {
-  return db('invoice')
-    .join('pasien', 'invoice.NIK', 'pasien.NIK')
-    .leftJoin('asuransi', 'pasien.IDASURANSI', 'asuransi.IDASURANSI')
+  return db('invoice as i')
+    .join('pasien as p', 'i.NIK', 'p.NIK')
+    .leftJoin('asuransi as a', 'p.IDASURANSI', 'a.IDASURANSI')
+    .leftJoin('riwayat_rawat_inap as rri', 'i.IDRIWAYATINAP', 'rri.IDRIWAYATINAP')
     .select(
-      'invoice.*',
-      'pasien.NAMALENGKAP as NAMAPASIEN',
-      'asuransi.NAMAASURANSI as ASURANSI'
+      'i.*',
+      'p.NAMALENGKAP as NAMAPASIEN',
+      'a.NAMAASURANSI as ASURANSI',
+      'rri.NOMORBED',
+      'rri.TANGGALMASUK',
+      'rri.TANGGALKELUAR',
+      'rri.TOTALKAMAR',
+      'rri.TOTALOBAT',
+      'rri.TOTALTINDAKAN',
+      'rri.TOTALBIAYA'
     )
-    .where('invoice.IDINVOICE', id)
+    .where('i.IDINVOICE', id)
     .first();
 };
 

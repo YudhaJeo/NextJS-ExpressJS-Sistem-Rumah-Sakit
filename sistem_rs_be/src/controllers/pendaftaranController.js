@@ -72,23 +72,29 @@ export async function getAllPendaftaran(req, res) {
 }
 
 export async function updatePendaftaran(req, res) {
+  const trx = await db.transaction();
   try {
     const id = req.params.id;
     const { NIK, TANGGALKUNJUNGAN, IDPOLI, KELUHAN, STATUSKUNJUNGAN } = req.body;
 
-    console.log('Update ID:', id);
-    console.log('Update Data:', req.body); 
+    await trx('pendaftaran')
+      .where({ IDPENDAFTARAN: id })
+      .update({
+        NIK,
+        TANGGALKUNJUNGAN,
+        IDPOLI,
+        KELUHAN,
+        STATUSKUNJUNGAN,
+      });
 
-    const [idPendaftaran] = await trx('pendaftaran').insert({
-      NIK,
-      TANGGALKUNJUNGAN,
-      IDPOLI,
-      KELUHAN,
-      STATUSKUNJUNGAN,
-    });
-    
+    await trx('rawat_jalan')
+      .where({ IDPENDAFTARAN: id })
+      .update({ STATUSKUNJUNGAN });
+
+    await trx.commit();
     res.json({ message: 'Pendaftaran berhasil diperbarui' });
   } catch (err) {
+    await trx.rollback();
     console.error('Update Error:', err);
     res.status(500).json({ error: err.message });
   }

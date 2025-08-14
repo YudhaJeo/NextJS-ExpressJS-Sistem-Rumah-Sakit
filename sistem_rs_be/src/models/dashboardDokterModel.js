@@ -36,6 +36,26 @@ export const getLaporanHariIni = async () => {
   }
 };
 
+export const getKalenderDokter = async () => {
+  try {
+    return await db('kalender')
+      .join('dokter', 'kalender.IDDOKTER', 'dokter.IDDOKTER')
+    .join('master_tenaga_medis', 'dokter.IDTENAGAMEDIS', 'master_tenaga_medis.IDTENAGAMEDIS')
+    .select(
+      'kalender.*',
+      'dokter.IDDOKTER',
+      'master_tenaga_medis.NAMALENGKAP as NAMA_DOKTER',
+      'kalender.STATUS',
+      'kalender.TANGGAL',
+      'kalender.KETERANGAN')
+      .orderBy('tanggal', 'asc')
+      .limit(10); // limit biar dashboard nggak kebanyakan
+  } catch (error) {
+    console.error('Error getKalenderDokter:', error);
+    throw error;
+  }
+};
+
 // export const getStatistikBulanan = async () => {
 //   try {
 //     return await db('laporan_dokter')
