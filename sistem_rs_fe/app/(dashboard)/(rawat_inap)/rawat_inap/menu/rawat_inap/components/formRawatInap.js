@@ -26,19 +26,27 @@ const FormRawatInap = ({
   bedOptions,
   tenagaMedisOptions,
 }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
-  const tabMenu = [
-    { label: 'Data Pasien', icon: 'pi pi-address-book' },
-    { label: 'Ruangan', icon: 'pi pi-objects-column' },
-    { label: 'Riwayat Tindakan', icon: 'pi pi-briefcase' },
-    { label: 'Riwayat Obat', icon: 'pi pi-chart-pie' },
-  ];
-
   const isEditMode = !!form.IDRAWATINAP;
+
+  let tabMenu;
+
+  if (isEditMode){
+    tabMenu = [
+        { label: 'Data Pasien', icon: 'pi pi-address-book' },
+        { label: 'Ruangan', icon: 'pi pi-objects-column' },
+        { label: 'Riwayat Tindakan', icon: 'pi pi-briefcase' },
+        { label: 'Riwayat Obat', icon: 'pi pi-chart-pie' },
+      ];
+    } else {
+      tabMenu = [
+        { label: 'Tambah Rawat Inap Baru', icon: 'pi pi-th-large' },
+      ];
+    }
+  
+  const [activeIndex, setActiveIndex] = useState(0);
 
   return (
     <Dialog
@@ -62,7 +70,7 @@ const FormRawatInap = ({
         />
         
         {/* TAB 0: Data Pasien */}
-        {activeIndex === 0 && (
+        {isEditMode && activeIndex === 0 && (
           <TabDataPasien
             form={form}
             setForm={setForm}
@@ -74,7 +82,7 @@ const FormRawatInap = ({
         )}
         
         {/* TAB 1: Data Ruangan  */}
-        {activeIndex === 1 && (
+        {isEditMode && activeIndex === 1 && (
           <TabRuangan
             form={form}
             setForm={setForm}
@@ -86,7 +94,7 @@ const FormRawatInap = ({
         )}
 
          {/* TAB 2: Riwayat Tindakan */}
-         {activeIndex === 2 && (
+         {isEditMode && activeIndex === 2 && (
            <TabTindakan
              form={form}
              setForm={setForm}
@@ -96,7 +104,7 @@ const FormRawatInap = ({
          )}
 
          {/* TAB 3: Riwayat Obat */}
-         {activeIndex === 3 && (
+         {isEditMode && activeIndex === 3 && (
            <TabObat
              form={form}
              setForm={setForm}
@@ -107,78 +115,78 @@ const FormRawatInap = ({
          )}
 
         {/* TAB 4: Tambah Ranap Baru */}
-        {activeIndex === 4 && (
+        {!isEditMode && activeIndex === 0 && (
           <>
             <div className="mt-2">
-            <label>Rawat Inap</label>
-            <Dropdown
-              className={inputClass('IDRAWATJALAN')}
-              value={form.IDRAWATJALAN}
-              options={rawatJalanOptions}
-              onChange={(e) => setForm({ ...form, IDRAWATJALAN: e.value })}
-              placeholder="Pilih Rawat Inap"
-              filter
-              showClear
-              optionLabel="label"
-            />
-            {errors.IDRAWATJALAN && <small className="text-red-500">{errors.IDRAWATJALAN}</small>}
-          </div>
+              <label>Rawat Inap</label>
+              <Dropdown
+                className={inputClass('IDRAWATJALAN')}
+                value={form.IDRAWATJALAN}
+                options={rawatJalanOptions}
+                onChange={(e) => setForm({ ...form, IDRAWATJALAN: e.value })}
+                placeholder="Pilih Rawat Inap"
+                filter
+                showClear
+                optionLabel="label"
+              />
+              {errors.IDRAWATJALAN && <small className="text-red-500">{errors.IDRAWATJALAN}</small>}
+            </div>
 
-          <div className="mt-2">
-            <label>Bed</label>
-            <Dropdown
-              className={inputClass('IDBED')}
-              value={form.IDBED}
-              options={bedOptions}
-              onChange={(e) => setForm({ ...form, IDBED: e.value })}
-              placeholder="Pilih Bed"
-              filter
-              showClear
-              optionLabel="label"
-            />
-            {errors.IDBED && <small className="text-red-500">{errors.IDBED}</small>}
-          </div>
+            <div className="mt-2">
+              <label>Bed</label>
+              <Dropdown
+                className={inputClass('IDBED')}
+                value={form.IDBED}
+                options={bedOptions}
+                onChange={(e) => setForm({ ...form, IDBED: e.value })}
+                placeholder="Pilih Bed"
+                filter
+                showClear
+                optionLabel="label"
+              />
+              {errors.IDBED && <small className="text-red-500">{errors.IDBED}</small>}
+            </div>
 
-          <div className="mt-2">
-            <label>Tanggal Masuk</label>
-            <Calendar
-              className={inputClass('TANGGALMASUK')}
-              value={form.TANGGALMASUK ? new Date(form.TANGGALMASUK) : null}
-              onChange={(e) => setForm({ ...form, TANGGALMASUK: e.value })}
-              showIcon
-              dateFormat="yy-mm-dd"
-              showButtonBar
-            />
-            {errors.TANGGALMASUK && <small className="text-red-500">{errors.TANGGALMASUK}</small>}
-          </div>
-
-          <div className="mt-2">
-            <label className="mb-1">Tanggal Keluar</label>
-            <div className="flex items-center gap-2">
+            <div className="mt-2">
+              <label>Tanggal Masuk</label>
               <Calendar
-                className={inputClass('TANGGALKELUAR')}
-                value={form.TANGGALKELUAR ? new Date(form.TANGGALKELUAR) : null}
-                onChange={(e) => setForm({ ...form, TANGGALKELUAR: e.value })}
+                className={inputClass('TANGGALMASUK')}
+                value={form.TANGGALMASUK ? new Date(form.TANGGALMASUK) : null}
+                onChange={(e) => setForm({ ...form, TANGGALMASUK: e.value })}
                 showIcon
                 dateFormat="yy-mm-dd"
                 showButtonBar
               />
+              {errors.TANGGALMASUK && <small className="text-red-500">{errors.TANGGALMASUK}</small>}
             </div>
-            {errors.TANGGALKELUAR && (
-              <small className="text-red-500">{errors.TANGGALKELUAR}</small>
-            )}
-          </div>
+
+            <div className="mt-2">
+              <label className="mb-1">Tanggal Keluar</label>
+              <div className="flex items-center gap-2">
+                <Calendar
+                  className={inputClass('TANGGALKELUAR')}
+                  value={form.TANGGALKELUAR ? new Date(form.TANGGALKELUAR) : null}
+                  onChange={(e) => setForm({ ...form, TANGGALKELUAR: e.value })}
+                  showIcon
+                  dateFormat="yy-mm-dd"
+                  showButtonBar
+                />
+              </div>
+              {errors.TANGGALKELUAR && (
+                <small className="text-red-500">{errors.TANGGALKELUAR}</small>
+              )}
+            </div>
 
 
-          <div className="mt-2">
-            <label>Catatan</label>
-            <InputTextarea
-              className={inputClass('CATATAN')}
-              value={form.CATATAN || ''}
-              onChange={(e) => setForm({ ...form, CATATAN: e.target.value })}
-              placeholder="Masukkan catatan (Opsional)"
-            />
-          </div>
+            <div className="mt-2">
+              <label>Catatan</label>
+              <InputTextarea
+                className={inputClass('CATATAN')}
+                value={form.CATATAN || ''}
+                onChange={(e) => setForm({ ...form, CATATAN: e.target.value })}
+                placeholder="Masukkan catatan (Opsional)"
+              />
+            </div>
           </>
         )}
         
