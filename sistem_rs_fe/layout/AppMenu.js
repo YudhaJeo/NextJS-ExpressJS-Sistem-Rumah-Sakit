@@ -160,8 +160,6 @@ const AppMenu = () => {
             items: [
               { label: "Manajemen Bed", icon: "pi pi-fw pi-objects-column", to: "/rawat_inap/menu/manajemen_bed" },
               { label: "Rawat Inap", icon: "pi pi-fw pi-heart", to: "/rawat_inap/menu/rawat_inap" },
-              { label: "Obat Inap", icon: "pi pi-fw pi-briefcase", to: "/rawat_inap/menu/obat_inap" },
-              { label: "Tindakan Medis Inap", icon: "pi pi-fw pi-link", to: "/rawat_inap/menu/tindakan_inap" },
               { label: "Tagihan Sementara", icon: "pi pi-fw pi-money-bill", to: "/rawat_inap/menu/tagihan_sementara" },
               { label: "Riwayat Rawat Inap", icon: "pi pi-fw pi-users", to: "/rawat_inap/menu/riwayat_inap" },
             ],
