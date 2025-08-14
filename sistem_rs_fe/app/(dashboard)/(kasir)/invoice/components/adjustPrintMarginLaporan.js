@@ -102,7 +102,7 @@ export default function AdjustPrintMarginLaporan({
 
   doc.setFontSize(10);
   doc.text('Nama Pasien', labelX, y);
-  doc.text(`: ${detail.NAMALENGKAP ?? '-'}`, valueX - 2, y);
+  doc.text(`: ${detail.NAMAPASIEN ?? '-'}`, valueX - 2, y);
   y += 6;
 
   doc.text('Nomor Bed', labelX, y);
@@ -198,7 +198,7 @@ export default function AdjustPrintMarginLaporan({
     head: [['Keterangan', 'Isi']],
     body: [
       ['No Invoice', detail.NOINVOICE ?? '-'],
-      ['Nama Pasien', detail.NAMALENGKAP ?? '-'],
+      ['Nama Pasien', detail.NAMAPASIEN ?? '-'],
       ['NIK', detail.NIK ?? '-'],
       ['Asuransi', detail.ASURANSI ?? '-'],
       ['Tanggal Invoice', formatTanggal(detail.TANGGALINVOICE)],
