@@ -1,4 +1,5 @@
 import * as TindakanInap from '../models/tindakanInapModel.js';
+import dayjs from 'dayjs';
 
 export async function getAllTindakanInap(req, res) {
   try {
@@ -23,7 +24,7 @@ export async function insertTindakanInap(req, res) {
   try {
     const { 
       IDRAWATINAP, 
-      IDOBAT, 
+      IDTINDAKAN, 
       IDTENAGAMEDIS, 
       WAKTUPEMBERIAN, 
       JUMLAH, 
@@ -31,7 +32,7 @@ export async function insertTindakanInap(req, res) {
       TOTAL 
     } = req.body;
 
-    if (!IDRAWATINAP || !IDOBAT || !IDTENAGAMEDIS || !WAKTUPEMBERIAN || !JUMLAH || !HARGA || !TOTAL) {
+    if (!IDRAWATINAP || !IDTINDAKAN || !IDTENAGAMEDIS || !WAKTUPEMBERIAN || !JUMLAH || !HARGA || !TOTAL) {
       return res.status(400).json({ error: 'Semua field wajib diisi' });
     }
 
@@ -39,7 +40,7 @@ export async function insertTindakanInap(req, res) {
 
     await TindakanInap.create({
       IDRAWATINAP,
-      IDOBAT,
+      IDTINDAKAN,
       IDTENAGAMEDIS,
       WAKTUPEMBERIAN: formattedWaktu,
       JUMLAH,

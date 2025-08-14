@@ -6,7 +6,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 
-const TabelRawatInap = ({ data, loading, onEdit, onDelete }) => {
+const TabelRawatInap = ({ data, loading, onEdit, onDelete, setFormRawatInapMode }) => {
 
   const formatTanggal = (tanggal) => {
     if (!tanggal) return "-";
@@ -76,12 +76,27 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete }) => {
         body={(row) => (
           <div className="flex gap-2">
             <Button
-              icon="pi pi-eye"
+              tooltip="Edit Data"
+              icon="pi pi-pencil"
               size="small"
               severity="warning"
-              onClick={() => onEdit(row)}
+              onClick={() => {
+                setFormRawatInapMode("edit")
+                onEdit(row, 0)
+              }}
             />
             <Button
+              tooltip="Visit"
+              icon="pi pi-eye"
+              size="small"
+              severity="info"
+              onClick={() => { 
+                setFormRawatInapMode("visit");
+                onEdit(row, 0);
+              }}
+            />
+            <Button
+              tooltip="Hapus Data"
               icon="pi pi-trash"
               size="small"
               severity="danger"

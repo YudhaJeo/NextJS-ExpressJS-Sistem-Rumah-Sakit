@@ -1,15 +1,16 @@
 // D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(dashboard)\(rawat_inap)\rawat_inap\menu\rawat_inap\components\formRawatInap.js
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { TabMenu } from 'primereact/tabmenu';
+import Cookies from 'js-cookie';
 import {
   TabDataPasien,
   TabRuangan,
   TabTindakan,
-  TabObat
+  TabObat,
 } from './tabs';
 
 const FormRawatInap = ({
@@ -22,20 +23,39 @@ const FormRawatInap = ({
   rawatJalanOptions,
   bedOptions,
   tenagaMedisOptions,
+  mode = 'edit',
 }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
-  const tabMenu = [
+  const isEditMode = !!form.IDRAWATINAP;
+
+  const tabMenuEdit = [
     { label: 'Data Pasien', icon: 'pi pi-address-book' },
     { label: 'Ruangan', icon: 'pi pi-objects-column' },
-    { label: 'Riwayat Tindakan', icon: 'pi pi-briefcase' },
-    { label: 'Riwayat Obat', icon: 'pi pi-chart-pie' },
   ];
 
-  const isEditMode = !!form.IDRAWATINAP;
+  const tabMenuVisit = [
+    { label: 'Pemberian Tindakan', icon: 'pi pi-briefcase' },
+    { label: 'Pemberian Obat', icon: 'pi pi-chart-pie' },
+  ];
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [mode]);
+
+  useEffect(() => {
+    if (visible && form.IDRAWATINAP) {
+      Cookies.set('idRawatInap', form.IDRAWATINAP, { path: '/' });
+    }
+    if (!visible) {
+      Cookies.remove('idRawatInap', { path: '/' });
+    }
+  }, [visible, form.IDRAWATINAP]);
+
+  const currentTabMenu = mode === 'edit' ? tabMenuEdit : tabMenuVisit;
 
   return (
     <Dialog
@@ -51,15 +71,13 @@ const FormRawatInap = ({
           onSubmit();
         }}
       >
-
-        <TabMenu 
-          model={tabMenu} 
+        <TabMenu
+          model={currentTabMenu}
           activeIndex={activeIndex}
-          onTabChange={(e) => setActiveIndex(e.index)}  
+          onTabChange={(e) => setActiveIndex(e.index)}
         />
-        
-        {/* TAB 0: Data Pasien */}
-        {activeIndex === 0 && (
+
+        {mode === 'edit' && activeIndex === 0 && (
           <TabDataPasien
             form={form}
             setForm={setForm}
@@ -69,9 +87,7 @@ const FormRawatInap = ({
             inputClass={inputClass}
           />
         )}
-        
-        {/* TAB 1: Data Ruangan  */}
-        {activeIndex === 1 && (
+        {mode === 'edit' && activeIndex === 1 && (
           <TabRuangan
             form={form}
             setForm={setForm}
@@ -82,30 +98,30 @@ const FormRawatInap = ({
           />
         )}
 
-         {/* TAB 2: Riwayat Tindakan */}
-         {activeIndex === 2 && (
-           <TabTindakan
-             form={form}
-             setForm={setForm}
-             tindakanInapData={form.tindakanInap || []}
-             tenagaMedisOptions={tenagaMedisOptions}
-           />
-         )}
+        {mode === 'visit' && activeIndex === 0 && (
+          <TabTindakan
+            form={form}
+            setForm={setForm}
+            idRawatInap={Cookies.get('IDRAWATINAP')}
+            tindakanInapData={form.tindakanInap || []}
+            tenagaMedisOptions={tenagaMedisOptions}
+          />
+        )}
+        {mode === 'visit' && activeIndex === 1 && (
+          <TabObat
+            form={form}
+            setForm={setForm}
+            idRawatInap={Cookies.get('IDRAWATINAP')}
+            obatInapData={form.obatInap || []}
+            tenagaMedisOptions={tenagaMedisOptions}
+          />
+        )}
 
-         {/* TAB 3: Riwayat Obat */}
-         {activeIndex === 3 && (
-           <TabObat
-             form={form}
-             setForm={setForm}
-             idRawatInap={form.IDRAWATINAP}
-             obatInapData={form.obatInap || []}
-             tenagaMedisOptions={tenagaMedisOptions}
-           />
-         )}
-        
-        <div className="text-right pt-3">
-          <Button type="submit" label="Simpan" icon="pi pi-save" />
-        </div>
+        {mode === 'edit' && (
+          <div className="text-right pt-3">
+            <Button type="submit" label="Simpan" icon="pi pi-save" />
+          </div>
+        )}
       </form>
     </Dialog>
   );

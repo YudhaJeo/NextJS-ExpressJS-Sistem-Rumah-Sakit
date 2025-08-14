@@ -4,10 +4,12 @@ export const getAll = () => {
   return db('bed')
     .join('kamar', 'bed.IDKAMAR', '=', 'kamar.IDKAMAR')
     .join('bangsal', 'kamar.IDBANGSAL', '=', 'bangsal.IDBANGSAL')
+    .join('jenis_bangsal', 'bangsal.IDJENISBANGSAL', 'jenis_bangsal.IDJENISBANGSAL')
     .select(
       'bed.*',
       'kamar.NAMAKAMAR',
-      'bangsal.NAMABANGSAL'
+      'bangsal.NAMABANGSAL',
+      'jenis_bangsal.HARGAPERHARI',
     );
 };
 
