@@ -25,6 +25,7 @@ const Page = () => {
   const [tenagaMedisOptions, setTenagaMedisOptions] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [formRawatInapMode, setFormRawatInapMode] = useState("edit");
 
   const defaultForm = {
     IDRAWATINAP: '',
@@ -223,11 +224,8 @@ const Page = () => {
       TANGGALMASUK: row.TANGGALMASUK,
       TANGGALKELUAR: row.TANGGALKELUAR || '',
       CATATAN: row.CATATAN || '',
-      tindakanInap: [],
-      obatInap: []
     });    
     setDialogVisible(true);
-    
     fetchTindakanInapByRawatInapId(row.IDRAWATINAP);
     fetchObatInapByRawatInapId(row.IDRAWATINAP);
   };
@@ -246,7 +244,8 @@ const Page = () => {
   const fetchTindakanInapByRawatInapId = async (idRawatInap) => {
     try {
       const res = await axios.get(`${API_URL}/tindakan_inap/rawat_inap/${idRawatInap}`);
-      console.log("Data tindakan ID:", res.data.data)
+      // console.log("Data tindakan ID:", res.data.data)
+      // console.log("[Page]:", idRawatInap)
       return res.data.data || [];
     } catch (err) {
       console.error('Gagal ambil data tindakan inap:', err);
@@ -325,6 +324,7 @@ const Page = () => {
           placeholder="Cari pasien"
           onSearch={handleSearch}
           onAddClick={() => {
+            setFormRawatInapMode('edit');
             setForm(defaultForm);
             setDialogVisible(true);
           }}
@@ -336,6 +336,7 @@ const Page = () => {
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        setFormRawatInapMode={setFormRawatInapMode}
       />
 
       <FormRawatInap
@@ -351,6 +352,7 @@ const Page = () => {
         rawatJalanOptions={rawatJalanOptions}
         bedOptions={bedOptions}
         tenagaMedisOptions={tenagaMedisOptions}
+        mode={formRawatInapMode}
       />
     </div>
   );

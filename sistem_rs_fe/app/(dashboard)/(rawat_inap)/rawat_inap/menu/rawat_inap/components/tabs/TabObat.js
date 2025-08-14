@@ -11,17 +11,18 @@ import { InputNumber } from 'primereact/inputnumber';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { Toast } from 'primereact/toast';
 import { useRef } from 'react';
+import dayjs from "dayjs";
+import Cookies from 'js-cookie';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const TabObat = ({ tenagaMedisOptions, idRawatInap }) => {
+const TabObat = ({ tenagaMedisOptions }) => {
   const [obatInapData, setObatInapData] = useState([]);
   const [obatOptions, setObatOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const toast = useRef(null);
 
   const [newItem, setNewItem] = useState({
-    IDRAWATINAP: idRawatInap, 
     WAKTUPEMBERIAN: null,
     IDTENAGAMEDIS: null,
     IDOBAT: null,
@@ -33,14 +34,30 @@ const TabObat = ({ tenagaMedisOptions, idRawatInap }) => {
   useEffect(() => {
     fetchObat(); 
   }, []); 
-  
-  useEffect(() => {
-    if (idRawatInap) {
-      fetchData();
-    }
-  }, [idRawatInap]);
 
-  const fetchData = async () => {
+  const fetchObat = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/obat`);
+      const options = res.data.data.map((item) => ({
+        label: item.NAMAOBAT,
+        value: item.IDOBAT,
+        HARGA: item.HARGA,
+      }));
+      setObatOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil data obat:', err);
+    }
+  };
+
+  useEffect(() => {
+    const idRawatInap = Cookies.get('idRawatInap');
+    if (idRawatInap) {
+      fetchData(idRawatInap);
+    }
+  }, []); 
+
+  const fetchData = async (idRawatInap) => {
+    if (!idRawatInap) return;
     setLoading(true);
     try {
       const res = await axios.get(`${API_URL}/obat_inap/rawat_inap/${idRawatInap}`);
@@ -52,72 +69,50 @@ const TabObat = ({ tenagaMedisOptions, idRawatInap }) => {
     }
   };
 
-  const fetchObat = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/obat`);
-      const options = res.data.data.map((item) => ({
-        label: item.NAMAOBAT,
-        value: item.IDOBAT,
-        HARGA: item.HARGAJUAL,
-      }));
-      setObatOptions(options);
-    } catch (err) {
-      console.error('Gagal ambil data obat:', err);
-    }
-  };
-
   const handleAdd = async () => {
-    if (!newItem.WAKTUPEMBERIAN) {
-      toast.current.show({ severity: 'warn', summary: 'Validasi', detail: 'Waktu pemberian wajib diisi', life: 3000 });
+    const idRawatInap = Cookies.get('idRawatInap');
+    if (!idRawatInap || !newItem.WAKTUPEMBERIAN || !newItem.IDTENAGAMEDIS || !newItem.IDOBAT || !newItem.JUMLAH) {
+      toast.current.show({ severity: 'warn', summary: 'Validasi', detail: 'Lengkapi semua field', life: 3000 });
       return;
     }
-    if (!newItem.IDTENAGAMEDIS) {
-      toast.current.show({ severity: 'warn', summary: 'Validasi', detail: 'Petugas wajib dipilih', life: 3000 });
-      return;
-    }
-    if (!newItem.IDOBAT) {
-      toast.current.show({ severity: 'warn', summary: 'Validasi', detail: 'Obat wajib dipilih', life: 3000 });
-      return;
-    }
-    if (!newItem.JUMLAH || newItem.JUMLAH < 1) {
-      toast.current.show({ severity: 'warn', summary: 'Validasi', detail: 'Jumlah harus lebih dari 0', life: 3000 });
-      return;
-    }
-  
+
+    const payload = {
+      ...newItem,
+      IDRAWATINAP: idRawatInap,
+      WAKTUPEMBERIAN: dayjs(newItem.WAKTUPEMBERIAN).format("YYYY-MM-DD HH:mm:ss")
+    };
+
     try {
-      await axios.post(`${API_URL}/obat_inap`, { ...newItem, IDRAWATINAP: idRawatInap });
+      await axios.post(`${API_URL}/obat_inap`, payload);
       toast.current.show({ severity: 'success', summary: 'Berhasil', detail: 'Data obat berhasil ditambahkan', life: 3000 });
-      fetchData();
-      setNewItem({
-        IDRAWATINAP: idRawatInap,
-        WAKTUPEMBERIAN: null,
-        IDTENAGAMEDIS: null,
-        IDOBAT: null,
-        JUMLAH: 1,
-        HARGA: 0,
-        TOTAL: 0
-      });
+      fetchData(idRawatInap);
+      setNewItem({ WAKTUPEMBERIAN: null, IDTENAGAMEDIS: null, IDOBAT: null, JUMLAH: 1, HARGA: 0, TOTAL: 0 });
     } catch (err) {
       toast.current.show({ severity: 'error', summary: 'Gagal', detail: 'Gagal tambah data', life: 3000 });
       console.error('Gagal tambah data:', err);
     }
   };
 
+    
   const handleDelete = (row) => {
     confirmDialog({
       message: 'Yakin hapus data ini?',
       header: 'Konfirmasi',
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
+        const idRawatInap = Cookies.get('idRawatInap');
         try {
           await axios.delete(`${API_URL}/obat_inap/${row.IDOBATINAP}`);
-          fetchData();
+          toast.current.show({ severity: 'success', summary: 'Berhasil', detail: 'Data obat berhasil dihapus', life: 3000 });
+          fetchData(idRawatInap); 
         } catch (err) {
+          toast.current.show({ severity: 'error', summary: 'Gagal', detail: 'Gagal hapus data', life: 3000 });
           console.error('Gagal hapus data:', err);
         }
       }
     });
   };
+  
 
   const formatRupiah = (val) =>
     new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' })
