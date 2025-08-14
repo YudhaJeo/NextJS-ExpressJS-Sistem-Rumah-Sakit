@@ -3,7 +3,6 @@ import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { InputText } from 'primereact/inputtext';
-import { Button } from 'primereact/button';
 
 const TabRuangan = ({
   form,
@@ -55,7 +54,7 @@ const TabRuangan = ({
           showButtonBar
           showIcon
           dateFormat="yy-mm-dd"
-          placeholder="Waktu Pemberian"
+          placeholder="Tanggal Masuk"
         />
         {errors.TANGGALMASUK && <small className="text-red-500">{errors.TANGGALMASUK}</small>}
       </div>
@@ -70,7 +69,7 @@ const TabRuangan = ({
             showButtonBar
             showIcon
             dateFormat="yy-mm-dd"
-            placeholder="Waktu Pemberian"
+            placeholder="Isi jika pasien akan checkout"
           />
         </div>
         {errors.TANGGALKELUAR && (
