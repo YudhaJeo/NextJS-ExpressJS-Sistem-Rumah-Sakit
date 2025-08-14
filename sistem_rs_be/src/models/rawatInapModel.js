@@ -26,6 +26,27 @@ export const getAll = () =>
       'rawat_jalan.DIAGNOSA'
     )
 
+    export const getAllAktif = () =>
+      db('rawat_inap')
+        .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
+        .join('kamar', 'bed.IDKAMAR', 'kamar.IDKAMAR')
+        .join('bangsal', 'kamar.IDBANGSAL', 'bangsal.IDBANGSAL')
+        .join('jenis_bangsal', 'bangsal.IDJENISBANGSAL', 'jenis_bangsal.IDJENISBANGSAL')
+        .select(
+          'rawat_inap.IDRAWATINAP',
+          'rawat_inap.TANGGALMASUK',
+          'rawat_inap.TANGGALKELUAR',
+          'jenis_bangsal.HARGAPERHARI'
+        )
+        .where('rawat_inap.STATUS', 'AKTIF'); 
+    
+
+export const updateTotalKamar = (id, totalKamar) =>
+  db('rawat_inap')
+    .where({ IDRAWATINAP: id })
+    .update({ TOTALKAMAR: totalKamar, UPDATED_AT: db.fn.now() });
+
+
 export const getById = (id) =>
   db('rawat_inap')
     .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
