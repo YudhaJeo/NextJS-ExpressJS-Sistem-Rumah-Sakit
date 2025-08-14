@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import cors from 'cors';
+import './cron/updateTotalKamar.js';
 import authRoutes from './routes/authRoutes.js';
 import pasienRoutes from './routes/pasienRoutes.js';
 import reservasiRoutes from './routes/reservasiRoutes.js';
