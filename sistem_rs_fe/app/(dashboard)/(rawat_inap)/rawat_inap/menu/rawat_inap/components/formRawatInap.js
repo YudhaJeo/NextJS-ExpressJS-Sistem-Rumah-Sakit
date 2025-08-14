@@ -90,6 +90,7 @@ const FormRawatInap = ({
            <TabTindakan
              form={form}
              setForm={setForm}
+             idRawatInap={form.IDRAWATINAP} 
              tindakanInapData={form.tindakanInap || []}
              tenagaMedisOptions={tenagaMedisOptions}
            />
