@@ -7,6 +7,16 @@ export const up = function (knex) {
       .references('IDRIWAYATINAP').inTable('riwayat_rawat_inap').onDelete('CASCADE');
     table.integer('IDOBAT').unsigned().notNullable()
       .references('IDOBAT').inTable('obat').onDelete('RESTRICT');
+
+      table
+      .integer('IDTENAGAMEDIS')
+      .unsigned()
+      .notNullable()
+      .references('IDTENAGAMEDIS')
+      .inTable('obat_inap')
+      .onDelete('RESTRICT');
+
+    table.dateTime('WAKTUPEMBERIAN').notNullable();
     table.integer('JUMLAH').notNullable();
     table.double('HARGA').notNullable();
     table.double('TOTAL').notNullable();

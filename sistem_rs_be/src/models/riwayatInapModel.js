@@ -83,6 +83,8 @@ export async function insertFromRawatInap(rawatInap) {
     const obatRiwayat = obatInap.map((obat) => ({
       IDRIWAYATINAP,
       IDOBAT: obat.IDOBAT,
+      IDTENAGAMEDIS: obat.IDTENAGAMEDIS,
+      WAKTUPEMBERIAN: obat.WAKTUPEMBERIAN,
       JUMLAH: obat.JUMLAH,
       HARGA: obat.HARGA,
       TOTAL: obat.TOTAL,
@@ -94,6 +96,8 @@ export async function insertFromRawatInap(rawatInap) {
     const tindakanRiwayat = tindakanInap.map((tindakan) => ({
       IDRIWAYATINAP,
       IDTINDAKAN: tindakan.IDTINDAKAN,
+      IDTENAGAMEDIS: tindakan.IDTENAGAMEDIS,
+      WAKTUPEMBERIAN: tindakan.WAKTUPEMBERIAN,
       JUMLAH: tindakan.JUMLAH,
       HARGA: tindakan.HARGA,
       TOTAL: tindakan.TOTAL,

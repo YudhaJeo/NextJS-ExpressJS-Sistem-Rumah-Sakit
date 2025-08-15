@@ -295,7 +295,6 @@ const Page = () => {
           toastRef.current?.showToast('00', 'Rawat inap berhasil diselesaikan');
           setDialogVisible(false);
           fetchRawatInap();
-          console.log('RESPON DARI BACKEND:', data);
         } catch (err) {
           toastRef.current?.showToast('01', 'Gagal menyelesaikan transaksi rawat inap');
           console.error("Gagal menyelesaikan transaksi:", err.message);
