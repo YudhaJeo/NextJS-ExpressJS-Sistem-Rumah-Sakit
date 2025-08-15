@@ -189,9 +189,7 @@ const Page = () => {
         response = await axios.post(url, payload);
       }
     
-      if (response.status === 200 && response.data?.message) {
-        
-        toastRef.current?.showToast('00', response.data.message);
+      if (response.status === 200) {
         fetchRawatInap();
         resetForm();
 

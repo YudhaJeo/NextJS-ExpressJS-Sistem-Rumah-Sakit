@@ -43,7 +43,6 @@ const TabObat = ({ tenagaMedisOptions }) => {
         value: item.IDOBAT,
         HARGA: item.HARGAJUAL,
       }));
-      console.log(options)
       setObatOptions(options);
     } catch (err) {
       console.error('Gagal ambil data obat:', err);
