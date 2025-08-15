@@ -1,5 +1,7 @@
 import * as RawatJalanModel from '../models/rawatJalanModel.js';
 import * as RiwayatRawatJalan from '../models/riwayatJalanModel.js';
+import * as RawatInapModel from '../models/rawatInapModel.js';
+import db from '../core/config/knex.js';
 
 export async function getAllRawatJalan(req, res) {
   try {
@@ -55,13 +57,32 @@ export async function updateRawatJalan(req, res) {
 
     const updated = await RawatJalanModel.getRawatById(id);
 
-    if(STATUSKUNJUNGAN === "Selesai"){
+    if (STATUSRAWAT === "Rawat Inap") {
+      const existingInap = await db('rawat_inap')
+        .where('IDRAWATJALAN', updated.IDRAWATJALAN)
+        .first();
+
+      if (!existingInap) {
+        const bedTersedia = await db('bed').where('STATUS', 'TERSEDIA').first();
+        if (!bedTersedia) {
+          return res.status(400).json({ message: "Tidak ada bed tersedia" });
+        }
+
+        await RawatInapModel.create({
+          IDRAWATJALAN: updated.IDRAWATJALAN,
+          IDBED: bedTersedia.IDBED,
+          TANGGALMASUK: new Date(),
+          CATATAN: 'Otomatis dari Rawat Jalan'
+        });
+      }
+    }
+
+    // Tetap proses riwayat rawat jalan kalau selesai
+    if (STATUSKUNJUNGAN === "Selesai") {
       const obat = await RawatJalanModel.getTotalObatInap(updated.IDRAWATJALAN);
       const tindakan = await RawatJalanModel.getTotalTindakanInap(updated.IDRAWATJALAN);
-      
       const TOTALOBAT = Number(obat.total) || 0;
       const TOTALTINDAKAN = Number(tindakan.total) || 0;
-
       const TOTALBIAYA = TOTALOBAT + TOTALTINDAKAN;
 
       const dataRiwayat = {
@@ -74,11 +95,10 @@ export async function updateRawatJalan(req, res) {
         TOTALTINDAKAN,
         TOTALBIAYA,
       };
-      
       await RiwayatRawatJalan.insertFromRawatJalan(dataRiwayat);
     }
 
-    res.json({ message: 'RawatJalan dan status pendaftaran berhasil diperbarui' });
+    res.json({ message: 'RawatJalan berhasil diperbarui & sinkron dengan Rawat Inap' });
   } catch (err) {
     console.error('Update Error:', err);
     res.status(500).json({ error: err.message });

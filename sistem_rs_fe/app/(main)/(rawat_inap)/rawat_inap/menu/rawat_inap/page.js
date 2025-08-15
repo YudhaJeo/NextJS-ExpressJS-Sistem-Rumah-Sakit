@@ -348,7 +348,7 @@ const Page = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
-        <HeaderBar
+        {/* <HeaderBar
           title=""
           placeholder="Cari pasien"
           onSearch={handleSearch}
@@ -357,7 +357,7 @@ const Page = () => {
             setForm(defaultForm);
             setDialogVisible(true);
           }}
-        />
+        /> */}
       </div>
 
       <TabelRawatInap
