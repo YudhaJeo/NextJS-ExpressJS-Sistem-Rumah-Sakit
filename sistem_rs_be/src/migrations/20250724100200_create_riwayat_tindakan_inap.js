@@ -18,6 +18,16 @@ export const up = function (knex) {
       .inTable('tindakan_medis')
       .onDelete('RESTRICT');
     
+    table
+      .integer('IDTENAGAMEDIS')
+      .unsigned()
+      .notNullable()
+      .references('IDTENAGAMEDIS')
+      .inTable('tindakan_inap')
+      .onDelete('RESTRICT');
+
+    table.dateTime('WAKTUPEMBERIAN').notNullable();
+    
     table.integer('JUMLAH').notNullable();
     table.double('HARGA').notNullable();
     table.double('TOTAL').notNullable();
