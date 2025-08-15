@@ -25,7 +25,7 @@ const DashboardDokter = () => {
       .get(`${API_URL}/dashboard_dokter`)
       .then((res) => {
         const resData = res.data;
-        console.log('DATA DASHBOARD:', resData);
+        // console.log('DATA DASHBOARD:', resData);
         setData(resData);
 
         const style = getComputedStyle(document.documentElement);
