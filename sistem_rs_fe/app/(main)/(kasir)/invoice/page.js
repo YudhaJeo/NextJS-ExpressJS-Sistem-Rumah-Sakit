@@ -184,19 +184,6 @@ const Page = () => {
         />
       </div>
 
-      <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
-
-        <FilterTanggal
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-          handleDateFilter={handleDateFilter}
-          resetFilter={resetFilter}
-        />
-
-      </div>
-
       <TabelInvoice
         data={data}
         loading={loading}
