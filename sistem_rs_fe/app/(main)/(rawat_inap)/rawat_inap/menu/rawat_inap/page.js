@@ -352,11 +352,6 @@ const Page = () => {
           title=""
           placeholder="Cari pasien"
           onSearch={handleSearch}
-          onAddClick={() => {
-            setFormRawatInapMode('edit');
-            setForm(defaultForm);
-            setDialogVisible(true);
-          }}
         />
       </div>
 
