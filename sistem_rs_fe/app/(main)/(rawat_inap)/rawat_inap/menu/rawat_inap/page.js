@@ -9,6 +9,7 @@ import FormRawatInap from './components/formRawatInap';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import FilterTanggal from '@/app/components/filterTanggal';
+import dayjs from "dayjs";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -154,7 +155,10 @@ const Page = () => {
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      setDialogVisible(false);
+      return;
+    }
   
     const isEdit = !!form.IDRAWATINAP;
     const url = isEdit
@@ -263,6 +267,7 @@ const Page = () => {
         try {
           await axios.delete(`${API_URL}/rawat_inap/${row.IDRAWATINAP}`);
           fetchRawatInap();
+          console.log('RESPON DARI BACKEND:', res.data);
           toastRef.current?.showToast('00', 'Data berhasil dihapus');
         } catch (err) {
           console.error('Gagal hapus data:', err);
@@ -272,6 +277,32 @@ const Page = () => {
     });
   };
 
+  const handleCheckout = (row) => {
+    confirmDialog({
+      message: `Anda yakin akan menyelesaikan rawat inap ini?`,
+      header: `Konfirmasi Checkout`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Ya',
+      rejectLabel: 'Batal',
+      accept: async () => {
+        try {
+          const today = dayjs().format("YYYY-MM-DD");
+          const data = await axios.put(
+            `${API_URL}/rawat_inap/${row.IDRAWATINAP}`,
+            { TANGGALKELUAR: today },
+            { headers: { "Content-Type": "application/json" } }
+          );
+          toastRef.current?.showToast('00', 'Rawat inap berhasil diselesaikan');
+          setDialogVisible(false);
+          fetchRawatInap();
+          console.log('RESPON DARI BACKEND:', data);
+        } catch (err) {
+          toastRef.current?.showToast('01', 'Gagal menyelesaikan transaksi rawat inap');
+          console.error("Gagal menyelesaikan transaksi:", err.message);
+        }
+      }
+    });
+  };  
   
   const handleDateFilter = () => {
     if (!startDate && !endDate) return setData(originalData);
@@ -335,6 +366,7 @@ const Page = () => {
         onEdit={handleEdit}
         onDelete={handleDelete}
         setFormRawatInapMode={setFormRawatInapMode}
+        onCheckout={handleCheckout}    
       />
 
       <FormRawatInap
