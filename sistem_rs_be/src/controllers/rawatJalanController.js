@@ -77,7 +77,6 @@ export async function updateRawatJalan(req, res) {
       }
     }
 
-    // Tetap proses riwayat rawat jalan kalau selesai
     if (STATUSKUNJUNGAN === "Selesai") {
       const obat = await RawatJalanModel.getTotalObatInap(updated.IDRAWATJALAN);
       const tindakan = await RawatJalanModel.getTotalTindakanInap(updated.IDRAWATJALAN);
