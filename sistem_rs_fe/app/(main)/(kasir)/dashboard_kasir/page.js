@@ -21,7 +21,7 @@ const DashboardKasir = () => {
       .get(`${API_URL}/dashboard_kasir`)
       .then((res) => {
         const resData = res.data;
-        console.log('DATA DASHBOARD KASIR:', resData);
+        // console.log('DATA DASHBOARD KASIR:', resData);
         setData(resData);
 
         const lunas = resData.statusInvoice?.LUNAS ?? 0;
