@@ -6,7 +6,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 
-const TabelRawatInap = ({ data, loading, onEdit, onDelete, setFormRawatInapMode }) => {
+const TabelRawatInap = ({ data, loading, onEdit, onDelete, setFormRawatInapMode, onCheckout }) => {
 
   const formatTanggal = (tanggal) => {
     if (!tanggal) return "-";
@@ -93,6 +93,15 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete, setFormRawatInapMode 
               onClick={() => { 
                 setFormRawatInapMode("visit");
                 onEdit(row, 0);
+              }}
+            />
+            <Button
+              tooltip="Selesaikan rawat inap"
+              size="small"
+              label="Checkout"
+              severity="success"
+              onClick={() => {
+                onCheckout(row);
               }}
             />
             <Button

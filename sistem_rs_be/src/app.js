@@ -44,7 +44,6 @@ import depositPenggunaanRoutes from './routes/depositPenggunaanRoutes.js';
 import obatInapRoutes from './routes/obatInapRoutes.js';
 import obatJalanRoutes from './routes/obatJalanRoutes.js';
 import tindakanInapRoutes from './routes/tindakanInapRoutes.js';
-// import tindakanJalanRoutes from './routes/tindakanJalanRoutes.js';
 import tagihanSementaraRoutes from './routes/tagihanSementaraRoutes.js';
 import riwayatInapRoutes from './routes/riwayatInapRoutes.js';
 import riwayatJalanRoutes from './routes/riwayatJalanRoutes.js';
@@ -60,6 +59,7 @@ import dashboardApotekRoutes from './routes/dashboardApotekRoutes.js';
 const NEXT_URL = process.env.NEXT_PUBLIC_URL;
 
 const app = express();
+app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({ 
     origin: `${NEXT_URL}`, 
