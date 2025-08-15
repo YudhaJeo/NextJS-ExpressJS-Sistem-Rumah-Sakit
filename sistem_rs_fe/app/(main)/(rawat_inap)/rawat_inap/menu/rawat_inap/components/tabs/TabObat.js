@@ -41,8 +41,9 @@ const TabObat = ({ tenagaMedisOptions }) => {
       const options = res.data.data.map((item) => ({
         label: item.NAMAOBAT,
         value: item.IDOBAT,
-        HARGA: item.HARGA,
+        HARGA: item.HARGAJUAL,
       }));
+      console.log(options)
       setObatOptions(options);
     } catch (err) {
       console.error('Gagal ambil data obat:', err);
