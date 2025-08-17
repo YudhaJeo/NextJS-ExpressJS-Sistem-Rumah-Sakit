@@ -76,6 +76,21 @@ export async function insertFromRawatInap(rawatInap) {
     .first()
     .then((row) => row?.IDRIWAYATINAP);
 
+  const pasienData = await db('rawat_inap')
+  .join('rawat_jalan', 'rawat_inap.IDRAWATJALAN', 'rawat_jalan.IDRAWATJALAN')
+  .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+  .select('pendaftaran.NIK')
+  .where('rawat_inap.IDRAWATINAP', IDRAWATINAP)
+  .first();
+
+  if (pasienData?.NIK) {
+  await db('invoice')
+    .where({ NIK: pasienData.NIK })
+    .whereNull('IDRIWAYATINAP') 
+    .update({ IDRIWAYATINAP });
+  }
+
+
   const obatInap = await db('obat_inap').where({ IDRAWATINAP });
   const tindakanInap = await db('tindakan_inap').where({ IDRAWATINAP });
 
