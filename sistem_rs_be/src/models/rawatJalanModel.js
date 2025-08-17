@@ -1,3 +1,4 @@
+// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_be\src\models\rawatJalanModel.js
 import db from '../core/config/knex.js';
 
 export const getPendaftaranIdByRawatJalanId = async (id) => {
@@ -131,4 +132,37 @@ export const getTotalTindakanInap = async (IDRAWATJALAN) => {
     .where({ IDRAWATJALAN })
     .sum('TOTAL as total');
   return result[0];
+};
+
+export const insertFromRawatJalan = async (data) => {
+  // Hitung total obat
+  const totalObatRes = await db('obat_jalan')
+    .where({ IDRAWATJALAN: data.IDRAWATJALAN })
+    .sum('TOTAL as total');
+  const totalObat = totalObatRes[0]?.total || 0;
+
+  // Hitung total tindakan
+  const totalTindakanRes = await db('tindakan_jalan')
+    .where({ IDRAWATJALAN: data.IDRAWATJALAN })
+    .sum('TOTAL as total');
+  const totalTindakan = totalTindakanRes[0]?.total || 0;
+
+  // Total biaya = obat + tindakan
+  const totalBiaya = totalObat + totalTindakan;
+
+  // Data yang dimasukin ke riwayat   
+  const insertData = {
+    IDRAWATJALAN: data.IDRAWATJALAN,
+    IDDOKTER: data.IDDOKTER,
+    DIAGNOSA: data.DIAGNOSA,
+    KETERANGAN: data.KETERANGAN,
+    FOTORESEP: data.FOTORESEP,
+    TOTALOBAT: totalObat,
+    TOTALTINDAKAN: totalTindakan,
+    TOTALBIAYA: totalBiaya,
+    CREATED_AT: db.fn.now()
+  };
+
+  const [id] = await db("riwayat_rawat_jalan").insert(insertData);
+  return id;
 };
