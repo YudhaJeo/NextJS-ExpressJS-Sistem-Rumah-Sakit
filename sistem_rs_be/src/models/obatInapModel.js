@@ -24,11 +24,13 @@ export const getById = (id) =>
 export const getByRawatInapId = (idRawatInap) =>
   db('obat_inap')
     .join('obat', 'obat_inap.IDOBAT', 'obat.IDOBAT')
+    .join('master_tenaga_medis', 'obat_inap.IDTENAGAMEDIS', 'master_tenaga_medis.IDTENAGAMEDIS')
     .where({ 'obat_inap.IDRAWATINAP': idRawatInap })
     .select(
       'obat_inap.*',
       'obat.NAMAOBAT',
-      'obat.HARGAJUAL as HARGA_OBAT'
+      'obat.HARGAJUAL as HARGA_OBAT',
+      'master_tenaga_medis.NAMALENGKAP as NAMATENAGAMEDIS'
     );
 
 export const create = (data) =>

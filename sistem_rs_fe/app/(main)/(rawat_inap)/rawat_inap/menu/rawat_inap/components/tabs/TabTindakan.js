@@ -169,7 +169,7 @@ const TabTindakan = ({ tenagaMedisOptions, statusRawat }) => {
       </div>
       )}
 
-      <DataTable value={tindakanInapData} paginator rows={10} loading={loading}>
+      <DataTable value={tindakanInapData} paginator rows={10} loading={loading} sortField="WAKTUPEMBERIAN" sortOrder={-1} scrollable>
         <Column field="WAKTUPEMBERIAN" header="Waktu"
           body={(row) => row.WAKTUPEMBERIAN ? new Date(row.WAKTUPEMBERIAN).toLocaleString() : '-'}
         />

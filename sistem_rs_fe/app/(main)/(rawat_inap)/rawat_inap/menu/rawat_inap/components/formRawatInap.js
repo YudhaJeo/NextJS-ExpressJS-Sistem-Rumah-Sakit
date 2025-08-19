@@ -86,6 +86,7 @@ const FormRawatInap = ({
             rawatJalanOptions={rawatJalanOptions}
             isEditMode={isEditMode}
             inputClass={inputClass}
+            statusRawat={selectedRawat?.STATUS}
           />
         )}
         {mode === 'edit' && activeIndex === 1 && (
@@ -96,6 +97,7 @@ const FormRawatInap = ({
             bedOptions={bedOptions}
             isEditMode={isEditMode}
             inputClass={inputClass}
+            statusRawat={selectedRawat?.STATUS}
           />
         )}
 
@@ -120,7 +122,7 @@ const FormRawatInap = ({
           />
         )}
 
-        {mode === 'edit' && (
+        {mode === 'edit' && selectedRawat?.STATUS === "AKTIF" && (
           <div className="text-right pt-3">
             <Button type="submit" label="Simpan" icon="pi pi-save" />
           </div>

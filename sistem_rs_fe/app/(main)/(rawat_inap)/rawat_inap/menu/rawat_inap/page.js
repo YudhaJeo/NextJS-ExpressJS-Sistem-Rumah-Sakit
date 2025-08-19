@@ -71,7 +71,6 @@ const Page = () => {
       const res = await axios.get(`${API_URL}/rawat_inap`);
       setData(res.data.data); 
       setOriginalData(res.data.data);
-      // console.log("[DEBUG] Data Rawat Inap:", res.data.data)
     } catch (err) {
       console.error('Gagal ambil data rawat inap:', err);
     } finally {
@@ -94,7 +93,6 @@ const Page = () => {
           DIAGNOSA: item.DIAGNOSA,
           NAMALENGKAP: item.NAMALENGKAP,
       }));
-      // console.log("[DEBUG] Rawat Jalan:", options)
       setRawatJalanOptions(options);
     } catch (err) {
       console.error('Gagal ambil data Rawat Inap:', err);
@@ -118,7 +116,6 @@ const Page = () => {
           HARGAPERHARI: item.HARGAPERHARI,
           STATUSBED: item.STATUS,
         }));
-      // console.log("[DEBUG] Data Kamar:", options)
       setBedOptions(options);
     } catch (err) {
       console.error('Gagal ambil bed:', err);
@@ -134,7 +131,6 @@ const Page = () => {
         JENISTENAGAMEDIS: item.JENISTENAGAMEDIS,
         NAMATENAGAMEDIS: item.NAMALENGKAP,
       }));
-      // console.log("[DEBUG] Tenaga Medis:", options)
       setTenagaMedisOptions(options);
     } catch (err) {
       console.error('Gagal ambil data tenaga medis:', err);
@@ -202,6 +198,7 @@ const Page = () => {
         fetchRawatInap();
         fetchRawatJalan();
         fetchTenagaMedis();
+        setDialogVisible(false);
       } else {
         throw new Error('Respons tidak valid');
       }
@@ -268,7 +265,6 @@ const Page = () => {
         try {
           await axios.delete(`${API_URL}/rawat_inap/${row.IDRAWATINAP}`);
           fetchRawatInap();
-          console.log('RESPON DARI BACKEND:', res.data);
           toastRef.current?.showToast('00', 'Data berhasil dihapus');
         } catch (err) {
           console.error('Gagal hapus data:', err);
@@ -303,6 +299,27 @@ const Page = () => {
       }
     });
   };  
+
+  const handleCancelCheckout = (row) => {
+    confirmDialog({
+      message: `Tindakan ini akan menghapus riwayat pada tabel riwayat rawat inap. Anda yakin ingin membatalkan checkout rawat inap ini?`,
+      header: `Konfirmasi Batal Checkout`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Ya',
+      rejectLabel: 'Batal',
+      accept: async () => {
+        try {
+          await axios.put(`${API_URL}/rawat_inap/${row.IDRAWATINAP}/cancel_checkout`);
+          toastRef.current?.showToast('00', 'Checkout rawat inap berhasil dibatalkan');
+          setDialogVisible(false);
+          fetchRawatInap();
+        } catch (err) {
+          toastRef.current?.showToast('01', 'Gagal membatalkan checkout rawat inap');
+          console.error("Gagal membatalkan checkout:", err.message);
+        }
+      }
+    });
+  };
   
   const handleDateFilter = () => {
     if (!startDate && !endDate) return setData(originalData);
@@ -362,6 +379,7 @@ const Page = () => {
         onDelete={handleDelete}
         setFormRawatInapMode={setFormRawatInapMode}
         onCheckout={handleCheckout}    
+        onCancelCheckout={handleCancelCheckout}
       />
 
       <FormRawatInap
