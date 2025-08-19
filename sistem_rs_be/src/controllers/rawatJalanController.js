@@ -78,11 +78,9 @@ export async function updateRawatJalan(req, res) {
     }
 
     if (STATUSKUNJUNGAN === "Selesai") {
-      const obat = await RawatJalanModel.getTotalObatInap(updated.IDRAWATJALAN);
-      const tindakan = await RawatJalanModel.getTotalTindakanInap(updated.IDRAWATJALAN);
-      const TOTALOBAT = Number(obat.total) || 0;
+      const tindakan = await RawatJalanModel.getTotalTindakanJalan(updated.IDRAWATJALAN);
       const TOTALTINDAKAN = Number(tindakan.total) || 0;
-      const TOTALBIAYA = TOTALOBAT + TOTALTINDAKAN;
+      const TOTALBIAYA = TOTALTINDAKAN; 
 
       const dataRiwayat = {
         IDRAWATJALAN: updated.IDRAWATJALAN,
@@ -90,7 +88,6 @@ export async function updateRawatJalan(req, res) {
         DIAGNOSA: updated.DIAGNOSA,
         KETERANGAN: updated.KETERANGAN,
         FOTORESEP: updated.FOTORESEP,
-        TOTALOBAT,
         TOTALTINDAKAN,
         TOTALBIAYA,
       };

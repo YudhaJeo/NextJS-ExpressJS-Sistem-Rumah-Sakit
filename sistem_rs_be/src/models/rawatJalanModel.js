@@ -65,7 +65,6 @@ export const getAllRawatJalan = () => {
     );
 };
 
-
 export const createRawatJalan = async ({
   IDPENDAFTARAN,
   IDDOKTER,
@@ -119,45 +118,28 @@ export const getRawatById = async (id) => {
   return await db('rawat_jalan').where('IDRAWATJALAN', id).first();
 };
 
-
-export const getTotalObatInap = async (IDRAWATJALAN) => {
-  const result = await db('obat_jalan')
-    .where({ IDRAWATJALAN })
-    .sum('TOTAL as total');
-  return result[0];
-};
-
-export const getTotalTindakanInap = async (IDRAWATJALAN) => {
+export const getTotalTindakanJalan = async (IDRAWATJALAN) => {
   const result = await db('tindakan_jalan')
     .where({ IDRAWATJALAN })
     .sum('TOTAL as total');
   return result[0];
 };
 
-export const insertFromRawatJalan = async (data) => {
-  // Hitung total obat
-  const totalObatRes = await db('obat_jalan')
-    .where({ IDRAWATJALAN: data.IDRAWATJALAN })
-    .sum('TOTAL as total');
-  const totalObat = totalObatRes[0]?.total || 0;
 
-  // Hitung total tindakan
+export const insertFromRawatJalan = async (data) => {
   const totalTindakanRes = await db('tindakan_jalan')
     .where({ IDRAWATJALAN: data.IDRAWATJALAN })
     .sum('TOTAL as total');
   const totalTindakan = totalTindakanRes[0]?.total || 0;
 
-  // Total biaya = obat + tindakan
-  const totalBiaya = totalObat + totalTindakan;
-
-  // Data yang dimasukin ke riwayat   
+  const totalBiaya = totalTindakan;
+  
   const insertData = {
     IDRAWATJALAN: data.IDRAWATJALAN,
     IDDOKTER: data.IDDOKTER,
     DIAGNOSA: data.DIAGNOSA,
     KETERANGAN: data.KETERANGAN,
     FOTORESEP: data.FOTORESEP,
-    TOTALOBAT: totalObat,
     TOTALTINDAKAN: totalTindakan,
     TOTALBIAYA: totalBiaya,
     CREATED_AT: db.fn.now()
