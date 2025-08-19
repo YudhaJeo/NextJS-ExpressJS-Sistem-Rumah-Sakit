@@ -202,6 +202,7 @@ const Page = () => {
         fetchRawatInap();
         fetchRawatJalan();
         fetchTenagaMedis();
+        setDialogVisible(false);
       } else {
         throw new Error('Respons tidak valid');
       }
