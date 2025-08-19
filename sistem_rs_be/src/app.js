@@ -109,7 +109,6 @@ app.use('/api/deposit', depositRoutes);
 app.use('/api/deposit_penggunaan', depositPenggunaanRoutes);
 app.use('/api/obat_inap', obatInapRoutes);
 app.use('/api/tindakan_inap', tindakanInapRoutes);
-// app.use('/api/tindakan_jalan', tindakanJalanRoutes);
 app.use('/api/tagihan_sementara', tagihanSementaraRoutes);
 app.use('/api/riwayat_inap', riwayatInapRoutes);
 app.use('/api/riwayat_jalan', riwayatJalanRoutes);

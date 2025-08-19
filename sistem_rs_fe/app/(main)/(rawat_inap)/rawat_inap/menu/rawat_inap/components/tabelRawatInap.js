@@ -6,7 +6,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 
-const TabelRawatInap = ({ data, loading, onEdit, onDelete, setFormRawatInapMode, onCheckout }) => {
+const TabelRawatInap = ({ data, loading, onEdit, onDelete, setFormRawatInapMode, onCheckout, onCancelCheckout }) => {
 
   const formatTanggal = (tanggal) => {
     if (!tanggal) return "-";
@@ -112,6 +112,19 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete, setFormRawatInapMode,
                   size="small"
                   severity="danger"
                   onClick={() => onDelete(row)}
+                />
+              </>
+            )}
+            {row.STATUS !== "AKTIF" && (
+              <>
+                <Button
+                  tooltip="Batalkan checkout"
+                  size="small"
+                  label="Aktifkan"
+                  severity="warning"
+                  onClick={() => {
+                    onCancelCheckout(row);
+                  }}
                 />
               </>
             )}

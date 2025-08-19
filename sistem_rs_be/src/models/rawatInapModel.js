@@ -184,3 +184,33 @@ export const getTotalTindakanInap = async (IDRAWATINAP) => {
     .sum('TOTAL as total');
   return result[0];
 };
+
+export const cancelCheckout = async (id) => {
+  await db.transaction(async (trx) => {
+    const riwayat = await trx('riwayat_rawat_inap')
+      .where({ IDRAWATINAP: id })
+      .first();
+
+    if (!riwayat) {
+      throw new Error('Data riwayat rawat inap tidak ditemukan');
+    }
+
+    await trx('riwayat_obat_inap').where({ IDRIWAYATINAP: riwayat.IDRIWAYATINAP }).delete();
+    await trx('riwayat_tindakan_inap').where({ IDRIWAYATINAP: riwayat.IDRIWAYATINAP }).delete();
+
+    await trx('riwayat_rawat_inap').where({ IDRAWATINAP: id }).delete();
+
+    await trx('rawat_inap')
+      .where({ IDRAWATINAP: id })
+      .update({
+        TANGGALKELUAR: null,
+        STATUS: 'AKTIF',
+        UPDATED_AT: db.fn.now(),
+      });
+
+    const rawat = await trx('rawat_inap').where({ IDRAWATINAP: id }).first();
+    if (rawat?.IDBED) {
+      await trx('bed').where({ IDBED: rawat.IDBED }).update({ STATUS: 'TERISI' });
+    }
+  });
+};

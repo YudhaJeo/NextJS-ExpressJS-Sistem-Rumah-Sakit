@@ -114,10 +114,22 @@ const remove = async (req, res) => {
   }
 };
 
+const cancelCheckout = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await RawatInap.cancelCheckout(id);
+    res.status(200).json({ message: 'Checkout berhasil dibatalkan' });
+  } catch (err) {
+    console.error('Error cancelCheckout:', err);
+    res.status(500).json({ message: 'Gagal membatalkan checkout rawat inap' });
+  }
+};
+
 export default {
   getAll,
   getById,
   create,
   update,
+  cancelCheckout,
   delete: remove
 };

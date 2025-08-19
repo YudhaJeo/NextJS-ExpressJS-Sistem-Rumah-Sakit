@@ -8,5 +8,6 @@ router.get('/:id', RawatInapController.getById);
 router.post('/', RawatInapController.create);
 router.put('/:id', RawatInapController.update);
 router.delete('/:id', RawatInapController.delete);
+router.put('/:id/cancel_checkout', RawatInapController.cancelCheckout);
 
 export default router;
