@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import TabelTagihanSementara from './components/tabelTagihanSementara';
 import ToastNotifier from '@/app/components/toastNotifier';
@@ -12,7 +11,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Page = () => {
   const toastRef = useRef(null);
-  const router = useRouter();
 
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
