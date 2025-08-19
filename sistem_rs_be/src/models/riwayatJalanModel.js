@@ -46,22 +46,18 @@ export async function getRiwayatJalanById(id) {
     .first();
 }
 
-export async function getRiwayatTindakanByIdRiwayat(id) {
-  return await db('riwayat_tindakan_jalan')
-    .join('tindakan_medis', 'riwayat_tindakan_jalan.IDTINDAKAN', 'tindakan_medis.IDTINDAKAN')
-    .select('tindakan_medis.NAMATINDAKAN', 'tindakan_medis.KATEGORI', 'riwayat_tindakan_jalan.JUMLAH', 'riwayat_tindakan_jalan.HARGA', 'riwayat_tindakan_jalan.TOTAL')
-    .where('riwayat_tindakan_jalan.IDRIWAYATJALAN', id);
-}
-
 export async function insertFromRawatJalan(rawatJalan) {
   const {
     IDRAWATJALAN,
     IDDOKTER,
     DIAGNOSA,
-    TOTALTINDAKAN,
-    TOTALBIAYA,
     TANGGALRAWAT
   } = rawatJalan;
+
+  const tindakanJalan = await db('tindakan_jalan').where({ IDRAWATJALAN });
+
+  const TOTALTINDAKAN = tindakanJalan.length;
+  const TOTALBIAYA = tindakanJalan.reduce((sum, t) => sum + Number(t.TOTAL || 0), 0);
 
   const [insertedRiwayat] = await db('riwayat_rawat_jalan').insert({
     IDRAWATJALAN,
@@ -78,16 +74,29 @@ export async function insertFromRawatJalan(rawatJalan) {
     .first()
     .then((row) => row?.IDRIWAYATJALAN);
 
-  const tindakanJalan = await db('tindakan_jalan').where({ IDRAWATJALAN });
-
   if (tindakanJalan.length > 0) {
-    const tindakanRiwayat = tindakanJalan.map((tindakan) => ({
+    const tindakanRiwayat = tindakanJalan.map((t) => ({
       IDRIWAYATJALAN,
-      IDTINDAKAN: tindakan.IDTINDAKAN,
-      JUMLAH: tindakan.JUMLAH,
-      HARGA: tindakan.HARGA,
-      TOTAL: tindakan.TOTAL,
+      IDTINDAKAN: t.IDTINDAKAN,
+      JUMLAH: t.JUMLAH,
+      HARGA: t.HARGA,
+      TOTAL: t.TOTAL,
     }));
     await db('riwayat_tindakan_jalan').insert(tindakanRiwayat);
   }
+
+  return IDRIWAYATJALAN;
+}
+
+export async function getRiwayatTindakanByIdRiwayat(id) {
+  return await db('riwayat_tindakan_jalan')
+    .join('tindakan_medis', 'riwayat_tindakan_jalan.IDTINDAKAN', 'tindakan_medis.IDTINDAKAN')
+    .select(
+      'tindakan_medis.NAMATINDAKAN',
+      'tindakan_medis.KATEGORI',
+      'riwayat_tindakan_jalan.JUMLAH',
+      'riwayat_tindakan_jalan.HARGA',
+      'riwayat_tindakan_jalan.TOTAL'
+    )
+    .where('riwayat_tindakan_jalan.IDRIWAYATJALAN', id);
 }

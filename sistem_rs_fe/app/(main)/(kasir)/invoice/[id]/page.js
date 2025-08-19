@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import axios from 'axios';
 import { Card } from 'primereact/card';
 import { Tag } from 'primereact/tag';
@@ -82,6 +82,17 @@ export default function InvoiceDetailPage() {
     );
   }
 
+  const num = (v) => Number.isFinite(Number(v)) ? Number(v) : 0;
+  const totalKamar = num(invoice.TOTALKAMAR);
+  const totalObat = num(invoice.TOTALOBAT);
+  const totalTindakan = num(invoice.TOTALTINDAKAN);
+  const totalBiaya = num(invoice.TOTALBIAYA) || (totalKamar + totalObat + totalTindakan);
+
+  const totalTagihan = num(invoice.TOTALTAGIHAN) || totalBiaya;
+  const totalDeposit = num(invoice.TOTALDEPOSIT);
+  const totalAngsuran = num(invoice.TOTALANGSURAN);
+  const sisaTagihan = num(invoice.SISA_TAGIHAN) || (totalTagihan - totalDeposit - totalAngsuran);
+
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
@@ -105,17 +116,17 @@ export default function InvoiceDetailPage() {
               <div className="col-12 md:col-6">
                 <Divider />
                 <h4>Rincian Biaya Riwayat</h4>
-                <p><b>Biaya Kamar:</b> {formatCurrency(invoice.TOTALKAMAR)}</p>
-                <p><b>Total Obat:</b> {formatCurrency(invoice.TOTALOBAT)}</p>
-                <p><b>Total Tindakan:</b> {formatCurrency(invoice.TOTALTINDAKAN)}</p>
-                <p><b>Total Biaya:</b> {formatCurrency(invoice.TOTALBIAYA)}</p>
+                <p><b>Biaya Kamar:</b> {formatCurrency(totalKamar)}</p>
+                <p><b>Total Obat:</b> {formatCurrency(totalObat)}</p>
+                <p><b>Total Tindakan:</b> {formatCurrency(totalTindakan)}</p>
+                <p><b>Total Biaya:</b> {formatCurrency(totalBiaya)}</p>
                 <Divider />
                 <h4>Informasi Invoice</h4>
                 <p><b>Tanggal Invoice:</b> {formatTanggal(invoice.TANGGALINVOICE)}</p>
-                <p><b>Total Tagihan:</b> {formatCurrency(invoice.TOTALTAGIHAN)}</p>
-                <p><b>Total Deposit:</b> {formatCurrency(invoice.TOTALDEPOSIT)}</p>
-                <p><b>Total Angsuran:</b> {formatCurrency(invoice.TOTALANGSURAN)}</p>
-                <p><b>Sisa Tagihan:</b> {formatCurrency(invoice.SISA_TAGIHAN)}</p>
+                <p><b>Total Tagihan:</b> {formatCurrency(totalTagihan)}</p>
+                <p><b>Total Deposit:</b> {formatCurrency(totalDeposit)}</p>
+                <p><b>Total Angsuran:</b> {formatCurrency(totalAngsuran)}</p>
+                <p><b>Sisa Tagihan:</b> {formatCurrency(sisaTagihan)}</p>
                 <p><b>Status:</b> <Tag value={statusLabels[invoice.STATUS] || invoice.STATUS} severity={statusSeverity[invoice.STATUS] || 'info'} /></p>
               </div>
             </div>
