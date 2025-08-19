@@ -19,7 +19,7 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete, setFormRawatInapMode,
   };
 
   return (
-    <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
+    <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable sortField="TANGGALMASUK" sortOrder={-1}>
       <Column
         field="NAMALENGKAP"
         header="Pasien"

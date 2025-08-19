@@ -68,7 +68,7 @@ const TabelRiwayatInap = ({ data, loading }) => {
 
   return (
     <>
-      <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
+      <DataTable value={data} paginator rows={10} loading={loading} size="small" sortField="TANGGALMASUK" sortOrder={-1}>
         <Column
           field="NAMALENGKAP"
           header="Pasien"
