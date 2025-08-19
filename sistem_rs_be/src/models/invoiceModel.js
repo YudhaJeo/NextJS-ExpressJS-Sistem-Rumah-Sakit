@@ -48,3 +48,35 @@ export const update = (id, data) => {
 export const remove = (id) => {
   return db('invoice').where('IDINVOICE', id).del();
 };
+
+export const getObatByInvoiceId = (invoiceId) => {
+  return db('riwayat_obat_inap as ro')
+    .join('obat as o', 'ro.IDOBAT', 'o.IDOBAT')
+    .join('riwayat_rawat_inap as rri', 'ro.IDRIWAYATINAP', 'rri.IDRIWAYATINAP')
+    .join('invoice as i', 'rri.IDRIWAYATINAP', 'i.IDRIWAYATINAP')
+    .select(
+      'o.IDOBAT',
+      'o.NAMAOBAT',
+      'o.JENISOBAT',
+      'ro.JUMLAH',
+      'ro.HARGA',
+      'ro.TOTAL'
+    )
+    .where('i.IDINVOICE', invoiceId);
+};
+
+export const getTindakanByInvoiceId = (invoiceId) => {
+  return db('riwayat_tindakan_inap as rt')
+    .join('tindakan_medis as t', 'rt.IDTINDAKAN', 't.IDTINDAKAN')
+    .join('riwayat_rawat_inap as rri', 'rt.IDRIWAYATINAP', 'rri.IDRIWAYATINAP')
+    .join('invoice as i', 'rri.IDRIWAYATINAP', 'i.IDRIWAYATINAP')
+    .select(
+      't.IDTINDAKAN',
+      't.NAMATINDAKAN',
+      't.KATEGORI',
+      'rt.JUMLAH',
+      'rt.HARGA',
+      'rt.TOTAL'
+    )
+    .where('i.IDINVOICE', invoiceId);
+};
