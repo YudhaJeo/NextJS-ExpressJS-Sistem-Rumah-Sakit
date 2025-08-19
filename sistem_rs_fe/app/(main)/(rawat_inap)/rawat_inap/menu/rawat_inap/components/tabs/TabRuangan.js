@@ -18,11 +18,14 @@ const TabRuangan = ({
       currency: 'IDR',
     }).format(value || 0);
 
+    const isDisabled = (form?.STATUS || '').toUpperCase() !== 'AKTIF';
+
   return (
     <>
       <div className="mt-2">
         <label>Bed</label>
         <Dropdown
+          disabled={isDisabled}
           className={inputClass('IDBED')}
           value={form.IDBED}
           options={bedOptions}
@@ -48,6 +51,7 @@ const TabRuangan = ({
       <div className="mt-2">
         <label>Tanggal Masuk (Mulai)</label>
         <Calendar
+          disabled={isDisabled}
           className={inputClass('TANGGALMASUK')}
           value={form.TANGGALMASUK ? new Date(form.TANGGALMASUK) : null}
           onChange={(e) => setForm({ ...form, TANGGALMASUK: e.value })}
@@ -63,6 +67,7 @@ const TabRuangan = ({
         <label className="mb-1">Tanggal Keluar (Pulang)</label>
         <div className="flex items-center gap-2">
           <Calendar
+            disabled={isDisabled}
             className={inputClass('TANGGALKELUAR')}
             value={form.TANGGALKELUAR ? new Date(form.TANGGALKELUAR) : null}
             onChange={(e) => setForm({ ...form, TANGGALKELUAR: e.value })}
@@ -80,6 +85,7 @@ const TabRuangan = ({
       <div className="mt-2">
         <label>Catatan</label>
         <InputTextarea
+          disabled={isDisabled}
           className={inputClass('CATATAN')}
           value={form.CATATAN || ''}
           onChange={(e) => setForm({ ...form, CATATAN: e.target.value })}
