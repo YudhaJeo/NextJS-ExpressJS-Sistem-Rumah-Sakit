@@ -70,7 +70,6 @@ const TabelRiwayatJalan = ({ data, loading }) => {
         <Column field="NAMALENGKAP" header="Pasien" />
         <Column field="NAMADOKTER" header="Dokter" />
         <Column field="DIAGNOSA" header="Hasil Diagnosa" />
-        <Column field="TOTALOBAT" header="Total Obat" body={(r) => formatRupiah(r.TOTALOBAT)} />
         <Column field="TOTALTINDAKAN" header="Total Tindakan" body={(r) => formatRupiah(r.TOTALTINDAKAN)} />
         <Column field="TOTALBIAYA" header="Tagihan Total" body={(r) => formatRupiah(r.TOTALBIAYA)} />
         <Column field="TANGGALRAWAT" header="Tanggal Rawat" body={(r) => formatTanggal(r.TANGGALRAWAT)} />

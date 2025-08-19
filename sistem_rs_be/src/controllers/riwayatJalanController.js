@@ -26,12 +26,10 @@ export async function getRiwayatJalanById(req, res) {
       return res.status(404).json({ message: 'Riwayat rawat jalan tidak ditemukan' });
     }
 
-    // const daftarObat = await RiwayatRawatJalan.getRiwayatObatByIdRiwayat(id);
     const daftarTindakan = await RiwayatRawatJalan.getRiwayatTindakanByIdRiwayat(id);
 
     const responseData = {
       ...dataUtama,
-      // obat: daftarObat,
       tindakan: daftarTindakan,
     };
 

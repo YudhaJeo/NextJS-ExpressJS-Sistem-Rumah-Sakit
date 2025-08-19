@@ -11,7 +11,6 @@ export const up = function (knex) {
       .references('IDDOKTER').inTable('dokter').onDelete('CASCADE');
 
     table.string('DIAGNOSA', 255).nullable();
-    table.double('TOTALOBAT').defaultTo(0);
     table.double('TOTALTINDAKAN').defaultTo(0);
     table.double('TOTALBIAYA').defaultTo(0);
     table.timestamp('TANGGALRAWAT').notNullable().defaultTo(knex.fn.now());

@@ -46,14 +46,6 @@ export async function getRiwayatJalanById(id) {
     .first();
 }
 
-
-// export async function getRiwayatObatByIdRiwayat(id) {
-//   return await db('riwayat_obat_jalan')
-//     .join('obat', 'riwayat_obat_jalan.IDOBAT', 'obat.IDOBAT')
-//     .select('obat.NAMAOBAT', 'obat.JENISOBAT', 'riwayat_obat_jalan.JUMLAH', 'riwayat_obat_jalan.HARGA', 'riwayat_obat_jalan.TOTAL')
-//     .where('riwayat_obat_jalan.IDRIWAYATJALAN', id);
-// }
-
 export async function getRiwayatTindakanByIdRiwayat(id) {
   return await db('riwayat_tindakan_jalan')
     .join('tindakan_medis', 'riwayat_tindakan_jalan.IDTINDAKAN', 'tindakan_medis.IDTINDAKAN')
@@ -86,19 +78,7 @@ export async function insertFromRawatJalan(rawatJalan) {
     .first()
     .then((row) => row?.IDRIWAYATJALAN);
 
-  // const obatJalan = await db('obat_jalan').where({ IDRAWATJALAN });
   const tindakanJalan = await db('tindakan_jalan').where({ IDRAWATJALAN });
-
-  // if (obatJalan.length > 0) {
-  //   const obatRiwayat = obatJalan.map((obat) => ({
-  //     IDRIWAYATJALAN,
-  //     IDOBAT: obat.IDOBAT,
-  //     JUMLAH: obat.JUMLAH,
-  //     HARGA: obat.HARGA,
-  //     TOTAL: obat.TOTAL,
-  //   }));
-  //   await db('riwayat_obat_jalan').insert(obatRiwayat);
-  // }
 
   if (tindakanJalan.length > 0) {
     const tindakanRiwayat = tindakanJalan.map((tindakan) => ({
