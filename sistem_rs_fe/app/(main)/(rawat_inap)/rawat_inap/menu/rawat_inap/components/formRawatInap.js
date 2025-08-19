@@ -23,7 +23,6 @@ const FormRawatInap = ({
   rawatJalanOptions,
   bedOptions,
   tenagaMedisOptions,
-  selectedRawat,
   mode = 'edit',
 }) => {
   const inputClass = (field) =>
@@ -86,7 +85,6 @@ const FormRawatInap = ({
             rawatJalanOptions={rawatJalanOptions}
             isEditMode={isEditMode}
             inputClass={inputClass}
-            statusRawat={selectedRawat?.STATUS}
           />
         )}
         {mode === 'edit' && activeIndex === 1 && (
@@ -97,7 +95,6 @@ const FormRawatInap = ({
             bedOptions={bedOptions}
             isEditMode={isEditMode}
             inputClass={inputClass}
-            statusRawat={selectedRawat?.STATUS}
           />
         )}
 
@@ -108,7 +105,7 @@ const FormRawatInap = ({
             idRawatInap={Cookies.get('IDRAWATINAP')}
             tindakanInapData={form.tindakanInap || []}
             tenagaMedisOptions={tenagaMedisOptions}
-            statusRawat={selectedRawat?.STATUS}
+            statusRawat={form.STATUS}
           />
         )}
         {mode === 'visit' && activeIndex === 1 && (
@@ -118,11 +115,11 @@ const FormRawatInap = ({
             idRawatInap={Cookies.get('IDRAWATINAP')}
             obatInapData={form.obatInap || []}
             tenagaMedisOptions={tenagaMedisOptions}
-            statusRawat={selectedRawat?.STATUS}
+            statusRawat={form.STATUS}
           />
         )}
 
-        {mode === 'edit' && selectedRawat?.STATUS === "AKTIF" && (
+        {mode === 'edit' && form.STATUS === "AKTIF" && (
           <div className="text-right pt-3">
             <Button type="submit" label="Simpan" icon="pi pi-save" />
           </div>

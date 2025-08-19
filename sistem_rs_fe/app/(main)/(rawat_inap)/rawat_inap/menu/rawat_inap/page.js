@@ -153,7 +153,6 @@ const Page = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) {
-      setDialogVisible(false);
       return;
     }
   
@@ -198,6 +197,7 @@ const Page = () => {
         fetchRawatInap();
         fetchRawatJalan();
         fetchTenagaMedis();
+        toastRef.current?.showToast('00', 'Data berhasil disimpan');
         setDialogVisible(false);
       } else {
         throw new Error('Respons tidak valid');
@@ -224,6 +224,7 @@ const Page = () => {
       TANGGALMASUK: row.TANGGALMASUK,
       TANGGALKELUAR: row.TANGGALKELUAR || '',
       CATATAN: row.CATATAN || '',
+      STATUS: row.STATUS || '',
     });    
     setDialogVisible(true);
     fetchTindakanInapByRawatInapId(row.IDRAWATINAP);
@@ -233,7 +234,6 @@ const Page = () => {
   const fetchObatInapByRawatInapId = async (idRawatInap) => {
     try {
       const res = await axios.get(`${API_URL}/obat_inap/rawat_inap/${idRawatInap}`);
-      // console.log("Data obat ID:", res.data.data)
       return res.data.data || [];
     } catch (err) {
       console.error('Gagal ambil data obat inap:', err);
@@ -244,8 +244,6 @@ const Page = () => {
   const fetchTindakanInapByRawatInapId = async (idRawatInap) => {
     try {
       const res = await axios.get(`${API_URL}/tindakan_inap/rawat_inap/${idRawatInap}`);
-      // console.log("Data tindakan ID:", res.data.data)
-      // console.log("[Page]:", idRawatInap)
       return res.data.data || [];
     } catch (err) {
       console.error('Gagal ambil data tindakan inap:', err);
@@ -396,7 +394,7 @@ const Page = () => {
         bedOptions={bedOptions}
         tenagaMedisOptions={tenagaMedisOptions}
         mode={formRawatInapMode}
-        selectedRawat={selectedRawat}
+        selectedRawat={selectedRawat?.STATUS || ""}
       />
     </div>
   );
