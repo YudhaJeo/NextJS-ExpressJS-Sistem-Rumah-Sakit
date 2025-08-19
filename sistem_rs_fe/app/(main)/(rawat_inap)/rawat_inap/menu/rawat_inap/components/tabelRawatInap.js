@@ -95,15 +95,17 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete, setFormRawatInapMode,
                 onEdit(row, 0);
               }}
             />
-            <Button
-              tooltip="Selesaikan rawat inap"
-              size="small"
-              label="Checkout"
-              severity="success"
-              onClick={() => {
-                onCheckout(row);
-              }}
-            />
+            {row.STATUS === "AKTIF" && (
+              <Button
+                tooltip="Selesaikan rawat inap"
+                size="small"
+                label="Checkout"
+                severity="success"
+                onClick={() => {
+                  onCheckout(row);
+                }}
+              />
+            )}
             <Button
               tooltip="Hapus Data"
               icon="pi pi-trash"
