@@ -59,7 +59,9 @@ import autoTable from 'jspdf-autotable'
     let y = marginTop + 10;
 
     const formatTanggal = (tanggal) =>
-      tanggal ? new Date(tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-';
+      tanggal
+        ? new Date(tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+        : '-';
 
     const formatRupiah = (val) =>
       new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(val || 0);
@@ -91,12 +93,16 @@ import autoTable from 'jspdf-autotable'
     const services = [];
     let no = 1;
 
-    detail.obat?.forEach((o) => {
-      services.push([ no++, o.NAMAOBAT, o.JENISOBAT || '-', o.JUMLAH, 'Obat', formatRupiah(o.HARGA), formatRupiah(o.TOTAL) ]);
-    });
-
     detail.tindakan?.forEach((t) => {
-      services.push([ no++, t.NAMATINDAKAN, t.KATEGORI || '-', t.JUMLAH, 'Tindakan', formatRupiah(t.HARGA), formatRupiah(t.TOTAL) ]);
+      services.push([
+        no++,
+        t.NAMATINDAKAN,
+        t.KATEGORI || '-',
+        t.JUMLAH,
+        'Tindakan',
+        formatRupiah(t.HARGA),
+        formatRupiah(t.TOTAL),
+      ]);
     });
 
     autoTable(doc, {
@@ -113,31 +119,38 @@ import autoTable from 'jspdf-autotable'
     doc.text('Ringkasan Biaya', marginLeft, y2);
     y2 += 6;
 
-    [['Total Obat', detail.TOTALOBAT], ['Total Tindakan', detail.TOTALTINDAKAN], ['Total Biaya', detail.TOTALBIAYA]]
-      .forEach(([label, val]) => {
-        doc.setFontSize(10);
-        doc.text(label, marginLeft, y2);
-        doc.text(formatRupiah(val), doc.internal.pageSize.width - marginRight, y2, { align: 'right' });
-        y2 += 6;
-      });
+    [
+      ['Total Tindakan', detail.TOTALTINDAKAN, false],
+      ['Total Biaya', detail.TOTALBIAYA, true]
+    ].forEach(([label, val, isCurrency]) => {
+      doc.setFontSize(10);
+      doc.text(label, marginLeft, y2);
+      doc.text(
+        isCurrency ? formatRupiah(val) : String(val),
+        doc.internal.pageSize.width - marginRight,
+        y2,
+        { align: 'right' }
+      );
+      y2 += 6;
+    });
 
     return doc.output('datauristring');
   }
 
   const handleExportPdf = async () => {
-    if (!selectedRow) return
+    if (!selectedRow) return;
     try {
-      setLoadingExport(true)
+      setLoadingExport(true);
 
-      const pdfDataUrl = await exportPDF(selectedRow, dataAdjust)
-      setPdfUrl(pdfDataUrl)
-      setFileName(`Laporan_RawatInap_${selectedRow.IDRIWAYATINAP}`)
-      setAdjustDialog(false)
-      setJsPdfPreviewOpen(true)
+      const pdfDataUrl = await exportPDF(selectedRow, dataAdjust);
+      setPdfUrl(pdfDataUrl);
+      setFileName(`Laporan_RawatJalan_${selectedRow.IDRIWAYATJALAN}.pdf`); 
+      setAdjustDialog(false);
+      setJsPdfPreviewOpen(true);
     } finally {
-      setLoadingExport(false)
+      setLoadingExport(false);
     }
-  }  
+  }; 
 
   const footer = () => (
     <div className="flex flex-row">

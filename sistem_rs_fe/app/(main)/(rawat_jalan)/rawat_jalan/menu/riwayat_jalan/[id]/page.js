@@ -192,7 +192,7 @@ export default function DetailRiwayatJalanPage() {
                     </div> */}
                     <div className="flex justify-content-between mb-2">
                       <span className="text-600">Total Tindakan:</span>
-                      <span className="font-medium">{formatRupiah(detail.TOTALTINDAKAN)}</span>
+                      <span className="font-medium">{(detail.TOTALTINDAKAN)}</span>
                     </div>
                     <Divider />
                     <div className="flex justify-content-between">
