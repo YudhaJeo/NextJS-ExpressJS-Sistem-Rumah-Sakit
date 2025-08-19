@@ -16,7 +16,7 @@ import Cookies from 'js-cookie';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const TabObat = ({ tenagaMedisOptions }) => {
+const TabObat = ({ tenagaMedisOptions, statusRawat }) => {
   const [obatInapData, setObatInapData] = useState([]);
   const [obatOptions, setObatOptions] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -123,6 +123,7 @@ const TabObat = ({ tenagaMedisOptions }) => {
       <Toast ref={toast} />
       <h3 className="text-lg font-semibold mb-3">Riwayat Obat Inap</h3>
 
+      {statusRawat === "AKTIF" && (
       <div className="flex flex-wrap gap-2 mb-4">
         <Calendar
           value={newItem.WAKTUPEMBERIAN}
@@ -164,8 +165,9 @@ const TabObat = ({ tenagaMedisOptions }) => {
           placeholder="Jumlah"
         />
         <InputNumber value={newItem.HARGA} disabled mode="currency" currency="IDR" locale="id-ID" />
-        <Button label="Tambah" icon="pi pi-plus" onClick={handleAdd} />
+        <Button label="Tambahkan" icon="pi pi-save" onClick={handleAdd} />
       </div>
+      )}
 
       <DataTable value={obatInapData} paginator rows={10} loading={loading}>
         <Column field="WAKTUPEMBERIAN" header="Waktu"
@@ -176,11 +178,13 @@ const TabObat = ({ tenagaMedisOptions }) => {
         <Column field="JUMLAH" header="Jumlah" />
         <Column field="HARGA" header="Harga" body={(row) => formatRupiah(row.HARGA)} />
         <Column field="TOTAL" header="Total" body={(row) => formatRupiah(row.TOTAL)} />
+        {statusRawat === "AKTIF" && (
         <Column header="Aksi" body={(row) => (
           <div className="flex gap-2">
             <Button icon="pi pi-trash" size="small" severity="danger" onClick={() => handleDelete(row)} />
           </div>
         )} style={{ width: '150px' }} />
+        )}
       </DataTable>
     </div>
   );

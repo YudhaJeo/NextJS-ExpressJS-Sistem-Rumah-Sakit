@@ -23,6 +23,7 @@ const FormRawatInap = ({
   rawatJalanOptions,
   bedOptions,
   tenagaMedisOptions,
+  selectedRawat,
   mode = 'edit',
 }) => {
   const inputClass = (field) =>
@@ -105,6 +106,7 @@ const FormRawatInap = ({
             idRawatInap={Cookies.get('IDRAWATINAP')}
             tindakanInapData={form.tindakanInap || []}
             tenagaMedisOptions={tenagaMedisOptions}
+            statusRawat={selectedRawat?.STATUS}
           />
         )}
         {mode === 'visit' && activeIndex === 1 && (
@@ -114,6 +116,7 @@ const FormRawatInap = ({
             idRawatInap={Cookies.get('IDRAWATINAP')}
             obatInapData={form.obatInap || []}
             tenagaMedisOptions={tenagaMedisOptions}
+            statusRawat={selectedRawat?.STATUS}
           />
         )}
 

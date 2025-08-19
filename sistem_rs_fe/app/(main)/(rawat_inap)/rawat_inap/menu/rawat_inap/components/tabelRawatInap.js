@@ -77,7 +77,7 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete, setFormRawatInapMode,
           <div className="flex gap-2">
             <Button
               tooltip="Edit Data"
-              icon="pi pi-pencil"
+              icon="pi pi-address-book"
               size="small"
               severity="warning"
               onClick={() => {
@@ -87,7 +87,7 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete, setFormRawatInapMode,
             />
             <Button
               tooltip="Visit"
-              icon="pi pi-eye"
+              icon="pi pi-briefcase"
               size="small"
               severity="info"
               onClick={() => { 
@@ -96,23 +96,25 @@ const TabelRawatInap = ({ data, loading, onEdit, onDelete, setFormRawatInapMode,
               }}
             />
             {row.STATUS === "AKTIF" && (
-              <Button
-                tooltip="Selesaikan rawat inap"
-                size="small"
-                label="Checkout"
-                severity="success"
-                onClick={() => {
-                  onCheckout(row);
-                }}
-              />
+              <>
+                <Button
+                  tooltip="Selesaikan rawat inap"
+                  size="small"
+                  label="Checkout"
+                  severity="success"
+                  onClick={() => {
+                    onCheckout(row);
+                  }}
+                />
+                <Button
+                  tooltip="Hapus Data"
+                  icon="pi pi-trash"
+                  size="small"
+                  severity="danger"
+                  onClick={() => onDelete(row)}
+                />
+              </>
             )}
-            <Button
-              tooltip="Hapus Data"
-              icon="pi pi-trash"
-              size="small"
-              severity="danger"
-              onClick={() => onDelete(row)}
-            />
           </div>
         )}
         style={{ width: '150px' }}

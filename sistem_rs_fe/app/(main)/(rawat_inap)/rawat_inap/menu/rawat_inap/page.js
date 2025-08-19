@@ -27,6 +27,7 @@ const Page = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [formRawatInapMode, setFormRawatInapMode] = useState("edit");
+  const [selectedRawat, setSelectedRawat] = useState(null)
 
   const defaultForm = {
     IDRAWATINAP: '',
@@ -377,6 +378,7 @@ const Page = () => {
         bedOptions={bedOptions}
         tenagaMedisOptions={tenagaMedisOptions}
         mode={formRawatInapMode}
+        selectedRawat={selectedRawat}
       />
     </div>
   );
