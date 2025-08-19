@@ -26,11 +26,15 @@ const AppTopbar = forwardRef((props, ref) => {
     }));
 
     const [username, setUsername] = useState("");
+    const [role, setRole] = useState("");
     const [profile, setProfile] = useState("");
 
     useEffect(() => {
         const name = Cookies.get("username");
         if (name) setUsername(name);
+
+        const roleData = Cookies.get("role");
+        if (roleData) setRole(roleData);
     }, []);
 
     useEffect(() => {
@@ -44,7 +48,7 @@ const AppTopbar = forwardRef((props, ref) => {
         <div className="layout-topbar">
             <Link href="/" className="layout-topbar-logo">
                 <img src={`/layout/images/logo.png`} alt="logo" />
-                <span>Rumah Sakit</span>
+                <span>RS Bayza Medica</span>
             </Link>
 
             <button
@@ -71,7 +75,10 @@ const AppTopbar = forwardRef((props, ref) => {
                     "layout-topbar-menu-mobile-active": layoutState.profileSidebarVisible,
                 })}
             >
-                <p className="text-base md:text-xl my-2 font-medium">{username}</p>
+                <p className="text-base md:text-xl my-2 font-medium flex flex-col">
+                    <span>{username}</span>
+                    {role && <span className="text-sm text-gray-400">{role}</span>}
+                </p>
 
                 <Link href="/profile">
                     <button type="button" className="p-link layout-topbar-button">

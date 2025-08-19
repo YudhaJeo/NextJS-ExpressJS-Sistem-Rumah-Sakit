@@ -7,6 +7,7 @@ export const getDashboardInfo = async () => {
     const jumlahDokter = await db('master_tenaga_medis').where('JENISTENAGAMEDIS', 'Dokter').count('* as total');
     const bedTersedia = await db('bed').where('STATUS', 'TERSEDIA').count('* as total');
     const bedTerisi = await db('bed').where('STATUS', 'TERISI').count('* as total');
+    const totalBed = await db('bed').count('* as total');
 
     // --- Ambil data kalender dokter ---
     const kalenderDokter = await db('kalender')
@@ -23,7 +24,7 @@ export const getDashboardInfo = async () => {
       .orderBy('TANGGAL', 'asc')
       .limit(10);
 
-    // --- Data chart ---
+    // --- Statistik umum untuk Bar Chart ---
     const chartData = {
       labels: ['Pasien', 'Dokter', 'Tersedia', 'Terisi'],
       datasets: [
@@ -40,17 +41,61 @@ export const getDashboardInfo = async () => {
       ]
     };
 
+    /// --- Tren Pasien per minggu (MySQL/MariaDB) ---
+const trenPasien = await db('pasien')
+  .select(db.raw('DAYOFWEEK(TANGGALDAFTAR) as hari'), db.raw('COUNT(*) as total'))
+  .groupBy('hari');
+
+// --- Tren Dokter per minggu ---
+const trenDokter = await db('master_tenaga_medis')
+  .where('JENISTENAGAMEDIS', 'Dokter')
+  .select(db.raw('DAYOFWEEK(CREATED_AT) as hari'), db.raw('COUNT(*) as total'))
+  .groupBy('hari');
+
+// Mapping hasil ke array Senin–Minggu
+const hariLabels = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+
+const trend = {
+  labels: hariLabels,
+  pasien: hariLabels.map((_, idx) => {
+    const found = trenPasien.find(row => Number(row.hari) === (idx === 0 ? 1 : idx + 1));
+    return found ? found.total : 0;
+  }),
+  dokter: hariLabels.map((_, idx) => {
+    const found = trenDokter.find(row => Number(row.hari) === (idx === 0 ? 1 : idx + 1));
+    return found ? found.total : 0;
+  }),
+};
+
+    // --- Distribusi pasien per Poli (Pie Chart) ---
+    const distribusiPasien = await db('pendaftaran')
+      .join('poli', 'pendaftaran.IDPOLI', 'poli.IDPOLI')
+      .select('poli.NAMAPOLI')
+      .count('* as total')
+      .groupBy('poli.NAMAPOLI');
+
+    const distribusi = {
+      labels: distribusiPasien.map(r => r.NAMAPOLI),
+      data: distribusiPasien.map(r => r.total),
+    };
+
+    // --- Bed Occupancy (Doughnut Chart) ---
+    const bed = {
+      total: totalBed[0].total,
+      used: bedTerisi[0].total,
+    };
+
     // --- Return semua data ---
     return {
       cards: [
         {
-          title: 'Jumlah Pasien',
+          title: 'Total Pasien',
           value: jumlahPasien[0].total,
           color: '#42A5F5',
           icon: 'pi pi-users'
         },
         {
-          title: 'Jumlah Dokter',
+          title: 'Total Dokter',
           value: jumlahDokter[0].total,
           color: '#66BB6A',
           icon: 'pi pi-graduation-cap'
@@ -68,7 +113,10 @@ export const getDashboardInfo = async () => {
           icon: 'pi pi-times-circle'
         }
       ],
-      chart: chartData,
+      chart: chartData,     // Bar Chart
+      trend,                // Line Chart
+      distribusi,           // Pie Chart
+      bed,                  // Doughnut Chart
       kalender: kalenderDokter
     };
   } catch (error) {

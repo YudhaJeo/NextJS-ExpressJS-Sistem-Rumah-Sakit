@@ -16,8 +16,12 @@ const Dashboard = () => {
   const [data, setData] = useState(null);
   const [barChartData, setBarChartData] = useState({});
   const [barChartOptions, setBarChartOptions] = useState({});
-  const [polarChartData, setPolarChartData] = useState({});
-  const [polarChartOptions, setPolarChartOptions] = useState({});
+  const [lineChartData, setLineChartData] = useState({});
+  const [lineChartOptions, setLineChartOptions] = useState({});
+  const [poliChartData, setPoliChartData] = useState({});
+  const [poliChartOptions, setPoliChartOptions] = useState({});
+  const [bedChartData, setBedChartData] = useState({});
+  const [bedChartOptions, setBedChartOptions] = useState({});
   const router = useRouter();
 
   useEffect(() => {
@@ -25,27 +29,19 @@ const Dashboard = () => {
       .get(`${API_URL}/dashboard`)
       .then((res) => {
         const resData = res.data;
-        // console.log('DATA DASHBOARD:', resData);
         setData(resData);
 
         const style = getComputedStyle(document.documentElement);
-
         const labels = resData.chart?.labels ?? [];
         const values = resData.chart?.datasets?.[0]?.data ?? [];
 
         const backgroundColors = [
-          'rgba(179, 59, 255, 0.2)',
-          'rgba(255, 204, 0, 0.2)',
-          'rgba(6, 146, 62, 0.2)',
-          'rgba(138, 0, 0, 0.2)',
+          'rgba(179, 59, 255, 0.5)',
+          'rgba(255, 204, 0, 0.5)',
+          'rgba(6, 146, 62, 0.5)',
+          'rgba(138, 0, 0, 0.5)',
         ];
-
-        const borderColors = [
-          '#B13BFF',
-          '#FFCC00',
-          '#06923E',
-          '#8A0000',
-        ];
+        const borderColors = ['#B13BFF', '#FFCC00', '#06923E', '#8A0000'];
 
         setBarChartData({
           labels,
@@ -62,40 +58,96 @@ const Dashboard = () => {
 
         setBarChartOptions({
           indexAxis: 'y',
-          plugins: {
-            legend: { display: false },
-          },
+          plugins: { legend: { display: false } },
           scales: {
             x: {
               beginAtZero: true,
               ticks: { color: style.getPropertyValue('--text-color') },
               grid: { color: style.getPropertyValue('--surface-border') },
             },
-            y: {
-              ticks: { color: style.getPropertyValue('--text-color') },
-            },
+            y: { ticks: { color: style.getPropertyValue('--text-color') } },
           },
         });
 
-        setPolarChartData({
-          labels,
+        const lineLabels = resData.trend?.labels ?? ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+        setLineChartData({
+          labels: lineLabels,
           datasets: [
             {
-              data: values,
-              backgroundColor: backgroundColors,
-              borderColor: borderColors,
+              label: 'Pasien',
+              data: resData.trend?.pasien ?? [2, 4, 3, 5, 6, 7, 8],
+              fill: false,
+              borderColor: '#42A5F5',
+              tension: 0.4,
+            },
+            {
+              label: 'Dokter',
+              data: resData.trend?.dokter ?? [1, 1, 1, 2, 2, 3, 3],
+              fill: false,
+              borderColor: '#66BB6A',
+              tension: 0.4,
+            },
+          ],
+        });
+        setLineChartOptions({
+          plugins: { legend: { labels: { color: style.getPropertyValue('--text-color') } } },
+          scales: {
+            x: { ticks: { color: style.getPropertyValue('--text-color') } },
+            y: { ticks: { color: style.getPropertyValue('--text-color'), beginAtZero: true } },
+          },
+        });
+
+        const poliLabels = resData.distribusi?.labels ?? ['Umum', 'Gigi', 'Anak', 'Bedah'];
+        const poliValues = resData.distribusi?.data ?? [10, 5, 7, 3];
+
+        // warna transparan (rgba)
+        const poliColors = [
+          'rgba(255, 99, 132, 0.6)',   // merah transparan
+          'rgba(54, 162, 235, 0.6)',   // biru transparan
+          'rgba(255, 206, 86, 0.6)',   // kuning transparan
+          'rgba(75, 192, 192, 0.6)',   // hijau transparan
+          'rgba(153, 102, 255, 0.6)',  // ungu transparan
+          'rgba(255, 159, 64, 0.6)',   // oranye transparan
+        ];
+
+        setPoliChartData({
+          labels: poliLabels,
+          datasets: [
+            {
+              data: poliValues,
+              backgroundColor: poliLabels.map((_, i) => poliColors[i % poliColors.length]),
+              borderColor: poliLabels.map((_, i) => poliColors[i % poliColors.length].replace('0.6', '1')), // versi solid utk border
               borderWidth: 1,
             },
           ],
         });
 
-        setPolarChartOptions({
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { color: style.getPropertyValue('--text-color') },
+        setPoliChartOptions({
+          plugins: { legend: { position: 'bottom', labels: { color: style.getPropertyValue('--text-color') } } },
+          scales: {
+            r: {
+              angleLines: { color: style.getPropertyValue('--surface-border') },
+              grid: { color: style.getPropertyValue('--surface-border') },
+              ticks: { color: style.getPropertyValue('--text-color') },
             },
           },
+        });
+
+        const totalBed = resData.bed?.total ?? 10;
+        const usedBed = resData.bed?.used ?? 7;
+        setBedChartData({
+          labels: ['Terisi', 'Tersedia'],
+          datasets: [
+            {
+              data: [usedBed, totalBed - usedBed],
+              backgroundColor: ['#E53935', '#43A047'],
+              hoverBackgroundColor: ['#EF5350', '#66BB6A'],
+            },
+          ],
+        });
+        setBedChartOptions({
+          cutout: '70%',
+          plugins: { legend: { position: 'bottom', labels: { color: style.getPropertyValue('--text-color') } } },
         });
       })
       .catch((err) => {
@@ -104,36 +156,35 @@ const Dashboard = () => {
       });
   }, []);
 
-  const cards = data?.cards?.map((card) => ({
-    title: card.title,
-    value: card.value,
-    icon: card.icon,
-    background: card.color + '20',
-    border: card.color,
-  })) ?? [];
+  const cards =
+    data?.cards?.map((card) => ({
+      title: card.title,
+      value: card.value,
+      icon: card.icon,
+      background: card.color + '20',
+      border: card.color,
+    })) ?? [];
 
   return (
     <div className="grid">
-  <div className="card col-12">
-    <div className="flex justify-content-center md:justify-content-between align-items-center">
-      {/* Judul di tengah (mobile: tengah, desktop: kiri) */}
-      <h1 className="text-xl font-semibold mb-3 text-center md:text-left flex-1">
-        Rumah Sakit Bayza Medika
-      </h1>
+      {/* Header */}
+      <div className="card col-12">
+        <div className="flex justify-content-center md:justify-content-between align-items-center">
+          <h1 className="text-xl font-semibold mb-3 text-center md:text-left flex-1">
+            Rumah Sakit Bayza Medika
+          </h1>
+          <span className="text-sm font-bold text-700">
+            {new Date().toLocaleDateString('id-ID', {
+              weekday: 'long',
+              day: '2-digit',
+              month: 'long',
+              year: 'numeric',
+            })}
+          </span>
+        </div>
+      </div>
 
-      {/* Hari & Tanggal Realtime */}
-      <span className="text-sm font-bold text-700">
-        {new Date().toLocaleDateString('id-ID', {
-          weekday: 'long',
-          day: '2-digit',
-          month: 'long',
-          year: 'numeric'
-        })}
-      </span>
-    </div>
-  </div>
-
-
+      {/* Summary Cards */}
       {cards.map((card, i) => (
         <div className="col-12 md:col-6 xl:col-3" key={i}>
           <Card className="shadow-md" style={{ borderTop: `4px solid ${card.border}` }}>
@@ -160,16 +211,18 @@ const Dashboard = () => {
         </div>
       ))}
 
+      {/* Grafik Tren */}
       <div className="col-12 md:col-6">
         <Card>
-          <div className="flex justify-content-between mb-5">
-            <span className="font-medium text-lg text-900">Perbandingan Data</span>
+          <div className="flex justify-content-between mb-3">
+            <span className="font-medium text-lg text-900">Tren Pasien & Dokter</span>
             <Tag value="Live" severity="info" />
           </div>
-          <Chart type="polarArea" data={polarChartData} options={polarChartOptions} className="w-full" />
+          <Chart type="line" data={lineChartData} options={lineChartOptions} className="w-full" />
         </Card>
       </div>
 
+      {/* Statistik Umum (Bar) */}
       <div className="col-12 md:col-6">
         <Card>
           <div className="flex justify-content-between mb-3">
@@ -178,7 +231,33 @@ const Dashboard = () => {
           </div>
           <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
         </Card>
-        {data?.table && (
+      </div>
+
+      {/* Distribusi Pasien per Poli (PolarArea) */}
+      <div className="col-12 md:col-6">
+        <Card>
+          <div className="flex justify-content-between mb-3">
+            <span className="font-medium text-lg text-900">Distribusi Pasien per Poli</span>
+            <Tag value="Live" severity="info" />
+          </div>
+          <Chart type="polarArea" data={poliChartData} options={poliChartOptions} className="w-full" />
+        </Card>
+      </div>
+
+      {/* Bed Occupancy */}
+      <div className="col-12 md:col-6">
+        <Card>
+          <div className="flex justify-content-between mb-3">
+            <span className="font-medium text-lg text-900">Statistik Bed</span>
+            <Tag value="Live" severity="info" />
+          </div>
+          <Chart type="doughnut" data={bedChartData} options={bedChartOptions} className="w-full" />
+        </Card>
+      </div>
+
+      {/* Data Terkini */}
+      {data?.table && (
+        <div className="col-12">
           <Card>
             <div className="flex justify-content-between mb-3">
               <span className="font-medium text-lg text-900">Data Terkini</span>
@@ -190,45 +269,49 @@ const Dashboard = () => {
               ))}
             </DataTable>
           </Card>
-        )}
+        </div>
+      )}
+
+      {/* Kalender Dokter */}
+      <div className="col-12">
         <Card>
-                  <div className="flex justify-content-between mb-3">
-                    <span className="font-medium text-lg text-900">Kalender Dokter</span>
-                    <Tag value="Live" severity="info" />
-                  </div>
-                  <DataTable value={data?.kalender ?? []} paginator rows={3} responsiveLayout="scroll">
-                    <Column field="NAMA_DOKTER" header="Nama Dokter" sortable />
-                    <Column
-                        field="TANGGAL"
-                        header="Tanggal"
-                        sortable
-                        body={(rowData) => {
-                          const date = new Date(rowData.TANGGAL);
-                          return date.toLocaleDateString('id-ID', {
-                            day: '2-digit',
-                            month: 'long',
-                            year: 'numeric',
-                          });
-                        }}
-                      />
-                    <Column
-                      field="STATUS"
-                      header="Status"
-                      sortable
-                      body={(rowData) => {
-                        switch (rowData.STATUS) {
-                          case "info":
-                            return <Tag severity="info" value="perjanjian" />;
-                          case "warning":
-                            return <Tag severity="warning" value="libur" />;
-                          default:
-                            return <Tag severity="secondary" value={rowData.STATUS} />;
-                        }
-                      }}
-                    />
-                    <Column field="KETERANGAN" header="Keterangan" />
-                  </DataTable>
-                </Card>
+          <div className="flex justify-content-between mb-3">
+            <span className="font-medium text-lg text-900">Kalender Dokter</span>
+            <Tag value="Live" severity="info" />
+          </div>
+          <DataTable value={data?.kalender ?? []} paginator rows={3} responsiveLayout="scroll">
+            <Column field="NAMA_DOKTER" header="Nama Dokter" sortable />
+            <Column
+              field="TANGGAL"
+              header="Tanggal"
+              sortable
+              body={(rowData) => {
+                const date = new Date(rowData.TANGGAL);
+                return date.toLocaleDateString('id-ID', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                });
+              }}
+            />
+            <Column
+              field="STATUS"
+              header="Status"
+              sortable
+              body={(rowData) => {
+                switch (rowData.STATUS) {
+                  case 'info':
+                    return <Tag severity="info" value="perjanjian" />;
+                  case 'warning':
+                    return <Tag severity="warning" value="libur" />;
+                  default:
+                    return <Tag severity="secondary" value={rowData.STATUS} />;
+                }
+              }}
+            />
+            <Column field="KETERANGAN" header="Keterangan" />
+          </DataTable>
+        </Card>
       </div>
     </div>
   );
