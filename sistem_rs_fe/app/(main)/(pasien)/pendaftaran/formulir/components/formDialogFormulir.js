@@ -102,16 +102,10 @@ const FormDialogPendaftaran = ({
         <div>
           <label className="font-medium">Poli</label>
           <Dropdown
-            className="w-full mt-2"
+            className={classNames('w-full mt-2', { 'p-invalid': errors.IDPOLI })}
             options={poliOptions}
-            value={form.IDPOLI}
-            onChange={(e) => {
-              const selectedPoli = e.value;
-              setForm({
-                ...form,
-                IDPOLI: selectedPoli
-              });
-            }}
+            value={Number(form.IDPOLI)}
+            onChange={(e) => setForm({ ...form, IDPOLI: Number(e.value) })}
             placeholder="Pilih Poli"
             filter
             showClear

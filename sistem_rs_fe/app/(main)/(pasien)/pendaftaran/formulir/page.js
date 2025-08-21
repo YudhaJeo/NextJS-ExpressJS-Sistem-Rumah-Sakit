@@ -131,7 +131,8 @@ const Page = () => {
       resetForm();
     } catch (err) {
       console.error('Gagal simpan data:', err);
-      toastRef.current?.showToast('01', 'Gagal menyimpan data');
+      const msg = err.response?.data?.error || 'Gagal menyimpan data';
+      toastRef.current?.showToast('01', msg);
     }
   };
 
@@ -139,6 +140,7 @@ const Page = () => {
     setForm({
       ...row,
       TANGGALKUNJUNGAN: row.TANGGALKUNJUNGAN?.split('T')[0] || '',
+      IDPOLI: Number(row.IDPOLI),
     });
     setDialogVisible(true);
   };
