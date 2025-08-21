@@ -12,11 +12,17 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const defaultForm = {
   IDOBAT: '',
+  KODEOBAT: '',
   NAMAOBAT: '',
-  JENISOBAT: '',
+  MEREK: '',
+  JENISOBAT: 'TABLET',
   STOK: 0,
-  HARGA: null,
-  KETERANGAN: ''
+  HARGABELI: null,
+  HARGAJUAL: null,
+  TGLKADALUARSA: '',
+  SUPPLIERID: null,
+  LOKASIRAK: '',
+  DESKRIPSI: ''
 };
 
 const Page = () => {
@@ -25,11 +31,13 @@ const Page = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [form, setForm] = useState(defaultForm);
   const [errors, setErrors] = useState({});
+  const [supplierOptions, setSupplierOptions] = useState([]);
 
   const toastRef = useRef(null);
 
   useEffect(() => {
     fetchData();
+    fetchSuppliers();
   }, []);
 
   const fetchData = async () => {
@@ -38,44 +46,57 @@ const Page = () => {
       const res = await axios.get(`${API_URL}/obat`);
       setData(res.data.data);
     } catch (err) {
-      console.error('Gagal ambil data:', err);
+      console.error('Gagal ambil data obat:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchSuppliers = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/supplier`);
+      const options = res.data.map((item) => ({
+        label: item.NAMASUPPLIER,
+        value: item.SUPPLIERID,
+      }));
+      setSupplierOptions(options);
+    } catch (err) {
+      console.error('Gagal ambil data supplier:', err);
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
 
+    if (!(form.KODEOBAT || '').trim())
+      newErrors.KODEOBAT = <span style={{ color: 'red' }}>Kode obat wajib diisi</span>;
+
     if (!(form.NAMAOBAT || '').trim())
-      newErrors.NAMAOBAT = (
-        <span style={{ color: 'red' }}>Nama obat wajib diisi</span>
-      );
+      newErrors.NAMAOBAT = <span style={{ color: 'red' }}>Nama obat wajib diisi</span>;
 
-    if (!(form.JENISOBAT || '').trim())
-      newErrors.JENISOBAT = (
-        <span style={{ color: 'red' }}>Satuan obat wajib diisi</span>
-      );
+    if (!(form.MEREK || '').trim())
+      newErrors.MEREK = <span style={{ color: 'red' }}>Merek wajib diisi</span>;
 
-    if (
-      form.STOK === null ||
-      form.STOK === undefined ||
-      isNaN(form.STOK)
-    ) {
-      newErrors.STOK = (
-        <span style={{ color: 'red' }}>Stok wajib diisi</span>
-      );
-    }
+    if (!form.JENISOBAT)
+      newErrors.JENISOBAT = <span style={{ color: 'red' }}>Jenis obat wajib diisi</span>;
 
-    if (
-      form.HARGA === null ||
-      form.HARGA === undefined ||
-      isNaN(form.HARGA)
-    ) {
-      newErrors.HARGA = (
-        <span style={{ color: 'red' }}>Harga wajib diisi</span>
-      );
-    }
+    if (form.STOK === null || isNaN(form.STOK))
+      newErrors.STOK = <span style={{ color: 'red' }}>Stok wajib diisi</span>;
+
+    if (form.HARGABELI === null || isNaN(form.HARGABELI))
+      newErrors.HARGABELI = <span style={{ color: 'red' }}>Harga beli wajib diisi</span>;
+
+    if (form.HARGAJUAL === null || isNaN(form.HARGAJUAL))
+      newErrors.HARGAJUAL = <span style={{ color: 'red' }}>Harga jual wajib diisi</span>;
+
+    if (!(form.TGLKADALUARSA || '').trim())
+      newErrors.TGLKADALUARSA = <span style={{ color: 'red' }}>Tanggal kadaluarsa wajib diisi</span>;
+
+    if (!(form.LOKASIRAK || '').trim())
+      newErrors.LOKASIRAK = <span style={{ color: 'red' }}>Lokasi rak wajib diisi</span>;
+
+    if (!form.SUPPLIERID)
+      newErrors.SUPPLIERID = <span style={{ color: 'red' }}>Supplier wajib dipilih</span>;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -110,11 +131,17 @@ const Page = () => {
   const handleEdit = (row) => {
     setForm({
       IDOBAT: row.IDOBAT,
+      KODEOBAT: row.KODEOBAT || '',
       NAMAOBAT: row.NAMAOBAT || '',
-      JENISOBAT: row.JENISOBAT || '',
+      MEREK: row.MEREK || '',
+      JENISOBAT: row.JENISOBAT || 'TABLET',
       STOK: row.STOK ?? 0,
-      HARGA: row.HARGA ?? 0,
-      KETERANGAN: row.KETERANGAN || ''
+      HARGABELI: row.HARGABELI ?? 0,
+      HARGAJUAL: row.HARGAJUAL ?? 0,
+      TGLKADALUARSA: row.TGLKADALUARSA || '',
+      SUPPLIERID: row.SUPPLIERID ?? null,
+      LOKASIRAK: row.LOKASIRAK || '',
+      DESKRIPSI: row.DESKRIPSI || ''
     });
     setDialogVisible(true);
   };
@@ -180,6 +207,7 @@ const Page = () => {
         form={form}
         setForm={setForm}
         errors={errors}
+        supplierOptions={supplierOptions}
       />
     </div>
   );
