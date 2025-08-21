@@ -54,6 +54,8 @@ import kartuRoutes from './routes/kartustokRoutes.js';
 import pemesananRoutes from './routes/pemesananRoutes.js';
 import penjualanRoutes from './routes/penjualanRoutes.js';
 import dashboardApotekRoutes from './routes/dashboardApotekRoutes.js';
+import reservasiRajalRoutes from './routes/reservasiRajalRoutes.js';
+import dashboardRajalRoutes from './routes/dashboardRajalRoutes.js';
 
 const NEXT_URL = process.env.NEXT_PUBLIC_URL;
 
@@ -120,5 +122,7 @@ app.use('/api/kartu_stok', kartuRoutes);
 app.use('/api/pemesanan', pemesananRoutes);
 app.use('/api/penjualan', penjualanRoutes);
 app.use('/api/dashboard_apotek', dashboardApotekRoutes);
+app.use('/api/reservasi_rajal', reservasiRajalRoutes);
+app.use('/api/dashboard_rajal', dashboardRajalRoutes);
 
 export default app;

@@ -123,15 +123,15 @@ const AppMenu = () => {
       {
         label: "Fitur Rawat Jalan",
         items: [
-          // { label: "Dashboard", icon: "pi pi-fw pi-home", to: "/rawat_jalan/dashboard" },
-          // {
-          //   label: "Reservasi & Kalender",
-          //   items: [
-          //     { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/reservasi/kalender_reservasi" },
-          //     { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi" },
-          //     { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/riwayat_reservasi" },
-          //   ],
-          // },
+           { label: "Dashboard Rawat Jalan", icon: "pi pi-fw pi-chart-bar", to: "/rawat_jalan/dashboard" },
+           {
+             label: "Reservasi & Kalender",
+             items: [
+               { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi" },
+               { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/menu/kalender_reservasi" },
+               { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/riwayat_reservasi" },
+             ],
+           },
           {
             label: "Menu",
             items: [
