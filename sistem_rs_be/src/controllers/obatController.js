@@ -25,15 +25,15 @@ export async function getObatById(req, res) {
 export async function insertObat(req, res) {
     try {
         const {
-            KODEOBAT, NAMAOBAT, MEREK, JENISOBAT, STOK,
+            KODEOBAT, NAMAOBAT, MERKOBAT, JENISOBAT, STOK,
             HARGABELI, HARGAJUAL, TGLKADALUARSA,
-            SUPPLIERID, LOKASIRAK, DESKRIPSI
+            SUPPLIERID, LOKASI, DESKRIPSI
         } = req.body;
 
         await Obat.createObat({
-            KODEOBAT, NAMAOBAT, MEREK, JENISOBAT, STOK,
+            KODEOBAT, NAMAOBAT, MERKOBAT, JENISOBAT, STOK,
             HARGABELI, HARGAJUAL, TGLKADALUARSA,
-            SUPPLIERID, LOKASIRAK, DESKRIPSI
+            SUPPLIERID, LOKASI, DESKRIPSI
         });
 
         res.json({ message: 'Data obat berhasil ditambahkan' });
@@ -47,18 +47,18 @@ export async function updateObat(req, res) {
     try {
         const id = req.params.id;
         const {
-            KODEOBAT, NAMAOBAT, MEREK, JENISOBAT, STOK,
+            KODEOBAT, NAMAOBAT, MERKOBAT, JENISOBAT, STOK,
             HARGABELI, HARGAJUAL, TGLKADALUARSA,
-            SUPPLIERID, LOKASIRAK, DESKRIPSI
+            SUPPLIERID, LOKASI, DESKRIPSI
         } = req.body;
 
         const existing = await Obat.getById(id);
         if (!existing) return res.status(404).json({ error: 'Data obat tidak ditemukan' });
 
         await Obat.updateObat(id, {
-            KODEOBAT, NAMAOBAT, MEREK, JENISOBAT, STOK,
+            KODEOBAT, NAMAOBAT, MERKOBAT, JENISOBAT, STOK,
             HARGABELI, HARGAJUAL, TGLKADALUARSA,
-            SUPPLIERID, LOKASIRAK, DESKRIPSI
+            SUPPLIERID, LOKASI, DESKRIPSI
         });
 
         res.json({ message: 'Data obat berhasil diperbarui' });

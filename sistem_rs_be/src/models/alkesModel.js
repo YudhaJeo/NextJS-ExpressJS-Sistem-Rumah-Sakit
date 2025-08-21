@@ -1,7 +1,7 @@
 import db from '../core/config/knex.js';
 
 export const getAll = () =>
-  db('master_alkes as a')
+  db('alkes as a')
     .leftJoin('master_supplier as s', 'a.SUPPLIERID', 's.SUPPLIERID')
     .select(
       'a.*',
@@ -9,14 +9,14 @@ export const getAll = () =>
     );
 
 export const getById = (id) =>
-  db('master_alkes as a')
+  db('alkes as a')
     .leftJoin('master_supplier as s', 'a.SUPPLIERID', 's.SUPPLIERID')
     .select('a.*', 's.NAMASUPPLIER')
     .where('a.IDALKES', id)
     .first();
 
 export const createAlkes = (data) =>
-  db('master_alkes').insert({
+  db('alkes').insert({
     KODEALKES: data.KODEALKES,
     NAMAALKES: data.NAMAALKES,
     MERKALKES: data.MERKALKES,
@@ -27,11 +27,11 @@ export const createAlkes = (data) =>
     TGLKADALUARSA: data.TGLKADALUARSA,
     LOKASI: data.LOKASI,
     SUPPLIERID: data.SUPPLIERID || null,
-    KETERANGAN: data.KETERANGAN || null,
+    DESKRIPSI: data.DESKRIPSI || null,
   });
 
 export const updateAlkes = (id, data) =>
-  db('master_alkes')
+  db('alkes')
     .where({ IDALKES: id })
     .update({
       KODEALKES: data.KODEALKES,
@@ -44,9 +44,9 @@ export const updateAlkes = (id, data) =>
       TGLKADALUARSA: data.TGLKADALUARSA,
       LOKASI: data.LOKASI,
       SUPPLIERID: data.SUPPLIERID || null,
-      KETERANGAN: data.KETERANGAN || null,
+      DESKRIPSI: data.DESKRIPSI || null,
       UPDATED_AT: db.fn.now(),
     });
 
 export const remove = (id) =>
-  db('master_alkes').where({ IDALKES: id }).delete();
+  db('alkes').where({ IDALKES: id }).delete();

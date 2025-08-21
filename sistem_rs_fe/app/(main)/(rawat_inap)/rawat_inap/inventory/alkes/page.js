@@ -3,25 +3,25 @@
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import HeaderBar from '@/app/components/headerbar';
-import TabelObat from './components/tabelObat';
-import FormObat from './components/formObat';
+import TabelAlkes from './components/tabelAlkes';
+import FormAlkes from './components/formAlkes';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const defaultForm = {
-  IDOBAT: '',
-  KODEOBAT: '',
-  NAMAOBAT: '',
-  MEREK: '',
-  JENISOBAT: 'TABLET',
+  IDALKES: '',
+  KODEALKES: '',
+  NAMAALKES: '',
+  MERKALKES: '',
+  JENISALKES: 'TABLET',
   STOK: 0,
   HARGABELI: null,
   HARGAJUAL: null,
   TGLKADALUARSA: '',
   SUPPLIERID: null,
-  LOKASIRAK: '',
+  LOKASI: '',
   DESKRIPSI: ''
 };
 
@@ -43,10 +43,10 @@ const Page = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/obat`);
+      const res = await axios.get(`${API_URL}/alkes`);
       setData(res.data.data);
     } catch (err) {
-      console.error('Gagal ambil data obat:', err);
+      console.error('Gagal ambil data alkes:', err);
     } finally {
       setLoading(false);
     }
@@ -68,17 +68,17 @@ const Page = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!(form.KODEOBAT || '').trim())
-      newErrors.KODEOBAT = <span style={{ color: 'red' }}>Kode obat wajib diisi</span>;
+    if (!(form.KODEALKES || '').trim())
+      newErrors.KODEALKES = <span style={{ color: 'red' }}>Kode alkes wajib diisi</span>;
 
-    if (!(form.NAMAOBAT || '').trim())
-      newErrors.NAMAOBAT = <span style={{ color: 'red' }}>Nama obat wajib diisi</span>;
+    if (!(form.NAMAALKES || '').trim())
+      newErrors.NAMAALKES = <span style={{ color: 'red' }}>Nama alkes wajib diisi</span>;
 
-    if (!(form.MEREK || '').trim())
-      newErrors.MEREK = <span style={{ color: 'red' }}>Merek wajib diisi</span>;
+    if (!(form.MERKALKES || '').trim())
+      newErrors.MERKALKES = <span style={{ color: 'red' }}>Merek wajib diisi</span>;
 
-    if (!form.JENISOBAT)
-      newErrors.JENISOBAT = <span style={{ color: 'red' }}>Jenis obat wajib diisi</span>;
+    if (!form.JENISALKES)
+      newErrors.JENISALKES = <span style={{ color: 'red' }}>Jenis alkes wajib diisi</span>;
 
     if (form.STOK === null || isNaN(form.STOK))
       newErrors.STOK = <span style={{ color: 'red' }}>Stok wajib diisi</span>;
@@ -92,8 +92,8 @@ const Page = () => {
     if (!(form.TGLKADALUARSA || '').trim())
       newErrors.TGLKADALUARSA = <span style={{ color: 'red' }}>Tanggal kadaluarsa wajib diisi</span>;
 
-    if (!(form.LOKASIRAK || '').trim())
-      newErrors.LOKASIRAK = <span style={{ color: 'red' }}>Lokasi rak wajib diisi</span>;
+    if (!(form.LOKASI || '').trim())
+      newErrors.LOKASI = <span style={{ color: 'red' }}>Lokasi rak wajib diisi</span>;
 
     if (!form.SUPPLIERID)
       newErrors.SUPPLIERID = <span style={{ color: 'red' }}>Supplier wajib dipilih</span>;
@@ -105,10 +105,10 @@ const Page = () => {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    const isEdit = !!form.IDOBAT;
+    const isEdit = !!form.IDALKES;
     const url = isEdit
-      ? `${API_URL}/obat/${form.IDOBAT}`
-      : `${API_URL}/obat`;
+      ? `${API_URL}/alkes/${form.IDALKES}`
+      : `${API_URL}/alkes`;
 
     try {
       if (isEdit) {
@@ -130,17 +130,17 @@ const Page = () => {
 
   const handleEdit = (row) => {
     setForm({
-      IDOBAT: row.IDOBAT,
-      KODEOBAT: row.KODEOBAT || '',
-      NAMAOBAT: row.NAMAOBAT || '',
-      MEREK: row.MEREK || '',
-      JENISOBAT: row.JENISOBAT || 'TABLET',
+      IDALKES: row.IDALKES,
+      KODEALKES: row.KODEALKES || '',
+      NAMAALKES: row.NAMAALKES || '',
+      MERKALKES: row.MERKALKES || '',
+      JENISALKES: row.JENISALKES || 'TABLET',
       STOK: row.STOK ?? 0,
       HARGABELI: row.HARGABELI ?? 0,
       HARGAJUAL: row.HARGAJUAL ?? 0,
       TGLKADALUARSA: row.TGLKADALUARSA || '',
       SUPPLIERID: row.SUPPLIERID ?? null,
-      LOKASIRAK: row.LOKASIRAK || '',
+      LOKASI: row.LOKASI || '',
       DESKRIPSI: row.DESKRIPSI || ''
     });
     setDialogVisible(true);
@@ -148,14 +148,14 @@ const Page = () => {
 
   const handleDelete = (row) => {
     confirmDialog({
-      message: `Yakin hapus '${row.NAMAOBAT}'?`,
+      message: `Yakin hapus '${row.NAMAALKES}'?`,
       header: 'Konfirmasi Hapus',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Ya',
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/obat/${row.IDOBAT}`);
+          await axios.delete(`${API_URL}/alkes/${row.IDALKES}`);
           fetchData();
           toastRef.current?.showToast('00', 'Data berhasil dihapus');
         } catch (err) {
@@ -171,16 +171,16 @@ const Page = () => {
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
 
-      <h3 className="text-xl font-semibold mb-3">Master Data Obat</h3>
+      <h3 className="text-xl font-semibold mb-3">Master Data Alkes</h3>
 
       <HeaderBar
         title=""
-        placeholder="Cari nama obat"
+        placeholder="Cari nama alkes"
         onSearch={(keyword) => {
           if (!keyword) return fetchData();
           const filtered = data.filter((item) =>
-            item.NAMAOBAT.toLowerCase().includes(keyword.toLowerCase()) ||
-            item.JENISOBAT.toLowerCase().includes(keyword.toLowerCase())
+            item.NAMAALKES.toLowerCase().includes(keyword.toLowerCase()) ||
+            item.JENISALKES.toLowerCase().includes(keyword.toLowerCase())
           );
           setData(filtered);
         }}
@@ -190,14 +190,14 @@ const Page = () => {
         }}
       />
 
-      <TabelObat
+      <TabelAlkes
         data={data}
         loading={loading}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
 
-      <FormObat
+      <FormAlkes
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);

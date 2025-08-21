@@ -66,7 +66,7 @@ const FormPemesanan = ({ visible, onHide, onSubmit, suppliers, obat, alkes }) =>
   };
 
   return (
-    <Dialog header="Form Pemesanan" visible={visible} onHide={onHide} style={{ width: '60vw' }}>
+    <Dialog header="Form Pemesanan" visible={visible} onHide={onHide} style={{ width: '80vw' }}>
       <form
         className="space-y-4"
         onSubmit={(e) => {
@@ -118,7 +118,7 @@ const FormPemesanan = ({ visible, onHide, onSubmit, suppliers, obat, alkes }) =>
               className="flex flex-wrap md:flex-nowrap items-start gap-2 border rounded-md p-3 mt-2"
             >
               {/* Jenis Barang */}
-              <div className="w-24">
+              <div className="flex-1 min-w-[80px]">
                 <Dropdown
                   value={d.JENISBARANG}
                   options={[{ label: 'OBAT', value: 'OBAT' }, { label: 'ALKES', value: 'ALKES' }]}
@@ -136,7 +136,7 @@ const FormPemesanan = ({ visible, onHide, onSubmit, suppliers, obat, alkes }) =>
               </div>
 
               {/* Nama Barang */}
-              <div className="flex-1 min-w-[150px]">
+              <div className="flex-1 min-w-[80px]">
                 <Dropdown
                   className={inputClass(`details-${idx}-IDBARANG`)}
                   value={d.IDBARANG}
@@ -147,8 +147,11 @@ const FormPemesanan = ({ visible, onHide, onSubmit, suppliers, obat, alkes }) =>
                   onChange={(e) => {
                     const details = [...form.details];
                     details[idx].IDBARANG = e.value;
+                    const selectedBarang = (d.JENISBARANG === 'OBAT' ? obat : alkes)
+                      .find(b => (b.IDOBAT || b.IDALKES) === e.value);
+                    details[idx].HARGABELI = selectedBarang ? selectedBarang.HARGABELI : 0;                  
                     setForm({ ...form, details });
-                  }}
+                  }}                  
                   placeholder={`Pilih ${d.JENISBARANG}`}
                   filter
                   showClear
@@ -159,8 +162,9 @@ const FormPemesanan = ({ visible, onHide, onSubmit, suppliers, obat, alkes }) =>
               </div>
 
               {/* QTY */}
-              <div className="w-20">
+              <div className="flex-1 min-w-[20px]">
                 <InputNumber
+                tooltip='Masukan Jumlah'
                   value={d.QTY}
                   className={inputClass(`details-${idx}-QTY`)}
                   onValueChange={(e) => {
@@ -176,8 +180,9 @@ const FormPemesanan = ({ visible, onHide, onSubmit, suppliers, obat, alkes }) =>
               </div>
 
               {/* Harga Beli */}
-              <div className="w-36">
+              <div className="flex-1 min-w-[80px]">
                 <InputNumber
+                  tooltip='Harga Supplier'
                   value={d.HARGABELI}
                   className={inputClass(`details-${idx}-HARGABELI`)}
                   onValueChange={(e) => {

@@ -50,11 +50,11 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors, supplierOp
         <div className="mt-2">
           <label>Merek</label>
           <InputText
-            className={inputClass('MEREK')}
-            value={form.MEREK}
-            onChange={(e) => setForm({ ...form, MEREK: e.target.value })}
+            className={inputClass('MERKOBAT')}
+            value={form.MERKOBAT}
+            onChange={(e) => setForm({ ...form, MERKOBAT: e.target.value })}
           />
-          {errors.MEREK && <small className="text-red-500">{errors.MEREK}</small>}
+          {errors.MERKOBAT && <small className="text-red-500">{errors.MERKOBAT}</small>}
         </div>
 
         <div className="mt-2">
@@ -68,7 +68,8 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors, supplierOp
               { label: 'Oles', value: 'OLES' },
               { label: 'Larutan', value: 'LARUTAN' },
               { label: 'Puyer', value: 'PUYER' },
-              { label: 'Pil', value: 'PIL' }
+              { label: 'Pil', value: 'PIL' },
+              { label: 'Lainnya', value: 'LAINNYA' }
             ]}
             value={form.JENISOBAT}
             onChange={(e) => setForm({ ...form, JENISOBAT: e.value })}
@@ -139,13 +140,13 @@ const FormObat = ({ visible, onHide, onSubmit, form, setForm, errors, supplierOp
         </div>
 
         <div className="mt-2">
-          <label>Lokasi Rak</label>
+          <label>Lokasi</label>
           <InputText
-            className={inputClass('LOKASIRAK')}
-            value={form.LOKASIRAK}
-            onChange={(e) => setForm({ ...form, LOKASIRAK: e.target.value })}
+            className={inputClass('LOKASI')}
+            value={form.LOKASI}
+            onChange={(e) => setForm({ ...form, LOKASI: e.target.value })}
           />
-          {errors.LOKASIRAK && <small className="text-red-500">{errors.LOKASIRAK}</small>}
+          {errors.LOKASI && <small className="text-red-500">{errors.LOKASI}</small>}
         </div>
 
         <div className="mt-2">

@@ -58,13 +58,22 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
         </div>
 
         <div className="mt-2">
-            <label>Jenis Alat Kesehatan</label>
-            <InputText
-                className={inputClass('JENISALKES')}
-                value={form.JENISALKES || ''}
-                onChange={(e) => setForm({ ...form, JENISALKES: e.target.value })}
-            />
-            {errors.JENISALKES && <small className="text-red-500">{errors.JENISALKES}</small>}
+          <label>Jenis Alkes</label>
+          <Dropdown
+            className={inputClass('JENISALKES')}
+            options={[
+              { label: 'Terapi', value: 'TERAPI' },
+              { label: 'Diagnostik', value: 'DIAGNOSTIK' },
+              { label: 'Penunjang', value: 'PENUNJANG' },
+              { label: 'Kebersihan', value: 'KEBERSIHAN' },
+              { label: 'Check-up', value: 'CHECKUP' },
+              { label: 'Lainnya', value: 'LAINNYA' }
+            ]}
+            value={form.JENISALKES}
+            onChange={(e) => setForm({ ...form, JENISALKES: e.value })}
+            placeholder="Pilih Jenis Alkes"
+          />
+          {errors.JENISALKES && <small className="text-red-500">{errors.JENISALKES}</small>}
         </div>
 
         <div className="mt-2">
@@ -151,11 +160,11 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
         <div className="mt-2">
           <label>Keterangan</label>
           <InputText
-            className={inputClass('KETERANGAN')}
-            value={form.KETERANGAN || ''}
-            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
+            className={inputClass('DESKRIPSI')}
+            value={form.DESKRIPSI || ''}
+            onChange={(e) => setForm({ ...form, DESKRIPSI: e.target.value })}
           />
-          {errors.KETERANGAN && <small className="text-red-500">{errors.KETERANGAN}</small>}
+          {errors.DESKRIPSI && <small className="text-red-500">{errors.DESKRIPSI}</small>}
         </div>
 
         <div className="text-right pt-3">

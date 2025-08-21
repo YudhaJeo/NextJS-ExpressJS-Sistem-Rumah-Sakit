@@ -35,7 +35,7 @@ export async function insertAlkes(req, res) {
       TGLKADALUARSA,
       LOKASI,
       SUPPLIERID,
-      KETERANGAN,
+      DESKRIPSI,
     } = req.body;
 
     await Alkes.createAlkes(req.body);

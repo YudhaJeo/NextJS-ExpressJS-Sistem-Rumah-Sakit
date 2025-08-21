@@ -19,14 +19,14 @@ export const createObat = (data) =>
     db('obat').insert({
         KODEOBAT: data.KODEOBAT,
         NAMAOBAT: data.NAMAOBAT,
-        MEREK: data.MEREK,
+        MERKOBAT: data.MERKOBAT,
         JENISOBAT: data.JENISOBAT,
         STOK: data.STOK || 0,
         HARGABELI: data.HARGABELI,
         HARGAJUAL: data.HARGAJUAL,
         TGLKADALUARSA: data.TGLKADALUARSA,
         SUPPLIERID: data.SUPPLIERID || null,
-        LOKASIRAK: data.LOKASIRAK,
+        LOKASI: data.LOKASI,
         DESKRIPSI: data.DESKRIPSI,
     });
 
@@ -36,14 +36,14 @@ export const updateObat = (id, data) =>
         .update({
             KODEOBAT: data.KODEOBAT,
             NAMAOBAT: data.NAMAOBAT,
-            MEREK: data.MEREK,
+            MERKOBAT: data.MERKOBAT,
             JENISOBAT: data.JENISOBAT,
             STOK: data.STOK,
             HARGABELI: data.HARGABELI,
             HARGAJUAL: data.HARGAJUAL,
             TGLKADALUARSA: data.TGLKADALUARSA,
             SUPPLIERID: data.SUPPLIERID || null,
-            LOKASIRAK: data.LOKASIRAK,
+            LOKASI: data.LOKASI,
             DESKRIPSI: data.DESKRIPSI,
             UPDATED_AT: db.fn.now(),
         });

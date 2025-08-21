@@ -4,7 +4,7 @@ export const up = function (knex) {
       table.increments('IDOBAT').primary(); 
       table.string('KODEOBAT', 50).notNullable().unique();
       table.string('NAMAOBAT', 100).notNullable().unique();
-      table.string('MEREK', 50).notNullable();
+      table.string('MERKOBAT', 50).notNullable();
       table.enu('JENISOBAT', [
         'TABLET',
         'KAPSUL',
@@ -12,13 +12,14 @@ export const up = function (knex) {
         'OLES',
         'LARUTAN',
         'PUYER',
-        'PIL'
+        'PIL',
+        'LAINNYA'
       ]).notNullable().defaultTo('TABLET');      
       table.integer('STOK').unsigned().defaultTo(0);
       table.double('HARGABELI').notNullable();
       table.double('HARGAJUAL').notNullable();
       table.string('TGLKADALUARSA', 50).notNullable();
-      table.string('LOKASIRAK', 50).notNullable();
+      table.string('LOKASI', 50).notNullable();
       table.integer("SUPPLIERID").unsigned().references("SUPPLIERID").inTable("master_supplier").onDelete("SET NULL").onUpdate("CASCADE");
       table.text('DESKRIPSI').nullable();
       table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
