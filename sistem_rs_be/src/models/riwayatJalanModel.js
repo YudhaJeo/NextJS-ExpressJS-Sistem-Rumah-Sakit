@@ -68,11 +68,24 @@ export async function insertFromRawatJalan(rawatJalan) {
     TANGGALRAWAT
   });
 
+  const pasienData = await db('rawat_jalan')
+  .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+  .select('pendaftaran.NIK')
+  .where('rawat_jalan.IDRAWATJALAN', IDRAWATJALAN)
+  .first();
+  
   const IDRIWAYATJALAN = insertedRiwayat ?? await db('riwayat_rawat_jalan')
     .where({ IDRAWATJALAN })
     .select('IDRIWAYATJALAN')
     .first()
     .then((row) => row?.IDRIWAYATJALAN);
+
+  if (pasienData?.NIK && IDRIWAYATJALAN) {
+  await db('invoice')
+    .where({ NIK: pasienData.NIK })
+    .whereNull('IDRIWAYATINAP')
+    .update({ IDRIWAYATJALAN });
+  }
 
   if (tindakanJalan.length > 0) {
     const tindakanRiwayat = tindakanJalan.map((t) => ({
