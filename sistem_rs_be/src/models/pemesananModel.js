@@ -11,7 +11,7 @@ export const getPemesananDetail = (id) =>
       this.on('pd.IDBARANG', '=', 'o.IDOBAT')
           .andOn('pd.JENISBARANG', '=', db.raw('?', ['OBAT']));
     })
-    .leftJoin('master_alkes as a', function () {
+    .leftJoin('alkes as a', function () {
       this.on('pd.IDBARANG', '=', 'a.IDALKES')
           .andOn('pd.JENISBARANG', '!=', db.raw('?', ['OBAT']));
     })
@@ -55,7 +55,7 @@ export const updatePemesananStatus = async (id, status) => {
           .increment('STOK', item.QTY)
           .update({ HARGABELI: item.HARGABELI });
       } else {
-        await db('master_alkes')
+        await db('alkes')
           .where('IDALKES', item.IDBARANG)
           .increment('STOK', item.QTY)
           .update({ HARGABELI: item.HARGABELI });
@@ -70,7 +70,7 @@ export const updatePemesananStatus = async (id, status) => {
           .where('IDOBAT', item.IDBARANG)
           .decrement('STOK', item.QTY);
       } else {
-        await db('master_alkes')
+        await db('alkes')
           .where('IDALKES', item.IDBARANG)
           .decrement('STOK', item.QTY);
       }

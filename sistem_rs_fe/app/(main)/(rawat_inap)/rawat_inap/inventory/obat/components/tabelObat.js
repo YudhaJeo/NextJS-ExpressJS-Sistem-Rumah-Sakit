@@ -14,7 +14,7 @@ const TabelObat = ({ data, loading, onEdit, onDelete }) => {
       <Column field="IDOBAT" header="ID" />
       <Column field="KODEOBAT" header="Kode Obat" />
       <Column field="NAMAOBAT" header="Nama Obat" />
-      <Column field="MEREK" header="Merek" />
+      <Column field="MERKOBAT" header="Merek" />
       <Column field="JENISOBAT" header="Jenis Obat" />
       <Column field="STOK" header="Stok" />
       <Column
@@ -38,7 +38,7 @@ const TabelObat = ({ data, loading, onEdit, onDelete }) => {
       />
       <Column field="TGLKADALUARSA" header="Tgl Kadaluarsa" />
       <Column field="NAMASUPPLIER" header="Supplier" />
-      <Column field="LOKASIRAK" header="Lokasi Rak" />
+      <Column field="LOKASI" header="Lokasi" />
       <Column field="DESKRIPSI" header="Deskripsi" />
 
       <Column

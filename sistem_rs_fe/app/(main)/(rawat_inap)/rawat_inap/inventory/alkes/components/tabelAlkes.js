@@ -38,7 +38,7 @@ const TabelAlkes = ({ data, loading, onEdit, onDelete }) => {
         <Column field="TGLKADALUARSA" header="Tgl Kadaluarsa" />
         <Column field="LOKASI" header="Lokasi" />
         <Column field="NAMASUPPLIER" header="Supplier" /> 
-        <Column field="KETERANGAN" header="Keterangan" />  
+        <Column field="DESKRIPSI" header="Keterangan" />  
 
         <Column
           header="Aksi"

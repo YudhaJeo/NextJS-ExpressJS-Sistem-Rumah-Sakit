@@ -5,7 +5,7 @@ export const getAll = () => {
     .leftJoin('obat as o', function () {
       this.on('f.ITEMID', '=', 'o.IDOBAT').andOn('f.TIPE', '=', db.raw("'OBAT'"));
     })
-    .leftJoin('master_alkes as a', function () {
+    .leftJoin('alkes as a', function () {
       this.on('f.ITEMID', '=', 'a.IDALKES').andOn('f.TIPE', '=', db.raw("'ALKES'"));
     })
     .select(
