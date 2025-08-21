@@ -148,17 +148,24 @@ const AppMenu = () => {
         items: [
           { label: "Dashboard Rawat Inap", icon: "pi pi-fw pi-chart-bar", to: "/rawat_inap" },
           {
-            label: "Master",
+            label: "Inventory",
             items: [
-              { label: "Jenis Bangsal", icon: "pi pi-fw pi-tag", to: "/rawat_inap/master/jenis_bangsal" },
-              { label: "Manajemen Bangsal", icon: "pi pi-fw pi-th-large", to: "/rawat_inap/master/manajemen_bangsal" },
-              { label: "Manajemen Kamar", icon: "pi pi-fw pi-table", to: "/rawat_inap/master/manajemen_kamar" },
+              { label: "Obat", icon: "pi pi-fw pi-inbox", to: "/rawat_inap/inventory/obat" },
+              { label: "Kartu Stok", icon: "pi pi-fw pi-tag", to: "/rawat_inap/inventory/kartu_stok" },
+            ],
+          },
+          {
+            label: "Ruangan",
+            items: [
+              { label: "Jenis Bangsal", icon: "pi pi-fw pi-tag", to: "/rawat_inap/ruangan/jenis_bangsal" },
+              { label: "Manajemen Bangsal", icon: "pi pi-fw pi-th-large", to: "/rawat_inap/ruangan/manajemen_bangsal" },
+              { label: "Manajemen Kamar", icon: "pi pi-fw pi-table", to: "/rawat_inap/ruangan/manajemen_kamar" },
+              { label: "Manajemen Bed", icon: "pi pi-fw pi-objects-column", to: "/rawat_inap/ruangan/manajemen_bed" },
             ],
           },
           {
             label: "Menu",
             items: [
-              { label: "Manajemen Bed", icon: "pi pi-fw pi-objects-column", to: "/rawat_inap/menu/manajemen_bed" },
               { label: "Rawat Inap", icon: "pi pi-fw pi-heart", to: "/rawat_inap/menu/rawat_inap" },
               { label: "Tagihan Sementara", icon: "pi pi-fw pi-money-bill", to: "/rawat_inap/menu/tagihan_sementara" },
               { label: "Riwayat Rawat Inap", icon: "pi pi-fw pi-users", to: "/rawat_inap/menu/riwayat_inap" },
