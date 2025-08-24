@@ -177,26 +177,6 @@ const AppMenu = () => {
           },
         ],
       },
-      // {
-      //   label: "Apotek & Farmasi",
-      //   items: [
-      //     { label: "Dashboard Apotek", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_apotek" },
-      //     {
-      //       label: "Menu",
-      //       items: [
-      //         { label: "Order Pengambilan Obat", icon: "pi pi-fw pi-history", to: "/order_pengambilan" },
-      //         { label: "Penjualan/POS Kasir", icon: "pi pi-fw pi-shopping-cart", to: "/penjualan" },
-      //         { label: "Pemesanan", icon: "pi pi-fw pi-dollar", to: "/pemesanan" },
-      //       ],
-      //     },
-      //     {
-      //       label: "Laporan",
-      //       items: [
-      //         { label: "Laporan Penjualan", icon: "pi pi-fw pi-chart-bar", to: "/apotek/laporan_penjualan_obat" },
-      //       ],
-      //     },
-      //   ],
-      // },
       {
         label: "Fitur Kasir & Sales",
         items: [
