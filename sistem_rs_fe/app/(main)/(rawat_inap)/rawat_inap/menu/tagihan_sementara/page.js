@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import HeaderBar from '@/app/components/headerbar';
 import TabelTagihanSementara from './components/tabelTagihanSementara';
 import ToastNotifier from '@/app/components/toastNotifier';
