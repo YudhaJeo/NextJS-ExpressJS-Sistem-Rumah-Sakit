@@ -178,6 +178,13 @@ export const getTotalObatInap = async (IDRAWATINAP) => {
   return result[0];
 };
 
+export const getTotalAlkesInap = async (IDRAWATINAP) => {
+  const result = await db('alkes_inap')
+    .where({ IDRAWATINAP })
+    .sum('TOTAL as total');
+  return result[0];
+};
+
 export const getTotalTindakanInap = async (IDRAWATINAP) => {
   const result = await db('tindakan_inap')
     .where({ IDRAWATINAP })
@@ -196,6 +203,7 @@ export const cancelCheckout = async (id) => {
     }
 
     await trx('riwayat_obat_inap').where({ IDRIWAYATINAP: riwayat.IDRIWAYATINAP }).delete();
+    await trx('riwayat_alkes_inap').where({ IDRIWAYATINAP: riwayat.IDRIWAYATINAP }).delete();
     await trx('riwayat_tindakan_inap').where({ IDRIWAYATINAP: riwayat.IDRIWAYATINAP }).delete();
 
     await trx('riwayat_rawat_inap').where({ IDRAWATINAP: id }).delete();
