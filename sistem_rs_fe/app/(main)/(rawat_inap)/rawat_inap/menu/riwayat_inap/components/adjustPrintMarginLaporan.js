@@ -133,6 +133,18 @@ export default function AdjustPrintMarginLaporan({
         formatRupiah(o.TOTAL)
       ])
     })
+    
+    detail.alkes?.forEach((o) => {
+      services.push([
+        services.length + 1,
+        o.NAMAALKES,
+        o.JENISALKES || '-',
+        o.JUMLAH,
+        'Alkes',
+        formatRupiah(o.HARGA),
+        formatRupiah(o.TOTAL)
+      ])
+    })
 
     detail.tindakan?.forEach((t) => {
       services.push([
@@ -181,6 +193,7 @@ export default function AdjustPrintMarginLaporan({
     const summary = [
       ['Biaya Kamar', detail.TOTALKAMAR],
       ['Total Obat', detail.TOTALOBAT],
+      ['Total Alkes', detail.TOTALALKES],
       ['Total Tindakan', detail.TOTALTINDAKAN],
       ['Total Biaya', detail.TOTALBIAYA],
     ];

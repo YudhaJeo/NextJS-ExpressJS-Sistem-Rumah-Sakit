@@ -40,6 +40,13 @@ export async function getRiwayatObatByIdRiwayat(id) {
     .where('riwayat_obat_inap.IDRIWAYATINAP', id);
 }
 
+export async function getRiwayatAlkesByIdRiwayat(id) {
+  return await db('riwayat_alkes_inap')
+    .join('alkes', 'riwayat_alkes_inap.IDALKES', 'alkes.IDALKES')
+    .select('alkes.NAMAALKES', 'alkes.JENISALKES', 'riwayat_alkes_inap.JUMLAH', 'riwayat_alkes_inap.HARGA', 'riwayat_alkes_inap.TOTAL')
+    .where('riwayat_alkes_inap.IDRIWAYATINAP', id);
+}
+
 export async function getRiwayatTindakanByIdRiwayat(id) {
   return await db('riwayat_tindakan_inap')
     .join('tindakan_medis', 'riwayat_tindakan_inap.IDTINDAKAN', 'tindakan_medis.IDTINDAKAN')
@@ -56,6 +63,7 @@ export async function insertFromRawatInap(rawatInap) {
     TOTALKAMAR,
     TOTALOBAT,
     TOTALTINDAKAN,
+    TOTALALKES,
     TOTALBIAYA,
   } = rawatInap;
 
@@ -67,6 +75,7 @@ export async function insertFromRawatInap(rawatInap) {
     TOTALKAMAR,
     TOTALOBAT,
     TOTALTINDAKAN,
+    TOTALALKES,
     TOTALBIAYA,
   });
 
@@ -92,6 +101,7 @@ export async function insertFromRawatInap(rawatInap) {
 
 
   const obatInap = await db('obat_inap').where({ IDRAWATINAP });
+  const alkesInap = await db('alkes_inap').where({ IDRAWATINAP });
   const tindakanInap = await db('tindakan_inap').where({ IDRAWATINAP });
 
   if (obatInap.length > 0) {
@@ -117,6 +127,20 @@ export async function insertFromRawatInap(rawatInap) {
       HARGA: tindakan.HARGA,
       TOTAL: tindakan.TOTAL,
     }));
+
+    if (alkesInap.length > 0) {
+      const alkesRiwayat = alkesInap.map((alkes) => ({
+        IDRIWAYATINAP,
+        IDALKES: alkes.IDALKES,
+        IDTENAGAMEDIS: alkes.IDTENAGAMEDIS,
+        WAKTUPEMBERIAN: alkes.WAKTUPEMBERIAN,
+        JUMLAH: alkes.JUMLAH,
+        HARGA: alkes.HARGA,
+        TOTAL: alkes.TOTAL,
+      }));
+      await db('riwayat_alkes_inap').insert(alkesRiwayat);
+    }
+
     await db('riwayat_tindakan_inap').insert(tindakanRiwayat);
   }
 

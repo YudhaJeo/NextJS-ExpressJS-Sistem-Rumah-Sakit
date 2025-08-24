@@ -13,7 +13,6 @@ import { Divider } from 'primereact/divider';
 import { Panel } from 'primereact/panel';
 import axios from 'axios';
 
-
 import ToastNotifier from '@/app/components/toastNotifier';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -56,6 +55,19 @@ export default function DetailRiwayatInapPage() {
           hargaSatuan: obat.HARGA,
           total: obat.TOTAL,
           type: 'obat'
+        });
+      });
+      
+      res.data.data.alkes?.forEach((alkes, index) => {
+        servicesData.push({
+          id: index + 2,
+          layanan: alkes.NAMAALKES,
+          satuan: alkes.JENISALKES,
+          qty: alkes.JUMLAH,
+          jenis: 'Alkes',
+          hargaSatuan: alkes.HARGA,
+          total: alkes.TOTAL,
+          type: 'alkes'
         });
       });
 
@@ -114,6 +126,7 @@ export default function DetailRiwayatInapPage() {
   const jenisBodyTemplate = (rowData) => {
     let severity = 'success';
     if (rowData.type === 'obat') severity = 'info';
+    if (rowData.type === 'alkes') severity = 'info';
     if (rowData.type === 'tindakan') severity = 'warning';
 
     return <Tag value={rowData.jenis} severity={severity} />;
@@ -262,6 +275,11 @@ export default function DetailRiwayatInapPage() {
                     <div className="flex justify-content-between mb-2">
                       <span className="text-600">Total Obat:</span>
                       <span className="font-medium">{formatRupiah(detail.TOTALOBAT)}</span>
+                    </div>
+                    
+                    <div className="flex justify-content-between mb-2">
+                      <span className="text-600">Total Alkes:</span>
+                      <span className="font-medium">{formatRupiah(detail.TOTALALKES)}</span>
                     </div>
 
                     <div className="flex justify-content-between mb-3">

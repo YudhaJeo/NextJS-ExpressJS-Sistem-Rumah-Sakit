@@ -78,7 +78,7 @@ const update = async (req, res) => {
       const TOTALOBAT = Number(obat.total) || 0;
       const TOTALALKES = Number(alkes.total) || 0;
       const TOTALTINDAKAN = Number(tindakan.total) || 0;
-      const TOTALBIAYA = (updated.TOTALKAMAR || 0) + TOTALOBAT + TOTALOBAT + TOTALTINDAKAN;
+      const TOTALBIAYA = (updated.TOTALKAMAR || 0) + TOTALOBAT + TOTALALKES + TOTALTINDAKAN;
 
       const dataRiwayat = {
         IDRAWATINAP: updated.IDRAWATINAP,

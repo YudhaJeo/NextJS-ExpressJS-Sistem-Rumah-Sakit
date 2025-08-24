@@ -38,8 +38,6 @@ const TabelRiwayatInap = ({ data, loading }) => {
       const res = await axios.get(`${API_URL}/riwayat_inap/${rowData.IDRIWAYATINAP}`)
       const detail = res.data.data
 
-      //console.log("[DEBUG] Detail:", detail)
-
       setSelectedRow(detail)
       setAdjustDialog(true)
     } catch (err) {
@@ -81,6 +79,11 @@ const TabelRiwayatInap = ({ data, loading }) => {
           field="TOTALOBAT"
           header="Total Obat"
           body={(r) => formatRupiah(r.TOTALOBAT)}
+        />
+        <Column
+          field="TOTALALKES"
+          header="Total Alkes"
+          body={(r) => formatRupiah(r.TOTALALKES)}
         />
         <Column
           field="TOTALTINDAKAN"
