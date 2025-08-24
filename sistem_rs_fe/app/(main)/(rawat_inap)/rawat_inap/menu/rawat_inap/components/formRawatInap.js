@@ -11,6 +11,7 @@ import {
   TabRuangan,
   TabTindakan,
   TabObat,
+  TabAlkes,
 } from './tabs';
 
 const FormRawatInap = ({
@@ -38,6 +39,7 @@ const FormRawatInap = ({
   const tabMenuVisit = [
     { label: 'Pemberian Tindakan', icon: 'pi pi-briefcase' },
     { label: 'Pemberian Obat', icon: 'pi pi-chart-pie' },
+    { label: 'Pemberian Alkes', icon: 'pi pi-calculator' },
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -114,6 +116,16 @@ const FormRawatInap = ({
             setForm={setForm}
             idRawatInap={Cookies.get('IDRAWATINAP')}
             obatInapData={form.obatInap || []}
+            tenagaMedisOptions={tenagaMedisOptions}
+            statusRawat={form.STATUS}
+          />
+        )}
+        {mode === 'visit' && activeIndex === 2 && (
+          <TabAlkes
+            form={form}
+            setForm={setForm}
+            idRawatInap={Cookies.get('IDRAWATINAP')}
+            alkesInapData={form.alkesInap || []}
             tenagaMedisOptions={tenagaMedisOptions}
             statusRawat={form.STATUS}
           />

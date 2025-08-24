@@ -72,11 +72,13 @@ const update = async (req, res) => {
 
     if (keluarSekarang && !existing.TANGGALKELUAR) {
       const obat = await RawatInap.getTotalObatInap(updated.IDRAWATINAP);
+      const alkes = await RawatInap.getTotalAlkesInap(updated.IDRAWATINAP);
       const tindakan = await RawatInap.getTotalTindakanInap(updated.IDRAWATINAP);
 
       const TOTALOBAT = Number(obat.total) || 0;
+      const TOTALALKES = Number(alkes.total) || 0;
       const TOTALTINDAKAN = Number(tindakan.total) || 0;
-      const TOTALBIAYA = (updated.TOTALKAMAR || 0) + TOTALOBAT + TOTALTINDAKAN;
+      const TOTALBIAYA = (updated.TOTALKAMAR || 0) + TOTALOBAT + TOTALALKES + TOTALTINDAKAN;
 
       const dataRiwayat = {
         IDRAWATINAP: updated.IDRAWATINAP,
@@ -86,6 +88,7 @@ const update = async (req, res) => {
         TOTALKAMAR: updated.TOTALKAMAR || 0,
         TOTALOBAT,
         TOTALTINDAKAN,
+        TOTALALKES,
         TOTALBIAYA,
       };
 

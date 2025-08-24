@@ -26,11 +26,13 @@ export async function getRiwayatInapById(req, res) {
     }
 
     const daftarObat = await RiwayatRawatInap.getRiwayatObatByIdRiwayat(id);
+    const daftarAlkes = await RiwayatRawatInap.getRiwayatAlkesByIdRiwayat(id);
     const daftarTindakan = await RiwayatRawatInap.getRiwayatTindakanByIdRiwayat(id);
 
     const responseData = {
       ...dataUtama,
       obat: daftarObat,
+      alkes: daftarAlkes,
       tindakan: daftarTindakan,
     };
 
