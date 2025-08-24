@@ -198,7 +198,6 @@ const Page = () => {
         fetchRawatJalan();
         fetchTenagaMedis();
         toastRef.current?.showToast('00', 'Data berhasil disimpan');
-        setDialogVisible(false);
       } else {
         throw new Error('Respons tidak valid');
       }
@@ -226,9 +225,10 @@ const Page = () => {
       CATATAN: row.CATATAN || '',
       STATUS: row.STATUS || '',
     });    
-    setDialogVisible(true);
+    setDialogVisible(true); 
     fetchTindakanInapByRawatInapId(row.IDRAWATINAP);
     fetchObatInapByRawatInapId(row.IDRAWATINAP);
+    fetchAlkesInapByRawatInapId(row.IDRAWATINAP);
   };
   
   const fetchObatInapByRawatInapId = async (idRawatInap) => {
@@ -249,7 +249,17 @@ const Page = () => {
       console.error('Gagal ambil data tindakan inap:', err);
       return [];
     }
-  };  
+  }; 
+  
+  const fetchAlkesInapByRawatInapId = async (idRawatInap) => {
+    try {
+      const res = await axios.get(`${API_URL}/alkes_inap/rawat_inap/${idRawatInap}`);
+      return res.data.data || [];
+    } catch (err) {
+      console.error('Gagal ambil data alkes inap:', err);
+      return [];
+    }
+  }; 
   
 
   const handleDelete = (row) => {
