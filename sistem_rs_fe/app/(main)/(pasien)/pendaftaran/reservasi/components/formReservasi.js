@@ -50,6 +50,7 @@ const FormReservasiPasien = ({
       setFormData((prev) => ({ ...prev, IDDOKTER: "" }));
     }
   }, [formData.TANGGALRESERVASI, formData.IDPOLI]);
+
   return (
     <Dialog
       header={formData.IDRESERVASI ? "Edit Reservasi" : "Tambah Reservasi"}
@@ -97,12 +98,16 @@ const FormReservasiPasien = ({
               onChange={(e) =>
                 onChange({
                   ...formData,
-                  TANGGALRESERVASI: e.value?.toISOString().split("T")[0] || "",
+                  TANGGALRESERVASI: e.value
+                    ? `${e.value.getFullYear()}-${String(e.value.getMonth() + 1).padStart(2, '0')}-${String(e.value.getDate()).padStart(2, '0')}`
+                    : "",
                 })
               }
               showIcon
             />
-            {errors.TANGGALRESERVASI && <small className="text-red-500">{errors.TANGGALRESERVASI}</small>}
+            {errors.TANGGALRESERVASI && (
+              <small className="text-red-500">{errors.TANGGALRESERVASI}</small>
+            )}
           </div>
 
           <div className="w-full md:w-1/2">
