@@ -5,6 +5,7 @@ export const getAll = () => {
     .join('pasien as p', 'i.NIK', 'p.NIK')
     .leftJoin('asuransi as a', 'p.IDASURANSI', 'a.IDASURANSI')
     .leftJoin('riwayat_rawat_inap as rri', 'i.IDRIWAYATINAP', 'rri.IDRIWAYATINAP')
+    .leftJoin('riwayat_rawat_jalan as rrj', 'i.IDRIWAYATJALAN', 'rrj.IDRIWAYATJALAN')
     .select(
       'i.*',
       'p.NAMALENGKAP as NAMAPASIEN',
@@ -15,7 +16,9 @@ export const getAll = () => {
       'rri.TOTALKAMAR',
       'rri.TOTALOBAT',
       'rri.TOTALTINDAKAN',
-      'rri.TOTALBIAYA'
+      'rri.TOTALBIAYA',
+      'rrj.TANGGALRAWAT as TANGGALRAWATJALAN',
+      'rrj.TOTALBIAYA as TOTALBIAYAJALAN'
     )
     .orderBy('i.TANGGALINVOICE', 'desc');
 };
@@ -25,6 +28,7 @@ export const getById = (id) => {
     .join('pasien as p', 'i.NIK', 'p.NIK')
     .leftJoin('asuransi as a', 'p.IDASURANSI', 'a.IDASURANSI')
     .leftJoin('riwayat_rawat_inap as rri', 'i.IDRIWAYATINAP', 'rri.IDRIWAYATINAP')
+    .leftJoin('riwayat_rawat_jalan as rrj', 'i.IDRIWAYATJALAN', 'rrj.IDRIWAYATJALAN')
     .select(
       'i.*',
       'p.NAMALENGKAP as NAMAPASIEN',
@@ -35,7 +39,9 @@ export const getById = (id) => {
       'rri.TOTALKAMAR',
       'rri.TOTALOBAT',
       'rri.TOTALTINDAKAN',
-      'rri.TOTALBIAYA'
+      'rri.TOTALBIAYA',
+      'rrj.TANGGALRAWAT as TANGGALRAWATJALAN',
+      'rrj.TOTALBIAYA as TOTALBIAYAJALAN'
     )
     .where('i.IDINVOICE', id)
     .first();
@@ -77,6 +83,22 @@ export const getTindakanByInvoiceId = (invoiceId) => {
       'rt.JUMLAH',
       'rt.HARGA',
       'rt.TOTAL'
+    )
+    .where('i.IDINVOICE', invoiceId);
+};
+
+export const getTindakanJalanByInvoiceId = (invoiceId) => {
+  return db('riwayat_tindakan_jalan as rtj')
+    .join('tindakan_medis as t', 'rtj.IDTINDAKAN', 't.IDTINDAKAN')
+    .join('riwayat_rawat_jalan as rrj', 'rtj.IDRIWAYATJALAN', 'rrj.IDRIWAYATJALAN')
+    .join('invoice as i', 'rrj.IDRIWAYATJALAN', 'i.IDRIWAYATJALAN')
+    .select(
+      't.IDTINDAKAN',
+      't.NAMATINDAKAN',
+      't.KATEGORI',
+      'rtj.JUMLAH',
+      'rtj.HARGA',
+      'rtj.TOTAL'
     )
     .where('i.IDINVOICE', invoiceId);
 };

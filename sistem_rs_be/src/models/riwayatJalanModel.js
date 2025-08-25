@@ -69,10 +69,10 @@ export async function insertFromRawatJalan(rawatJalan) {
   });
 
   const pasienData = await db('rawat_jalan')
-  .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
-  .select('pendaftaran.NIK')
-  .where('rawat_jalan.IDRAWATJALAN', IDRAWATJALAN)
-  .first();
+    .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+    .select('pendaftaran.NIK')
+    .where('rawat_jalan.IDRAWATJALAN', IDRAWATJALAN)
+    .first();
   
   const IDRIWAYATJALAN = insertedRiwayat ?? await db('riwayat_rawat_jalan')
     .where({ IDRAWATJALAN })
@@ -81,10 +81,10 @@ export async function insertFromRawatJalan(rawatJalan) {
     .then((row) => row?.IDRIWAYATJALAN);
 
   if (pasienData?.NIK && IDRIWAYATJALAN) {
-  await db('invoice')
-    .where({ NIK: pasienData.NIK })
-    .whereNull('IDRIWAYATINAP')
-    .update({ IDRIWAYATJALAN });
+    await db('invoice')
+      .where({ NIK: pasienData.NIK })
+      .whereNull('IDRIWAYATINAP')
+      .update({ IDRIWAYATJALAN });
   }
 
   if (tindakanJalan.length > 0) {
@@ -96,6 +96,28 @@ export async function insertFromRawatJalan(rawatJalan) {
       TOTAL: t.TOTAL,
     }));
     await db('riwayat_tindakan_jalan').insert(tindakanRiwayat);
+  }
+
+  // 🔥 Tambahan: update invoice dengan TOTALTAGIHAN, SISA_TAGIHAN, STATUS
+  if (pasienData?.NIK) {
+    const invoice = await db('invoice')
+      .where('NIK', pasienData.NIK)
+      .orderBy('IDINVOICE', 'desc')
+      .first();
+
+    if (invoice) {
+      const SISA_TAGIHAN = (TOTALBIAYA || 0) - (invoice.TOTALDEPOSIT || 0) - (invoice.TOTALANGSURAN || 0);
+      const statusFinal = SISA_TAGIHAN <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
+
+      await db('invoice')
+        .where('IDINVOICE', invoice.IDINVOICE)
+        .update({
+          TOTALTAGIHAN: TOTALBIAYA,
+          SISA_TAGIHAN,
+          STATUS: statusFinal,
+          UPDATED_AT: db.fn.now()
+        });
+    }
   }
 
   return IDRIWAYATJALAN;

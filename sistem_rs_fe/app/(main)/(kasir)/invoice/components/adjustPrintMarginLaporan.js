@@ -73,151 +73,229 @@ export default function AdjustPrintMarginLaporan({
     const formatRupiah = (val) =>
       new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num(val));
 
-    doc.setFontSize(18);
-    doc.text('Detail Invoice', doc.internal.pageSize.width / 2, y, { align: 'center' });
-    y += 10;
+    // ---------- RAWAT JALAN ----------
+    if (detail.IDRIWAYATJALAN) {
+      doc.setFontSize(18);
+      doc.text('Detail Rawat Jalan', doc.internal.pageSize.width / 2, y, { align: 'center' });
+      y += 5;
 
-    doc.setFontSize(10);
-    doc.text(`ID Transaksi: #${detail.IDINVOICE ?? '-'}`, doc.internal.pageSize.width / 2, y, { align: 'center' });
-    y += 15;
-
-    const labelX = marginLeft;
-    const valueX = marginLeft + 25;
-
-    doc.setFontSize(12);
-    doc.text('Informasi Pasien', labelX, y);
-    y += 6;
-
-    doc.setFontSize(10);
-    doc.text('Nama Pasien', labelX, y);
-    doc.text(`: ${detail.NAMAPASIEN ?? '-'}`, valueX - 2, y);
-    y += 6;
-
-    doc.text('Nomor Bed', labelX, y);
-    doc.text(`: ${detail.NOMORBED ?? '-'}`, valueX - 2, y);
-    y += 10;
-
-    doc.setFontSize(12);
-    doc.text('Periode Rawat Inap', labelX, y);
-    y += 6;
-
-    doc.setFontSize(10);
-    doc.text('Masuk', labelX, y);
-    doc.text(`: ${formatTanggal(detail.TANGGALMASUK)}`, valueX - 2, y);
-    y += 6;
-
-    doc.text('Keluar', labelX, y);
-    doc.text(`: ${formatTanggal(detail.TANGGALKELUAR)}`, valueX - 2, y);
-    y += 10;
-
-    const services = [];
-    let no = 1;
-
-    services.push([
-      1,
-      `Biaya Kamar Rawat Inap (Bed ${detail.NOMORBED})`,
-      '-',
-      1,
-      'Kamar',
-      formatRupiah(detail.TOTALKAMAR),
-      formatRupiah(detail.TOTALKAMAR)
-    ])
-
-    detail.obat?.forEach((o) => {
-      services.push([
-        services.length + 1,
-        o.NAMAOBAT,
-        o.JENISOBAT || '-',
-        o.JUMLAH,
-        'Obat',
-        formatRupiah(o.HARGA),
-        formatRupiah(o.TOTAL)
-      ])
-    })
-
-    detail.tindakan?.forEach((t) => {
-      services.push([
-        services.length + 1,
-        t.NAMATINDAKAN,
-        t.KATEGORI || '-',
-        t.JUMLAH,
-        'Tindakan',
-        formatRupiah(t.HARGA),
-        formatRupiah(t.TOTAL)
-      ])
-    })
-
-    autoTable(doc, {
-      startY: y,
-      head: [['#', 'Layanan', 'Satuan/Kategori', 'Qty', 'Jenis', 'Harga Satuan', 'Total']],
-      body: services,
-      styles: { fontSize: 9, lineColor: [200, 200, 200], lineWidth: 0.1 },
-      headStyles: {
-        fillColor: [245, 246, 250],
-        textColor: 20,
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-      bodyStyles: {
-        fillColor: [255, 255, 255],
-        textColor: 20,
-      },
-      columnStyles: {
-        0: { halign: 'center', cellWidth: 8 },
-        2: { halign: 'center', cellWidth: 25 },
-        3: { halign: 'center', cellWidth: 12 },
-        4: { halign: 'center', cellWidth: 25 },
-        5: { halign: 'right' },
-        6: { halign: 'right' },
-      },
-      margin: { left: marginLeft, right: marginRight },
-    });
-
-    let y2 = doc.lastAutoTable.finalY + 10;
-
-    doc.setFontSize(12);
-    doc.text('Ringkasan Biaya', marginLeft, y2);
-    y2 += 6;
-
-    const summary = [
-      ['Biaya Kamar', detail.TOTALKAMAR],
-      ['Total Obat', detail.TOTALOBAT],
-      ['Total Tindakan', detail.TOTALTINDAKAN],
-      ['Total Biaya', detail.TOTALBIAYA],
-    ];
-
-    summary.forEach(([label, val]) => {
       doc.setFontSize(10);
-      doc.text(label, marginLeft, y2);
-      doc.text(formatRupiah(val), doc.internal.pageSize.width - marginRight, y2, { align: 'right' });
-      y2 += 6;
-    });
+      doc.text(`ID Riwayat: #${detail.IDRIWAYATJALAN}`, doc.internal.pageSize.width / 2, y, { align: 'center' });
+      y += 15;
 
-    y2 += 10;
+      const labelX1 = marginLeft;
+      const valueX1 = marginLeft + 35;
 
-    autoTable(doc, {
-      startY: y2,
-      head: [['Keterangan', 'Isi']],
-      body: [
-        ['No Invoice', detail.NOINVOICE ?? '-'],
-        ['Nama Pasien', detail.NAMAPASIEN ?? '-'],
-        ['NIK', detail.NIK ?? '-'],
-        ['Asuransi', detail.ASURANSI ?? '-'],
-        ['Tanggal Invoice', formatTanggal(detail.TANGGALINVOICE)],
-        ['Tanggal Dibuat', formatDateTime(detail.CREATED_AT)],
-        ['Status', detail.STATUS ?? '-'],
-        ['Total Tagihan', formatRupiah(detail.TOTALTAGIHAN)],
-        ['Total Deposit', formatRupiah(detail.TOTALDEPOSIT)],
-        ['Total Angsuran', formatRupiah(detail.TOTALANGSURAN)],
-        ['Sisa Tagihan', formatRupiah(detail.SISA_TAGIHAN)],
-      ],
-      styles: { fontSize: 9 },
-      margin: { left: marginLeft, right: marginRight },
-    });
+      doc.setFontSize(12);
+      doc.text('Informasi Pasien', labelX1, y);
+      y += 6;
 
-    const y3 = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(9);
-    doc.text('Terima kasih atas kepercayaan anda menggunakan layanan kami.', doc.internal.pageSize.width / 2, y3, { align: 'center' });
+      doc.setFontSize(10);
+      doc.text('Nama Pasien', labelX1, y);
+      doc.text(`: ${detail.NAMAPASIEN}`, valueX1, y);
+      y += 6;
+
+      doc.text('Tanggal Rawat', labelX1, y);
+      doc.text(`: ${formatTanggal(detail.TANGGALRAWATJALAN)}`, valueX1, y);
+      y += 10;
+
+      const servicesRJ = [];
+      let noRJ = 1;
+      const totalTindakanRJ = detail.tindakan?.reduce((acc, t) => acc + (t.TOTAL ?? 0), 0);
+
+      detail.tindakan?.forEach((t) => {
+        servicesRJ.push([
+          noRJ++,
+          t.NAMATINDAKAN,
+          t.KATEGORI || '-',
+          t.JUMLAH,
+          'Tindakan',
+          formatRupiah(t.HARGA),
+          formatRupiah(t.TOTAL),
+        ]);
+      });
+
+      autoTable(doc, {
+        startY: y,
+        head: [['#', 'Layanan', 'Satuan/Kategori', 'Qty', 'Jenis', 'Harga Satuan', 'Total']],
+        body: servicesRJ,
+        styles: { fontSize: 9 },
+        headStyles: { fillColor: [41, 128, 185], halign: 'center', fontStyle: 'bold' },
+        margin: { left: marginLeft, right: marginRight },
+      });
+
+      let yAfterRJ = doc.lastAutoTable.finalY + 10;
+
+      doc.setFontSize(12);
+      doc.text('Ringkasan Biaya', marginLeft, yAfterRJ);
+      yAfterRJ += 6;
+
+      [
+        ['Total Tindakan Jalan', totalTindakanRJ, true],
+        ['Total Biaya Rawat Jalan', detail.TOTALBIAYAJALAN, true]
+      ].forEach(([label, val, isCurrency]) => {
+        doc.setFontSize(10);
+        doc.text(label, marginLeft, yAfterRJ);
+        doc.text(
+          isCurrency ? formatRupiah(val) : String(val),
+          doc.internal.pageSize.width - marginRight,
+          yAfterRJ,
+          { align: 'right' }
+        );
+        yAfterRJ += 6;
+      });
+
+      y = yAfterRJ + 10;
+    }
+
+    // ---------- RAWAT INAP ----------
+    if (detail.IDRIWAYATINAP) {
+      doc.setFontSize(18);
+      doc.text('Detail Rawat Inap', doc.internal.pageSize.width / 2, y, { align: 'center' });
+      let yInap = y + 10;
+
+      doc.setFontSize(10);
+      doc.text(`ID Rawat Inap: #${detail.IDRIWAYATINAP}`, doc.internal.pageSize.width / 2, yInap, { align: 'center' });
+      yInap += 15;
+
+      const labelX2 = marginLeft;
+      const valueX2 = marginLeft + 25;
+
+      doc.setFontSize(12);
+      doc.text('Informasi Pasien', labelX2, yInap);
+      yInap += 6;
+
+      doc.setFontSize(10);
+      doc.text('Nama Pasien', labelX2, yInap);
+      doc.text(`: ${detail.NAMAPASIEN ?? '-'}`, valueX2 - 2, yInap);
+      yInap += 6;
+
+      doc.text('Nomor Bed', labelX2, yInap);
+      doc.text(`: ${detail.NOMORBED ?? '-'}`, valueX2 - 2, yInap);
+      yInap += 10;
+
+      doc.setFontSize(12);
+      doc.text('Periode Rawat Inap', labelX2, yInap);
+      yInap += 6;
+
+      doc.setFontSize(10);
+      doc.text('Masuk', labelX2, yInap);
+      doc.text(`: ${formatTanggal(detail.TANGGALMASUK)}`, valueX2 - 2, yInap);
+      yInap += 6;
+
+      doc.text('Keluar', labelX2, yInap);
+      doc.text(`: ${formatTanggal(detail.TANGGALKELUAR)}`, valueX2 - 2, yInap);
+      yInap += 10;
+
+      const servicesInp = [];
+      servicesInp.push([
+        1,
+        `Biaya Kamar Rawat Inap (Bed ${detail.NOMORBED})`,
+        '-',
+        1,
+        'Kamar',
+        formatRupiah(detail.TOTALKAMAR),
+        formatRupiah(detail.TOTALKAMAR)
+      ]);
+
+      detail.obat?.forEach((o) => {
+        servicesInp.push([
+          servicesInp.length + 1,
+          o.NAMAOBAT,
+          o.JENISOBAT || '-',
+          o.JUMLAH,
+          'Obat',
+          formatRupiah(o.HARGA),
+          formatRupiah(o.TOTAL)
+        ]);
+      });
+
+      detail.tindakan?.forEach((t) => {
+        servicesInp.push([
+          servicesInp.length + 1,
+          t.NAMATINDAKAN,
+          t.KATEGORI || '-',
+          t.JUMLAH,
+          'Tindakan',
+          formatRupiah(t.HARGA),
+          formatRupiah(t.TOTAL)
+        ]);
+      });
+
+      autoTable(doc, {
+        startY: yInap,
+        head: [['#', 'Layanan', 'Satuan/Kategori', 'Qty', 'Jenis', 'Harga Satuan', 'Total']],
+        body: servicesInp,
+        styles: { fontSize: 9 },
+        headStyles: { fillColor: [41, 128, 185], halign: 'center', fontStyle: 'bold' },
+        margin: { left: marginLeft, right: marginRight },
+      });
+
+      let yAfterInv = doc.lastAutoTable.finalY + 10;
+
+      doc.setFontSize(12);
+      doc.text('Ringkasan Biaya', marginLeft, yAfterInv);
+      yAfterInv += 6;
+
+      const summary = [
+        ['Biaya Kamar', detail.TOTALKAMAR],
+        ['Total Obat', detail.TOTALOBAT],
+        ['Total Tindakan', detail.TOTALTINDAKAN],
+        ['Total Biaya', detail.TOTALBIAYA],
+      ];
+
+      summary.forEach(([label, val]) => {
+        doc.setFontSize(10);
+        doc.text(label, marginLeft, yAfterInv);
+        doc.text(formatRupiah(val), doc.internal.pageSize.width - marginRight, yAfterInv, { align: 'right' });
+        yAfterInv += 6;
+      });
+
+      y = yAfterInv + 10;
+    }
+
+    // ---------- INVOICE ----------
+    if (detail.NOINVOICE) {
+      // Kalau ada rawat jalan/inap → Invoice pindah ke halaman baru
+      if (detail.IDRIWAYATJALAN || detail.IDRIWAYATINAP) {
+        doc.addPage();
+      }
+
+      let yStartInvoice = marginTop + 10;
+      doc.setFontSize(18);
+      doc.text('Detail Invoice', doc.internal.pageSize.width / 2, yStartInvoice, { align: 'center' });
+      let yInv = yStartInvoice + 10;
+
+      autoTable(doc, {
+        startY: yInv,
+        head: [['Keterangan', 'Isi']],
+        body: [
+          ['No Invoice', detail.NOINVOICE ?? '-'],
+          ['Nama Pasien', detail.NAMAPASIEN ?? '-'],
+          ['NIK', detail.NIK ?? '-'],
+          ['Asuransi', detail.ASURANSI ?? '-'],
+          ['Tanggal Invoice', formatTanggal(detail.TANGGALINVOICE)],
+          ['Tanggal Dibuat', formatDateTime(detail.CREATED_AT)],
+          ['Status', detail.STATUS ?? detail.status ?? '-'],
+          ['Total Tagihan', formatRupiah(detail.TOTALTAGIHAN)],
+          ['Total Deposit', formatRupiah(detail.TOTALDEPOSIT)],
+          ['Total Angsuran', formatRupiah(detail.TOTALANGSURAN)],
+          ['Sisa Tagihan', formatRupiah(detail.SISA_TAGIHAN)],
+        ],
+        styles: { fontSize: 9 },
+        headStyles: { fillColor: [41, 128, 185], halign: 'center', fontStyle: 'bold' },
+        margin: { left: marginLeft, right: marginRight },
+      });
+
+      const yEnd = doc.lastAutoTable.finalY + 10;
+      doc.setFontSize(9);
+      doc.text(
+        'Terima kasih atas kepercayaan anda menggunakan layanan kami.',
+        doc.internal.pageSize.width / 2,
+        yEnd,
+        { align: 'center' }
+      );
+    }
 
     return doc.output('datauristring');
   }

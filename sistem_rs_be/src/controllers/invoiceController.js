@@ -21,10 +21,20 @@ export async function getInvoiceById(req, res) {
       return res.status(404).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    invoice.TOTALTAGIHAN = invoice.TOTALTAGIHAN || invoice.TOTALBIAYA;
+    const totalInap = invoice.TOTALBIAYA || 0;
+    const totalJalan = invoice.TOTALBIAYAJALAN || 0;
 
-    const daftarObat = await InvoiceModel.getObatByInvoiceId(id);
-    const daftarTindakan = await InvoiceModel.getTindakanByInvoiceId(id);
+    invoice.TOTALTAGIHAN = invoice.TOTALTAGIHAN ?? (totalInap + totalJalan);
+
+    let daftarObat = [];
+    let daftarTindakan = [];
+
+    if (invoice.IDRIWAYATINAP) {
+      daftarObat = await InvoiceModel.getObatByInvoiceId(id);
+      daftarTindakan = await InvoiceModel.getTindakanByInvoiceId(id);
+    } else if (invoice.IDRIWAYATJALAN) {
+      daftarTindakan = await InvoiceModel.getTindakanJalanByInvoiceId(id);
+    }
 
     res.status(200).json({
       success: true,
@@ -46,18 +56,26 @@ export async function updateInvoice(req, res) {
     const {
       NIK,
       TANGGALINVOICE,
-      TOTALTAGIHAN,
       TOTALDEPOSIT,
       TOTALANGSURAN,
       STATUS
     } = req.body;
+
+    const invoiceDB = await InvoiceModel.getById(id);
+    if (!invoiceDB) {
+      return res.status(404).json({ success: false, message: 'Invoice tidak ditemukan' });
+    }
 
     const pasien = await db('pasien').where('NIK', NIK).first();
     if (!pasien) {
       return res.status(400).json({ success: false, message: 'Pasien dengan NIK ini tidak ditemukan' });
     }
 
-    const SISA_TAGIHAN = (TOTALTAGIHAN || 0) + (TOTALDEPOSIT || 0) - (TOTALANGSURAN || 0);
+    const totalInap = invoiceDB.TOTALBIAYA || 0;
+    const totalJalan = invoiceDB.TOTALBIAYAJALAN || 0;
+    const TOTALTAGIHAN = totalInap + totalJalan;
+
+    const SISA_TAGIHAN = TOTALTAGIHAN - (TOTALDEPOSIT || 0) - (TOTALANGSURAN || 0);
     const statusFinal = SISA_TAGIHAN <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
     const updated = await InvoiceModel.update(id, {
