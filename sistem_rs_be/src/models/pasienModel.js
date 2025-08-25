@@ -11,6 +11,19 @@ export const getAll = () => {
     );
 };
 
+async function generateNoRM() {
+  const last = await db('pasien')
+    .max('NOREKAMMEDIS as maxNo')
+    .first();
+
+  let nextNo = 1;
+
+  if (last && last.maxNo) {
+    nextNo = parseInt(last.maxNo, 10) + 1; 
+  }
+  return String(nextNo).padStart(8, '0');
+}
+
 export const getById = (id) => {
   return db('pasien').where({ IDPASIEN: id }).first();
 };
@@ -19,8 +32,9 @@ export async function getByNIK(nik) {
   return db('pasien').where({ NIK: nik }).first();
 }
 
-export const create = (data) => {
-  return db('pasien').insert(data);
+export const create = async (data) => {
+  const noRM = await generateNoRM();
+  return db('pasien').insert({ ...data, NOREKAMMEDIS: noRM });
 };
 
 export const update = (id, data) => {
