@@ -45,12 +45,14 @@ const Page = () => {
   };
 
   const [form, setForm] = useState({
+    NOREKAMMEDIS: '',
     NIK: '',
     NAMALENGKAP: '',
     TANGGALLAHIR: '',
     JENISKELAMIN: 'L',
     IDASURANSI: '',
     ALAMAT: '',
+    ALAMAT_KTP: '',
     NOHP: '',
     USIA: '',
     IDAGAMA: '',
@@ -228,12 +230,14 @@ const Page = () => {
 
   const resetForm = () => {
     setForm({
+      NOREKAMMEDIS: '',
       NIK: '',
       NAMALENGKAP: '',
       TANGGALLAHIR: '',
       JENISKELAMIN: 'L',
       IDASURANSI: '',
       ALAMAT: '',
+      ALAMAT_KTP: '',
       NOHP: '',
       USIA: '',
       IDAGAMA: '',

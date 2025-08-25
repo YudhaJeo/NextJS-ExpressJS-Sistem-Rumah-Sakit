@@ -44,6 +44,15 @@ const FormDialogPasien = ({
         </div>
 
         <div>
+          <label>No Rekam Medis</label>
+          <InputText
+            className="w-full mt-2"
+            value={form.NOREKAMMEDIS || 'Auto Generate'}
+            readOnly
+          />
+        </div>
+
+        <div>
           <label>NIK</label>
           <InputText
             className={inputClass('NIK')}
@@ -87,13 +96,23 @@ const FormDialogPasien = ({
         </div>
 
         <div>
-          <label>Alamat</label>
+          <label>Alamat Domisili</label>
           <InputText
             className={inputClass('ALAMAT')}
             value={form.ALAMAT}
             onChange={(e) => setForm({ ...form, ALAMAT: e.target.value })}
           />
           {errors.ALAMAT && <small className="text-red-500">{errors.ALAMAT}</small>}
+        </div>
+
+        <div>
+          <label>Alamat KTP</label>
+          <InputText
+            className={inputClass('ALAMAT_KTP')}
+            value={form.ALAMAT_KTP}
+            onChange={(e) => setForm({ ...form, ALAMAT_KTP: e.target.value })}
+          />
+          {errors.ALAMAT_KTP && <small className="text-red-500">{errors.ALAMAT_KTP}</small>}
         </div>
 
         <div>

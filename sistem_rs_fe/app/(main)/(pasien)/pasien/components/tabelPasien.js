@@ -8,6 +8,7 @@ const TabelPasien = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
       <Column field="NAMALENGKAP" header="Nama Lengkap" sortable />
+      <Column field="NOREKAMMEDIS" header="No Rekam Medis" />
       <Column field="NIK" header="NIK" />
       <Column
         field="TANGGALLAHIR"
@@ -22,7 +23,8 @@ const TabelPasien = ({ data, loading, onEdit, onDelete }) => {
         }}
       />
       <Column field="JENISKELAMIN" header="JK" />
-      <Column field="ALAMAT" header="Alamat" />
+      <Column field="ALAMAT" header="Alamat Domisili" />
+      <Column field="ALAMAT_KTP" header="Alamat KTP" />
       <Column field="NOHP" header="No HP" />
       <Column field="USIA" header="Usia" />
       <Column field="NAMAAGAMA" header="Agama" />
