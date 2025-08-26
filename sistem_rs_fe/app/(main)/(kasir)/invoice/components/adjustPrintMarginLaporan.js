@@ -65,11 +65,6 @@ export default function AdjustPrintMarginLaporan({
         ? new Date(tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
         : '-';
 
-    const formatDateTime = (tanggal) =>
-      tanggal
-        ? new Date(tanggal).toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-        : '-';
-
     const formatRupiah = (val) =>
       new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num(val));
 
@@ -78,10 +73,6 @@ export default function AdjustPrintMarginLaporan({
       doc.setFontSize(18);
       doc.text('Detail Rawat Jalan', doc.internal.pageSize.width / 2, y, { align: 'center' });
       y += 5;
-
-      doc.setFontSize(10);
-      doc.text(`ID Riwayat: #${detail.IDRIWAYATJALAN}`, doc.internal.pageSize.width / 2, y, { align: 'center' });
-      y += 15;
 
       const labelX1 = marginLeft;
       const valueX1 = marginLeft + 35;
@@ -153,10 +144,6 @@ export default function AdjustPrintMarginLaporan({
       doc.setFontSize(18);
       doc.text('Detail Rawat Inap', doc.internal.pageSize.width / 2, y, { align: 'center' });
       let yInap = y + 10;
-
-      doc.setFontSize(10);
-      doc.text(`ID Rawat Inap: #${detail.IDRIWAYATINAP}`, doc.internal.pageSize.width / 2, yInap, { align: 'center' });
-      yInap += 15;
 
       const labelX2 = marginLeft;
       const valueX2 = marginLeft + 25;
@@ -256,27 +243,42 @@ export default function AdjustPrintMarginLaporan({
 
     // ---------- INVOICE ----------
     if (detail.NOINVOICE) {
-      // Kalau ada rawat jalan/inap → Invoice pindah ke halaman baru
-      if (detail.IDRIWAYATJALAN || detail.IDRIWAYATINAP) {
-        doc.addPage();
-      }
+      if (detail.IDRIWAYATJALAN || detail.IDRIWAYATINAP) doc.addPage();
 
-      let yStartInvoice = marginTop + 10;
+      const pageWidth = doc.internal.pageSize.width;
+      let yInv = marginTop + 10;
+
       doc.setFontSize(18);
-      doc.text('Detail Invoice', doc.internal.pageSize.width / 2, yStartInvoice, { align: 'center' });
-      let yInv = yStartInvoice + 10;
+      doc.text('Detail Invoice', pageWidth / 2, yInv, { align: 'center' });
+      yInv += 10;
+
+      const labelX = marginLeft;
+      const valueX = marginLeft + 40;
+
+      doc.setFontSize(12);
+      doc.text('Informasi Invoice', labelX, yInv);
+      yInv += 6;
+
+      doc.setFontSize(10);
+      [
+        ['No Invoice', detail.NOINVOICE ?? '-'],
+        ['Nama Pasien', detail.NAMAPASIEN ?? '-'],
+        ['NIK', detail.NIK ?? '-'],
+        ['Asuransi', detail.ASURANSI ?? '-'],
+        ['Tanggal Invoice', formatTanggal(detail.TANGGALINVOICE)],
+        ['Status', detail.STATUS ?? detail.status ?? '-'],
+      ].forEach(([label, val]) => {
+        doc.text(label, labelX, yInv);
+        doc.text(`: ${val}`, valueX, yInv);
+        yInv += 6;
+      });
+
+      yInv += 4;
 
       autoTable(doc, {
         startY: yInv,
-        head: [['Keterangan', 'Isi']],
+        head: [['Keterangan', 'Nominal']],
         body: [
-          ['No Invoice', detail.NOINVOICE ?? '-'],
-          ['Nama Pasien', detail.NAMAPASIEN ?? '-'],
-          ['NIK', detail.NIK ?? '-'],
-          ['Asuransi', detail.ASURANSI ?? '-'],
-          ['Tanggal Invoice', formatTanggal(detail.TANGGALINVOICE)],
-          ['Tanggal Dibuat', formatDateTime(detail.CREATED_AT)],
-          ['Status', detail.STATUS ?? detail.status ?? '-'],
           ['Total Tagihan', formatRupiah(detail.TOTALTAGIHAN)],
           ['Total Deposit', formatRupiah(detail.TOTALDEPOSIT)],
           ['Total Angsuran', formatRupiah(detail.TOTALANGSURAN)],
@@ -284,17 +286,14 @@ export default function AdjustPrintMarginLaporan({
         ],
         styles: { fontSize: 9 },
         headStyles: { fillColor: [41, 128, 185], halign: 'center', fontStyle: 'bold' },
+        columnStyles: { 0: { halign: 'left' }, 1: { halign: 'right' } },
         margin: { left: marginLeft, right: marginRight },
       });
 
       const yEnd = doc.lastAutoTable.finalY + 10;
       doc.setFontSize(9);
-      doc.text(
-        'Terima kasih atas kepercayaan anda menggunakan layanan kami.',
-        doc.internal.pageSize.width / 2,
-        yEnd,
-        { align: 'center' }
-      );
+      doc.text('Terima kasih atas kepercayaan anda menggunakan layanan kami.',
+        pageWidth / 2, yEnd, { align: 'center' });
     }
 
     return doc.output('datauristring');

@@ -112,7 +112,6 @@ const Page = () => {
       <TabelInvoice
         data={data}
         loading={loading}
-        onEdit={handleEdit}
         onDelete={handleDelete}
         onPrint={(row) => window.open(`/invoice/cetak/${row.IDINVOICE}`, '_blank')}
       />
