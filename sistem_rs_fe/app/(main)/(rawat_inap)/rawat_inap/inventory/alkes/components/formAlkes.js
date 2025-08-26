@@ -5,8 +5,9 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
-import { Calendar } from 'primereact/calendar';
 import { classNames } from 'primereact/utils';
+import { Calendar } from 'primereact/calendar';
+
 
 const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierOptions }) => {
   const inputClass = (field) =>
@@ -14,7 +15,7 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
 
   return (
     <Dialog
-      header={form.IDALKES ? 'Edit Alat Kesehatan' : 'Tambah Alat Kesehatan'}
+      header={form.IDALKES ? 'Edit Alkes' : 'Tambah Alkes'}
       visible={visible}
       onHide={onHide}
       style={{ width: '30vw' }}
@@ -26,9 +27,8 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
           onSubmit();
         }}
       >
-
         <div className="mt-2">
-          <label>Kode Alat Kesehatan</label>
+          <label>Kode Alkes</label>
           <InputText
             className={inputClass('KODEALKES')}
             value={form.KODEALKES}
@@ -38,7 +38,7 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
         </div>
 
         <div className="mt-2">
-          <label>Nama Alat Kesehatan</label>
+          <label>Nama Alkes</label>
           <InputText
             className={inputClass('NAMAALKES')}
             value={form.NAMAALKES}
@@ -48,10 +48,10 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
         </div>
 
         <div className="mt-2">
-          <label>Merk Alat Kesehatan</label>  
+          <label>Merek</label>
           <InputText
             className={inputClass('MERKALKES')}
-            value={form.MERKALKES || ''}
+            value={form.MERKALKES}
             onChange={(e) => setForm({ ...form, MERKALKES: e.target.value })}
           />
           {errors.MERKALKES && <small className="text-red-500">{errors.MERKALKES}</small>}
@@ -85,35 +85,37 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
             value={form.STOK}
             onValueChange={(e) => setForm({ ...form, STOK: e.value })}
           />
-          {errors.STOK && <small className="text-red-500">{errors.STOK}</small>}
+          {errors.STOK && (
+            <small className="text-red-500">{errors.STOK}</small>
+          )}
         </div>
 
         <div className="mt-2">
           <label>Harga Beli</label>
-          <InputNumber
-            inputId="hargaBeli"
-            className="w-full mt-2"
-            value={form.HARGABELI}
-            onValueChange={(e) => setForm({ ...form, HARGABELI: e.value })}
-            mode="currency"
-            currency="IDR"
-            locale="id-ID"
-          />
-          {errors.HARGABELI && <small className="text-red-500">{errors.HARGABELI}</small>}
+            <InputNumber
+              inputId="hargaBeli"
+              className="w-full mt-2"
+              value={form.HARGABELI}
+              onValueChange={(e) => setForm({ ...form, HARGABELI: e.value })}
+              mode="currency" currency="IDR" locale="id-ID"
+            />
+          {errors.HARGABELI && (
+            <small className="text-red-500">{errors.HARGABELI}</small>  
+          )}
         </div>
 
         <div className="mt-2">
           <label>Harga Jual</label>
-          <InputNumber
-            inputId="hargaJual"
-            className="w-full mt-2"
-            value={form.HARGAJUAL}
-            onValueChange={(e) => setForm({ ...form, HARGAJUAL: e.value })}
-            mode="currency"
-            currency="IDR"
-            locale="id-ID"
-          />
-          {errors.HARGAJUAL && <small className="text-red-500">{errors.HARGAJUAL}</small>}
+            <InputNumber
+              inputId="hargaJual"
+              className="w-full mt-2"
+              value={form.HARGAJUAL}
+              onValueChange={(e) => setForm({ ...form, HARGAJUAL: e.value })}
+              mode="currency" currency="IDR" locale="id-ID"
+            />
+          {errors.HARGAJUAL && (
+            <small className="text-red-500">{errors.HARGAJUAL}</small>  
+          )}
         </div>
 
         <div className="mt-2">
@@ -139,29 +141,33 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
           <label>Lokasi</label>
           <InputText
             className={inputClass('LOKASI')}
-            value={form.LOKASI || ''}
+            value={form.LOKASI}
             onChange={(e) => setForm({ ...form, LOKASI: e.target.value })}
           />
           {errors.LOKASI && <small className="text-red-500">{errors.LOKASI}</small>}
         </div>
-        
+
         <div className="mt-2">
-          <label>Supplier</label>
-          <Dropdown
-            className={classNames('w-full mt-2', { 'p-invalid': errors.SUPPLIERID })}
-            options={supplierOptions}
-            value={form.SUPPLIERID}
-            onChange={(e) => setForm({ ...form, SUPPLIERID: e.value })}
-            placeholder="Pilih Supplier"
-          />
-          {errors.SUPPLIERID && <small className="text-red-500">{errors.SUPPLIERID}</small>}
+          <label>Supplier</label> 
+            <Dropdown
+              className={classNames('w-full mt-2', { 'p-invalid': errors.SUPPLIERID })}
+              options={supplierOptions} 
+              value={form.SUPPLIERID}
+              onChange={(e) => setForm({ ...form, SUPPLIERID: e.value })}
+              placeholder="Pilih Supplier"
+              filter
+              showClear
+            />
+            {errors.SUPPLIERID && (
+              <small className="text-red-500">{errors.SUPPLIERID}</small>
+            )}
         </div>
 
         <div className="mt-2">
-          <label>Keterangan</label>
+          <label>Deskripsi</label>
           <InputText
             className={inputClass('DESKRIPSI')}
-            value={form.DESKRIPSI || ''}
+            value={form.DESKRIPSI}
             onChange={(e) => setForm({ ...form, DESKRIPSI: e.target.value })}
           />
           {errors.DESKRIPSI && <small className="text-red-500">{errors.DESKRIPSI}</small>}
