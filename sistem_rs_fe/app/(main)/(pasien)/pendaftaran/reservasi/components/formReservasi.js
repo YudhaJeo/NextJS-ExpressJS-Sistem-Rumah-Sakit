@@ -5,7 +5,7 @@ import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const getNamaHari = (tanggalString) => {
   const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at", 'Sabtu'];
@@ -30,6 +30,8 @@ const FormReservasiPasien = ({
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
+  const [jamOptions, setJamOptions] = useState([]);
+
   useEffect(() => {
     if (!formData.TANGGALRESERVASI || !formData.IDPOLI) {
       setDokterOptions([]);
@@ -41,15 +43,35 @@ const FormReservasiPasien = ({
     const filtered = allDokterOptions.filter(
       (dokter) =>
         dokter.IDPOLI === formData.IDPOLI &&
-        dokter.label.toLowerCase().includes(hari.toLowerCase())
+        (dokter.JADWALPRAKTEK || []).some((j) =>
+          j.toLowerCase().includes(hari.toLowerCase())
+        )
     );
 
     setDokterOptions(filtered);
 
     if (!filtered.some((d) => d.value === formData.IDDOKTER)) {
-      setFormData((prev) => ({ ...prev, IDDOKTER: "" }));
+      setFormData((prev) => ({ ...prev, IDDOKTER: "", JAMRESERVASI: "" }));
     }
   }, [formData.TANGGALRESERVASI, formData.IDPOLI]);
+
+  useEffect(() => {
+    if (!formData.IDDOKTER || !formData.TANGGALRESERVASI) {
+      setJamOptions([]);
+      return;
+    }
+
+    const hari = getNamaHari(formData.TANGGALRESERVASI);
+
+    const selected = allDokterOptions.find(d => d.value === formData.IDDOKTER);
+
+    if (selected && selected.JADWALPRAKTEK) {
+      const filteredJam = selected.JADWALPRAKTEK.filter(j => j.includes(hari));
+      setJamOptions(filteredJam);
+    } else {
+      setJamOptions([]);
+    }
+  }, [formData.IDDOKTER, formData.TANGGALRESERVASI]);
 
   return (
     <Dialog
@@ -65,18 +87,14 @@ const FormReservasiPasien = ({
           onSubmit();
         }}
       >
+
         <div>
           <label>NIK</label>
           <Dropdown
             className={inputClass('NIK')}
             options={pasienOptions}
             value={formData.NIK}
-            onChange={(e) => {
-              setFormData({
-                ...formData,
-                NIK: e.value,
-              });
-            }}
+            onChange={(e) => setFormData({ ...formData, NIK: e.value })}
             placeholder="Pilih NIK"
             filter
             showClear
@@ -117,18 +135,15 @@ const FormReservasiPasien = ({
               options={poliOptions}
               value={formData.IDPOLI}
               onChange={(e) => {
-                const selectedPoli = e.value;
-
                 setFormData({
                   ...formData,
-                  IDPOLI: selectedPoli,
+                  IDPOLI: e.value,
                   IDDOKTER: "",
+                  JAMRESERVASI: "",
                 });
-
-                const filteredDokter = allDokterOptions.filter(
-                  (dokter) => dokter.IDPOLI === selectedPoli
+                setDokterOptions(
+                  allDokterOptions.filter((d) => d.IDPOLI === e.value)
                 );
-                setDokterOptions(filteredDokter);
               }}
               placeholder="Pilih Poli"
               filter
@@ -139,15 +154,20 @@ const FormReservasiPasien = ({
         </div>
 
         <div>
-          <label>Nama Dokter & Jadwal Praktek</label>
+          <label>Nama Dokter</label>
           <Dropdown
             className={inputClass('IDDOKTER')}
-            options={dokterOptions}
+            options={dokterOptions.map(d => ({
+              label: d.NAMALENGKAP,
+              value: d.value,
+              JADWALPRAKTEK: d.JADWALPRAKTEK || []
+            }))}
             value={formData.IDDOKTER}
             onChange={(e) => {
               setFormData({
                 ...formData,
                 IDDOKTER: e.value,
+                JAMRESERVASI: "",
               });
             }}
             placeholder="Pilih Dokter"
@@ -155,6 +175,19 @@ const FormReservasiPasien = ({
             showClear
           />
           {errors.IDDOKTER && <small className="text-red-500">{errors.IDDOKTER}</small>}
+        </div>
+
+        <div>
+          <label>Jam Praktek</label>
+          <Dropdown
+            className={inputClass('JAMRESERVASI')}
+            options={jamOptions.map(j => ({ label: j, value: j }))}
+            value={formData.JAMRESERVASI || ""}
+            onChange={(e) => setFormData({ ...formData, JAMRESERVASI: e.value })}
+            placeholder="Pilih Jam"
+            disabled={jamOptions.length === 0}
+          />
+          {errors.JAMRESERVASI && <small className="text-red-500">{errors.JAMRESERVASI}</small>}
         </div>
 
         <div>

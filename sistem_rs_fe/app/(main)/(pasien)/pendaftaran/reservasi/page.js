@@ -113,16 +113,33 @@ const ReservasiPasienPage = () => {
     try {
       const res = await axios.get(`${API_URL}/dokter`);
 
-      const options = res.data.map((dokter) => ({
-        label: `${dokter.NAMALENGKAP} (${dokter.JADWALPRAKTEK || 'Jadwal tidak tersedia'})`,
-        value: dokter.IDDOKTER,
-        IDPOLI: dokter.IDPOLI,
-      }));
+      const options = res.data.map((dokter) => {
+        let jadwal = [];
+
+        if (typeof dokter.JADWALPRAKTEK === "string") {
+          jadwal = dokter.JADWALPRAKTEK
+            .split(",")
+            .map((j) => j.trim())
+            .filter(Boolean);
+        }
+
+        else if (Array.isArray(dokter.JADWALPRAKTEK)) {
+          jadwal = dokter.JADWALPRAKTEK;
+        }
+
+        return {
+          label: dokter.NAMALENGKAP,
+          value: dokter.IDDOKTER,
+          IDPOLI: dokter.IDPOLI,
+          NAMALENGKAP: dokter.NAMALENGKAP,
+          JADWALPRAKTEK: jadwal,
+        };
+      });
 
       setDokterOptions(options);
       setAllDokterOptions(options);
     } catch (err) {
-      console.error('Gagal ambil data poli:', err);
+      console.error("Gagal ambil data dokter:", err);
     }
   };
 
