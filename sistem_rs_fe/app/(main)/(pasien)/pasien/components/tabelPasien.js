@@ -7,8 +7,8 @@ import { Button } from 'primereact/button';
 const TabelPasien = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
-      <Column field="NAMALENGKAP" header="Nama Lengkap" sortable />
       <Column field="NOREKAMMEDIS" header="No Rekam Medis" />
+      <Column field="NAMALENGKAP" header="Nama Lengkap" sortable />
       <Column field="NIK" header="NIK" />
       <Column
         field="TANGGALLAHIR"

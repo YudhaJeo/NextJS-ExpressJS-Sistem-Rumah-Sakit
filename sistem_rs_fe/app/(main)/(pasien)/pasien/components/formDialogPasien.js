@@ -34,16 +34,6 @@ const FormDialogPasien = ({
         }}
       >
         <div>
-          <label>Nama Lengkap</label>
-          <InputText
-            className={inputClass('NAMALENGKAP')}
-            value={form.NAMALENGKAP}
-            onChange={(e) => setForm({ ...form, NAMALENGKAP: e.target.value })}
-          />
-          {errors.NAMALENGKAP && <small className="text-red-500">{errors.NAMALENGKAP}</small>}
-        </div>
-
-        <div>
           <label>No Rekam Medis</label>
           <InputText
             className="w-full mt-2"
@@ -51,6 +41,16 @@ const FormDialogPasien = ({
             placeholder="Auto-Generate"
             readOnly
           />
+        </div>
+        
+        <div>
+          <label>Nama Lengkap</label>
+          <InputText
+            className={inputClass('NAMALENGKAP')}
+            value={form.NAMALENGKAP}
+            onChange={(e) => setForm({ ...form, NAMALENGKAP: e.target.value })}
+          />
+          {errors.NAMALENGKAP && <small className="text-red-500">{errors.NAMALENGKAP}</small>}
         </div>
 
         <div>
