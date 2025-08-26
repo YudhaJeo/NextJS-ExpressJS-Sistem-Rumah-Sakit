@@ -12,11 +12,13 @@ export const getAll = () =>
     .join('jenis_bangsal', 'bangsal.IDJENISBANGSAL', 'jenis_bangsal.IDJENISBANGSAL')
     .select(
       'rawat_inap.*',
+      'pasien.NOREKAMMEDIS',
       'pasien.NIK as PASIEN_NIK',
       'pasien.NAMALENGKAP',
       'pasien.USIA',
       'pasien.JENISKELAMIN',
       'pasien.ALAMAT as ALAMAT_PASIEN',
+      'pasien.ALAMAT_KTP',
       'pl.NAMAPOLI as POLI',
       'bed.NOMORBED',
       'kamar.NAMAKAMAR',

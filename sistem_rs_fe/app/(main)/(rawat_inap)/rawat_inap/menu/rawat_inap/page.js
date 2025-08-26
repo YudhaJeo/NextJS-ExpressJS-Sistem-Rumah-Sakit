@@ -37,8 +37,10 @@ const Page = () => {
     NAMAPASIEN: '',
     UMUR: '',
     JENISKELAMIN: '',
+    NOREKAMMEDIS: '',
     NIK: '',
     ALAMAT_PASIEN: '',
+    ALAMAT_KTP: '',
     IDBED: '',
     NAMAKAMAR: '',
     NAMABANGSAL: '',
@@ -215,8 +217,10 @@ const Page = () => {
       POLI: row.POLI || '',
       DIAGNOSA: row.DIAGNOSA || '',
       JENISKELAMIN: row.JENISKELAMIN || '',
+      NOREKAMMEDIS: row.NOREKAMMEDIS || '',
       NIK: row.PASIEN_NIK || '',
       ALAMAT_PASIEN: row.ALAMAT_PASIEN || '',
+      ALAMAT_KTP: row.ALAMAT_KTP || '',
       NAMAKAMAR: row.NAMAKAMAR || '',
       NAMABANGSAL: row.NAMABANGSAL || '',
       HARGAPERHARI: row.HARGAPERHARI || '',
@@ -353,6 +357,7 @@ const Page = () => {
     const filtered = data.filter((item) =>
       item.NAMALENGKAP?.toLowerCase().includes(keyword.toLowerCase()) ||
       item.NOMORBED?.toLowerCase().includes(keyword.toLowerCase()) ||
+      item.NOREKAMMEDIS?.toLowerCase().includes(keyword.toLowerCase()) ||
       item.STATUS?.toLowerCase().includes(keyword.toLowerCase()) 
     );
     setData(filtered);

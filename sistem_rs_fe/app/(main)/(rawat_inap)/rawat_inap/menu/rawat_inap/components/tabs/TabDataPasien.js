@@ -30,8 +30,10 @@ const TabDataPasien = ({
               IDRAWATJALAN: e.value,
               POLI: selected?.POLI || '',
               JENISKELAMIN: selected?.JENISKELAMIN || '',
+              NOREKAMMEDIS: selected?.NOREKAMMEDIS || '',
               NIK: selected?.NIK || '',
               ALAMAT_PASIEN: selected?.ALAMAT_PASIEN || '',
+              ALAMAT_KTP: selected?.ALAMAT_KTP || '',
               DIAGNOSA: selected?.DIAGNOSA || '',
             })
           }}
@@ -74,6 +76,15 @@ const TabDataPasien = ({
       </div>
       
       <div className="mt-2">
+        <label>No Rekam Medis</label>
+        <InputText
+          readOnly={isEditMode}
+          className={inputClass('NOREKAMMEDIS')}
+          value={form.NOREKAMMEDIS}
+        />
+      </div>
+
+      <div className="mt-2">
         <label>NIK</label>
         <InputText
           readOnly={isEditMode}
@@ -88,6 +99,15 @@ const TabDataPasien = ({
           readOnly={isEditMode}
           className={inputClass('ALAMAT_PASIEN')}
           value={form.ALAMAT_PASIEN}
+        />
+      </div>
+      
+      <div className="mt-2">
+        <label>Alamat KTP</label>
+        <InputText
+          readOnly={isEditMode}
+          className={inputClass('ALAMAT_KTP')}
+          value={form.ALAMAT_KTP}
         />
       </div>
     </>
