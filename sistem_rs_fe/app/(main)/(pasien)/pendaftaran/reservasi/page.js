@@ -31,6 +31,7 @@ const ReservasiPasienPage = () => {
     IDPOLI: '',
     IDDOKTER: '',
     TANGGALRESERVASI: '',
+    JAMRESERVASI: '',
     KETERANGAN: '',
     STATUS: 'Menunggu',
   });
@@ -164,6 +165,7 @@ const ReservasiPasienPage = () => {
     if (!formData.TANGGALRESERVASI.trim()) newErrors.TANGGALRESERVASI = <span style={{ color: 'red' }}>Tanggal Reservasi wajib diisi</span>;
     if (!formData.IDPOLI) newErrors.IDPOLI = <span style={{ color: 'red' }}>Poli wajib dipilih</span>;
     if (!formData.IDDOKTER) newErrors.IDDOKTER = <span style={{ color: 'red' }}>Dokter wajib dipilih</span>;
+    if (!formData.JAMRESERVASI) newErrors.JAMRESERVASI = <span style={{ color: 'red' }}>Jam wajib dipilih</span>;
     if (!formData.KETERANGAN.trim()) newErrors.KETERANGAN = <span style={{ color: 'red' }}>Keluhan wajib dipilih</span>;
     if (!formData.STATUS.trim()) newErrors.STATUS = <span style={{ color: 'red' }}>Status wajib dipilih</span>;
 

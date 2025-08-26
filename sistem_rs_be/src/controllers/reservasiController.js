@@ -16,7 +16,7 @@ export async function createReservasi(req, res) {
   const trx = await db.transaction();
 
   try {
-    const { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, STATUS, KETERANGAN } = req.body;
+    const { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN } = req.body;
 
     if (!NIK || !IDPOLI || !IDDOKTER || !TANGGALRESERVASI || !STATUS) {
       await trx.rollback();
@@ -28,6 +28,7 @@ export async function createReservasi(req, res) {
       IDPOLI,
       IDDOKTER,
       TANGGALRESERVASI,
+      JAMRESERVASI,
       STATUS,
       KETERANGAN,
     });
@@ -62,9 +63,9 @@ export async function createReservasi(req, res) {
 export async function updateReservasi(req, res) {
   try {
     const id = req.params.id;
-    const { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, STATUS, KETERANGAN } = req.body;
+    const { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN } = req.body;
 
-    await ReservasiModel.update(id, { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, STATUS, KETERANGAN });
+    await ReservasiModel.update(id, { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN });
     res.json({ message: 'Reservasi berhasil diperbarui' });
   } catch (err) {
     console.error('Error backend:', err);
