@@ -35,7 +35,7 @@ const TabDataPasien = ({
               DIAGNOSA: selected?.DIAGNOSA || '',
             })
           }}
-          disabled={isEditMode}
+          readOnly={isEditMode}
           placeholder="Pilih Rawat Inap"
           filter
           showClear
@@ -50,7 +50,7 @@ const TabDataPasien = ({
           className={inputClass('POLI')}
           value={form.POLI}
           onChange={(e) => setForm({ ...form, POLI: e.target.value })}
-          disabled={isEditMode}
+          readOnly={isEditMode}
         />
       </div>
 
@@ -60,14 +60,14 @@ const TabDataPasien = ({
           className={inputClass('DIAGNOSA')}
           value={form.DIAGNOSA}
           onChange={(e) => setForm({ ...form, DIAGNOSA: e.target.value })}
-          disabled={isEditMode}
+          readOnly={isEditMode}
         />
       </div>
       
       <div className="mt-2">
         <label>Jenis Kelamin</label>    
         <InputText
-          disabled={isEditMode}
+          readOnly={isEditMode}
           className={inputClass('JENISKELAMIN')}
           value={formatGender(form.JENISKELAMIN)}
         />
@@ -76,7 +76,7 @@ const TabDataPasien = ({
       <div className="mt-2">
         <label>NIK</label>
         <InputText
-          disabled={isEditMode}
+          readOnly={isEditMode}
           className={inputClass('NIK')}
           value={form.NIK}
         />
@@ -85,7 +85,7 @@ const TabDataPasien = ({
       <div className="mt-2">
         <label>Alamat</label>
         <InputText
-          disabled={isEditMode}
+          readOnly={isEditMode}
           className={inputClass('ALAMAT_PASIEN')}
           value={form.ALAMAT_PASIEN}
         />
