@@ -52,7 +52,7 @@ const ReservasiPasienPage = () => {
   const fetchReservasi = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/reservasi_rajal`);
+      const res = await axios.get(`${API_URL}/reservasi`);
       const transformed = transformJadwalHariIni(res.data);
       setData(transformed);
       setOriginalData(transformed);
@@ -160,8 +160,8 @@ const ReservasiPasienPage = () => {
 
     const isEdit = !!formData.IDRESERVASI;
     const url = isEdit
-      ? `${API_URL}/reservasi_rajal/${formData.IDRESERVASI}`
-      : `${API_URL}/reservasi_rajal`;
+      ? `${API_URL}/reservasi/${formData.IDRESERVASI}`
+      : `${API_URL}/reservasi`;
 
     try {
       if (isEdit) {
@@ -197,7 +197,7 @@ const ReservasiPasienPage = () => {
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/reservasi_rajal/${row.IDRESERVASI}`);
+          await axios.delete(`${API_URL}/reservasi/${row.IDRESERVASI}`);
           fetchReservasi();
           toastRef.current?.showToast('00', 'Data berhasil dihapus');
         } catch (err) {

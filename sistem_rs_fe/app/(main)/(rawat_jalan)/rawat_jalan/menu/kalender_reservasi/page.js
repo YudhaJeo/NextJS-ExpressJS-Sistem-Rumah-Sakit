@@ -27,7 +27,7 @@ const KalenderPage = () => {
     setLoading(true);
     try {
       // Ambil semua data dari reservasi_rajal
-      const res = await axios.get(`${API_URL}/reservasi_rajal`);
+      const res = await axios.get(`${API_URL}/reservasi`);
 
       const filteredData = res.data.filter(item => item.STATUS?.toLowerCase() === 'DIKONFIRMASI');
 

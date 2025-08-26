@@ -53,7 +53,6 @@ import supplierRoutes from './routes/supplierRoutes.js';
 import alkesRoutes from './routes/alkesRoutes.js';
 import pemesananRoutes from './routes/pemesananRoutes.js';
 import dashboardApotekRoutes from './routes/dashboardApotekRoutes.js';
-import reservasiRajalRoutes from './routes/reservasiRajalRoutes.js';
 import dashboardRajalRoutes from './routes/dashboardRajalRoutes.js';
 
 const NEXT_URL = process.env.NEXT_PUBLIC_URL;
@@ -120,7 +119,6 @@ app.use('/api/supplier', supplierRoutes);
 app.use('/api/alkes', alkesRoutes);
 app.use('/api/pemesanan', pemesananRoutes);
 app.use('/api/dashboard_apotek', dashboardApotekRoutes);
-app.use('/api/reservasi_rajal', reservasiRajalRoutes);
 app.use('/api/dashboard_rajal', dashboardRajalRoutes);
 
 export default app;

@@ -31,8 +31,8 @@ const TabelRawatJalan = ({ data, loading, onEdit, onDelete, onDetail }) => {
   const actionBody = (row) => (
     <div className="flex gap-2">
       <Button
-        label="Detail"
-        icon="pi pi-search"
+        label="Tindakan"
+        icon="pi pi-briefcase"
         size="small"
         onClick={() => onDetail(row)}
       />

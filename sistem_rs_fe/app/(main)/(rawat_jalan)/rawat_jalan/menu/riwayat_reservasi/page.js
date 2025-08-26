@@ -29,7 +29,7 @@ const Page = () => {
     try {
       setLoading(true);
       const token = Cookies.get('token');
-      const res = await axios.get(`${API_URL}/reservasi_rajal`, {
+      const res = await axios.get(`${API_URL}/reservasi`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
