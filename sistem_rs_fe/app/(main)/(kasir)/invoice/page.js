@@ -7,7 +7,6 @@ import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import FilterTanggal from '@/app/components/filterTanggal';
 import TabelInvoice from './components/tabelInvoice';
-import FormDialogInvoice from './components/formDialogInvoice';
 import HeaderBar from '@/app/components/headerbar';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -16,30 +15,14 @@ const Page = () => {
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [dialogVisible, setDialogVisible] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [pasienOptions, setPasienOptions] = useState([]);
-
-  const [form, setForm] = useState({
-    IDINVOICE: 0,
-    NOINVOICE: '',
-    NIK: '',
-    NAMAPASIEN: '',
-    TANGGALINVOICE: '',
-    TOTALTAGIHAN: 0,
-    TOTALDEPOSIT: 0,
-    TOTALANGSURAN: 0,
-    SISA_TAGIHAN: 0,
-    STATUS: 'BELUM_LUNAS',
-  });
 
   const toastRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
     fetchData();
-    fetchPasien();
   }, []);
 
   const fetchData = async () => {
@@ -52,21 +35,6 @@ const Page = () => {
       console.error('Gagal ambil data invoice:', err);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const fetchPasien = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/pasien`);
-      const options = res.data.data.map((pasien) => ({
-        label: `${pasien.NIK} - ${pasien.NAMALENGKAP}`,
-        value: pasien.NIK,
-        NAMALENGKAP: pasien.NAMALENGKAP,
-        ASURANSI: pasien.NAMAASURANSI || '-',
-      }));
-      setPasienOptions(options);
-    } catch (err) {
-      console.error('Gagal ambil data pasien:', err);
     }
   };
 
@@ -97,34 +65,6 @@ const Page = () => {
     setData(originalData);
   };
 
-  const handleSubmit = async () => {
-    if (!form.IDINVOICE) return;
-
-    const url = `${API_URL}/invoice/${form.IDINVOICE}`;
-    try {
-      const { NOINVOICE, NAMAPASIEN, ASURANSI, ...body } = form;
-      await axios.put(url, body);
-      toastRef.current?.showToast('00', 'Data berhasil diperbarui');
-      fetchData();
-      setDialogVisible(false);
-      resetForm();
-    } catch (err) {
-      console.error('Gagal simpan data invoice:', err);
-      toastRef.current?.showToast('01', 'Gagal menyimpan data');
-    }
-  };
-
-  const handleEdit = (row) => {
-    setForm({
-      ...row,
-      TANGGALINVOICE: row.TANGGALINVOICE?.split('T')[0] || '',
-      TOTALDEPOSIT: row.TOTALDEPOSIT || 0,
-      TOTALANGSURAN: row.TOTALANGSURAN || 0,
-      SISA_TAGIHAN: row.SISA_TAGIHAN || 0,
-    });
-    setDialogVisible(true);
-  };
-
   const handleDelete = (row) => {
     confirmDialog({
       message: `Hapus Invoice ${row.NOINVOICE}?`,
@@ -142,21 +82,6 @@ const Page = () => {
           toastRef.current?.showToast('01', 'Gagal menghapus data');
         }
       },
-    });
-  };
-
-  const resetForm = () => {
-    setForm({
-      IDINVOICE: 0,
-      NOINVOICE: '',
-      NIK: '',
-      NAMAPASIEN: '',
-      TANGGALINVOICE: '',
-      TOTALTAGIHAN: 0,
-      TOTALDEPOSIT: 0,
-      TOTALANGSURAN: 0,
-      SISA_TAGIHAN: 0,
-      STATUS: 'BELUM_LUNAS',
     });
   };
 
@@ -190,18 +115,6 @@ const Page = () => {
         onEdit={handleEdit}
         onDelete={handleDelete}
         onPrint={(row) => window.open(`/invoice/cetak/${row.IDINVOICE}`, '_blank')}
-      />
-
-      <FormDialogInvoice
-        visible={dialogVisible}
-        onHide={() => {
-          setDialogVisible(false);
-          resetForm();
-        }}
-        onSubmit={handleSubmit}
-        form={form}
-        setForm={setForm}
-        pasienOptions={pasienOptions}
       />
     </div>
   );

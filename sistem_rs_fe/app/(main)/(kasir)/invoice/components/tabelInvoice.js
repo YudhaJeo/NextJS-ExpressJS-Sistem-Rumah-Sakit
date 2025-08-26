@@ -22,7 +22,7 @@ const statusSeverity = {
   LUNAS: "success",
 };
 
-const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
+const TabelInvoice = ({ data, loading, onDelete }) => {
   const [adjustDialog, setAdjustDialog] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
@@ -52,13 +52,13 @@ const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
   );
 
   const asuransiBody = (rowData) => {
-    let severity = "warning"; // default kuning
+    let severity = "warning"; 
     const asuransi = rowData.ASURANSI?.toUpperCase() || "";
 
     if (asuransi.includes("BPJS")) {
-      severity = "success"; // hijau
+      severity = "success"; 
     } else if (asuransi === "UMUM") {
-      severity = "info"; // biru
+      severity = "info";
     }
 
     return <Tag value={rowData.ASURANSI} severity={severity} />;
@@ -71,7 +71,6 @@ const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
           icon="pi pi-sliders-h"
           className="p-button-sm p-button-warning"
           onClick={() => handleOpenAdjust(rowData)}
-          tooltip="Atur Margin"
         />
       )}
       <a
@@ -81,12 +80,6 @@ const TabelInvoice = ({ data, loading, onEdit, onDelete }) => {
       >
         <Button icon="pi pi-eye" className="p-button-sm"/>
       </a>
-      <Button
-        icon="pi pi-pencil"
-        size="small"
-        severity="warning"
-        onClick={() => onEdit(rowData)}
-      />
       <Button
         icon="pi pi-trash"
         size="small"
