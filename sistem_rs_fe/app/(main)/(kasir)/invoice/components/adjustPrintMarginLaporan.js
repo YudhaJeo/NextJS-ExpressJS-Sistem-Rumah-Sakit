@@ -45,6 +45,74 @@ export default function AdjustPrintMarginLaporan({
     setDataAdjust((prev) => ({ ...prev, [name]: e.value }));
   };
 
+  const addHeader = (doc, title, marginLeft, marginTop) => {
+    const pageWidth = doc.internal.pageSize.width;
+    const marginRight = parseFloat(dataAdjust.marginRight);
+
+    doc.setDrawColor(41, 128, 185);
+    doc.setLineWidth(0.5);
+    doc.line(marginLeft, marginTop - 2, pageWidth - marginRight, marginTop - 2);
+
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(41, 128, 185);
+    doc.text('RS BAYZA MEDICA', pageWidth / 2, marginTop + 8, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
+    doc.text('Jl. A. Yani No. 84, Kota Madiun, Jawa Timur | Telp: (0351) 876-9090', pageWidth / 2, marginTop + 14, { align: 'center' });
+
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(marginLeft, marginTop + 18, pageWidth - marginRight, marginTop + 18);
+
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
+    doc.text(title, pageWidth / 2, marginTop + 30, { align: 'center' });
+
+    return marginTop + 40;
+  };
+
+  const addSectionHeader = (doc, title, y, marginLeft) => {
+    doc.setFillColor(250, 250, 250);
+    doc.rect(marginLeft, y - 4, doc.internal.pageSize.width - marginLeft - parseFloat(dataAdjust.marginRight), 10, 'F');
+
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(41, 128, 185);
+    doc.text(title, marginLeft + 2, y + 2);
+
+    return y + 12;
+  };
+
+  const addInfoRow = (doc, label, value, y, marginLeft, labelWidth = 35) => {
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(80, 80, 80);
+    doc.text(label, marginLeft + 2, y);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
+    doc.text(`: ${value}`, marginLeft + labelWidth, y);
+
+    return y + 5;
+  };
+
+  const addSummaryRow = (doc, label, value, y, marginLeft, isTotal = false) => {
+    doc.setFontSize(isTotal ? 11 : 10);
+    doc.setFont('helvetica', isTotal ? 'bold' : 'normal');
+    doc.setTextColor(isTotal ? 41 : 80, isTotal ? 128 : 80, isTotal ? 185 : 80);
+    doc.text(label, marginLeft + 2, y);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(isTotal ? 41 : 0, isTotal ? 128 : 0, isTotal ? 185 : 0);
+    doc.text(`: ${value}`, marginLeft + 50, y);
+
+    return y + 6;
+  };
+
   async function exportPDF(detail, adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,
@@ -55,8 +123,9 @@ export default function AdjustPrintMarginLaporan({
     const marginLeft = parseFloat(adjustConfig.marginLeft);
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
+    const marginBottom = parseFloat(adjustConfig.marginBottom);
 
-    let y = marginTop + 10;
+    let y = marginTop + 8;
 
     const num = (v) => Number.isFinite(Number(v)) ? Number(v) : 0;
 
@@ -70,25 +139,15 @@ export default function AdjustPrintMarginLaporan({
 
     // ---------- RAWAT JALAN ----------
     if (detail.IDRIWAYATJALAN) {
-      doc.setFontSize(18);
-      doc.text('Detail Rawat Jalan', doc.internal.pageSize.width / 2, y, { align: 'center' });
+      let y = addHeader(doc, 'LAPORAN RAWAT JALAN', marginLeft, marginTop);
       y += 5;
 
-      const labelX1 = marginLeft;
-      const valueX1 = marginLeft + 35;
+      y = addSectionHeader(doc, 'INFORMASI PASIEN', y, marginLeft);
+      y = addInfoRow(doc, 'Nama Pasien', detail.NAMAPASIEN, y, marginLeft);
+      y = addInfoRow(doc, 'Tanggal Rawat', formatTanggal(detail.TANGGALRAWATJALAN), y, marginLeft);
+      y += 5;
 
-      doc.setFontSize(12);
-      doc.text('Informasi Pasien', labelX1, y);
-      y += 6;
-
-      doc.setFontSize(10);
-      doc.text('Nama Pasien', labelX1, y);
-      doc.text(`: ${detail.NAMAPASIEN}`, valueX1, y);
-      y += 6;
-
-      doc.text('Tanggal Rawat', labelX1, y);
-      doc.text(`: ${formatTanggal(detail.TANGGALRAWATJALAN)}`, valueX1, y);
-      y += 10;
+      y = addSectionHeader(doc, 'RINCIAN LAYANAN', y, marginLeft);
 
       const servicesRJ = [];
       let noRJ = 1;
@@ -110,69 +169,60 @@ export default function AdjustPrintMarginLaporan({
         startY: y,
         head: [['#', 'Layanan', 'Satuan/Kategori', 'Qty', 'Jenis', 'Harga Satuan', 'Total']],
         body: servicesRJ,
-        styles: { fontSize: 9 },
-        headStyles: { fillColor: [41, 128, 185], halign: 'center', fontStyle: 'bold' },
+        styles: {
+          fontSize: 9,
+          cellPadding: 3,
+          lineColor: [200, 200, 200],
+          lineWidth: 0.1,
+        },
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+          halign: 'center',
+          fontStyle: 'bold',
+          fontSize: 10
+        },
+        alternateRowStyles: { fillColor: [248, 249, 250] },
+        columnStyles: {
+          0: { halign: 'center', cellWidth: 10 },
+          3: { halign: 'center', cellWidth: 15 },
+          5: { halign: 'right', cellWidth: 25 },
+          6: { halign: 'right', cellWidth: 25 }
+        },
         margin: { left: marginLeft, right: marginRight },
       });
 
       let yAfterRJ = doc.lastAutoTable.finalY + 10;
 
-      doc.setFontSize(12);
-      doc.text('Ringkasan Biaya', marginLeft, yAfterRJ);
-      yAfterRJ += 6;
+      y = addSectionHeader(doc, 'RINGKASAN BIAYA', yAfterRJ, marginLeft);
 
-      [
-        ['Total Tindakan Jalan', totalTindakanRJ, true],
-        ['Total Biaya Rawat Jalan', detail.TOTALBIAYAJALAN, true]
-      ].forEach(([label, val, isCurrency]) => {
-        doc.setFontSize(10);
-        doc.text(label, marginLeft, yAfterRJ);
-        doc.text(
-          isCurrency ? formatRupiah(val) : String(val),
-          doc.internal.pageSize.width - marginRight,
-          yAfterRJ,
-          { align: 'right' }
-        );
-        yAfterRJ += 6;
-      });
+      y = addSummaryRow(doc, 'Total Tindakan Jalan', formatRupiah(totalTindakanRJ), y, marginLeft);
+      y = addSummaryRow(doc, 'Total Biaya Rawat Jalan', formatRupiah(detail.TOTALBIAYAJALAN), y, marginLeft, true);
 
-      y = yAfterRJ + 10;
+      y = y + 10;
     }
 
     // ---------- RAWAT INAP ----------
     if (detail.IDRIWAYATINAP) {
-      doc.setFontSize(18);
-      doc.text('Detail Rawat Inap', doc.internal.pageSize.width / 2, y, { align: 'center' });
-      let yInap = y + 10;
+      if (detail.IDRIWAYATJALAN) {
+        doc.addPage();
+        y = marginTop;
+      }
 
-      const labelX2 = marginLeft;
-      const valueX2 = marginLeft + 25;
+      y = addHeader(doc, 'LAPORAN RAWAT INAP', marginLeft, y);
+      y += 5;
 
-      doc.setFontSize(12);
-      doc.text('Informasi Pasien', labelX2, yInap);
-      yInap += 6;
+      y = addSectionHeader(doc, 'INFORMASI PASIEN', y, marginLeft);
+      y = addInfoRow(doc, 'Nama Pasien', detail.NAMAPASIEN ?? '-', y, marginLeft);
+      y = addInfoRow(doc, 'Nomor Bed', detail.NOMORBED ?? '-', y, marginLeft);
+      y += 5;
 
-      doc.setFontSize(10);
-      doc.text('Nama Pasien', labelX2, yInap);
-      doc.text(`: ${detail.NAMAPASIEN ?? '-'}`, valueX2 - 2, yInap);
-      yInap += 6;
+      y = addSectionHeader(doc, 'PERIODE RAWAT INAP', y, marginLeft);
+      y = addInfoRow(doc, 'Tanggal Masuk', formatTanggal(detail.TANGGALMASUK), y, marginLeft);
+      y = addInfoRow(doc, 'Tanggal Keluar', formatTanggal(detail.TANGGALKELUAR), y, marginLeft);
+      y += 5;
 
-      doc.text('Nomor Bed', labelX2, yInap);
-      doc.text(`: ${detail.NOMORBED ?? '-'}`, valueX2 - 2, yInap);
-      yInap += 10;
-
-      doc.setFontSize(12);
-      doc.text('Periode Rawat Inap', labelX2, yInap);
-      yInap += 6;
-
-      doc.setFontSize(10);
-      doc.text('Masuk', labelX2, yInap);
-      doc.text(`: ${formatTanggal(detail.TANGGALMASUK)}`, valueX2 - 2, yInap);
-      yInap += 6;
-
-      doc.text('Keluar', labelX2, yInap);
-      doc.text(`: ${formatTanggal(detail.TANGGALKELUAR)}`, valueX2 - 2, yInap);
-      yInap += 10;
+      y = addSectionHeader(doc, 'RINCIAN LAYANAN', y, marginLeft);
 
       const servicesInp = [];
       servicesInp.push([
@@ -210,90 +260,132 @@ export default function AdjustPrintMarginLaporan({
       });
 
       autoTable(doc, {
-        startY: yInap,
+        startY: y,
         head: [['#', 'Layanan', 'Satuan/Kategori', 'Qty', 'Jenis', 'Harga Satuan', 'Total']],
         body: servicesInp,
-        styles: { fontSize: 9 },
-        headStyles: { fillColor: [41, 128, 185], halign: 'center', fontStyle: 'bold' },
+        styles: {
+          fontSize: 9,
+          cellPadding: 3,
+          lineColor: [200, 200, 200],
+          lineWidth: 0.1,
+        },
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: 255,
+          halign: 'center',
+          fontStyle: 'bold',
+          fontSize: 10
+        },
+        alternateRowStyles: { fillColor: [248, 249, 250] },
+        columnStyles: {
+          0: { halign: 'center', cellWidth: 10 },
+          3: { halign: 'center', cellWidth: 15 },
+          5: { halign: 'right', cellWidth: 25 },
+          6: { halign: 'right', cellWidth: 25 }
+        },
         margin: { left: marginLeft, right: marginRight },
       });
 
       let yAfterInv = doc.lastAutoTable.finalY + 10;
 
-      doc.setFontSize(12);
-      doc.text('Ringkasan Biaya', marginLeft, yAfterInv);
-      yAfterInv += 6;
+      let ySummary = addSectionHeader(doc, 'RINGKASAN BIAYA', yAfterInv, marginLeft);
 
       const summary = [
         ['Biaya Kamar', detail.TOTALKAMAR],
         ['Total Obat', detail.TOTALOBAT],
         ['Total Tindakan', detail.TOTALTINDAKAN],
-        ['Total Biaya', detail.TOTALBIAYA],
+        ['TOTAL BIAYA', detail.TOTALBIAYA],
       ];
 
-      summary.forEach(([label, val]) => {
-        doc.setFontSize(10);
-        doc.text(label, marginLeft, yAfterInv);
-        doc.text(formatRupiah(val), doc.internal.pageSize.width - marginRight, yAfterInv, { align: 'right' });
-        yAfterInv += 6;
+      summary.forEach(([label, val], index) => {
+        const isTotal = index === summary.length - 1; // Last item is total
+        ySummary = addSummaryRow(doc, label, formatRupiah(val), ySummary, marginLeft, isTotal);
       });
 
-      y = yAfterInv + 10;
+      y = ySummary + 10;
     }
 
     // ---------- INVOICE ----------
     if (detail.NOINVOICE) {
-      if (detail.IDRIWAYATJALAN || detail.IDRIWAYATINAP) doc.addPage();
+      if (detail.IDRIWAYATJALAN || detail.IDRIWAYATINAP) {
+        doc.addPage();
+        y = marginTop;
+      }
 
-      const pageWidth = doc.internal.pageSize.width;
-      let yInv = marginTop + 10;
+      y = addHeader(doc, 'INVOICE PEMBAYARAN', marginLeft, y);
+      y += 5;
 
-      doc.setFontSize(18);
-      doc.text('Detail Invoice', pageWidth / 2, yInv, { align: 'center' });
-      yInv += 10;
+      y = addSectionHeader(doc, 'INFORMASI INVOICE', y, marginLeft);
 
-      const labelX = marginLeft;
-      const valueX = marginLeft + 40;
-
-      doc.setFontSize(12);
-      doc.text('Informasi Invoice', labelX, yInv);
-      yInv += 6;
-
-      doc.setFontSize(10);
-      [
+      const invoiceInfo = [
         ['No Invoice', detail.NOINVOICE ?? '-'],
         ['Nama Pasien', detail.NAMAPASIEN ?? '-'],
         ['NIK', detail.NIK ?? '-'],
         ['Asuransi', detail.ASURANSI ?? '-'],
         ['Tanggal Invoice', formatTanggal(detail.TANGGALINVOICE)],
         ['Status', detail.STATUS ?? detail.status ?? '-'],
-      ].forEach(([label, val]) => {
-        doc.text(label, labelX, yInv);
-        doc.text(`: ${val}`, valueX, yInv);
-        yInv += 6;
+      ];
+
+      invoiceInfo.forEach(([label, val]) => {
+        y = addInfoRow(doc, label, val, y, marginLeft, 40);
       });
 
-      yInv += 4;
+      y += 5;
+
+      y = addSectionHeader(doc, 'RINCIAN PEMBAYARAN', y, marginLeft);
+
+      const paymentData = [
+        ['Total Tagihan', formatRupiah(detail.TOTALTAGIHAN)],
+        ['Total Deposit', formatRupiah(detail.TOTALDEPOSIT)],
+        ['Total Angsuran', formatRupiah(detail.TOTALANGSURAN)],
+        ['Sisa Tagihan', formatRupiah(detail.SISA_TAGIHAN)],
+      ];
 
       autoTable(doc, {
-        startY: yInv,
+        startY: y, 
         head: [['Keterangan', 'Nominal']],
-        body: [
-          ['Total Tagihan', formatRupiah(detail.TOTALTAGIHAN)],
-          ['Total Deposit', formatRupiah(detail.TOTALDEPOSIT)],
-          ['Total Angsuran', formatRupiah(detail.TOTALANGSURAN)],
-          ['Sisa Tagihan', formatRupiah(detail.SISA_TAGIHAN)],
-        ],
-        styles: { fontSize: 9 },
-        headStyles: { fillColor: [41, 128, 185], halign: 'center', fontStyle: 'bold' },
-        columnStyles: { 0: { halign: 'left' }, 1: { halign: 'right' } },
+        body: paymentData,
+        styles: {
+          fontSize: 11,
+          cellPadding: 3,
+          lineColor: [200, 200, 200],
+          lineWidth: 0.1,
+          halign: 'left',
+          fillColor: [245, 245, 245] 
+        },
+        headStyles: {
+          fillColor: [41, 128, 185],
+          textColor: [255, 255, 255],
+          halign: 'center',
+          fontStyle: 'bold'
+        },
+        columnStyles: {
+          0: { fontStyle: 'bold', halign: 'left', cellWidth: 60 },
+          1: { halign: 'right', fontStyle: 'bold', textColor: [41, 128, 185] }
+        },
         margin: { left: marginLeft, right: marginRight },
+        tableWidth: 'auto',
+        didParseCell: function (data) {
+          if (data.section === 'body' && data.row.index === paymentData.length - 1) {
+            data.cell.styles.fillColor = [220, 53, 69];
+            data.cell.styles.textColor = [255, 255, 255];
+            data.cell.styles.fontSize = 12;
+            data.cell.styles.fontStyle = 'bold';
+          }
+        }
       });
 
-      const yEnd = doc.lastAutoTable.finalY + 10;
+      const yEnd = doc.lastAutoTable.finalY + 20;
+
+      doc.setDrawColor(41, 128, 185);
+      doc.setLineWidth(0.3);
+      doc.line(marginLeft, yEnd - 5, doc.internal.pageSize.width - marginRight, yEnd - 5);
+
       doc.setFontSize(9);
-      doc.text('Terima kasih atas kepercayaan anda menggunakan layanan kami.',
-        pageWidth / 2, yEnd, { align: 'center' });
+      doc.setFont('helvetica', 'italic');
+      doc.setTextColor(100, 100, 100);
+      doc.text('Terima kasih atas kepercayaan Anda menggunakan layanan kami.',
+        doc.internal.pageSize.width / 2, yEnd + 2, { align: 'center' });
     }
 
     return doc.output('datauristring');
