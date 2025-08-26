@@ -21,7 +21,7 @@ export default function TabelKalender({ refresh }) {
 
   const fetchKalender = async () => {
     try {
-      const res = await axios.get(`${API_URL}/reservasi_rajal`);
+      const res = await axios.get(`${API_URL}/reservasi`);
 
       // Filter hanya status "dikonfirmasi"
       const filteredData = res.data.filter(item => item.STATUS?.toLowerCase() === 'dikonfirmasi');
