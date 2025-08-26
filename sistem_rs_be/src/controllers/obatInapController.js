@@ -34,12 +34,12 @@ export async function insertObatInap(req, res) {
     } = req.body;
 
     if (!IDRAWATINAP || !IDOBAT || !IDTENAGAMEDIS || !WAKTUPEMBERIAN || !JUMLAH || !HARGA || !TOTAL) {
-      return res.status(400).json({ error: 'Semua field wajib diisi' });
+      return res.status(400).json({ status: 'error', message: 'Semua field wajib diisi' });
     }
 
     const formattedWaktu = dayjs(WAKTUPEMBERIAN).format('YYYY-MM-DD HH:mm:ss');
 
-    await ObatInap.create({
+    const result = await ObatInap.create({
       IDRAWATINAP,
       IDOBAT,
       IDTENAGAMEDIS,
@@ -49,10 +49,14 @@ export async function insertObatInap(req, res) {
       TOTAL,
     });
 
-    res.json({ message: 'Data obat inap berhasil ditambahkan' });
+    if (result.status === 'error') {
+      return res.status(400).json(result);
+    }
+
+    res.json(result);
   } catch (err) {
     console.error("Insert Obat Inap Error:", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ status: 'error', message: err.message });
   }
 }
 
@@ -60,12 +64,14 @@ export async function deleteObatInap(req, res) {
   try {
     const id = req.params.id;
 
-    const existing = await ObatInap.getById(id);
-    if (!existing) return res.status(404).json({ error: 'Data tidak ditemukan' });
+    const result = await ObatInap.remove(id);
 
-    await ObatInap.remove(id);
-    res.json({ message: 'Data berhasil dihapus' });
+    if (result.status === 'error') {
+      return res.status(404).json(result);
+    }
+
+    res.json(result);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ status: 'error', message: err.message });
   }
 }

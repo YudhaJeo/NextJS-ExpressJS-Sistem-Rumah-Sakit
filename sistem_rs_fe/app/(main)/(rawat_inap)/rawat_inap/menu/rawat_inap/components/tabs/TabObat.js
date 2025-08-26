@@ -83,12 +83,40 @@ const TabObat = ({ tenagaMedisOptions, statusRawat }) => {
     };
 
     try {
-      await axios.post(`${API_URL}/obat_inap`, payload);
-      toast.current.show({ severity: 'success', summary: 'Berhasil', detail: 'Data obat berhasil ditambahkan', life: 3000 });
-      fetchData(idRawatInap);
-      setNewItem({ WAKTUPEMBERIAN: null, IDTENAGAMEDIS: null, IDOBAT: null, JUMLAH: 1, HARGA: 0, TOTAL: 0 });
+      const res = await axios.post(`${API_URL}/obat_inap`, payload);
+    
+      if (res.data.status === 'success') {
+        toast.current.show({ 
+          severity: 'success', 
+          summary: 'Berhasil', 
+          detail: res.data.message, 
+          life: 3000 
+        });
+    
+        fetchData(idRawatInap);
+        setNewItem({ 
+          WAKTUPEMBERIAN: null, 
+          IDTENAGAMEDIS: null, 
+          IDOBAT: null, 
+          JUMLAH: 1, 
+          HARGA: 0, 
+          TOTAL: 0 
+        });
+      } else {
+        toast.current.show({ 
+          severity: 'warn', 
+          summary: 'Peringatan', 
+          detail: res.data.message, 
+          life: 3000 
+        });
+      }
     } catch (err) {
-      toast.current.show({ severity: 'error', summary: 'Gagal', detail: 'Gagal tambah data', life: 3000 });
+      toast.current.show({ 
+        severity: 'error', 
+        summary: 'Error', 
+        detail: err.response?.data?.message || 'Terjadi kesalahan server', 
+        life: 3000 
+      });
       console.error('Gagal tambah data:', err);
     }
   };
