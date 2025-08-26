@@ -91,7 +91,6 @@ const AppMenu = () => {
                 icon: "pi pi-fw pi-chart-bar",
                 items: [
                   { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/riwayat_kunjungan" },
-                  { label: "Histori Transaksi", icon: "pi pi-fw pi-history", to: "/laporan/histori_transaksi" },
                 ],
               },
             ],
