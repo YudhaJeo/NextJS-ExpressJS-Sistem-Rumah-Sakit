@@ -33,8 +33,48 @@ export const getByRawatInapId = (idRawatInap) =>
       'master_tenaga_medis.NAMALENGKAP as NAMATENAGAMEDIS'
     );
 
-export const create = (data) =>
-  db('obat_inap').insert(data);
+export const create = async (data) => {
+  return db.transaction(async (trx) => {
+    const obat = await trx('obat')
+      .where({ IDOBAT: data.IDOBAT })
+      .select('STOK')
+      .first();
 
-export const remove = (id) =>
-  db('obat_inap').where({ IDOBATINAP: id }).delete();
+    if (!obat) {
+      return { status: 'error', message: 'Obat tidak ditemukan' };
+    }
+
+    if (obat.STOK <= 0) {
+      return { status: 'error', message: 'Stok obat kosong, tidak bisa ditambahkan ke obat inap' };
+    }
+
+    if (obat.STOK < data.JUMLAH) {
+      return { status: 'error', message: `Stok obat hanya tersisa ${obat.STOK}, tidak mencukupi` };
+    }
+
+    const [insertedId] = await trx('obat_inap').insert(data);
+
+    await trx('obat')
+      .where({ IDOBAT: data.IDOBAT })
+      .decrement('STOK', data.JUMLAH);
+
+    return { status: 'success', message: 'Obat inap berhasil ditambahkan', id: insertedId };
+  });
+};
+
+export const remove = async (id) => {
+  return db.transaction(async (trx) => {
+    const obatInap = await trx('obat_inap').where({ IDOBATINAP: id }).first();
+    if (!obatInap) {
+      return { status: 'error', message: 'Data obat inap tidak ditemukan' };
+    }
+
+    await trx('obat_inap').where({ IDOBATINAP: id }).delete();
+
+    await trx('obat')
+      .where({ IDOBAT: obatInap.IDOBAT })
+      .increment('STOK', obatInap.JUMLAH);
+
+    return { status: 'success', message: 'Data obat inap berhasil dihapus' };
+  });
+};
