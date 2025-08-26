@@ -31,6 +31,7 @@ const ReservasiPasienPage = () => {
     IDPOLI: '',
     IDDOKTER: '',
     TANGGALRESERVASI: '',
+    JAMRESERVASI: '',
     KETERANGAN: '',
     STATUS: 'Menunggu',
   });
@@ -113,16 +114,33 @@ const ReservasiPasienPage = () => {
     try {
       const res = await axios.get(`${API_URL}/dokter`);
 
-      const options = res.data.map((dokter) => ({
-        label: `${dokter.NAMALENGKAP} (${dokter.JADWALPRAKTEK || 'Jadwal tidak tersedia'})`,
-        value: dokter.IDDOKTER,
-        IDPOLI: dokter.IDPOLI,
-      }));
+      const options = res.data.map((dokter) => {
+        let jadwal = [];
+
+        if (typeof dokter.JADWALPRAKTEK === "string") {
+          jadwal = dokter.JADWALPRAKTEK
+            .split(",")
+            .map((j) => j.trim())
+            .filter(Boolean);
+        }
+
+        else if (Array.isArray(dokter.JADWALPRAKTEK)) {
+          jadwal = dokter.JADWALPRAKTEK;
+        }
+
+        return {
+          label: dokter.NAMALENGKAP,
+          value: dokter.IDDOKTER,
+          IDPOLI: dokter.IDPOLI,
+          NAMALENGKAP: dokter.NAMALENGKAP,
+          JADWALPRAKTEK: jadwal,
+        };
+      });
 
       setDokterOptions(options);
       setAllDokterOptions(options);
     } catch (err) {
-      console.error('Gagal ambil data poli:', err);
+      console.error("Gagal ambil data dokter:", err);
     }
   };
 
@@ -147,6 +165,7 @@ const ReservasiPasienPage = () => {
     if (!formData.TANGGALRESERVASI.trim()) newErrors.TANGGALRESERVASI = <span style={{ color: 'red' }}>Tanggal Reservasi wajib diisi</span>;
     if (!formData.IDPOLI) newErrors.IDPOLI = <span style={{ color: 'red' }}>Poli wajib dipilih</span>;
     if (!formData.IDDOKTER) newErrors.IDDOKTER = <span style={{ color: 'red' }}>Dokter wajib dipilih</span>;
+    if (!formData.JAMRESERVASI) newErrors.JAMRESERVASI = <span style={{ color: 'red' }}>Jam wajib dipilih</span>;
     if (!formData.KETERANGAN.trim()) newErrors.KETERANGAN = <span style={{ color: 'red' }}>Keluhan wajib dipilih</span>;
     if (!formData.STATUS.trim()) newErrors.STATUS = <span style={{ color: 'red' }}>Status wajib dipilih</span>;
 
@@ -242,7 +261,7 @@ const ReservasiPasienPage = () => {
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
 
-      <h3 className="text-xl font-semibold mb-3">Reservasi Rawat Jalan</h3>
+      <h3 className="text-xl font-semibold mb-3">Reservasi Pasien</h3>
       <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
         <FilterTanggal
           startDate={startDate}

@@ -9,6 +9,26 @@ export const getDashboardInfo = async () => {
     const bedTerisi = await db('bed').where('STATUS', 'TERISI').count('* as total');
     const totalBed = await db('bed').count('* as total');
 
+    const jumlahReservasi = await db('reservasi')
+      .join('pasien', 'reservasi.NIK', 'pasien.NIK')
+    .join('poli', 'reservasi.IDPOLI', 'poli.IDPOLI')
+    .join('dokter', 'reservasi.IDDOKTER', 'dokter.IDDOKTER')
+    .leftJoin('jadwal_dokter', 'dokter.IDDOKTER', 'jadwal_dokter.IDDOKTER')
+    .leftJoin('master_tenaga_medis', 'dokter.IDTENAGAMEDIS', 'master_tenaga_medis.IDTENAGAMEDIS')
+    .select(
+      'reservasi.*',
+      'pasien.NAMALENGKAP',
+      'poli.NAMAPOLI',
+      'dokter.IDDOKTER',
+      'master_tenaga_medis.NAMALENGKAP as NAMADOKTER',
+      'reservasi.TANGGALRESERVASI',
+      'reservasi.JAMRESERVASI',
+      'reservasi.STATUS',
+    )
+    .orderBy('TANGGALRESERVASI', 'asc')
+    .limit(10);  
+
+
     // --- Ambil data kalender dokter ---
     const kalenderDokter = await db('kalender')
       .join('dokter', 'kalender.IDDOKTER', 'dokter.IDDOKTER')
@@ -117,7 +137,8 @@ const trend = {
       trend,                // Line Chart
       distribusi,           // Pie Chart
       bed,                  // Doughnut Chart
-      kalender: kalenderDokter
+      kalender: kalenderDokter,
+      reservasi: jumlahReservasi
     };
   } catch (error) {
     console.error('Error getDashboardInfo:', error);

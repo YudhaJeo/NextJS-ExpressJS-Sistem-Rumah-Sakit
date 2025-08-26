@@ -5,6 +5,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
+import { Tag } from 'primereact/tag';
 
 const URL_API = process.env.NEXT_PUBLIC_URL;
 
@@ -21,6 +22,25 @@ const TabelRawatJalan = ({ data, loading, onEdit, onDelete, onDetail }) => {
       month: 'long',
       year: 'numeric',
     });
+  };
+
+  const getSeverity = (status) => {
+    switch (status) {
+        case 'Selesai':
+            return 'success';
+        case 'Dalam Antrian':
+            return 'info';
+        case 'Diperiksa':
+            return 'warning';
+        case 'Batal':
+            return 'danger';
+        default:
+            return null;
+    }
+  };
+
+  const statusKunjunganTemplate = (rowData) => {
+      return <Tag value={rowData.STATUSKUNJUNGAN} severity={getSeverity(rowData.STATUSKUNJUNGAN)} />;
   };
 
   const handlePreview = (src) => {
@@ -72,7 +92,6 @@ const TabelRawatJalan = ({ data, loading, onEdit, onDelete, onDetail }) => {
         />
         <Column field="KELUHAN" header="Keluhan" />
         <Column field="POLI" header="Poli" />
-        <Column field="STATUSKUNJUNGAN" header="Status Kunjungan" />
         <Column field="NAMADOKTER" header="Dokter" />
         <Column field="STATUSRAWAT" header="Status Rawat" />
         <Column field="DIAGNOSA" header="Diagnosa" />
@@ -98,6 +117,11 @@ const TabelRawatJalan = ({ data, loading, onEdit, onDelete, onDetail }) => {
               )
             }
           />
+        <Column
+          field="STATUSKUNJUNGAN"
+          header="Status Kunjungan"
+          body={statusKunjunganTemplate}
+      />
         <Column header="Aksi" body={actionBody} style={{ width: "220px" }} />
       </DataTable>
 

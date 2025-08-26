@@ -29,7 +29,7 @@ const TabelReservasiPasien = ({ data, loading, onEdit, onDelete }) => {
       />
       <Column field="NAMAPOLI" header="Poli" />
       <Column field="NAMADOKTER" header="Nama Dokter" />
-      <Column field="JADWAL_PRAKTEK_HARI_INI" header="Jam" />
+      <Column field="JAMRESERVASI" header="Jam" />
       <Column field="KETERANGAN" header="Keluhan" />
       <Column
         header="Status"

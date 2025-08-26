@@ -6,14 +6,15 @@ import { Chart } from 'primereact/chart';
 import { Tag } from 'primereact/tag';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { TabView, TabPanel } from 'primereact/tabview';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Dashboard = () => {
   const [data, setData] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [barChartData, setBarChartData] = useState({});
   const [barChartOptions, setBarChartOptions] = useState({});
   const [lineChartData, setLineChartData] = useState({});
@@ -32,9 +33,10 @@ const Dashboard = () => {
         setData(resData);
 
         const style = getComputedStyle(document.documentElement);
+
+        // --- Chart Configuration (sama seperti sebelumnya) ---
         const labels = resData.chart?.labels ?? [];
         const values = resData.chart?.datasets?.[0]?.data ?? [];
-
         const backgroundColors = [
           'rgba(179, 59, 255, 0.5)',
           'rgba(255, 204, 0, 0.5)',
@@ -99,29 +101,25 @@ const Dashboard = () => {
 
         const poliLabels = resData.distribusi?.labels ?? ['Umum', 'Gigi', 'Anak', 'Bedah'];
         const poliValues = resData.distribusi?.data ?? [10, 5, 7, 3];
-
-        // warna transparan (rgba)
         const poliColors = [
-          'rgba(255, 99, 132, 0.6)',   // merah transparan
-          'rgba(54, 162, 235, 0.6)',   // biru transparan
-          'rgba(255, 206, 86, 0.6)',   // kuning transparan
-          'rgba(75, 192, 192, 0.6)',   // hijau transparan
-          'rgba(153, 102, 255, 0.6)',  // ungu transparan
-          'rgba(255, 159, 64, 0.6)',   // oranye transparan
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(54, 162, 235, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(75, 192, 192, 0.6)',
+          'rgba(153, 102, 255, 0.6)',
+          'rgba(255, 159, 64, 0.6)',
         ];
-
         setPoliChartData({
           labels: poliLabels,
           datasets: [
             {
               data: poliValues,
               backgroundColor: poliLabels.map((_, i) => poliColors[i % poliColors.length]),
-              borderColor: poliLabels.map((_, i) => poliColors[i % poliColors.length].replace('0.6', '1')), // versi solid utk border
+              borderColor: poliLabels.map((_, i) => poliColors[i % poliColors.length].replace('0.6', '1')),
               borderWidth: 1,
             },
           ],
         });
-
         setPoliChartOptions({
           plugins: { legend: { position: 'bottom', labels: { color: style.getPropertyValue('--text-color') } } },
           scales: {
@@ -167,11 +165,10 @@ const Dashboard = () => {
 
   return (
     <div className="grid">
-      {/* Header */}
-      <div className="card col-12">
+      <div className="card col-12 mb-2">
         <div className="flex justify-content-center md:justify-content-between align-items-center">
           <h1 className="text-xl font-semibold mb-3 text-center md:text-left flex-1">
-            Rumah Sakit Bayza Medika
+            Rumah Sakit Bayza Medica
           </h1>
           <span className="text-sm font-bold text-700">
             {new Date().toLocaleDateString('id-ID', {
@@ -184,134 +181,188 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Summary Cards */}
-      {cards.map((card, i) => (
-        <div className="col-12 md:col-6 xl:col-3" key={i}>
-          <Card className="shadow-md" style={{ borderTop: `4px solid ${card.border}` }}>
-            <div className="flex justify-content-between">
-              <div>
-                <span className="block text-500 mb-2">{card.title}</span>
-                <span className="text-900 font-bold text-xl md:text-2xl">{card.value}</span>
-              </div>
-              <div>
-                <div
-                  className="flex align-items-center justify-content-center border-round"
-                  style={{
-                    background: card.background,
-                    width: '2.5rem',
-                    height: '2.5rem',
-                  }}
-                >
-                  <i className={`${card.icon} text-xl`} />
-                </div>
-                <Tag value="Live" severity="info" />
-              </div>
-            </div>
-          </Card>
-        </div>
-      ))}
-
-      {/* Grafik Tren */}
-      <div className="col-12 md:col-6">
-        <Card>
-          <div className="flex justify-content-between mb-3">
-            <span className="font-medium text-lg text-900">Tren Pasien & Dokter</span>
-            <Tag value="Live" severity="info" />
-          </div>
-          <Chart type="line" data={lineChartData} options={lineChartOptions} className="w-full" />
-        </Card>
-      </div>
-
-      {/* Statistik Umum (Bar) */}
-      <div className="col-12 md:col-6">
-        <Card>
-          <div className="flex justify-content-between mb-3">
-            <span className="font-medium text-lg text-900">Statistik Umum</span>
-            <Tag value="Live" severity="info" />
-          </div>
-          <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
-        </Card>
-      </div>
-
-      {/* Distribusi Pasien per Poli (PolarArea) */}
-      <div className="col-12 md:col-6">
-        <Card>
-          <div className="flex justify-content-between mb-3">
-            <span className="font-medium text-lg text-900">Distribusi Pasien per Poli</span>
-            <Tag value="Live" severity="info" />
-          </div>
-          <Chart type="polarArea" data={poliChartData} options={poliChartOptions} className="w-full" />
-        </Card>
-      </div>
-
-      {/* Bed Occupancy */}
-      <div className="col-12 md:col-6">
-        <Card>
-          <div className="flex justify-content-between mb-3">
-            <span className="font-medium text-lg text-900">Statistik Bed</span>
-            <Tag value="Live" severity="info" />
-          </div>
-          <Chart type="doughnut" data={bedChartData} options={bedChartOptions} className="w-full" />
-        </Card>
-      </div>
-
-      {/* Data Terkini */}
-      {data?.table && (
-        <div className="col-12">
-          <Card>
-            <div className="flex justify-content-between mb-3">
-              <span className="font-medium text-lg text-900">Data Terkini</span>
-              <Tag value="Live" severity="info" />
-            </div>
-            <DataTable value={data.table} paginator rows={5} responsiveLayout="scroll">
-              {Object.keys(data.table[0] || {}).map((field, idx) => (
-                <Column key={idx} field={field} header={field.toUpperCase()} sortable />
-              ))}
-            </DataTable>
-          </Card>
-        </div>
-      )}
-
-      {/* Kalender Dokter */}
       <div className="col-12">
-        <Card>
-          <div className="flex justify-content-between mb-3">
-            <span className="font-medium text-lg text-900">Kalender Dokter</span>
-            <Tag value="Live" severity="info" />
-          </div>
-          <DataTable value={data?.kalender ?? []} paginator rows={3} responsiveLayout="scroll">
-            <Column field="NAMA_DOKTER" header="Nama Dokter" sortable />
-            <Column
-              field="TANGGAL"
-              header="Tanggal"
-              sortable
-              body={(rowData) => {
-                const date = new Date(rowData.TANGGAL);
-                return date.toLocaleDateString('id-ID', {
-                  day: '2-digit',
-                  month: 'long',
-                  year: 'numeric',
-                });
-              }}
-            />
-            <Column
-              field="STATUS"
-              header="Status"
-              sortable
-              body={(rowData) => {
-                switch (rowData.STATUS) {
-                  case 'info':
-                    return <Tag severity="info" value="perjanjian" />;
-                  case 'warning':
-                    return <Tag severity="warning" value="libur" />;
-                  default:
-                    return <Tag severity="secondary" value={rowData.STATUS} />;
-                }
-              }}
-            />
-            <Column field="KETERANGAN" header="Keterangan" />
-          </DataTable>
-        </Card>
+        <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
+          {/* TAB 1 - Statistik & Cards */}
+          <TabPanel header="Statistik & Ringkasan">
+            <div className="grid">
+              {cards.map((card, i) => (
+                <div className="col-12 md:col-6 xl:col-3" key={i}>
+                  <Card className="shadow-md" style={{ borderTop: `4px solid ${card.border}` }}>
+                    <div className="flex justify-content-between">
+                      <div>
+                        <span className="block text-500 mb-2">{card.title}</span>
+                        <span className="text-900 font-bold text-xl md:text-2xl">{card.value}</span>
+                      </div>
+                      <div>
+                        <div
+                          className="flex align-items-center justify-content-center border-round"
+                          style={{
+                            background: card.background,
+                            width: '2.5rem',
+                            height: '2.5rem',
+                          }}
+                        >
+                          <i className={`${card.icon} text-xl`} />
+                        </div>
+                        <Tag value="Live" severity="info" />
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+              ))}
+
+              <div className="col-12 md:col-6">
+                <Card>
+                  <div className="flex justify-content-between mb-3">
+                    <span className="font-medium text-lg text-900">Tren Pasien & Dokter</span>
+                    <Tag value="Live" severity="info" />
+                  </div>
+                  <Chart type="line" data={lineChartData} options={lineChartOptions} className="w-full" />
+                </Card>
+              </div>
+
+              <div className="col-12 md:col-6">
+                <Card>
+                  <div className="flex justify-content-between mb-3">
+                    <span className="font-medium text-lg text-900">Statistik Umum</span>
+                    <Tag value="Live" severity="info" />
+                  </div>
+                  <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
+                </Card>
+              </div>
+
+              <div className="col-12 md:col-6">
+                <Card>
+                  <div className="flex justify-content-between mb-3">
+                    <span className="font-medium text-lg text-900">Distribusi Pasien per Poli</span>
+                    <Tag value="Live" severity="info" />
+                  </div>
+                  <Chart type="polarArea" data={poliChartData} options={poliChartOptions} className="w-full" />
+                </Card>
+              </div>
+
+              <div className="col-12 md:col-6">
+                <Card>
+                  <div className="flex justify-content-between mb-3">
+                    <span className="font-medium text-lg text-900">Statistik Bed</span>
+                    <Tag value="Live" severity="info" />
+                  </div>
+                  <Chart type="doughnut" data={bedChartData} options={bedChartOptions} className="w-full" />
+                </Card>
+              </div>
+            </div>
+          </TabPanel>
+
+          {/* TAB 2 - Data Tabel */}
+          <TabPanel header="Data Terkini">
+            <div className="grid">
+              {data?.table && (
+                <div className="col-12">
+                  <Card>
+                    <div className="flex justify-content-between mb-3">
+                      <span className="font-medium text-lg text-900">Data Tabel Terkini</span>
+                      <Tag value="Live" severity="info" />
+                    </div>
+                    <DataTable value={data.table} paginator rows={5} responsiveLayout="scroll">
+                      {Object.keys(data.table[0] || {}).map((field, idx) => (
+                        <Column key={idx} field={field} header={field.toUpperCase()} sortable />
+                      ))}
+                    </DataTable>
+                  </Card>
+                </div>
+              )}
+
+              <div className="col-12">
+                <Card>
+                  <div className="flex justify-content-between mb-3">
+                    <span className="font-medium text-lg text-900">Kalender Dokter</span>
+                    <Tag value="Live" severity="info" />
+                  </div>
+                  <DataTable value={data?.kalender ?? []} paginator rows={3} responsiveLayout="scroll">
+                    <Column field="NAMA_DOKTER" header="Nama Dokter" sortable />
+                    <Column
+                      field="TANGGAL"
+                      header="Tanggal"
+                      sortable
+                      body={(rowData) => {
+                        const date = new Date(rowData.TANGGAL);
+                        return date.toLocaleDateString('id-ID', {
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric',
+                        });
+                      }}
+                    />
+                    <Column
+                      field="STATUS"
+                      header="Status"
+                      sortable
+                      body={(rowData) => {
+                        switch (rowData.STATUS) {
+                          case 'info':
+                            return <Tag severity="info" value="perjanjian" />;
+                          case 'warning':
+                            return <Tag severity="warning" value="libur" />;
+                          default:
+                            return <Tag severity="secondary" value={rowData.STATUS} />;
+                        }
+                      }}
+                    />
+                    <Column field="KETERANGAN" header="Keterangan" />
+                  </DataTable>
+                </Card>
+              </div>
+
+              <div className="col-12">
+                <Card>
+                  <div className="flex justify-content-between mb-3">
+                    <span className="font-medium text-lg text-900">Jadwal Reservasi</span>
+                    <Tag value="Live" severity="info" />
+                  </div>
+                  <DataTable value={data?.reservasi ?? []} paginator rows={3} responsiveLayout="scroll">
+                    <Column field="NAMALENGKAP" header="Nama Pasien" />
+                    <Column
+                      field="TANGGALRESERVASI"
+                      header="Tanggal Reservasi"
+                      body={(rowData) => {
+                        const date = new Date(rowData.TANGGALRESERVASI);
+                        return date.toLocaleDateString('id-ID', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                        });
+                      }}
+                    />
+                    <Column field="NAMAPOLI" header="Poli" />
+                    <Column field="NAMADOKTER" header="Nama Dokter" />
+                    <Column field="JAMRESERVASI" header="Jam" />
+                    <Column field="KETERANGAN" header="Keluhan" />
+                    <Column
+                      header="Status"
+                      body={(row) => {
+                        const status = row.STATUS;
+                        const severity = () => {
+                          switch (status) {
+                            case "Menunggu":
+                              return "info";
+                            case "Dikonfirmasi":
+                              return "success";
+                            case "Dibatalkan":
+                              return "danger";
+                            default:
+                              return "info";
+                          }
+                        };
+                        return <Tag value={status} severity={severity()} />;
+                      }}
+                    />
+                  </DataTable>
+                </Card>
+              </div>
+            </div>
+          </TabPanel>
+        </TabView>
       </div>
     </div>
   );

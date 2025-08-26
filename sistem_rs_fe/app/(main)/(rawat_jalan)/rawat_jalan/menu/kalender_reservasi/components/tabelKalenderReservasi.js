@@ -35,6 +35,7 @@ export default function TabelKalender({ refresh }) {
           NAMAPASIEN: item.NAMALENGKAP,
           NAMAPOLI: item.NAMAPOLI,
           NAMADOKTER: item.NAMADOKTER,
+          JAMRESERVASI: item.JAMRESERVASI,
           JADWALPRAKTEK: item.JADWALPRAKTEK?.join(', ') || '-',
           STATUS: item.STATUS,
           KETERANGAN: item.KETERANGAN,
@@ -105,7 +106,7 @@ export default function TabelKalender({ refresh }) {
             <p><strong>Pasien:</strong> {selectedEvent.NAMAPASIEN}</p>
             <p><strong>Dokter:</strong> {selectedEvent.NAMADOKTER}</p>
             <p><strong>Poli:</strong> {selectedEvent.NAMAPOLI}</p>
-            <p><strong>Jadwal:</strong> {selectedEvent.JADWALPRAKTEK}</p>
+            <p><strong>Jam Reservasi:</strong> {selectedEvent.JAMRESERVASI}</p>
             <p><strong>Tanggal:</strong> {formatTanggal(selectedEvent.TANGGALRESERVASI)}</p>
             <p><strong>Keterangan:</strong> {selectedEvent.KETERANGAN || '-'}</p>
             <p><strong>Status:</strong> {selectedEvent.STATUS}</p>
