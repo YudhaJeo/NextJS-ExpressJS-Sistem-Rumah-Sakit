@@ -47,7 +47,8 @@ const FormDialogPasien = ({
           <label>No Rekam Medis</label>
           <InputText
             className="w-full mt-2"
-            value={form.NOREKAMMEDIS || 'Auto Generate'}
+            value={form.NOREKAMMEDIS}
+            placeholder="Auto-Generate"
             readOnly
           />
         </div>
