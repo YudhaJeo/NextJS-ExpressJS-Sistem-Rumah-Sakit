@@ -25,7 +25,7 @@ const TabRuangan = ({
       <div className="mt-2">
         <label>Bed</label>
         <Dropdown
-          disabled={isDisabled}
+          readOnly={isDisabled}
           className={inputClass('IDBED')}
           value={form.IDBED}
           options={bedOptions}
@@ -51,7 +51,7 @@ const TabRuangan = ({
       <div className="mt-2">
         <label>Tanggal Masuk (Mulai)</label>
         <Calendar
-          disabled={isDisabled}
+          readOnly={isDisabled}
           className={inputClass('TANGGALMASUK')}
           value={form.TANGGALMASUK ? new Date(form.TANGGALMASUK) : null}
           onChange={(e) => setForm({ ...form, TANGGALMASUK: e.value })}
@@ -67,7 +67,7 @@ const TabRuangan = ({
         <label className="mb-1">Tanggal Keluar (Pulang)</label>
         <div className="flex items-center gap-2">
           <Calendar
-            disabled={isDisabled}
+            readOnly={isDisabled}
             className={inputClass('TANGGALKELUAR')}
             value={form.TANGGALKELUAR ? new Date(form.TANGGALKELUAR) : null}
             onChange={(e) => setForm({ ...form, TANGGALKELUAR: e.value })}
@@ -85,7 +85,7 @@ const TabRuangan = ({
       <div className="mt-2">
         <label>Catatan</label>
         <InputTextarea
-          disabled={isDisabled}
+          readOnly={isDisabled}
           className={inputClass('CATATAN')}
           value={form.CATATAN || ''}
           onChange={(e) => setForm({ ...form, CATATAN: e.target.value })}
@@ -96,7 +96,7 @@ const TabRuangan = ({
       <div className="mt-2">
         <label>Kamar</label>
         <InputText
-          disabled={isEditMode}
+          readOnly={isEditMode}
           className={inputClass('NAMAKAMAR')}
           value={form.NAMAKAMAR}
         />
@@ -105,7 +105,7 @@ const TabRuangan = ({
       <div className="mt-2">
         <label>Bangsal</label>
         <InputText
-          disabled={isEditMode}
+          readOnly={isEditMode}
           className={inputClass('NAMABANGSAL')}
           value={form.NAMABANGSAL}
         />
@@ -114,7 +114,7 @@ const TabRuangan = ({
       <div className="mt-2">
         <label>Harga Bangsal (Hari)</label>
         <InputText
-          disabled={isEditMode}
+          readOnly={isEditMode}
           className={inputClass('HARGAPERHARI')}
           value={formatRupiah(form.HARGAPERHARI)}
           mode='currency'

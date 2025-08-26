@@ -164,7 +164,7 @@ const TabTindakan = ({ tenagaMedisOptions, statusRawat }) => {
           })}
           placeholder="Jumlah"
         />
-        <InputNumber value={newItem.HARGA} disabled mode="currency" currency="IDR" locale="id-ID" />
+        <InputNumber value={newItem.HARGA} readOnly mode="currency" currency="IDR" locale="id-ID" />
         <Button label="Tambahkan" icon="pi pi-save" onClick={handleAdd} />
       </div>
       )}

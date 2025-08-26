@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import HeaderBar from '@/app/components/headerbar';
+import HeaderBar from './components/customHeaderBar';
 import TabelRawatInap from './components/tabelRawatInap';
 import FormRawatInap from './components/formRawatInap';
 import ToastNotifier from '@/app/components/toastNotifier';
@@ -28,6 +28,7 @@ const Page = () => {
   const [endDate, setEndDate] = useState(null);
   const [formRawatInapMode, setFormRawatInapMode] = useState("edit");
   const [selectedRawat, setSelectedRawat] = useState(null)
+  const [statusFilter, setStatusFilter] = useState("");
 
   const defaultForm = {
     IDRAWATINAP: '',
@@ -37,8 +38,10 @@ const Page = () => {
     NAMAPASIEN: '',
     UMUR: '',
     JENISKELAMIN: '',
+    NOREKAMMEDIS: '',
     NIK: '',
     ALAMAT_PASIEN: '',
+    ALAMAT_KTP: '',
     IDBED: '',
     NAMAKAMAR: '',
     NAMABANGSAL: '',
@@ -215,8 +218,10 @@ const Page = () => {
       POLI: row.POLI || '',
       DIAGNOSA: row.DIAGNOSA || '',
       JENISKELAMIN: row.JENISKELAMIN || '',
+      NOREKAMMEDIS: row.NOREKAMMEDIS || '',
       NIK: row.PASIEN_NIK || '',
       ALAMAT_PASIEN: row.ALAMAT_PASIEN || '',
+      ALAMAT_KTP: row.ALAMAT_KTP || '',
       NAMAKAMAR: row.NAMAKAMAR || '',
       NAMABANGSAL: row.NAMABANGSAL || '',
       HARGAPERHARI: row.HARGAPERHARI || '',
@@ -348,15 +353,37 @@ const Page = () => {
     setData(originalData);
   };
 
-  const handleSearch = (keyword) => {
-    if (!keyword) return fetchRawatInap();
-    const filtered = data.filter((item) =>
-      item.NAMALENGKAP?.toLowerCase().includes(keyword.toLowerCase()) ||
-      item.NOMORBED?.toLowerCase().includes(keyword.toLowerCase()) ||
-      item.STATUS?.toLowerCase().includes(keyword.toLowerCase()) 
-    );
+
+  const statusOptions = [
+    { label: "Semua", value: "SEMUA" },
+    { label: "Aktif", value: "AKTIF" },
+    { label: "Selesai", value: "SELESAI" },
+  ];
+
+  const handleSearch = (keyword, status = statusFilter) => {
+    let filtered = originalData;
+  
+    if (keyword) {
+      filtered = filtered.filter((item) =>
+        item.NAMALENGKAP?.toLowerCase().includes(keyword.toLowerCase()) ||
+        item.NOMORBED?.toLowerCase().includes(keyword.toLowerCase()) ||
+        item.NOREKAMMEDIS?.toLowerCase().includes(keyword.toLowerCase()) ||
+        item.STATUS?.toLowerCase().includes(keyword.toLowerCase())
+      );
+    }
+  
+    if (status !== "SEMUA") {
+      filtered = filtered.filter((item) => item.STATUS === status);
+    }
+  
     setData(filtered);
-  }
+  };
+  
+  const handleStatusChange = (e) => {
+    setStatusFilter(e.value);
+    handleSearch("", e.value); 
+  };
+  
 
   return (
     <div className="card">
@@ -377,6 +404,9 @@ const Page = () => {
           title=""
           placeholder="Cari pasien"
           onSearch={handleSearch}
+          statusFilter={statusFilter}
+          statusOptions={statusOptions}
+          handleStatusChange={handleStatusChange}
         />
       </div>
 

@@ -30,12 +30,14 @@ const TabDataPasien = ({
               IDRAWATJALAN: e.value,
               POLI: selected?.POLI || '',
               JENISKELAMIN: selected?.JENISKELAMIN || '',
+              NOREKAMMEDIS: selected?.NOREKAMMEDIS || '',
               NIK: selected?.NIK || '',
               ALAMAT_PASIEN: selected?.ALAMAT_PASIEN || '',
+              ALAMAT_KTP: selected?.ALAMAT_KTP || '',
               DIAGNOSA: selected?.DIAGNOSA || '',
             })
           }}
-          disabled={isEditMode}
+          readOnly={isEditMode}
           placeholder="Pilih Rawat Inap"
           filter
           showClear
@@ -50,7 +52,7 @@ const TabDataPasien = ({
           className={inputClass('POLI')}
           value={form.POLI}
           onChange={(e) => setForm({ ...form, POLI: e.target.value })}
-          disabled={isEditMode}
+          readOnly={isEditMode}
         />
       </div>
 
@@ -60,23 +62,32 @@ const TabDataPasien = ({
           className={inputClass('DIAGNOSA')}
           value={form.DIAGNOSA}
           onChange={(e) => setForm({ ...form, DIAGNOSA: e.target.value })}
-          disabled={isEditMode}
+          readOnly={isEditMode}
         />
       </div>
       
       <div className="mt-2">
         <label>Jenis Kelamin</label>    
         <InputText
-          disabled={isEditMode}
+          readOnly={isEditMode}
           className={inputClass('JENISKELAMIN')}
           value={formatGender(form.JENISKELAMIN)}
         />
       </div>
       
       <div className="mt-2">
+        <label>No Rekam Medis</label>
+        <InputText
+          readOnly={isEditMode}
+          className={inputClass('NOREKAMMEDIS')}
+          value={form.NOREKAMMEDIS}
+        />
+      </div>
+
+      <div className="mt-2">
         <label>NIK</label>
         <InputText
-          disabled={isEditMode}
+          readOnly={isEditMode}
           className={inputClass('NIK')}
           value={form.NIK}
         />
@@ -85,9 +96,18 @@ const TabDataPasien = ({
       <div className="mt-2">
         <label>Alamat</label>
         <InputText
-          disabled={isEditMode}
+          readOnly={isEditMode}
           className={inputClass('ALAMAT_PASIEN')}
           value={form.ALAMAT_PASIEN}
+        />
+      </div>
+      
+      <div className="mt-2">
+        <label>Alamat KTP</label>
+        <InputText
+          readOnly={isEditMode}
+          className={inputClass('ALAMAT_KTP')}
+          value={form.ALAMAT_KTP}
         />
       </div>
     </>
