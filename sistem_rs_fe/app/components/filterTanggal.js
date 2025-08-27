@@ -30,22 +30,24 @@ const FilterTanggal = ({ startDate, endDate, setStartDate, setEndDate, handleDat
           className="w-[160px]"
         />
       </div>
-      <div className="flex gap-2 mt-4">
-        <Button
-          icon="pi pi-filter"
-          label="Terapkan"
-          tooltip="Reset"
-          className="p-1 text-xs h-12"
-          severity="info"
-          onClick={handleDateFilter}
-        />
-        <Button
-          icon="pi pi-times"
-          tooltip="Reset"
-          className="p-1 text-xs h-12"
-          severity="secondary"
-          onClick={resetFilter}
-        />
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Terapkan</label>
+        <div className='flex gap-2'>
+          <Button
+            icon="pi pi-check"
+            tooltip='Terapkan'
+            className="p-inputtext"
+            severity="info"
+            onClick={handleDateFilter}
+          />
+          <Button
+            tooltip='Reset'
+            icon="pi pi-times"
+            className="p-inputtext"
+            severity="secondary"
+            onClick={resetFilter}
+          />
+        </div>
       </div>
     </div>
   );
