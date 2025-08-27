@@ -1,10 +1,15 @@
-/* D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\globals.css */
-@import "tailwindcss";
-@import "primereact/resources/themes/lara-light-indigo/theme.css";
-@import "primereact/resources/primereact.min.css";
-@import "primeicons/primeicons.css";
+@layer tailwind-base, primereact, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
 
 html {
-  font-size: 12px;
+  font-size: 13px;
 }
 

@@ -149,8 +149,8 @@ const AppMenu = () => {
               { label: "Dashboard Apotek", icon: "pi pi-fw pi-chart-bar", to: "/rawat_inap/inventory/dashboard_apotek" },
               { label: "Daftar Alkes", icon: "pi pi-fw pi-inbox", to: "/rawat_inap/inventory/alkes" },
               { label: "Daftar Obat", icon: "pi pi-fw pi-chart-pie", to: "/rawat_inap/inventory/obat" },
-              { label: "Kartu Stok", icon: "pi pi-fw pi-tag", to: "/rawat_inap/inventory/kartu_stock" },
               { label: "Pemesanan", icon: "pi pi-fw pi-dollar", to: "/rawat_inap/inventory/pemesanan" },
+              { label: "Log Transaksi", icon: "pi pi-fw pi-file-arrow-up", to: "/rawat_inap/inventory/log_transaksi" },
             ],
           },
           {

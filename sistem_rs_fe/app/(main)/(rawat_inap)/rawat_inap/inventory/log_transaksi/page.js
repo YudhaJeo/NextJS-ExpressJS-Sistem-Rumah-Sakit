@@ -1,13 +1,13 @@
+// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(main)\(rawat_inap)\rawat_inap\inventory\log_transaksi\page.js
 'use client';
 
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 import HeaderBar from "@/app/components/headerbar";
 import ToastNotifier from "@/app/components/toastNotifier";
-import TabelPemesanan from "./components/tabelKartu"; // <-- gunakan tabel pemesanan
-import DetailPemesanan from "./components/detailPemesanan"; // <-- modal detail
+import TabelPemesanan from "./components/tabelTransaksi"; 
+import DetailMasuk from "./components/detailMasuk";
+import DetailKeluar from "./components/detailKeluar";
 import FilterTanggal from "@/app/components/filterTanggal";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -17,7 +17,6 @@ const MonitoringPemesananPage = () => {
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const toastRef = useRef(null);
-  const router = useRouter();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [detailVisible, setDetailVisible] = useState(false);
@@ -30,35 +29,66 @@ const MonitoringPemesananPage = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/pemesanan`);
-      const apiData = Array.isArray(res.data) ? res.data : res.data.data;
-
-      const filteredData = (apiData || [])
-      .filter(item => item.STATUS === 'DITERIMA')
-      .map(item => ({
-        ...item,
-        STATUS: 'MASUK'
+      const [pemesananRes, obatInapRes, alkesInapRes] = await Promise.all([
+        axios.get(`${API_URL}/pemesanan`),
+        axios.get(`${API_URL}/obat_inap`),
+        axios.get(`${API_URL}/alkes_inap`)
+      ]);
+  
+      const pemesananData = (Array.isArray(pemesananRes.data) ? pemesananRes.data : pemesananRes.data.data)
+        .filter(item => item.STATUS === 'DITERIMA')
+        .map(item => ({
+          ID: item.IDPEMESANAN,
+          TANGGAL: item.TGLPEMESANAN,
+          SUPPLIER: item.NAMASUPPLIER,
+          STATUS: 'MASUK',
+          TIPE: 'PEMESANAN',
+          ...item
+        }));
+  
+      const obatInapData = (obatInapRes.data.data || []).map(item => ({
+        ID: item.IDOBATINAP,
+        TANGGAL: item.WAKTUPEMBERIAN,
+        SUPPLIER: item.NAMAOBAT, 
+        STATUS: 'KELUAR',
+        TIPE: 'OBAT_INAP',
+        ...item
       }));
-
-      setData(filteredData);
-      setOriginalData(filteredData);
+  
+      const alkesInapData = (alkesInapRes.data.data || []).map(item => ({
+        ID: item.IDALKESINAP,
+        TANGGAL: item.WAKTUPEMBERIAN,
+        SUPPLIER: item.NAMAALKES, 
+        STATUS: 'KELUAR',
+        TIPE: 'ALKES_INAP',
+        ...item
+      }));
+  
+      const merged = [...pemesananData, ...obatInapData, ...alkesInapData];
+  
+      setData(merged);
+      setOriginalData(merged);
     } catch (err) {
-      console.error("Gagal mengambil data pemesanan:", err);
-      toastRef.current?.showToast("01", "Gagal memuat data pemesanan");
+      console.error("Gagal mengambil data transaksi:", err);
+      toastRef.current?.showToast("01", "Gagal memuat data transaksi");
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   const handleDetail = async (row) => {
     try {
-      const res = await axios.get(`${API_URL}/pemesanan/${row.IDPEMESANAN}`);
-      setDetailData(res.data);
+      if (row.TIPE === 'PEMESANAN') {
+        const res = await axios.get(`${API_URL}/pemesanan/${row.IDPEMESANAN}`);
+        setDetailData({ ...res.data, TIPE: 'PEMESANAN' }); 
+      } else {
+        setDetailData(row); 
+      }
       setDetailVisible(true);
     } catch (err) {
-      toastRef.current?.showToast("01", "Gagal memuat detail pemesanan");
+      toastRef.current?.showToast("01", "Gagal memuat detail transaksi");
     }
-  };
+  };  
 
   const resetFilter = () => {
     setStartDate(null);
@@ -91,7 +121,7 @@ const MonitoringPemesananPage = () => {
   return (
     <div className="card">
       <ToastNotifier ref={toastRef} />
-      <h3 className="text-xl font-semibold mb-3">Kartu Stok Obat dan Alat Kesehatan</h3>
+      <h3 className="text-xl font-semibold mb-3">Transaksi Stok Obat dan Alat Kesehatan</h3>
 
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
         <FilterTanggal
@@ -110,11 +140,21 @@ const MonitoringPemesananPage = () => {
 
       <TabelPemesanan data={data} loading={loading} onDetail={handleDetail} />
 
-      <DetailPemesanan
-        visible={detailVisible}
-        onHide={() => setDetailVisible(false)}
-        data={detailData}
-      />
+      {detailData?.TIPE === 'PEMESANAN' ? (
+        <DetailMasuk
+          visible={detailVisible}
+          onHide={() => setDetailVisible(false)}
+          data={detailData}
+        />
+      ) : detailData ? (
+        <DetailKeluar
+          visible={detailVisible}
+          onHide={() => setDetailVisible(false)}
+          data={detailData}
+        />
+      ) : null}
+
+
     </div>
   );
 };

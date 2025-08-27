@@ -19,10 +19,10 @@ const HeaderBar = ({
 
       <div className="flex gap-2 flex-wrap items-center">
         <span className="p-input-icon-left w-64">
-          <i className="pi pi-search" />
+          <i className="pi pi-search ml-3" />
           <InputText
             placeholder={placeholder}
-            className="w-full"
+            className="w-full pl-6"
             onChange={(e) => onSearch?.(e.target.value.toLowerCase())}
           />
         </span>

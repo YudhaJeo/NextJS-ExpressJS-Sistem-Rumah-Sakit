@@ -1,9 +1,10 @@
+// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(main)\(rawat_inap)\rawat_inap\inventory\log_transaksi\components\detailTransaksi.js
 'use client';
 import { Dialog } from 'primereact/dialog';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
-const DetailPemesanan = ({ visible, onHide, data }) => {
+const DetailMasuk = ({ visible, onHide, data }) => {
   if (!data) return null;
 
   return (
@@ -28,4 +29,4 @@ const DetailPemesanan = ({ visible, onHide, data }) => {
   );
 };
 
-export default DetailPemesanan;
+export default DetailMasuk;

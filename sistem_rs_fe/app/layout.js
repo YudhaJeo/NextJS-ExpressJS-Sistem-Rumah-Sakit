@@ -1,10 +1,10 @@
 import Providers from './providers';
-import 'primereact/resources/primereact.css';
-import 'primeflex/primeflex.css';
+import 'primereact/resources/themes/lara-light-teal/theme.css';
+import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+import 'primeflex/primeflex.css';
 import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
-import '/public/themes/lara-light-indigo/theme.css';
 import './globals.css';
 
 export const metadata = {

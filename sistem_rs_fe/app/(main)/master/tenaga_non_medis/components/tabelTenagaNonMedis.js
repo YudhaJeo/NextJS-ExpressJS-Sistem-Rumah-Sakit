@@ -116,7 +116,7 @@ const TabelTenagaNonMedis = ({ data, loading, onEdit, onDelete }) => {
 
   const gridItem = (row) => {
     return (
-      <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" key={row.IDTENAGANONMEDIS}>
+      <div className="col-12 sm:col-6 md:col-4 lg:col-3 p-2" key={row.IDTENAGANONMEDIS}>
         <Card className="h-full cursor-pointer hover:shadow-4 transition-all transition-duration-300">
           <div className="flex flex-column h-full">
             {/* Header dengan status */}
