@@ -13,3 +13,9 @@ html {
   font-size: 13px;
 }
 
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: color-mix(in srgb, var(--primary-color) 20%, transparent);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+  font-color: var(--primary-color);
+}
