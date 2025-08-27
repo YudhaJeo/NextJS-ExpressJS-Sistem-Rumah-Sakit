@@ -61,14 +61,66 @@ export async function createReservasi(req, res) {
 }
 
 export async function updateReservasi(req, res) {
+  const trx = await db.transaction();
+
   try {
     const id = req.params.id;
     const { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN } = req.body;
 
-    await ReservasiModel.update(id, { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN });
-    res.json({ message: 'Reservasi berhasil diperbarui' });
+    // update reservasi
+    await trx("reservasi").where("IDRESERVASI", id).update({
+      NIK,
+      IDPOLI,
+      IDDOKTER,
+      TANGGALRESERVASI,
+      JAMRESERVASI,
+      STATUS,
+      KETERANGAN,
+    });
+
+    // kalau statusnya Dikonfirmasi → langsung masuk rawat jalan
+    if (STATUS === "Dikonfirmasi") {
+      // cek apakah sudah ada pendaftaran
+      let pendaftaran = await trx("pendaftaran")
+        .where({ NIK, IDPOLI, TANGGALKUNJUNGAN: TANGGALRESERVASI })
+        .first();
+
+      if (!pendaftaran) {
+        const [idPendaftaran] = await trx("pendaftaran").insert(
+          {
+            NIK,
+            IDPOLI,
+            TANGGALKUNJUNGAN: TANGGALRESERVASI,
+            KELUHAN: KETERANGAN,
+            STATUSKUNJUNGAN: "Dalam Antrian",
+          },
+          ["IDPENDAFTARAN"]
+        );
+        pendaftaran = { IDPENDAFTARAN: idPendaftaran };
+      }
+
+      // cek apakah sudah ada rawat jalan dari pendaftaran itu
+      const existingRJ = await trx("rawat_jalan")
+        .where("IDPENDAFTARAN", pendaftaran.IDPENDAFTARAN)
+        .first();
+
+      if (!existingRJ) {
+        await trx("rawat_jalan").insert({
+          IDPENDAFTARAN: pendaftaran.IDPENDAFTARAN,
+          IDDOKTER,
+          STATUSKUNJUNGAN: "Dalam Antrian",
+          STATUSRAWAT: "Rawat Jalan",
+          DIAGNOSA: "",
+          KETERANGAN,
+        });
+      }
+    }
+
+    await trx.commit();
+    res.json({ message: "Reservasi berhasil diperbarui & masuk ke Rawat Jalan" });
   } catch (err) {
-    console.error('Error backend:', err);
+    await trx.rollback();
+    console.error("❌ Error updateReservasi:", err);
     res.status(500).json({ error: err.message });
   }
 }
