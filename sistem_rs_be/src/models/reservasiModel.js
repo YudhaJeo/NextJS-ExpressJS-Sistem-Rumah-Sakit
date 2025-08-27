@@ -13,9 +13,6 @@ export const getAll = async () => {
       'poli.NAMAPOLI',
       'dokter.IDDOKTER',
       'master_tenaga_medis.NAMALENGKAP as NAMADOKTER',
-      // 'jadwal_dokter.HARI',
-      // 'jadwal_dokter.JAM_MULAI',
-      // 'jadwal_dokter.JAM_SELESAI'
     );
 
   const result = {};
@@ -36,12 +33,6 @@ export const getAll = async () => {
         JAMRESERVASI: row.JAMRESERVASI || '-',
       };
     }
-
-    // if (row.HARI && row.JAM_MULAI && row.JAM_SELESAI) {
-    //   result[row.IDRESERVASI].JADWALPRAKTEK.push(
-    //     `${row.HARI} ${row.JAM_MULAI.slice(0, 5)} - ${row.JAM_SELESAI.slice(0, 5)}`
-    //   );
-    // }
   });
 
   return Object.values(result);
