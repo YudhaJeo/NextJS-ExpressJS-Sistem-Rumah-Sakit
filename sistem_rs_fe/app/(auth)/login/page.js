@@ -8,11 +8,10 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import "@/styles/gradient.css";
 import ToastNotifier from "@/app/components/toastNotifier";
-import Image from "next/image";
 
 const URL = process.env.NEXT_PUBLIC_URL;
 
-function LoginPage() {
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -22,10 +21,7 @@ function LoginPage() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(`${URL}/login`, {
-        email,
-        password,
-      });
+      const res = await axios.post(`${URL}/login`, { email, password });
 
       Cookies.set("token", res.data.token);
       Cookies.set("username", res.data.username);
@@ -70,66 +66,62 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-blue-400 to-blue-800">
+    <div className="min-h-screen flex justify-content-center align-items-center">
       <ToastNotifier ref={toastRef} />
 
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden flex w-11/12 md:w-3/4 lg:w-2/3">
-        <div className="flex-1 p-8 flex flex-col justify-center">
-          <div className="flex items-center mb-6">
-            <Image
-              src="/layout/images/logo.png"
-              width={60}
-              height={60}
-              alt="logo"
-            />
-            <h3 className="text-2xl font-bold ml-3">RUMAH SAKIT</h3>
+      <div className="animated-gradient-bg w-full h-full flex justify-content-center align-items-center">
+        <div className="card w-10 h-full md:h-30rem shadow-3">
+          <div className="grid h-full">
+            <div className="col-12 md:col-6 flex flex-col justify-center h-full px-4">
+              <div>
+                <h3 className="text-2xl text-center font-semibold mb-5">
+                  {process.env.NEXT_PUBLIC_APP_NAME || "RUMAH SAKIT"}
+                </h3>
+
+                <form onSubmit={handleLogin} className="grid">
+                  <div className="col-12">
+                    <label htmlFor="email">Email</label>
+                    <InputText
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full mt-3"
+                      required
+                    />
+                  </div>
+
+                  <div className="col-12">
+                    <label htmlFor="password">Password</label>
+                    <InputText
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full mt-3"
+                      required
+                    />
+                  </div>
+
+                  <div className="col-12 mt-3">
+                    <Button type="submit" label="Login" className="w-full" />
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div className="hidden md:block md:col-6 h-full">
+              <img
+                src="/layout/images/hospital.jpg"
+                className="w-full h-full object-cover"
+                alt="cover"
+              />
+            </div>
           </div>
-
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div>
-              <label htmlFor="email" className="block font-medium">
-                Email
-              </label>
-              <InputText
-                id="email"
-                type="text"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full mt-2"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block font-medium">
-                Password
-              </label>
-              <InputText
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full mt-2"
-              />
-            </div>
-
-            <Button label="login" className="w-full mt-3" />
-          </form>
-        </div>
-
-        <div className="hidden md:block flex-1">
-          <Image
-            src="/layout/images/hospital.jpg"
-            width={800}
-            height={600}
-            className="w-full h-full object-cover"
-            alt="cover"
-          />
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default LoginPage;
