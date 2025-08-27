@@ -75,9 +75,9 @@ const AppTopbar = forwardRef((props, ref) => {
                     "layout-topbar-menu-mobile-active": layoutState.profileSidebarVisible,
                 })}
             >
-                <p className="text-base md:text-xl my-2 font-medium flex flex-col">
+                <p className="text-base md:text-xl font-medium text-right flex flex-col">
                     <span>{username}</span>
-                    {role && <span className="text-sm text-gray-400">{role}</span>}
+                    {role && <span className="text-sm text-right text-gray-400">{role}</span>}
                 </p>
 
                 <Link href="/profile">
