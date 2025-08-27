@@ -8,11 +8,13 @@ export const getAll = () =>
     .join('pasien', 'pendaftaran.NIK', 'pasien.NIK')
     .join('bed', 'rawat_inap.IDBED', 'bed.IDBED')
     .join('alkes', 'alkes_inap.IDALKES', 'alkes.IDALKES')
+    .join('master_tenaga_medis', 'alkes_inap.IDTENAGAMEDIS', 'master_tenaga_medis.IDTENAGAMEDIS')
     .select(
       'alkes_inap.*',
       'pasien.NAMALENGKAP',
       'bed.NOMORBED',
-      'alkes.NAMAALKES'
+      'alkes.NAMAALKES',
+      'master_tenaga_medis.NAMALENGKAP as NAMAPERAWAT'
     );
 
 
