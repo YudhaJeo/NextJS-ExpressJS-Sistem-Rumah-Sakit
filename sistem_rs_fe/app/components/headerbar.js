@@ -12,7 +12,6 @@ const HeaderBar = ({ title, placeholder, onSearch, onAddClick }) => {
           <i className="pi pi-search ml-3" />
           <InputText
             placeholder={placeholder}
-            icon
             className="w-full pl-6"
             onChange={(e) => onSearch(e.target.value.toLowerCase())}
           />
