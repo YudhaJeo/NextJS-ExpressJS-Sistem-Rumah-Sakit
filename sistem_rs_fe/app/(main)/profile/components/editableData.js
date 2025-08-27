@@ -19,19 +19,20 @@ export default function EditableData({ user, loading }) {
     <div className="col-12 md:col-4">
       <div className="card align-items-center text-center">
         {/* foto profil */}
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-content-center mb-4">
           {user.FOTOPROFIL ? (
             <img
               src={user.FOTOPROFIL}
               alt="Preview"
-              className="w-32 h-32 rounded-full object-cover border shadow"
+              className="w-10rem h-10rem border-circle object-cover border-1 shadow-2"
             />
           ) : (
-            <div className="w-32 h-32 flex items-center justify-center rounded-full bg-gray-100 border border-gray-300 shadow-inner">
-              <i className="pi pi-user text-4xl text-gray-500"></i>
+            <div className="w-10rem h-10rem flex align-items-center justify-content-center border-circle bg-gray-100 border-1 surface-border shadow-1">
+              <i className="pi pi-user text-4xl text-500"></i>
             </div>
           )}
         </div>
+
 
         <h2 className="text-2xl font-bold">{user.NAMALENGKAP || 'Nama tidak tersedia'}</h2>
 
