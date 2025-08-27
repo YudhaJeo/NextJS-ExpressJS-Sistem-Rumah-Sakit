@@ -63,7 +63,7 @@ export const getAllRawatJalan = () => {
       'r.FOTORESEP',
       'tm.NAMALENGKAP'
     )
-    .orderBy('p.TANGGALKUNJUNGAN', 'desc'); // urutkan terbaru paling atas
+    .orderBy('p.TANGGALKUNJUNGAN', 'desc'); 
 };
 
 export const createRawatJalan = async ({

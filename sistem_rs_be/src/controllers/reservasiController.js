@@ -67,7 +67,6 @@ export async function updateReservasi(req, res) {
     const id = req.params.id;
     const { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN } = req.body;
 
-    // update reservasi
     await trx("reservasi").where("IDRESERVASI", id).update({
       NIK,
       IDPOLI,
@@ -78,9 +77,7 @@ export async function updateReservasi(req, res) {
       KETERANGAN,
     });
 
-    // kalau statusnya Dikonfirmasi → langsung masuk rawat jalan
     if (STATUS === "Dikonfirmasi") {
-      // cek apakah sudah ada pendaftaran
       let pendaftaran = await trx("pendaftaran")
         .where({ NIK, IDPOLI, TANGGALKUNJUNGAN: TANGGALRESERVASI })
         .first();
@@ -99,7 +96,6 @@ export async function updateReservasi(req, res) {
         pendaftaran = { IDPENDAFTARAN: idPendaftaran };
       }
 
-      // cek apakah sudah ada rawat jalan dari pendaftaran itu
       const existingRJ = await trx("rawat_jalan")
         .where("IDPENDAFTARAN", pendaftaran.IDPENDAFTARAN)
         .first();
