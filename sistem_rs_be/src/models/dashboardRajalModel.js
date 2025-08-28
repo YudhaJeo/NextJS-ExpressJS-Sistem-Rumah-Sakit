@@ -2,7 +2,7 @@ import db from '../core/config/knex.js';
 
 export const getTotalReservasi = async () => {
   try {
-    return await db('reservasi_rajal').count('IDRESERVASI as total').first();
+    return await db('reservasi').count('IDRESERVASI as total').first();
   } catch (error) {
     console.error('Error getTotalDokter:', error);
     throw error;
@@ -29,7 +29,7 @@ export const getJadwalHariIni = async () => {
 
 export const getLaporanHariIni = async () => {
   try {
-    return await db('reservasi_rajal').count('IDRESERVASI as total').first();
+    return await db('reservasi').count('IDRESERVASI as total').first();
   } catch (error) {
     console.error('Error getLaporanHariIni:', error);
     throw error;
@@ -38,19 +38,19 @@ export const getLaporanHariIni = async () => {
 
 export const getKalenderDokter = async () => {
   try {
-    return await db('reservasi_rajal')
-      .join('pasien', 'reservasi_rajal.NIK', 'pasien.NIK')
-      .join('dokter', 'reservasi_rajal.IDDOKTER', 'dokter.IDDOKTER')
+    return await db('reservasi')
+      .join('pasien', 'reservasi.NIK', 'pasien.NIK')
+      .join('dokter', 'reservasi.IDDOKTER', 'dokter.IDDOKTER')
       .leftJoin('master_tenaga_medis', 'dokter.IDTENAGAMEDIS', 'master_tenaga_medis.IDTENAGAMEDIS')
       .select(
         'pasien.NAMALENGKAP as nama_pasien',
         'master_tenaga_medis.NAMALENGKAP as nama_dokter',
-        'reservasi_rajal.TANGGALRESERVASI as tanggal',
-        'reservasi_rajal.KETERANGAN as keterangan',
-        'reservasi_rajal.STATUS as status'
+        'reservasi.TANGGALRESERVASI as tanggal',
+        'reservasi.KETERANGAN as keterangan',
+        'reservasi.STATUS as status'
       )
-      .where('reservasi_rajal.STATUS', 'dikonfirmasi')
-      .orderBy('reservasi_rajal.TANGGALRESERVASI', 'asc');
+      .where('reservasi.STATUS', 'dikonfirmasi')
+      .orderBy('reservasi.TANGGALRESERVASI', 'asc');
   } catch (error) {
     console.error('Error getKalenderDokter:', error);
     throw error;

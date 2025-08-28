@@ -70,9 +70,6 @@ const TabApotek = () => {
 
   return (
     <div className="grid">
-      <div className="col-12">
-        <h1 className="text-xl font-semibold mb-3">Dashboard Monitoring Apotek</h1>
-      </div>
       {cards.map((card, i) => (
         <div className="col-12 md:col-6 xl:col-3" key={i}>
           <Card className="shadow-md" style={{ borderTop: `4px solid ${card.border}` }}>

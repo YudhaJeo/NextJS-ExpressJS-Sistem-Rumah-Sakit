@@ -1,8 +1,9 @@
 import express from 'express';
-import { getRawatInapDashboard } from '../controllers/dashboardRawatInapController.js';
+import { getRuanganDashboard, getRawatInapDashboard } from '../controllers/dashboardRawatInapController.js';
 
 const router = express.Router();
 
-router.get('/', getRawatInapDashboard);
+router.get('/ruangan', getRuanganDashboard);
+router.get('/rawatinap', getRawatInapDashboard);
 
 export default router;

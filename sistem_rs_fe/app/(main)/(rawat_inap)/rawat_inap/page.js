@@ -36,12 +36,14 @@ const DashboardRawatInap = () => {
           <h1 className="text-xl font-semibold mb-3">
             Dashboard Monitoring Rawat Inap
           </h1>
+        </Card>
+        <div>
           <TabMenu
             model={tabMenu}
             activeIndex={activeIndex}
             onTabChange={(e) => setActiveIndex(e.index)}
           />
-        </Card>
+        </div>
       </div>
 
       <div className="col-12">{renderContent()}</div>

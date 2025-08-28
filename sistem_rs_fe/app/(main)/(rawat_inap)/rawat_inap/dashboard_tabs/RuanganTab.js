@@ -16,7 +16,7 @@ const TabRuangan = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/dashboard_rawat_inap`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/dashboard_rawat_inap/ruangan`)
       .then((res) => {
         const data = res.data.data;
         setData(data);
@@ -140,12 +140,6 @@ const TabRuangan = () => {
 
   return (
     <div className="grid">
-      <div className="card col-12">
-        <h1 className="text-xl font-semibold mb-3">
-          Dashboard Monitoring Rawat Inap
-        </h1>
-      </div>
-
       {cards.map((card, i) => (
         <div className="col-12 md:col-6 xl:col-3" key={i}>
           <Card
