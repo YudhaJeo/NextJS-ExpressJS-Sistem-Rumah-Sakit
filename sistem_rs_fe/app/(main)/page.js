@@ -329,7 +329,7 @@ const Dashboard = () => {
                         const date = new Date(rowData.TANGGALRESERVASI);
                         return date.toLocaleDateString('id-ID', {
                           day: '2-digit',
-                          month: '2-digit',
+                          month: 'long',
                           year: 'numeric',
                         });
                       }}

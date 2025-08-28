@@ -34,7 +34,7 @@ const DashboardRawatInap = () => {
       <div className="col-12">
         <Card className="mb-4 shadow-md">
           <h1 className="text-xl font-semibold mb-3">
-            Dashboard Monitoring Rawat Inap
+            Dashboard Rawat Inap
           </h1>
         </Card>
         <div>
