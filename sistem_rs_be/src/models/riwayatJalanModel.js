@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_be\src\models\riwayatJalanModel.js
 import db from '../core/config/knex.js';
 
 export async function getAllRiwayatJalan() {
@@ -98,7 +97,6 @@ export async function insertFromRawatJalan(rawatJalan) {
     await db('riwayat_tindakan_jalan').insert(tindakanRiwayat);
   }
 
-  // 🔥 Tambahan: update invoice dengan TOTALTAGIHAN, SISA_TAGIHAN, STATUS
   if (pasienData?.NIK) {
     const invoice = await db('invoice')
       .where('NIK', pasienData.NIK)
@@ -106,7 +104,7 @@ export async function insertFromRawatJalan(rawatJalan) {
       .first();
 
     if (invoice) {
-      const SISA_TAGIHAN = (TOTALBIAYA || 0) - (invoice.TOTALDEPOSIT || 0) - (invoice.TOTALANGSURAN || 0);
+      const SISA_TAGIHAN = (TOTALBIAYA || 0) + (invoice.TOTALDEPOSIT || 0) - (invoice.TOTALANGSURAN || 0);
       const statusFinal = SISA_TAGIHAN <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
       await db('invoice')

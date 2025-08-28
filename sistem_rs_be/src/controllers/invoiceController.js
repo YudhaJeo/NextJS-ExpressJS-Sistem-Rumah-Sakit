@@ -27,13 +27,18 @@ export async function getInvoiceById(req, res) {
     invoice.TOTALTAGIHAN = invoice.TOTALTAGIHAN ?? (totalInap + totalJalan);
 
     let daftarObat = [];
-    let daftarTindakan = [];
+    let daftarAlkes = [];
+    let daftarTindakanInap = [];
+    let daftarTindakanJalan = [];
 
     if (invoice.IDRIWAYATINAP) {
       daftarObat = await InvoiceModel.getObatByInvoiceId(id);
-      daftarTindakan = await InvoiceModel.getTindakanByInvoiceId(id);
-    } else if (invoice.IDRIWAYATJALAN) {
-      daftarTindakan = await InvoiceModel.getTindakanJalanByInvoiceId(id);
+      daftarTindakanInap = await InvoiceModel.getTindakanByInvoiceId(id);
+      daftarAlkes = await InvoiceModel.getAlkesByInvoiceId(id);
+    }
+
+    if (invoice.IDRIWAYATJALAN) {
+      daftarTindakanJalan = await InvoiceModel.getTindakanJalanByInvoiceId(id);
     }
 
     res.status(200).json({
@@ -41,7 +46,9 @@ export async function getInvoiceById(req, res) {
       data: {
         ...invoice,
         obat: daftarObat,
-        tindakan: daftarTindakan,
+        alkes: daftarAlkes,
+        tindakanInap: daftarTindakanInap,
+        tindakanJalan: daftarTindakanJalan,
       },
     });
   } catch (err) {
@@ -75,7 +82,7 @@ export async function updateInvoice(req, res) {
     const totalJalan = invoiceDB.TOTALBIAYAJALAN || 0;
     const TOTALTAGIHAN = totalInap + totalJalan;
 
-    const SISA_TAGIHAN = TOTALTAGIHAN - (TOTALDEPOSIT || 0) - (TOTALANGSURAN || 0);
+    const SISA_TAGIHAN = TOTALTAGIHAN + (TOTALDEPOSIT || 0) - (TOTALANGSURAN || 0);
     const statusFinal = SISA_TAGIHAN <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
     const updated = await InvoiceModel.update(id, {

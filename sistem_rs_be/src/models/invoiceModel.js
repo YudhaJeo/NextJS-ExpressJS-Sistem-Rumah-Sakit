@@ -15,6 +15,7 @@ export const getAll = () => {
       'rri.TANGGALKELUAR',
       'rri.TOTALKAMAR',
       'rri.TOTALOBAT',
+      'rri.TOTALALKES',
       'rri.TOTALTINDAKAN',
       'rri.TOTALBIAYA',
       'rrj.TANGGALRAWAT as TANGGALRAWATJALAN',
@@ -38,6 +39,7 @@ export const getById = (id) => {
       'rri.TANGGALKELUAR',
       'rri.TOTALKAMAR',
       'rri.TOTALOBAT',
+      'rri.TOTALALKES',
       'rri.TOTALTINDAKAN',
       'rri.TOTALBIAYA',
       'rrj.TANGGALRAWAT as TANGGALRAWATJALAN',
@@ -83,6 +85,23 @@ export const getTindakanByInvoiceId = (invoiceId) => {
       'rt.JUMLAH',
       'rt.HARGA',
       'rt.TOTAL'
+    )
+    .where('i.IDINVOICE', invoiceId);
+};
+
+export const getAlkesByInvoiceId = (invoiceId) => {
+  return db('riwayat_alkes_inap as ra')
+    .join('alkes as a', 'ra.IDALKES', 'a.IDALKES')
+    .join('riwayat_rawat_inap as rri', 'ra.IDRIWAYATINAP', 'rri.IDRIWAYATINAP')
+    .join('invoice as i', 'ra.IDRIWAYATINAP', 'i.IDRIWAYATINAP')
+    .select(
+      'a.IDALKES',
+      'a.NAMAALKES',
+      'a.MERKALKES',
+      'a.JENISALKES',      
+      'ra.JUMLAH',
+      'ra.HARGA',
+      'ra.TOTAL'
     )
     .where('i.IDINVOICE', invoiceId);
 };

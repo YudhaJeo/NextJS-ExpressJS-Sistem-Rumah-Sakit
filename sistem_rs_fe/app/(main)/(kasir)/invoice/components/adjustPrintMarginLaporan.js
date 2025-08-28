@@ -151,9 +151,9 @@ export default function AdjustPrintMarginLaporan({
 
       const servicesRJ = [];
       let noRJ = 1;
-      const totalTindakanRJ = detail.tindakan?.reduce((acc, t) => acc + (t.TOTAL ?? 0), 0);
+      const totalTindakanRJ = detail.tindakanJalan?.reduce((acc, t) => acc + (t.TOTAL ?? 0), 0);
 
-      detail.tindakan?.forEach((t) => {
+      detail.tindakanJalan?.forEach((t) => {
         servicesRJ.push([
           noRJ++,
           t.NAMATINDAKAN,
@@ -247,7 +247,19 @@ export default function AdjustPrintMarginLaporan({
         ]);
       });
 
-      detail.tindakan?.forEach((t) => {
+      detail.alkes?.forEach((a) => {
+        servicesInp.push([
+          servicesInp.length + 1,
+          a.NAMAALKES,
+          a.JENISALKES || '-',
+          a.JUMLAH,
+          'Alkes',
+          formatRupiah(a.HARGA),
+          formatRupiah(a.TOTAL)
+        ])
+      })
+
+      detail.tindakanInap?.forEach((t) => {
         servicesInp.push([
           servicesInp.length + 1,
           t.NAMATINDAKAN,
@@ -293,12 +305,13 @@ export default function AdjustPrintMarginLaporan({
       const summary = [
         ['Biaya Kamar', detail.TOTALKAMAR],
         ['Total Obat', detail.TOTALOBAT],
+        ['Total Alkes', detail.TOTALALKES],
         ['Total Tindakan', detail.TOTALTINDAKAN],
         ['TOTAL BIAYA', detail.TOTALBIAYA],
       ];
 
       summary.forEach(([label, val], index) => {
-        const isTotal = index === summary.length - 1; // Last item is total
+        const isTotal = index === summary.length - 1;
         ySummary = addSummaryRow(doc, label, formatRupiah(val), ySummary, marginLeft, isTotal);
       });
 
@@ -342,7 +355,7 @@ export default function AdjustPrintMarginLaporan({
       ];
 
       autoTable(doc, {
-        startY: y, 
+        startY: y,
         head: [['Keterangan', 'Nominal']],
         body: paymentData,
         styles: {
@@ -351,7 +364,7 @@ export default function AdjustPrintMarginLaporan({
           lineColor: [200, 200, 200],
           lineWidth: 0.1,
           halign: 'left',
-          fillColor: [245, 245, 245] 
+          fillColor: [245, 245, 245]
         },
         headStyles: {
           fillColor: [41, 128, 185],

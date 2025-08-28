@@ -99,7 +99,6 @@ export async function insertFromRawatInap(rawatInap) {
     .update({ IDRIWAYATINAP });
   }
 
-
   const obatInap = await db('obat_inap').where({ IDRAWATINAP });
   const alkesInap = await db('alkes_inap').where({ IDRAWATINAP });
   const tindakanInap = await db('tindakan_inap').where({ IDRAWATINAP });
@@ -164,18 +163,24 @@ export async function insertFromRawatInap(rawatInap) {
         .first();
 
       if (invoice) {
-        const SISA_TAGIHAN = (TOTALBIAYA || 0) - (invoice.TOTALDEPOSIT || 0) - (invoice.TOTALANGSURAN || 0);
+        const totalJalan = invoice.TOTALTAGIHAN || 0;
+        const totalInap = TOTALBIAYA || 0; 
+
+        const TOTALTAGIHAN = totalJalan + totalInap;
+
+        const SISA_TAGIHAN = TOTALTAGIHAN + (invoice.TOTALDEPOSIT || 0) - (invoice.TOTALANGSURAN || 0);
         const statusFinal = SISA_TAGIHAN <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
         await db('invoice')
           .where('IDINVOICE', invoice.IDINVOICE)
           .update({
-            TOTALTAGIHAN: TOTALBIAYA,
+            TOTALTAGIHAN,
             SISA_TAGIHAN,
             STATUS: statusFinal,
             UPDATED_AT: db.fn.now()
           });
       }
+
     }
   }
 }
