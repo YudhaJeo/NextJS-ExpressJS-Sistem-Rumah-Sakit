@@ -146,7 +146,6 @@ const AppMenu = () => {
           {
             label: "Inventory",
             items: [
-              { label: "Dashboard Apotek", icon: "pi pi-fw pi-chart-bar", to: "/rawat_inap/inventory/dashboard_apotek" },
               { label: "Daftar Alkes", icon: "pi pi-fw pi-inbox", to: "/rawat_inap/inventory/alkes" },
               { label: "Daftar Obat", icon: "pi pi-fw pi-chart-pie", to: "/rawat_inap/inventory/obat" },
               { label: "Pemesanan", icon: "pi pi-fw pi-dollar", to: "/rawat_inap/inventory/pemesanan" },

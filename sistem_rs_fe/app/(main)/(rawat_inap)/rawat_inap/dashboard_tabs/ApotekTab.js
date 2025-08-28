@@ -1,3 +1,4 @@
+// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(main)\(rawat_inap)\rawat_inap\dashboard_tabs\ApotekTab.js
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -6,7 +7,7 @@ import { Chart } from 'primereact/chart';
 import { Tag } from 'primereact/tag';
 import axios from 'axios';
 
-const DashboardApotek = () => {
+const TabApotek = () => {
   const [data, setData] = useState({});
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
@@ -99,4 +100,4 @@ const DashboardApotek = () => {
   );
 };
 
-export default DashboardApotek;
+export default TabApotek;
