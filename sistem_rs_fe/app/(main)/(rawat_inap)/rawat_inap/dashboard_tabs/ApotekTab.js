@@ -27,16 +27,16 @@ const TabApotek = () => {
         ];
 
         const backgroundColors = [
-          'rgba(0, 123, 255, 0.2)',
-          'rgba(40, 167, 69, 0.2)',
-          'rgba(255, 193, 7, 0.2)',
-          'rgba(220, 53, 69, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
         ];
         const borderColors = [
-          '#007bff',
-          '#28a745',
-          '#ffc107',
-          '#dc3545',
+          'rgb(255, 159, 64)',
+          'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)',
+          'rgb(153, 102, 255)',
         ];
 
         setChartData({
@@ -62,10 +62,10 @@ const TabApotek = () => {
   }, []);
 
   const cards = [
-    { title: 'Total Obat', value: data.totalObat ?? 0, icon: 'pi pi-briefcase', border: '#007bff', background: 'rgba(0, 123, 255, 0.2)' },
-    { title: 'Total Alkes', value: data.totalAlkes ?? 0, icon: 'pi pi-cog', border: '#28a745', background: 'rgba(40, 167, 69, 0.2)' },
-    { title: 'Total Supplier', value: data.totalSupplier ?? 0, icon: 'pi pi-truck', border: '#ffc107', background: 'rgba(255, 193, 7, 0.2)' },
-    { title: 'Total Pemesanan', value: data.totalPemesanan ?? 0, icon: 'pi pi-shopping-cart', border: '#dc3545', background: 'rgba(220, 53, 69, 0.2)' },
+    { title: 'Total Obat', value: data.totalObat ?? 0, icon: 'pi pi-briefcase', border: 'rgb(255, 159, 64)', background: 'rgba(0, 123, 255, 0.2)' },
+    { title: 'Total Alkes', value: data.totalAlkes ?? 0, icon: 'pi pi-cog', border: 'rgb(75, 192, 192)', background: 'rgba(40, 167, 69, 0.2)' },
+    { title: 'Total Supplier', value: data.totalSupplier ?? 0, icon: 'pi pi-truck', border: 'rgb(54, 162, 235)', background: 'rgba(255, 193, 7, 0.2)' },
+    { title: 'Total Pemesanan', value: data.totalPemesanan ?? 0, icon: 'pi pi-shopping-cart', border: 'rgb(153, 102, 255)', background: 'rgba(220, 53, 69, 0.2)' },
   ];
 
   return (
