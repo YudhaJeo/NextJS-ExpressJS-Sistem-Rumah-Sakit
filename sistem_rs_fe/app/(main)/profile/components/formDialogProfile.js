@@ -151,7 +151,7 @@ export default function FormDialogProfile({
         ref={fileUploadRef}
         name="demo[]"
         accept=".png, .jpg, .jpeg"
-        maxFileSize={5000000}
+        maxFileSize={2000000}
         customUpload
         onUpload={onTemplateUpload}
         onSelect={onTemplateSelect}

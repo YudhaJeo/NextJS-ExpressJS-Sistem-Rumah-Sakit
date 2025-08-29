@@ -373,13 +373,13 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
             className="mt-1"
               mode="basic"
               accept="image/*"
-              maxFileSize={5000000}
+              maxFileSize={2000000}
               customUpload
               chooseLabel="Pilih Foto"
               auto={false}
               onSelect={(e) => handleFileUpload("FOTOPROFIL", e)}
             />
-            <small className="block text-gray-500 text-sm">Ukuran maksimal file: 5MB</small>
+            <small className="block text-gray-500 text-sm">Ukuran maksimal file: 2MB</small>
         </div>
 
         <div className="mt-2">
@@ -387,13 +387,13 @@ function FormDialogTenagaMedis({ visible, onHide, onSubmit, form, setForm }) {
             <FileUpload
               className="mt-1"
               mode="basic"
-              maxFileSize={5000000}
+              maxFileSize={2000000}
               customUpload
               chooseLabel="Pilih Dokumen"
               auto={false}
               onSelect={(e) => handleFileUpload("DOKUMENPENDUKUNG", e)}
             />
-            <small className="block text-gray-500 text-sm">Ukuran maksimal file: 5MB</small>
+            <small className="block text-gray-500 text-sm">Ukuran maksimal file: 2MB</small>
         </div> 
 
         <div className="text-right pt-4">
