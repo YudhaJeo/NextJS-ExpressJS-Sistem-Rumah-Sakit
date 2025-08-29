@@ -45,6 +45,70 @@ export default function AdjustPrintMarginLaporan({
     setDataAdjust((prev) => ({ ...prev, [name]: e.value }));
   };
 
+  const addHeader = (doc, title, marginLeft, marginTop) => {
+    const pageWidth = doc.internal.pageSize.width;
+    const marginRight = parseFloat(dataAdjust.marginRight);
+
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(41, 128, 185);
+    doc.text('RS BAYZA MEDICA', pageWidth / 2, marginTop + 6, { align: 'center' });
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 100, 100);
+    doc.text('Jl. A. Yani No. 84, Kota Madiun, Jawa Timur | Telp: (0351) 876-9090',
+      pageWidth / 2, marginTop + 12, { align: 'center' });
+
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(marginLeft, marginTop + 16, pageWidth - marginRight, marginTop + 16);
+
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
+    doc.text(title, pageWidth / 2, marginTop + 28, { align: 'center' });
+
+    return marginTop + 40;
+  };
+
+  const addSectionHeader = (doc, title, y, marginLeft) => {
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(41, 128, 185);
+    doc.text(title, marginLeft, y);
+    return y + 8;
+  };
+
+  const addInfoRow = (doc, label, value, y, marginLeft, labelWidth = 40) => {
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(80, 80, 80);
+    doc.text(label, marginLeft, y);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
+    doc.text(`: ${value}`, marginLeft + labelWidth, y);
+
+    return y + 5;
+  };
+
+  const formatTanggal = (tanggal) =>
+    tanggal
+      ? new Date(tanggal).toLocaleDateString('id-ID', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })
+      : '-';
+
+  const formatRupiah = (val) =>
+    new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      maximumFractionDigits: 0,
+    }).format(Number(val) || 0);
+
   async function exportPDF(detail, adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,
@@ -56,63 +120,51 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
-    let y = marginTop + 10;
+    let y = addHeader(doc, 'INVOICE PEMBAYARAN', marginLeft, marginTop);
 
-    const formatTanggal = (tanggal) =>
-      tanggal
-        ? new Date(tanggal).toLocaleDateString('id-ID', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-          })
-        : '-';
+    y = addSectionHeader(doc, 'INFORMASI PASIEN', y, marginLeft);
+    y = addInfoRow(doc, 'No Pembayaran', detail.NOPEMBAYARAN, y, marginLeft);
+    y = addInfoRow(doc, 'No Invoice', detail.NOINVOICE, y, marginLeft);
+    y = addInfoRow(doc, 'Nama Pasien', detail.NAMAPASIEN, y, marginLeft);
+    y = addInfoRow(doc, 'NIK', detail.NIK, y, marginLeft);
+    y = addInfoRow(doc, 'Asuransi', detail.ASURANSI || '-', y, marginLeft);
+    y = addInfoRow(doc, 'Tanggal Bayar', formatTanggal(detail.TANGGALBAYAR), y, marginLeft);
+    y += 5;
 
-    const formatDateTime = (tanggal) =>
-      tanggal
-        ? new Date(tanggal).toLocaleString('id-ID', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          })
-        : '-';
-
-    // === HEADER ===
-    doc.setFontSize(18);
-    doc.text('Detail Pembayaran', doc.internal.pageSize.width / 2, y, {
-      align: 'center',
-    });
-    y += 10;
-
-    doc.setFontSize(12);
-    doc.text(`No Pembayaran : ${detail.NOPEMBAYARAN}`, marginLeft, y); 
-    y += 6;
-    doc.text(`Nama Pasien : ${detail.NAMAPASIEN}`, marginLeft, y); 
-    y += 6;
-    doc.text(`NIK : ${detail.NIK}`, marginLeft, y); 
-    y += 6;
-    doc.text(`Tanggal Bayar : ${formatTanggal(detail.TANGGALBAYAR)}`, marginLeft, y); 
-    y += 10;
-
+    y = addSectionHeader(doc, 'RINCIAN PEMBAYARAN', y, marginLeft);
     autoTable(doc, {
       startY: y,
       head: [['Keterangan', 'Isi']],
       body: [
-        ['No Pembayaran', detail.NOPEMBAYARAN],
-        ['No Invoice', detail.NOINVOICE],
-        ['Nama Pasien', detail.NAMAPASIEN],
-        ['NIK', detail.NIK],
-        ['Asuransi', detail.ASURANSI || '-'],
-        ['Tanggal Bayar', formatTanggal(detail.TANGGALBAYAR)],
         ['Metode Pembayaran', detail.METODEPEMBAYARAN],
         ['Bank', detail.NAMA_BANK || '-'],
-        ['Jumlah Bayar', `Rp ${Number(detail.JUMLAHBAYAR).toLocaleString('id-ID')}`],
+        ['Jumlah Bayar', formatRupiah(detail.JUMLAHBAYAR)],
         ['Keterangan', detail.KETERANGAN || '-'],
       ],
-      styles: { fontSize: 9 },
+      styles: { fontSize: 10, cellPadding: 3 },
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontStyle: 'bold',
+      },
+      columnStyles: {
+        0: { fontStyle: 'bold', cellWidth: 60 },
+        1: { halign: 'right' },
+      },
       margin: { left: marginLeft, right: marginRight },
     });
+
+    const yEnd = doc.lastAutoTable.finalY + 20;
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'italic');
+    doc.setTextColor(100, 100, 100);
+    doc.text(
+      'Terima kasih atas kepercayaan Anda menggunakan layanan kami.',
+      doc.internal.pageSize.width / 2,
+      yEnd,
+      { align: 'center' }
+    );
 
     return doc.output('datauristring');
   }

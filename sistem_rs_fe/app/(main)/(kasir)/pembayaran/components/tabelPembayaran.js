@@ -97,13 +97,12 @@ const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Button icon="pi pi-eye" className="p-button-sm" tooltip="Lihat Detail" />
+        <Button icon="pi pi-eye" className="p-button-sm"/>
       </a>
       <Button
         icon="pi pi-sliders-h"
         className="p-button-sm p-button-warning"
         onClick={() => handleOpenAdjust(row)}
-        tooltip="Atur Margin"
       />
       <Button
         icon="pi pi-pencil"
