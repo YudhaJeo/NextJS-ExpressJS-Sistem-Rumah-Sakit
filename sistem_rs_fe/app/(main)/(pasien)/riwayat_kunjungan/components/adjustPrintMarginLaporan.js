@@ -9,7 +9,7 @@ import { Toolbar } from 'primereact/toolbar'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 
-export default function AdjustPrintMarginLaporanKunjungan({
+export default function AdjustPrintMarginLaporan({
   adjustDialog,
   setAdjustDialog,
   selectedRow,
@@ -44,6 +44,21 @@ export default function AdjustPrintMarginLaporanKunjungan({
     setDataAdjust((prev) => ({ ...prev, [name]: e.value }))
   }
 
+  const formatTanggal = (tanggal) =>
+    tanggal
+      ? new Date(tanggal).toLocaleDateString('id-ID', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })
+      : '-';
+
+  const formatRupiah = (val) =>
+    new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+    }).format(val || 0);
+
   async function exportPDF(detail, adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,
@@ -57,42 +72,191 @@ export default function AdjustPrintMarginLaporanKunjungan({
 
     let y = marginTop + 10;
 
-    const formatTanggal = (tanggal) =>
-      tanggal
-        ? new Date(tanggal).toLocaleDateString('id-ID', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        })
-        : '-';
+    // ===================== RAJAL ======================
+    if (detail.JENIS === 'RAWAT JALAN') {
+      doc.setFontSize(18);
+      doc.text('Detail Rawat Jalan', doc.internal.pageSize.width / 2, y, { align: 'center' });
+      y += 5;
 
-    // === HEADER ===
-    doc.setFontSize(18);
-    doc.text('Detail Riwayat Kunjungan', doc.internal.pageSize.width / 2, y, { align: 'center' });
-    y += 10;
+      doc.setFontSize(10);
+      doc.text(`ID Riwayat: #${detail.IDRIWAYATJALAN}`, doc.internal.pageSize.width / 2, y, { align: 'center' });
+      y += 15;
 
-    doc.setFontSize(12);
-    doc.text(`Nama Pasien : ${detail.NAMALENGKAP}`, marginLeft, y); y += 6;
-    doc.text(`NIK : ${detail.NIK}`, marginLeft, y); y += 6;
-    doc.text(`Tanggal Kunjungan : ${formatTanggal(detail.TANGGALKUNJUNGAN)}`, marginLeft, y); y += 6;
-    doc.text(`Poli : ${detail.POLI}`, marginLeft, y); y += 6;
-    doc.text(`Keluhan : ${detail.KELUHAN}`, marginLeft, y); y += 6;
-    doc.text(`Status : ${detail.STATUSKUNJUNGAN}`, marginLeft, y); y += 10;
+      const labelX = marginLeft;
+      const valueX = marginLeft + 35;
 
-    autoTable(doc, {
-      startY: y,
-      head: [['Keterangan', 'Isi']],
-      body: [
-        ['Nama Pasien', detail.NAMALENGKAP],
-        ['NIK', detail.NIK],
-        ['Tanggal Kunjungan', formatTanggal(detail.TANGGALKUNJUNGAN)],
-        ['Poli', detail.POLI],
-        ['Keluhan', detail.KELUHAN],
-        ['Status', detail.STATUSKUNJUNGAN],
-      ],
-      styles: { fontSize: 9 },
-      margin: { left: marginLeft, right: marginRight },
-    });
+      doc.setFontSize(12);
+      doc.text('Informasi Pasien', labelX, y);
+      y += 6;
+
+      doc.setFontSize(10);
+      doc.text('Nama Pasien', labelX, y);
+      doc.text(`: ${detail.NAMALENGKAP}`, valueX, y);
+      y += 6;
+
+      doc.text('Tanggal Rawat', labelX, y);
+      doc.text(`: ${formatTanggal(detail.TANGGALRAWAT)}`, valueX, y);
+      y += 10;
+
+      const services = [];
+      let no = 1;
+
+      detail.tindakan?.forEach((t) => {
+        services.push([
+          no++,
+          t.NAMATINDAKAN,
+          t.KATEGORI || '-',
+          t.JUMLAH,
+          'Tindakan',
+          formatRupiah(t.HARGA),
+          formatRupiah(t.TOTAL),
+        ]);
+      });
+
+      autoTable(doc, {
+        startY: y,
+        head: [['#', 'Layanan', 'Satuan/Kategori', 'Qty', 'Jenis', 'Harga Satuan', 'Total']],
+        body: services,
+        styles: { fontSize: 9 },
+        margin: { left: marginLeft, right: marginRight },
+      });
+
+      let y2 = doc.lastAutoTable.finalY + 10;
+
+      doc.setFontSize(12);
+      doc.text('Ringkasan Biaya', marginLeft, y2);
+      y2 += 6;
+
+      [
+        ['Total Tindakan', detail.TOTALTINDAKAN, false],
+        ['Total Biaya', detail.TOTALBIAYA, true]
+      ].forEach(([label, val]) => {
+        doc.setFontSize(10);
+        doc.text(label, marginLeft, y2);
+        doc.text(
+          formatRupiah(val),
+          doc.internal.pageSize.width - marginRight,
+          y2,
+          { align: 'right' }
+        );
+        y2 += 6;
+      });
+    }
+
+    // ===================== RANAP ======================
+    if (detail.JENIS === 'RAWAT INAP') {
+      doc.setFontSize(18);
+      doc.text('Detail Rawat Inap', doc.internal.pageSize.width / 2, y, { align: 'center' });
+      y += 5;
+
+      doc.setFontSize(10);
+      doc.text(`ID Transaksi: #${detail.IDRIWAYATINAP}`, doc.internal.pageSize.width / 2, y, { align: 'center' });
+      y += 15;
+
+      const labelX = marginLeft;
+      const valueX = marginLeft + 25;
+
+      doc.setFontSize(12);
+      doc.text('Informasi Pasien', labelX, y);
+      y += 6;
+
+      doc.setFontSize(10);
+      doc.text('Nama Pasien', labelX, y);
+      doc.text(`: ${detail.NAMALENGKAP}`, valueX - 2, y);
+      y += 6;
+
+      doc.text('Nomor Bed', labelX, y);
+      doc.text(`: ${detail.NOMORBED}`, valueX - 2, y);
+      y += 10;
+
+      doc.setFontSize(12);
+      doc.text('Periode Rawat Inap', labelX, y);
+      y += 6;
+
+      doc.setFontSize(10);
+      doc.text('Masuk', labelX, y);
+      doc.text(`: ${formatTanggal(detail.TANGGALMASUK)}`, valueX - 2, y);
+      y += 6;
+
+      doc.text('Keluar', labelX, y);
+      doc.text(`: ${formatTanggal(detail.TANGGALKELUAR)}`, valueX - 2, y);
+      y += 10;
+
+      const services = [];
+      services.push([
+        1,
+        `Biaya Kamar Rawat Inap (Bed ${detail.NOMORBED})`,
+        '-',
+        1,
+        'Kamar',
+        formatRupiah(detail.TOTALKAMAR),
+        formatRupiah(detail.TOTALKAMAR)
+      ]);
+
+      detail.obat?.forEach((o) => {
+        services.push([
+          services.length + 1,
+          o.NAMAOBAT,
+          o.JENISOBAT || '-',
+          o.JUMLAH,
+          'Obat',
+          formatRupiah(o.HARGA),
+          formatRupiah(o.TOTAL)
+        ])
+      })
+
+      detail.alkes?.forEach((o) => {
+        services.push([
+          services.length + 1,
+          o.NAMAALKES,
+          o.JENISALKES || '-',
+          o.JUMLAH,
+          'Alkes',
+          formatRupiah(o.HARGA),
+          formatRupiah(o.TOTAL)
+        ])
+      })
+
+      detail.tindakan?.forEach((t) => {
+        services.push([
+          services.length + 1,
+          t.NAMATINDAKAN,
+          t.KATEGORI || '-',
+          t.JUMLAH,
+          'Tindakan',
+          formatRupiah(t.HARGA),
+          formatRupiah(t.TOTAL)
+        ])
+      })
+
+      autoTable(doc, {
+        startY: y,
+        head: [['#', 'Layanan', 'Satuan/Kategori', 'Qty', 'Jenis', 'Harga Satuan', 'Total']],
+        body: services,
+        styles: { fontSize: 9 },
+        margin: { left: marginLeft, right: marginRight },
+      });
+
+      let y2 = doc.lastAutoTable.finalY + 10;
+
+      doc.setFontSize(12);
+      doc.text('Ringkasan Biaya', marginLeft, y2);
+      y2 += 6;
+      const summary = [
+        ['Biaya Kamar', detail.TOTALKAMAR],
+        ['Total Obat', detail.TOTALOBAT],
+        ['Total Alkes', detail.TOTALALKES],
+        ['Total Tindakan', detail.TOTALTINDAKAN],
+        ['Total Biaya', detail.TOTALBIAYA],
+      ];
+
+      summary.forEach(([label, val]) => {
+        doc.setFontSize(10);
+        doc.text(label, marginLeft, y2);
+        doc.text(formatRupiah(val), doc.internal.pageSize.width - marginRight, y2, { align: 'right' });
+        y2 += 6;
+      });
+    }
 
     return doc.output('datauristring');
   }
@@ -103,13 +267,15 @@ export default function AdjustPrintMarginLaporanKunjungan({
       setLoadingExport(true)
       const pdfDataUrl = await exportPDF(selectedRow, dataAdjust)
       setPdfUrl(pdfDataUrl)
-      setFileName(`Riwayat_Kunjungan_${selectedRow.IDPENDAFTARAN}`)
+
+      const jenis = selectedRow.JENIS || 'KUNJUNGAN'
+      setFileName(`Laporan_${jenis}_${selectedRow.NIK}`)
       setAdjustDialog(false)
       setJsPdfPreviewOpen(true)
     } finally {
       setLoadingExport(false)
     }
-  }
+  }  
 
   const footer = () => (
     <div className="flex flex-row">

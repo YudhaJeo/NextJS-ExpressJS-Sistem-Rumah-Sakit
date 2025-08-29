@@ -1,4 +1,5 @@
 import db from '../core/config/knex.js';
+import { insertKunjungan } from './riwayatKunjunganModel.js';
 
 export async function getAllRiwayatJalan() {
   return await db('riwayat_rawat_jalan')
@@ -117,6 +118,15 @@ export async function insertFromRawatJalan(rawatJalan) {
         });
     }
   }
+
+  if (pasienData?.NIK && IDRIWAYATJALAN) {
+    await insertKunjungan({
+      NIK: pasienData.NIK,
+      JENIS: 'RAWAT JALAN',
+      IDRIWAYATJALAN
+    });
+  }
+  console.log('Kunjungan rajal inserted for NIK:', pasienData?.NIK, IDRIWAYATJALAN);
 
   return IDRIWAYATJALAN;
 }

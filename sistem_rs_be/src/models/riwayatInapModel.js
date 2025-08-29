@@ -1,4 +1,5 @@
 import db from '../core/config/knex.js';
+import { insertKunjungan } from './riwayatKunjunganModel.js';
 
 export async function getAllRiwayatInap() {
   return await db('riwayat_rawat_inap')
@@ -67,36 +68,40 @@ export async function insertFromRawatInap(rawatInap) {
     TOTALBIAYA,
   } = rawatInap;
 
-  const [insertedRiwayat] = await db('riwayat_rawat_inap').insert({
-    IDRAWATINAP,
-    TANGGALMASUK,
-    TANGGALKELUAR,
-    NOMORBED,
-    TOTALKAMAR,
-    TOTALOBAT,
-    TOTALTINDAKAN,
-    TOTALALKES,
-    TOTALBIAYA,
-  });
+  let [insertedRiwayat] = await db('riwayat_rawat_inap')
+    .insert({
+      IDRAWATINAP,
+      TANGGALMASUK,
+      TANGGALKELUAR,
+      NOMORBED,
+      TOTALKAMAR,
+      TOTALOBAT,
+      TOTALTINDAKAN,
+      TOTALALKES,
+      TOTALBIAYA,
+    });
 
-  const IDRIWAYATINAP = insertedRiwayat ?? await db('riwayat_rawat_inap')
-    .where({ IDRAWATINAP })
-    .select('IDRIWAYATINAP')
-    .first()
-    .then((row) => row?.IDRIWAYATINAP);
+  let IDRIWAYATINAP = insertedRiwayat;
+  if (!IDRIWAYATINAP) {
+    const row = await db('riwayat_rawat_inap')
+      .where({ IDRAWATINAP })
+      .select('IDRIWAYATINAP')
+      .first();
+    IDRIWAYATINAP = row?.IDRIWAYATINAP;
+  }
 
   const pasienData = await db('rawat_inap')
-  .join('rawat_jalan', 'rawat_inap.IDRAWATJALAN', 'rawat_jalan.IDRAWATJALAN')
-  .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
-  .select('pendaftaran.NIK')
-  .where('rawat_inap.IDRAWATINAP', IDRAWATINAP)
-  .first();
+    .join('rawat_jalan', 'rawat_inap.IDRAWATJALAN', 'rawat_jalan.IDRAWATJALAN')
+    .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
+    .select('pendaftaran.NIK')
+    .where('rawat_inap.IDRAWATINAP', IDRAWATINAP)
+    .first();
 
   if (pasienData?.NIK) {
-  await db('invoice')
-    .where({ NIK: pasienData.NIK })
-    .whereNull('IDRIWAYATINAP') 
-    .update({ IDRIWAYATINAP });
+    await db('invoice')
+      .where({ NIK: pasienData.NIK })
+      .whereNull('IDRIWAYATINAP')
+      .update({ IDRIWAYATINAP });
   }
 
   const obatInap = await db('obat_inap').where({ IDRAWATINAP });
@@ -148,39 +153,39 @@ export async function insertFromRawatInap(rawatInap) {
     await db('bed').where({ IDBED: rawatData.IDBED }).update({ STATUS: 'TERSEDIA' });
   }
 
-  if (rawatData) {
-    const pasienData = await db('rawat_inap')
-      .join('rawat_jalan', 'rawat_inap.IDRAWATJALAN', 'rawat_jalan.IDRAWATJALAN')
-      .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
-      .select('pendaftaran.NIK')
-      .where('rawat_inap.IDRAWATINAP', IDRAWATINAP)
+  if (pasienData?.NIK) {
+    const invoice = await db('invoice')
+      .where('NIK', pasienData.NIK)
+      .orderBy('IDINVOICE', 'desc')
       .first();
 
-    if (pasienData?.NIK) {
-      const invoice = await db('invoice')
-        .where('NIK', pasienData.NIK)
-        .orderBy('IDINVOICE', 'desc')
-        .first();
+    if (invoice) {
+      const totalJalan = invoice.TOTALTAGIHAN || 0;
+      const totalInap = TOTALBIAYA || 0;
+      const TOTALTAGIHAN = totalJalan + totalInap;
+      const SISA_TAGIHAN =
+        TOTALTAGIHAN + (invoice.TOTALDEPOSIT || 0) - (invoice.TOTALANGSURAN || 0);
+      const statusFinal = SISA_TAGIHAN <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
-      if (invoice) {
-        const totalJalan = invoice.TOTALTAGIHAN || 0;
-        const totalInap = TOTALBIAYA || 0; 
-
-        const TOTALTAGIHAN = totalJalan + totalInap;
-
-        const SISA_TAGIHAN = TOTALTAGIHAN + (invoice.TOTALDEPOSIT || 0) - (invoice.TOTALANGSURAN || 0);
-        const statusFinal = SISA_TAGIHAN <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
-
-        await db('invoice')
-          .where('IDINVOICE', invoice.IDINVOICE)
-          .update({
-            TOTALTAGIHAN,
-            SISA_TAGIHAN,
-            STATUS: statusFinal,
-            UPDATED_AT: db.fn.now()
-          });
-      }
-
+      await db('invoice')
+        .where('IDINVOICE', invoice.IDINVOICE)
+        .update({
+          TOTALTAGIHAN,
+          SISA_TAGIHAN,
+          STATUS: statusFinal,
+          UPDATED_AT: db.fn.now(),
+        });
     }
   }
+
+  if (pasienData?.NIK && IDRIWAYATINAP) {
+    await insertKunjungan({
+      NIK: pasienData.NIK,
+      JENIS: 'RAWAT INAP',
+      IDRIWAYATINAP,
+    });
+    console.log('✅ Kunjungan ranap inserted:', pasienData.NIK, IDRIWAYATINAP);
+  }
+
+  return IDRIWAYATINAP;
 }

@@ -1,15 +1,17 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import FilterTanggal from '@/app/components/filterTanggal';
 import HeaderBar from '@/app/components/headerbar';
+import ToastNotifier from '@/app/components/toastNotifier';
+import FilterTanggal from '@/app/components/filterTanggal';
 import TabelRiwayatKunjungan from './components/tabelRiwayatKunjungan';
-
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-const RiwayatKunjunganPage = () => {
+const Page = () => {
+  const toastRef = useRef(null);
+
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -18,42 +20,32 @@ const RiwayatKunjunganPage = () => {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   const fetchData = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const res = await axios.get(`${API_URL}/riwayat_kunjungan`);
-      setData(res.data.data);
-      setOriginalData(res.data.data);
+      setData(res.data.data || []);
+      setOriginalData(res.data.data || []);
     } catch (err) {
-      console.error('Gagal mengambil data:', err);
+      console.error('Gagal fetch riwayat kunjungan:', err);
+      toastRef.current?.showToast('01', 'Gagal mengambil data riwayat kunjungan');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSearch = (keyword) => {
-    if (!keyword) return setData(originalData);
-    const filtered = originalData.filter(
-      (item) =>
-        item.NIK.toLowerCase().includes(keyword.toLowerCase()) ||
-        item.NAMALENGKAP.toLowerCase().includes(keyword.toLowerCase())
-    );
-    setData(filtered);
-  };
-
-
   const handleDateFilter = () => {
     if (!startDate && !endDate) return setData(originalData);
+
     const filtered = originalData.filter((item) => {
       const visitDate = new Date(item.TANGGALKUNJUNGAN);
       const from = startDate ? new Date(startDate.setHours(0, 0, 0, 0)) : null;
       const to = endDate ? new Date(endDate.setHours(23, 59, 59, 999)) : null;
       return (!from || visitDate >= from) && (!to || visitDate <= to);
     });
+
     setData(filtered);
   };
 
@@ -63,11 +55,23 @@ const RiwayatKunjunganPage = () => {
     setData(originalData);
   };
 
+  const handleSearch = (keyword) => {
+    if (!keyword) return setData(originalData);
+
+    const filtered = originalData.filter((item) => {
+      const nama = item.NAMALENGKAP?.toLowerCase() || '';
+      return nama.includes(keyword.toLowerCase());
+    });
+
+    setData(filtered);
+  };
+
   return (
     <div className="card">
-      <h3 className="text-xl font-semibold mb-4">Riwayat Kunjungan</h3>
+      <ToastNotifier ref={toastRef} />
+      <h3 className="text-xl font-semibold mb-3">Riwayat Kunjungan Pasien</h3>
 
-      <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
         <FilterTanggal
           startDate={startDate}
           endDate={endDate}
@@ -76,21 +80,17 @@ const RiwayatKunjunganPage = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
+
         <HeaderBar
           title=""
-          placeholder="Cari nama atau NIK..."
+          placeholder="Cari nama pasien..."
           onSearch={handleSearch}
-          onAddClick={() => {
-            resetForm();
-            setDialogVisible(true);
-          }}
         />
       </div>
 
       <TabelRiwayatKunjungan data={data} loading={loading} />
-
     </div>
   );
 };
 
-export default RiwayatKunjunganPage;
+export default Page;
