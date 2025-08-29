@@ -26,6 +26,7 @@
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
+    "minio": "^8.0.5",
     "multer": "^2.0.1",
     "mysql2": "^3.14.1",
     "node-cron": "^4.2.1",

@@ -1569,7 +1569,7 @@ var qz = (function() {
          * Optionally, print requests can be pre-signed:
          * Signed content consists of a JSON object string containing no spacing,
          * following the format of the "call" and "params" keys in the API call, with the addition of a "timestamp" key in milliseconds
-         * ex. <code>'{"call":"<callName>","params":{...},"timestamp":1450000000}'</code>
+         * ex. <code>'{"call":"<callName>","params":{...},"timestamp":1420000000}'</code>
          *
          * @param {Object<Config>|Array<Object<Config>>} configs Previously created config object or objects.
          * @param {Array<Object|string>|Array<Array<Object|string>>} data Array of data being sent to the printer.<br/>
