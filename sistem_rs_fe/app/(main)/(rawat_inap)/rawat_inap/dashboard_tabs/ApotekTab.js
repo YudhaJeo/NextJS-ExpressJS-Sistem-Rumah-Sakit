@@ -42,7 +42,7 @@ const TabApotek = () => {
         setChartData({
           labels,
           datasets: [{
-            label: 'Statistik Apotek',
+            label: 'Jumlah: ',
             data: values,
             backgroundColor: backgroundColors,
             borderColor: borderColors,

@@ -53,7 +53,7 @@ const TabelReservasiRajal = ({ data, loading }) => {
             body={dateBodyTemplate}
             sortable
           />
-          <Column field="JADWALPRAKTEK" header="Jadwal Praktek" sortable />
+          <Column field="JAMRESERVASI" header="Jam Reservasi" sortable />
           <Column
             field="STATUS"
             header="Status"
