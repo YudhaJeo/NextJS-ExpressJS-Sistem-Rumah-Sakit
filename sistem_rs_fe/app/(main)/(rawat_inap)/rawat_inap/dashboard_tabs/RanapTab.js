@@ -145,14 +145,24 @@ const TabRanap = () => {
     <div className="grid">
       {cards.map((card, i) => (
         <div className="col-12 md:col-6 xl:col-3" key={i}>
-          <Card className="shadow-md" style={{ borderTop: `4px solid ${card.border}` }}>
+          <Card
+            className="shadow-md"
+            style={{ borderTop: `4px solid ${card.border}` }}
+          >
             <div className="flex justify-content-between">
               <div>
                 <span className="block text-500 mb-2">{card.title}</span>
-                <span className="text-900 font-bold text-xl md:text-2xl">{card.value}</span>
+                <span className="text-900 font-bold text-xl md:text-2xl">
+                  {card.value}
+                </span>
               </div>
-              <div className="flex flex-column align-items-end gap-2">
-                <i className={`${card.icon} text-xl`} />
+              <div>
+                <div
+                  className={`flex align-items-center justify-content-center ${card.color} border-round`}
+                  style={{ width: '2.5rem', height: '2.5rem' }}
+                >
+                  <i className={`${card.icon} text-xl`} />
+                </div>
                 <Tag value="Live" severity="info" />
               </div>
             </div>
@@ -176,6 +186,7 @@ const TabRanap = () => {
             <span className="font-medium text-lg text-900">Statistik Rawat Inap</span>
             <Tag value="Live" severity="info" />
           </div>
+          <Chart type="line" data={barChartData} options={barChartOptions} className="w-full" />
           <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
         </Card>
       </div>

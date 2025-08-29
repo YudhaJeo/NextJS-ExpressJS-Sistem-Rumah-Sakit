@@ -112,28 +112,24 @@ const TabRuangan = () => {
       title: 'Bed Tersedia',
       value: data?.tersedia ?? 0,
       icon: 'pi pi-objects-column',
-      background: 'rgba(255, 159, 64, 0.2)',
       border: 'rgb(255, 159, 64)',
     },
     {
       title: 'Bed Terisi',
       value: data?.terisi ?? 0,
       icon: 'pi pi-users',
-      background: 'rgba(75, 192, 192, 0.2)',
       border: 'rgb(75, 192, 192)',
     },
     {
       title: 'Jumlah Kamar',
       value: data?.jumlah_kamar ?? 0,
       icon: 'pi pi-box',
-      background: 'rgba(54, 162, 235, 0.2)',
       border: 'rgb(54, 162, 235)',
     },
     {
       title: 'Jumlah Bangsal',
       value: data?.jumlah_bangsal ?? 0,
       icon: 'pi pi-table',
-      background: 'rgba(153, 102, 255, 0.2)',
       border: 'rgb(153, 102, 255)',
     },
   ];
