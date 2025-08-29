@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import { Card } from 'primereact/card';
 import { Chart } from 'primereact/chart';
 import { Tag } from 'primereact/tag';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -13,17 +11,20 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const DashboardKasir = () => {
   const [data, setData] = useState(null);
   const [invoiceChart, setInvoiceChart] = useState({});
+  const [invoiceChartOptions, setInvoiceChartOptions] = useState({});
   const [depositChart, setDepositChart] = useState({});
-  const router = useRouter();
+  const [depositChartOptions, setDepositChartOptions] = useState({});
 
   useEffect(() => {
     axios
       .get(`${API_URL}/dashboard_kasir`)
       .then((res) => {
         const resData = res.data;
-        // console.log('DATA DASHBOARD KASIR:', resData);
         setData(resData);
 
+        const style = getComputedStyle(document.documentElement);
+
+        // ===== Status Invoice =====
         const lunas = resData.statusInvoice?.LUNAS ?? 0;
         const belum = resData.statusInvoice?.BELUM_LUNAS ?? 0;
 
@@ -32,11 +33,29 @@ const DashboardKasir = () => {
           datasets: [
             {
               data: [lunas, belum],
-              backgroundColor: ['#28A745', '#DC3545'],
+              backgroundColor: [
+                'rgba(40, 167, 69, 0.2)',   // hijau transparan
+                'rgba(220, 53, 69, 0.2)',   // merah transparan
+              ],
+              borderColor: [
+                '#28A745', // hijau solid
+                '#DC3545', // merah solid
+              ],
+              borderWidth: 1,
             },
           ],
         });
 
+        setInvoiceChartOptions({
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: style.getPropertyValue('--text-color') },
+            },
+          },
+        });
+
+        // ===== Status Deposit =====
         const aktif = resData.statusDeposit?.AKTIF ?? 0;
         const habis = resData.statusDeposit?.HABIS ?? 0;
         const refund = resData.statusDeposit?.REFUND ?? 0;
@@ -46,9 +65,28 @@ const DashboardKasir = () => {
           datasets: [
             {
               data: [aktif, habis, refund],
-              backgroundColor: ['#007BFF', '#FFC107', '#6C757D'],
+              backgroundColor: [
+                'rgba(0, 123, 255, 0.2)',   // biru transparan
+                'rgba(255, 193, 7, 0.2)',   // kuning transparan
+                'rgba(108, 117, 125, 0.2)', // abu transparan
+              ],
+              borderColor: [
+                '#007BFF',
+                '#FFC107',
+                '#6C757D',
+              ],
+              borderWidth: 1,
             },
           ],
+        });
+
+        setDepositChartOptions({
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: style.getPropertyValue('--text-color') },
+            },
+          },
         });
       })
       .catch((err) => {
@@ -80,11 +118,11 @@ const DashboardKasir = () => {
       border: '#FFC107',
     },
     {
-      title: 'Penggunaan Deposit',
-      value: data?.totalDepositPenggunaan ?? 0,
+      title: 'Total Angsuran',
+      value: data?.totalAngsuran ?? 0,
       icon: 'pi pi-list',
-      background: 'rgba(23, 162, 184, 0.2)',
-      border: '#17A2B8',
+      background: 'rgba(111, 66, 193, 0.2)',
+      border: '#6F42C1',
     },
   ];
 
@@ -126,7 +164,7 @@ const DashboardKasir = () => {
             <span className="font-medium text-lg text-900">Status Invoice</span>
             <Tag value="Live" severity="info" />
           </div>
-          <Chart type="pie" data={invoiceChart} className="w-full" />
+          <Chart type="pie" data={invoiceChart} options={invoiceChartOptions} className="w-full" />
         </Card>
       </div>
 
@@ -136,7 +174,7 @@ const DashboardKasir = () => {
             <span className="font-medium text-lg text-900">Status Deposit</span>
             <Tag value="Live" severity="info" />
           </div>
-          <Chart type="pie" data={depositChart} className="w-full" />
+          <Chart type="pie" data={depositChart} options={depositChartOptions} className="w-full" />
         </Card>
       </div>
     </div>
