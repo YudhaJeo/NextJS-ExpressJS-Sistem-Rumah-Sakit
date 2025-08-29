@@ -137,7 +137,6 @@ export default function AdjustPrintMarginLaporan({
     const formatRupiah = (val) =>
       new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num(val));
 
-    // ---------- RAWAT JALAN ----------
     if (detail.IDRIWAYATJALAN) {
       let y = addHeader(doc, 'LAPORAN RAWAT JALAN', marginLeft, marginTop);
       y += 5;
@@ -202,7 +201,6 @@ export default function AdjustPrintMarginLaporan({
       y = y + 10;
     }
 
-    // ---------- RAWAT INAP ----------
     if (detail.IDRIWAYATINAP) {
       if (detail.IDRIWAYATJALAN) {
         doc.addPage();
@@ -318,7 +316,6 @@ export default function AdjustPrintMarginLaporan({
       y = ySummary + 10;
     }
 
-    // ---------- INVOICE ----------
     if (detail.NOINVOICE) {
       if (detail.IDRIWAYATJALAN || detail.IDRIWAYATINAP) {
         doc.addPage();

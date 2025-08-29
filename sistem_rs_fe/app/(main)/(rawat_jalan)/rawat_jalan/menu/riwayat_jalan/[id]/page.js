@@ -34,19 +34,6 @@ export default function DetailRiwayatJalanPage() {
 
       const servicesData = [];
 
-      // data.obat?.forEach((obat, index) => {
-      //   servicesData.push({
-      //     id: index + 1,
-      //     layanan: obat.NAMAOBAT,
-      //     satuan: obat.JENISOBAT,
-      //     qty: obat.JUMLAH,
-      //     jenis: 'Obat',
-      //     hargaSatuan: obat.HARGA,
-      //     total: obat.TOTAL,
-      //     type: 'obat'
-      //   });
-      // });
-
       data.tindakan?.forEach((tindakan, index) => {
         servicesData.push({
           id: (data.obat?.length || 0) + index + 1,
@@ -186,10 +173,6 @@ export default function DetailRiwayatJalanPage() {
               <div className="col-12 md:col-6 md:col-offset-6">
                 <Panel header="Ringkasan Biaya" className="bg-gray-50">
                   <div className="pt-2">
-                    {/* <div className="flex justify-content-between mb-2">
-                      <span className="text-600">Total Obat:</span>
-                      <span className="font-medium">{formatRupiah(detail.TOTALOBAT)}</span>
-                    </div> */}
                     <div className="flex justify-content-between mb-2">
                       <span className="text-600">Total Tindakan:</span>
                       <span className="font-medium">{(detail.TOTALTINDAKAN)}</span>

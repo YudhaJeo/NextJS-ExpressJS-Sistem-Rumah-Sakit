@@ -52,11 +52,11 @@ const TabelInvoice = ({ data, loading, onDelete }) => {
   );
 
   const asuransiBody = (rowData) => {
-    let severity = "warning"; 
+    let severity = "warning";
     const asuransi = rowData.ASURANSI?.toUpperCase() || "";
 
     if (asuransi.includes("BPJS")) {
-      severity = "success"; 
+      severity = "success";
     } else if (asuransi === "UMUM") {
       severity = "info";
     }
@@ -66,6 +66,13 @@ const TabelInvoice = ({ data, loading, onDelete }) => {
 
   const actionBody = (rowData) => (
     <div className="flex gap-2">
+      <a
+        href={`/invoice/${rowData.IDINVOICE}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Button icon="pi pi-eye" className="p-button-sm" />
+      </a>
       {rowData.STATUS === "LUNAS" && (
         <Button
           icon="pi pi-sliders-h"
@@ -73,13 +80,6 @@ const TabelInvoice = ({ data, loading, onDelete }) => {
           onClick={() => handleOpenAdjust(rowData)}
         />
       )}
-      <a
-        href={`/invoice/${rowData.IDINVOICE}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <Button icon="pi pi-eye" className="p-button-sm"/>
-      </a>
       <Button
         icon="pi pi-trash"
         size="small"
