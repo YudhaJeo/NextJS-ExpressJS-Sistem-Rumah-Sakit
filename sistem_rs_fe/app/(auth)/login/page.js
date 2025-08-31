@@ -38,11 +38,14 @@ const LoginPage = () => {
           case "dokter":
             router.push("/dashboard_dokter");
             break;
-          case "perawat":
-            router.push("/dashboard_perawat");
+          case "perawatpoli":
+            router.push("/dashboard_dokter");
             break;
-          case "admin":
-            router.push("/dashboard_admin");
+          case "perawatrawatinap":
+            router.push("/dashboard_dokter");
+            break;
+          case "adminutama":
+            router.push("/");
             break;
           case "superadmin":
             router.push("/");

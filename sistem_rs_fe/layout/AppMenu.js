@@ -34,7 +34,6 @@ const AppMenu = () => {
         items: [
           { label: "Antrian Pendaftaran", icon: "pi pi-fw pi-users", to: "/antrian/data" },
           { label: "Antrian Poli", icon: "pi pi-fw pi-users", to: "/antrian/antrian_poli" },
-          // { label: "Data Printer", icon: "pi pi-fw pi-print", to: "/antrian/printer" },
         ],
       },
       {
@@ -207,6 +206,75 @@ const AppMenu = () => {
         ],
       },
     ];
+  } else if (userRole === "Admin Utama" || userRole === "Admin") {
+    model = [
+      {
+        label: "dashboard",
+        items: [
+          { label: "Dashboard Utama", icon: "pi pi-fw pi-chart-bar", to: "/" },
+        ],
+      },
+      {
+        label: "Antrian",
+        icon: "pi pi-fw pi-list",
+        items: [
+          { label: "Antrian Pendaftaran", icon: "pi pi-fw pi-users", to: "/antrian/data" },
+          { label: "Antrian Poli", icon: "pi pi-fw pi-users", to: "/antrian/antrian_poli" },
+        ],
+      },
+      {
+        label: "Master Data",
+        items: [
+          {
+            label: "Master",
+            items: [
+              { label: "Loket", icon: "pi pi-fw pi-ticket", to: "/master/loket" },
+              { label: "Jadwal Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/dokter" },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Fitur Pasien",
+        items: [
+          { label: "Dashboard Pasien", icon: "pi pi-fw pi-chart-bar", to: "/dashboard" },
+          {
+            label: "Master",
+            items: [
+              { label: "Pasien", icon: "pi pi-fw pi-user", to: "/pasien" },
+            ],
+          },
+          {
+            label: "Menu",
+            items: [
+              {
+                label: "Pendaftaran Pasien",
+                icon: "pi pi-fw pi-user-plus",
+                items: [
+                  { label: "Reservasi", icon: "pi pi-fw pi-calendar", to: "/pendaftaran/reservasi" },
+                  { label: "Formulir Pendaftaran", icon: "pi pi-fw pi-book", to: "/pendaftaran/formulir" },
+                ],
+              },
+              {
+                label: "Rekam Medis",
+                icon: "pi pi-fw pi-folder-open",
+                items: [
+                  { label: "File Dokumen", icon: "pi pi-fw pi-file", to: "/rekam_medis/dokumen" },
+                ],
+              },
+              {
+                label: "Laporan",
+                icon: "pi pi-fw pi-chart-bar",
+                items: [
+                  { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/riwayat_kunjungan" },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    
   } else if (userRole === "Dokter") {
     model = [
       {
@@ -231,8 +299,62 @@ const AppMenu = () => {
           },
         ],
       },
+     {
+        label: "Fitur Rawat Jalan",
+        items: [
+           { label: "Dashboard Rawat Jalan", icon: "pi pi-fw pi-chart-bar", to: "/rawat_jalan/dashboard" },
+           {
+             label: "Reservasi & Kalender",
+             items: [
+               { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi" },
+               { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/menu/kalender_reservasi" },
+               { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/riwayat_reservasi" },
+             ],
+           },
+          {
+            label: "Menu",
+            items: [
+              { label: "Rawat Jalan", icon: "pi pi-fw pi-users", to: "/rawat_jalan/menu/rawat_jalan" },
+              { label: "Riwayat Rawat Jalan", icon: "pi pi-fw pi-users", to: "/rawat_jalan/menu/riwayat_jalan" },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Fitur Rawat Inap",
+        items: [
+          { label: "Dashboard Rawat Inap", icon: "pi pi-fw pi-chart-bar", to: "/rawat_inap" },
+          {
+            label: "Inventory",
+            items: [
+              { label: "Daftar Alkes", icon: "pi pi-fw pi-inbox", to: "/rawat_inap/inventory/alkes" },
+              { label: "Daftar Obat", icon: "pi pi-fw pi-chart-pie", to: "/rawat_inap/inventory/obat" },
+              { label: "Pemesanan", icon: "pi pi-fw pi-dollar", to: "/rawat_inap/inventory/pemesanan" },
+              { label: "Log Transaksi", icon: "pi pi-fw pi-file-arrow-up", to: "/rawat_inap/inventory/log_transaksi" },
+            ],
+          },
+          {
+            label: "Ruangan",
+            items: [
+              { label: "Jenis Bangsal", icon: "pi pi-fw pi-tag", to: "/rawat_inap/ruangan/jenis_bangsal" },
+              { label: "Manajemen Bangsal", icon: "pi pi-fw pi-th-large", to: "/rawat_inap/ruangan/manajemen_bangsal" },
+              { label: "Manajemen Kamar", icon: "pi pi-fw pi-table", to: "/rawat_inap/ruangan/manajemen_kamar" },
+              { label: "Manajemen Bed", icon: "pi pi-fw pi-objects-column", to: "/rawat_inap/ruangan/manajemen_bed" },
+            ],
+          },
+          {
+            label: "Menu",
+            items: [
+              { label: "Rawat Inap", icon: "pi pi-fw pi-heart", to: "/rawat_inap/menu/rawat_inap" },
+              { label: "Tagihan Sementara", icon: "pi pi-fw pi-money-bill", to: "/rawat_inap/menu/tagihan_sementara" },
+              { label: "Riwayat Rawat Inap", icon: "pi pi-fw pi-users", to: "/rawat_inap/menu/riwayat_inap" },
+            ],
+          },
+        ],
+      },
     ];
-  } else if (userRole === "Perawat") {
+
+  } else if (userRole === "Perawat Poli") {
     model = [
       {
         label: "Antrian",
@@ -254,7 +376,85 @@ const AppMenu = () => {
           },
         ],
       },
+     {
+        label: "Fitur Rawat Jalan",
+        items: [
+           { label: "Dashboard Rawat Jalan", icon: "pi pi-fw pi-chart-bar", to: "/rawat_jalan/dashboard" },
+           {
+             label: "Reservasi & Kalender",
+             items: [
+               { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi" },
+               { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/menu/kalender_reservasi" },
+               { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/riwayat_reservasi" },
+             ],
+           },
+          {
+            label: "Menu",
+            items: [
+              { label: "Rawat Jalan", icon: "pi pi-fw pi-users", to: "/rawat_jalan/menu/rawat_jalan" },
+              { label: "Riwayat Rawat Jalan", icon: "pi pi-fw pi-users", to: "/rawat_jalan/menu/riwayat_jalan" },
+            ],
+          },
+        ],
+      },
     ];
+
+  } else if (userRole === "Perawat Rawat Inap") {
+    model = [
+      {
+        label: "Antrian",
+        icon: "pi pi-fw pi-list",
+        items: [
+          { label: "Antrian Poli", icon: "pi pi-fw pi-users", to: "/antrian/antrian_poli" },
+        ],
+      },
+      {
+        label: "Fitur Dokter",
+        items: [
+          { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_dokter" },
+          {
+            label: "Menu",
+            items: [
+              { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
+              { label: "Rawat Inap", icon: "pi pi-fw pi-folder-open", to: "/rawat_jalan" },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Fitur Rawat Inap",
+        items: [
+          { label: "Dashboard Rawat Inap", icon: "pi pi-fw pi-chart-bar", to: "/rawat_inap" },
+          {
+            label: "Inventory",
+            items: [
+              { label: "Daftar Alkes", icon: "pi pi-fw pi-inbox", to: "/rawat_inap/inventory/alkes" },
+              { label: "Daftar Obat", icon: "pi pi-fw pi-chart-pie", to: "/rawat_inap/inventory/obat" },
+              { label: "Pemesanan", icon: "pi pi-fw pi-dollar", to: "/rawat_inap/inventory/pemesanan" },
+              { label: "Log Transaksi", icon: "pi pi-fw pi-file-arrow-up", to: "/rawat_inap/inventory/log_transaksi" },
+            ],
+          },
+          {
+            label: "Ruangan",
+            items: [
+              { label: "Jenis Bangsal", icon: "pi pi-fw pi-tag", to: "/rawat_inap/ruangan/jenis_bangsal" },
+              { label: "Manajemen Bangsal", icon: "pi pi-fw pi-th-large", to: "/rawat_inap/ruangan/manajemen_bangsal" },
+              { label: "Manajemen Kamar", icon: "pi pi-fw pi-table", to: "/rawat_inap/ruangan/manajemen_kamar" },
+              { label: "Manajemen Bed", icon: "pi pi-fw pi-objects-column", to: "/rawat_inap/ruangan/manajemen_bed" },
+            ],
+          },
+          {
+            label: "Menu",
+            items: [
+              { label: "Rawat Inap", icon: "pi pi-fw pi-heart", to: "/rawat_inap/menu/rawat_inap" },
+              { label: "Tagihan Sementara", icon: "pi pi-fw pi-money-bill", to: "/rawat_inap/menu/tagihan_sementara" },
+              { label: "Riwayat Rawat Inap", icon: "pi pi-fw pi-users", to: "/rawat_inap/menu/riwayat_inap" },
+            ],
+          },
+        ],
+      },
+    ];
+
   } else if (userRole === "Kasir") {
     model = [
       {
@@ -265,7 +465,6 @@ const AppMenu = () => {
             label: "Master",
             items: [
               { label: "Bank Account", icon: "pi pi-fw pi-building", to: "/bank_account" },
-              { label: "Metode Pembayaran", icon: "pi pi-fw pi-credit-card", to: "/metode_pembayaran" },
             ],
           },
           {
@@ -288,8 +487,19 @@ const AppMenu = () => {
                   { label: "Deposit Penggunaan", icon: "pi pi-fw pi-money-bill", to: "/deposit_penggunaan" },
                 ],
               },
-              { label: "Cetak Invoice & Kwitansi", icon: "pi pi-fw pi-print", to: "/cetak_invoice" },
               { label: "Laporan Pembayaran", icon: "pi pi-fw pi-chart-bar", to: "/laporan_pembayaran" },
+            ],
+          },
+        ],
+      },
+            {
+        label: "Fitur Rawat Inap",
+        items: [
+          {
+            label: "Menu",
+            items: [
+              { label: "Tagihan Sementara", icon: "pi pi-fw pi-money-bill", to: "/rawat_inap/menu/tagihan_sementara" },
+              { label: "Riwayat Rawat Inap", icon: "pi pi-fw pi-users", to: "/rawat_inap/menu/riwayat_inap" },
             ],
           },
         ],
