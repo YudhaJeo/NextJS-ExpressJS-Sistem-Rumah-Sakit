@@ -8,6 +8,7 @@ import { InputNumber } from 'primereact/inputnumber'
 import { Toolbar } from 'primereact/toolbar'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import * as XLSX from 'xlsx' // <-- Perbaikan import
 
 export default function AdjustPrintMarginLaporan({
   adjustDialog,
@@ -18,6 +19,7 @@ export default function AdjustPrintMarginLaporan({
   setJsPdfPreviewOpen
 }) {
   const [loadingExport, setLoadingExport] = useState(false)
+  const [loadingExcel, setLoadingExcel] = useState(false)
   const [dataAdjust, setDataAdjust] = useState({
     marginTop: 10,
     marginBottom: 10,
@@ -105,18 +107,17 @@ export default function AdjustPrintMarginLaporan({
     doc.text(`: ${formatTanggal(detail.TANGGALKUNJUNGAN)}`, valueX - 2, y);
     y += 6;
 
-    const services = [];
-    let no = 1;
-
-    services.push([
-      1,
-      `Biaya Komisi Dokter (${detail.NAMAPASIEN})`,
-      '-',
-      1,
-      'Komisi',
-      formatRupiah(detail.NILAIKOMISI),
-      formatRupiah(detail.NILAIKOMISI)
-    ])
+    const services = [
+      [
+        1,
+        `Biaya Komisi Dokter (${detail.NAMAPASIEN})`,
+        '-',
+        1,
+        'Komisi',
+        formatRupiah(detail.NILAIKOMISI),
+        formatRupiah(detail.NILAIKOMISI)
+      ]
+    ]
 
     autoTable(doc, {
       startY: y,
@@ -149,17 +150,10 @@ export default function AdjustPrintMarginLaporan({
     doc.setFontSize(12);
     doc.text('Ringkasan Biaya', marginLeft, y2);
     y2 += 6;
-    const summary = [
-      ['Biaya Komisi Dokter', detail.NILAIKOMISI],
-    ];
 
-    summary.forEach(([label, val]) => {
-      doc.setFontSize(10);
-      doc.text(label, marginLeft, y2);
-      doc.text(formatRupiah(val), doc.internal.pageSize.width - marginRight, y2, { align: 'right' });
-      y2 += 6;
-    });
-
+    doc.setFontSize(10);
+    doc.text('Biaya Komisi Dokter', marginLeft, y2);
+    doc.text(formatRupiah(detail.NILAIKOMISI), doc.internal.pageSize.width - marginRight, y2, { align: 'right' });
     y2 += 10;
 
     doc.setFontSize(9);
@@ -177,7 +171,6 @@ export default function AdjustPrintMarginLaporan({
     if (!selectedRow) return
     try {
       setLoadingExport(true)
-
       const pdfDataUrl = await exportPDF(selectedRow, dataAdjust)
       setPdfUrl(pdfDataUrl)
       setFileName(`Laporan_Komisi_${selectedRow.NAMAPASIEN}`)
@@ -186,16 +179,49 @@ export default function AdjustPrintMarginLaporan({
     } finally {
       setLoadingExport(false)
     }
-  }  
+  }
+
+  const handleExportExcel = async () => {
+    if (!selectedRow) return
+    try {
+      setLoadingExcel(true)
+
+      const row = selectedRow
+      const data = [{
+        ID: row.IDKOMISI,
+        Dokter: row.NAMADOKTER,
+        Pasien: row.NAMAPASIEN,
+        'Tanggal Kunjungan': new Date(row.TANGGALKUNJUNGAN).toLocaleDateString('id-ID'),
+        Komisi: row.NILAIKOMISI,
+        Status: row.STATUS
+      }]
+
+      const ws = XLSX.utils.json_to_sheet(data)
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, ws, 'Laporan Komisi')
+
+      XLSX.writeFile(wb, `Laporan_Komisi_${row.NAMAPASIEN}.xlsx`)
+      setAdjustDialog(false)
+    } finally {
+      setLoadingExcel(false)
+    }
+  }
 
   const footer = () => (
-    <div className="flex flex-row">
+    <div className="flex flex-row gap-2">
       <Button
         label="Export PDF"
-        icon="pi pi-file"
+        icon="pi pi-file-pdf"
         className="p-button-danger"
         onClick={handleExportPdf}
         loading={loadingExport}
+      />
+      <Button
+        label="Export Excel"
+        icon="pi pi-file-excel"
+        className="p-button-success"
+        onClick={handleExportExcel}
+        loading={loadingExcel}
       />
     </div>
   )

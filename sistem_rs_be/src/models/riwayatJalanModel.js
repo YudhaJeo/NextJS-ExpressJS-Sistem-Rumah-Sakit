@@ -59,27 +59,46 @@ export async function insertFromRawatJalan(rawatJalan) {
   const TOTALTINDAKAN = tindakanJalan.length;
   const TOTALBIAYA = tindakanJalan.reduce((sum, t) => sum + Number(t.TOTAL || 0), 0);
 
-  const [insertedRiwayat] = await db('riwayat_rawat_jalan').insert({
-    IDRAWATJALAN,
-    IDDOKTER,
-    DIAGNOSA,
-    TOTALTINDAKAN,
-    TOTALBIAYA,
-    TANGGALRAWAT
-  });
+  // Cek apakah riwayat sudah ada
+  const existingRiwayat = await db('riwayat_rawat_jalan')
+    .where({ IDRAWATJALAN })
+    .first();
 
+  let IDRIWAYATJALAN;
+
+  if (existingRiwayat) {
+    // Update jika sudah ada
+    await db('riwayat_rawat_jalan')
+      .where({ IDRAWATJALAN })
+      .update({
+        IDDOKTER,
+        DIAGNOSA,
+        TOTALTINDAKAN,
+        TOTALBIAYA,
+        TANGGALRAWAT
+      });
+    IDRIWAYATJALAN = existingRiwayat.IDRIWAYATJALAN;
+  } else {
+    // Insert baru jika belum ada
+    const [insertedId] = await db('riwayat_rawat_jalan').insert({
+      IDRAWATJALAN,
+      IDDOKTER,
+      DIAGNOSA,
+      TOTALTINDAKAN,
+      TOTALBIAYA,
+      TANGGALRAWAT
+    });
+    IDRIWAYATJALAN = insertedId;
+  }
+
+  // Ambil NIK pasien dari rawat jalan
   const pasienData = await db('rawat_jalan')
     .join('pendaftaran', 'rawat_jalan.IDPENDAFTARAN', 'pendaftaran.IDPENDAFTARAN')
     .select('pendaftaran.NIK')
     .where('rawat_jalan.IDRAWATJALAN', IDRAWATJALAN)
     .first();
-  
-  const IDRIWAYATJALAN = insertedRiwayat ?? await db('riwayat_rawat_jalan')
-    .where({ IDRAWATJALAN })
-    .select('IDRIWAYATJALAN')
-    .first()
-    .then((row) => row?.IDRIWAYATJALAN);
 
+  // Update invoice dengan IDRIWAYATJALAN jika ada
   if (pasienData?.NIK && IDRIWAYATJALAN) {
     await db('invoice')
       .where({ NIK: pasienData.NIK })
@@ -87,7 +106,11 @@ export async function insertFromRawatJalan(rawatJalan) {
       .update({ IDRIWAYATJALAN });
   }
 
+  // Sinkronisasi tindakan riwayat
   if (tindakanJalan.length > 0) {
+    // Hapus dulu tindakan lama supaya tidak duplikat
+    await db('riwayat_tindakan_jalan').where({ IDRIWAYATJALAN }).del();
+
     const tindakanRiwayat = tindakanJalan.map((t) => ({
       IDRIWAYATJALAN,
       IDTINDAKAN: t.IDTINDAKAN,
@@ -98,6 +121,7 @@ export async function insertFromRawatJalan(rawatJalan) {
     await db('riwayat_tindakan_jalan').insert(tindakanRiwayat);
   }
 
+  // Update invoice tagihan
   if (pasienData?.NIK) {
     const invoice = await db('invoice')
       .where('NIK', pasienData.NIK)
@@ -119,14 +143,15 @@ export async function insertFromRawatJalan(rawatJalan) {
     }
   }
 
+  // Tambahkan ke riwayat kunjungan jika belum ada
   if (pasienData?.NIK && IDRIWAYATJALAN) {
     await insertKunjungan({
       NIK: pasienData.NIK,
       JENIS: 'RAWAT JALAN',
       IDRIWAYATJALAN
     });
+    console.log('Kunjungan rajal inserted for NIK:', pasienData?.NIK, IDRIWAYATJALAN);
   }
-  console.log('Kunjungan rajal inserted for NIK:', pasienData?.NIK, IDRIWAYATJALAN);
 
   return IDRIWAYATJALAN;
 }
