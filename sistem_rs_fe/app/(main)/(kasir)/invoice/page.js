@@ -8,6 +8,10 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import FilterTanggal from '@/app/components/filterTanggal';
 import TabelInvoice from './components/tabelInvoice';
 import HeaderBar from '@/app/components/headerbar';
+import { Button } from 'primereact/button';
+import AdjustPrintMarginLaporan from './adjustPrintMarginLaporan';
+import { Dialog } from 'primereact/dialog';
+import dynamic from 'next/dynamic';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,8 +22,15 @@ const Page = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+
   const toastRef = useRef(null);
   const router = useRouter();
+
+  const PDFViewer = dynamic(() => import('./PDFViewer'), { ssr: false });
 
   useEffect(() => {
     fetchData();
@@ -93,7 +104,7 @@ const Page = () => {
 
       <h3 className="text-xl font-semibold mb-3">Manajemen Invoice</h3>
 
-      <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
         <FilterTanggal
           startDate={startDate}
           endDate={endDate}
@@ -102,21 +113,58 @@ const Page = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
-        <HeaderBar
-          title=""
-          placeholder="Cari no invoice atau nama pasien..."
-          onSearch={handleSearch}
-        />
+
+        {/* Bagian kanan: tombol sliders + search (sejajar) */}
+        <div className="flex items-center gap-2">
+          <Button
+            icon="pi pi-sliders-h"
+            className="p-button-warning mt-3"
+            tooltip="Atur Print Margin"
+            onClick={() => setAdjustDialog(true)}
+          />
+          <HeaderBar
+            title=""
+            placeholder="Cari no invoice atau nama pasien..."
+            onSearch={handleSearch}
+          />
+        </div>
       </div>
 
       <TabelInvoice
         data={data}
         loading={loading}
         onDelete={handleDelete}
-        onPrint={(row) => window.open(`/invoice/cetak/${row.IDINVOICE}`, '_blank')}
+        onPrint={(row) =>
+          window.open(`/invoice/cetak/${row.IDINVOICE}`, '_blank')
+        }
       />
+
+      {/* Dialog Adjust Print Margin Global */}
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null} // global, bukan per-row
+        dataInvoices={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: '90vw', height: '90vh' }}
+        header="Preview PDF"
+      >
+        <PDFViewer
+          pdfUrl={pdfUrl}
+          fileName={fileName}
+          paperSize="A4"
+        />
+      </Dialog>
     </div>
   );
 };
 
-export default Page; 
+export default Page;

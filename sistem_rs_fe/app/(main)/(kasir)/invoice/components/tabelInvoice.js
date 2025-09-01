@@ -151,6 +151,7 @@ const TabelInvoice = ({ data, loading, onDelete }) => {
         adjustDialog={adjustDialog}
         setAdjustDialog={setAdjustDialog}
         selectedRow={selectedRow}
+        dataInvoice={[]}
         setPdfUrl={setPdfUrl}
         setFileName={setFileName}
         setJsPdfPreviewOpen={setJsPdfPreviewOpen}

@@ -37,7 +37,8 @@
     "react-pdf": "^10.0.1",
     "sas": "^3.0.4",
     "sass": "^1.89.2",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
