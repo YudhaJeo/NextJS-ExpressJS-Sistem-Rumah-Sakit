@@ -285,14 +285,13 @@ const AppMenu = () => {
             label: "Menu",
             items: [
               { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
-              { label: "Rawat Inap", icon: "pi pi-fw pi-folder-open", to: "/rawat_jalan" },
               { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/manajemen_komisi" },
               {
                 label: "Laporan",
                 icon: "pi pi-fw pi-chart-bar",
                 items: [
-                  { label: "Entri Rekam Medis", icon: "pi pi-fw pi-pencil", to: "/entri_rm" },
-                  { label: "Laporan Komisi", icon: "pi pi-fw pi-file", to: "/laporan_komisi" },
+                  { label: "Entri Drawing Rekam Medis", icon: "pi pi-fw pi-pencil", to: "/entri_rm" },
+                  { label: "Laporan dan Transaksi", icon: "pi pi-fw pi-file", to: "/laporan_komisi" },
                 ],
               },
             ],
@@ -371,7 +370,6 @@ const AppMenu = () => {
             label: "Menu",
             items: [
               { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
-              { label: "Rawat Inap", icon: "pi pi-fw pi-folder-open", to: "/rawat_jalan" },
             ],
           },
         ],
@@ -416,7 +414,6 @@ const AppMenu = () => {
             label: "Menu",
             items: [
               { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
-              { label: "Rawat Inap", icon: "pi pi-fw pi-folder-open", to: "/rawat_jalan" },
             ],
           },
         ],
