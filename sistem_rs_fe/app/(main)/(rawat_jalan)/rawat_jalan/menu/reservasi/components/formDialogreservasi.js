@@ -28,7 +28,7 @@ const FormReservasiPasien = ({
   allDokterOptions,
 }) => {
   const inputClass = (field) =>
-    errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
+    errors[field] ? "p-invalid w-full mt-2" : "w-full mt-2";
 
   const [jamOptions, setJamOptions] = useState([]);
 
@@ -48,11 +48,17 @@ const FormReservasiPasien = ({
         )
     );
 
-    setDokterOptions(filtered);
-
-    if (!filtered.some((d) => d.value === formData.IDDOKTER)) {
-      setFormData((prev) => ({ ...prev, IDDOKTER: "", JAMRESERVASI: "" }));
+    if (
+      formData.IDDOKTER &&
+      !filtered.some((d) => d.value === formData.IDDOKTER)
+    ) {
+      const dokterLama = allDokterOptions.find(
+        (d) => d.value === formData.IDDOKTER
+      );
+      if (dokterLama) filtered.push(dokterLama);
     }
+
+    setDokterOptions(filtered);
   }, [formData.TANGGALRESERVASI, formData.IDPOLI]);
 
   useEffect(() => {
@@ -62,11 +68,22 @@ const FormReservasiPasien = ({
     }
 
     const hari = getNamaHari(formData.TANGGALRESERVASI);
-
-    const selected = allDokterOptions.find(d => d.value === formData.IDDOKTER);
+    const selected = allDokterOptions.find(
+      (d) => d.value === formData.IDDOKTER
+    );
 
     if (selected && selected.JADWALPRAKTEK) {
-      const filteredJam = selected.JADWALPRAKTEK.filter(j => j.includes(hari));
+      const filteredJam = selected.JADWALPRAKTEK.filter((j) =>
+        j.includes(hari)
+      );
+
+      if (
+        formData.JAMRESERVASI &&
+        !filteredJam.includes(formData.JAMRESERVASI)
+      ) {
+        filteredJam.push(formData.JAMRESERVASI);
+      }
+
       setJamOptions(filteredJam);
     } else {
       setJamOptions([]);
@@ -87,11 +104,10 @@ const FormReservasiPasien = ({
           onSubmit();
         }}
       >
-
         <div>
           <label>NIK</label>
           <Dropdown
-            className={inputClass('NIK')}
+            className={inputClass("NIK")}
             options={pasienOptions}
             value={formData.NIK}
             onChange={(e) => setFormData({ ...formData, NIK: e.value })}
@@ -106,7 +122,7 @@ const FormReservasiPasien = ({
           <div className="w-full md:w-1/2">
             <label>Tanggal Reservasi</label>
             <Calendar
-              className={inputClass('TANGGALRESERVASI')}
+              className={inputClass("TANGGALRESERVASI")}
               dateFormat="yy-mm-dd"
               value={
                 formData.TANGGALRESERVASI
@@ -117,7 +133,12 @@ const FormReservasiPasien = ({
                 onChange({
                   ...formData,
                   TANGGALRESERVASI: e.value
-                    ? `${e.value.getFullYear()}-${String(e.value.getMonth() + 1).padStart(2, '0')}-${String(e.value.getDate()).padStart(2, '0')}`
+                    ? `${e.value.getFullYear()}-${String(
+                        e.value.getMonth() + 1
+                      ).padStart(2, "0")}-${String(e.value.getDate()).padStart(
+                        2,
+                        "0"
+                      )}`
                     : "",
                 })
               }
@@ -131,7 +152,7 @@ const FormReservasiPasien = ({
           <div className="w-full md:w-1/2">
             <label>Poli</label>
             <Dropdown
-              className={inputClass('IDPOLI')}
+              className={inputClass("IDPOLI")}
               options={poliOptions}
               value={formData.IDPOLI}
               onChange={(e) => {
@@ -149,18 +170,20 @@ const FormReservasiPasien = ({
               filter
               showClear
             />
-            {errors.IDPOLI && <small className="text-red-500">{errors.IDPOLI}</small>}
+            {errors.IDPOLI && (
+              <small className="text-red-500">{errors.IDPOLI}</small>
+            )}
           </div>
         </div>
 
         <div>
           <label>Nama Dokter</label>
           <Dropdown
-            className={inputClass('IDDOKTER')}
-            options={dokterOptions.map(d => ({
+            className={inputClass("IDDOKTER")}
+            options={dokterOptions.map((d) => ({
               label: d.NAMALENGKAP,
               value: d.value,
-              JADWALPRAKTEK: d.JADWALPRAKTEK || []
+              JADWALPRAKTEK: d.JADWALPRAKTEK || [],
             }))}
             value={formData.IDDOKTER}
             onChange={(e) => {
@@ -174,38 +197,56 @@ const FormReservasiPasien = ({
             filter
             showClear
           />
-          {errors.IDDOKTER && <small className="text-red-500">{errors.IDDOKTER}</small>}
+          {errors.IDDOKTER && (
+            <small className="text-red-500">{errors.IDDOKTER}</small>
+          )}
         </div>
 
         <div>
           <label>Jam Praktek</label>
           <Dropdown
-            className={inputClass('JAMRESERVASI')}
-            options={jamOptions.map(j => ({ label: j, value: j }))}
+            className={inputClass("JAMRESERVASI")}
+            options={[
+              ...(formData.JAMRESERVASI &&
+              !jamOptions.includes(formData.JAMRESERVASI)
+                ? [
+                    {
+                      label: formData.JAMRESERVASI,
+                      value: formData.JAMRESERVASI,
+                    },
+                  ]
+                : []),
+              ...jamOptions.map((j) => ({ label: j, value: j })),
+            ]}
             value={formData.JAMRESERVASI || ""}
-            onChange={(e) => setFormData({ ...formData, JAMRESERVASI: e.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, JAMRESERVASI: e.value })
+            }
             placeholder="Pilih Jam"
-            disabled={jamOptions.length === 0}
           />
-          {errors.JAMRESERVASI && <small className="text-red-500">{errors.JAMRESERVASI}</small>}
+          {errors.JAMRESERVASI && (
+            <small className="text-red-500">{errors.JAMRESERVASI}</small>
+          )}
         </div>
 
         <div>
           <label>Keluhan</label>
           <InputText
-            className={inputClass('KETERANGAN')}
+            className={inputClass("KETERANGAN")}
             value={formData.KETERANGAN}
             onChange={(e) =>
               onChange({ ...formData, KETERANGAN: e.target.value })
             }
           />
-          {errors.KETERANGAN && <small className="text-red-500">{errors.KETERANGAN}</small>}
+          {errors.KETERANGAN && (
+            <small className="text-red-500">{errors.KETERANGAN}</small>
+          )}
         </div>
 
         <div>
           <label>Status</label>
           <Dropdown
-            className={inputClass('STATUS')}
+            className={inputClass("STATUS")}
             options={["Menunggu", "Dikonfirmasi", "Dibatalkan"].map((val) => ({
               label: val,
               value: val,
@@ -214,7 +255,9 @@ const FormReservasiPasien = ({
             onChange={(e) => onChange({ ...formData, STATUS: e.value })}
             placeholder="Pilih Status"
           />
-          {errors.STATUS && <small className="text-red-500">{errors.STATUS}</small>}
+          {errors.STATUS && (
+            <small className="text-red-500">{errors.STATUS}</small>
+          )}
         </div>
 
         <div className="text-right pt-3">

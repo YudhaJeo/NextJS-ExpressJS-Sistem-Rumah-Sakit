@@ -6,13 +6,15 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function TabelKalender({ refresh }) {
   const [events, setEvents] = useState([]);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEvents, setSelectedEvents] = useState([]);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -26,22 +28,21 @@ export default function TabelKalender({ refresh }) {
       // Filter hanya status "dikonfirmasi"
       const filteredData = res.data.filter(item => item.STATUS?.toLowerCase() === 'dikonfirmasi');
 
-      const data = filteredData.map((item) => ({
-        id: item.IDRESERVASI,
-        title: `Reservasi - ${item.NAMALENGKAP} - ${item.NAMADOKTER} - (${item.KETERANGAN || '-'})`,
-        start: item.TANGGALRESERVASI,
-        extendedProps: {
-          NIK: item.NIK,
-          NAMAPASIEN: item.NAMALENGKAP,
-          NAMAPOLI: item.NAMAPOLI,
-          NAMADOKTER: item.NAMADOKTER,
-          JAMRESERVASI: item.JAMRESERVASI,
-          JADWALPRAKTEK: item.JADWALPRAKTEK?.join(', ') || '-',
-          STATUS: item.STATUS,
-          KETERANGAN: item.KETERANGAN,
-          TANGGALRESERVASI: item.TANGGALRESERVASI,
-        },
-        color: item.STATUS === 'batal' ? '#f87171' : '#60a5fa',
+      // Grup berdasarkan tanggal reservasi
+      const grouped = filteredData.reduce((acc, item) => {
+        const date = item.TANGGALRESERVASI.split('T')[0]; // Ambil tanggal saja
+        if (!acc[date]) acc[date] = [];
+        acc[date].push(item);
+        return acc;
+      }, {});
+
+      // Konversi menjadi event untuk kalender
+      const data = Object.entries(grouped).map(([date, items]) => ({
+        id: date,
+        title: `${items.length} Reservasi`,
+        start: date,
+        extendedProps: { items },
+        color: '#60a5fa',
       }));
 
       setEvents(data);
@@ -51,7 +52,7 @@ export default function TabelKalender({ refresh }) {
   };
 
   const handleEventClick = (info) => {
-    setSelectedEvent(info.event.extendedProps);
+    setSelectedEvents(info.event.extendedProps.items);
     setVisible(true);
   };
 
@@ -93,7 +94,7 @@ export default function TabelKalender({ refresh }) {
       <Dialog
         header="Detail Reservasi"
         visible={visible}
-        style={{ width: '30rem' }}
+        style={{ width: '50rem' }}
         onHide={() => setVisible(false)}
         footer={
           <div className="flex justify-end gap-2">
@@ -101,16 +102,16 @@ export default function TabelKalender({ refresh }) {
           </div>
         }
       >
-        {selectedEvent && (
-          <div className="p-2">
-            <p><strong>Pasien:</strong> {selectedEvent.NAMAPASIEN}</p>
-            <p><strong>Dokter:</strong> {selectedEvent.NAMADOKTER}</p>
-            <p><strong>Poli:</strong> {selectedEvent.NAMAPOLI}</p>
-            <p><strong>Jam Reservasi:</strong> {selectedEvent.JAMRESERVASI}</p>
-            <p><strong>Tanggal:</strong> {formatTanggal(selectedEvent.TANGGALRESERVASI)}</p>
-            <p><strong>Keterangan:</strong> {selectedEvent.KETERANGAN || '-'}</p>
-            <p><strong>Status:</strong> {selectedEvent.STATUS}</p>
-          </div>
+        {selectedEvents.length > 0 && (
+          <DataTable value={selectedEvents} paginator rows={5} responsiveLayout="scroll">
+            <Column field="NAMALENGKAP" header="Pasien" />
+            <Column field="NAMADOKTER" header="Dokter" />
+            <Column field="NAMAPOLI" header="Poli" />
+            <Column field="JAMRESERVASI" header="Jam" />
+            <Column field="TANGGALRESERVASI" header="Tanggal" body={(row) => formatTanggal(row.TANGGALRESERVASI)} />
+            <Column field="STATUS" header="Status" />
+            <Column field="KETERANGAN" header="Keterangan" />
+          </DataTable>
         )}
       </Dialog>
 
