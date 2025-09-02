@@ -1,7 +1,7 @@
 import db from '../core/config/knex.js';
 
 export const getAll = () =>
-    db('agama').select();
+    db('agama').select().orderBy('IDAGAMA', 'asc');
 
 export const getById = (id) =>
     db('agama').where({ IDAGAMA: id }).first();
