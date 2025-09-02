@@ -1,14 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
-import HeaderBar from '@/app/components/headerbar';
-import TabelAgama from './components/tabelAgama';
-import FormDialogAgama from './components/formDialogAgama';
-import ToastNotifier from '@/app/components/toastNotifier';
-import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import HeaderBar from "@/app/components/headerbar";
+import TabelAgama from "./components/tabelAgama";
+import FormDialogAgama from "./components/formDialogAgama";
+import ToastNotifier from "@/app/components/toastNotifier";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { Button } from "primereact/button";
+import AdjustPrintMarginLaporan from "./adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -16,9 +20,13 @@ const Page = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-
-  const [form, setForm] = useState({ NAMAAGAMA: '' });
+  const [form, setForm] = useState({ NAMAAGAMA: "" });
   const [errors, setErrors] = useState({});
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+  const PDFViewer = dynamic(() => import("./PDFViewer"), { ssr: false });
 
   const toastRef = useRef(null);
   const router = useRouter();
@@ -33,19 +41,18 @@ const Page = () => {
       const res = await axios.get(`${API_URL}/agama`);
       setData(res.data.data);
     } catch (err) {
-      console.error('Gagal ambil data:', err);
+      console.error("Gagal ambil data:", err);
     } finally {
       setLoading(false);
     }
   };
 
-
   const validateForm = () => {
     const newErrors = {};
-    if (!form.NAMAAGAMA.trim()) newErrors.NAMAAGAMA =
-      <span style={{ color: 'red' }}>
-        Nama agama wajib diisi
-      </span>;
+    if (!form.NAMAAGAMA.trim())
+      newErrors.NAMAAGAMA = (
+        <span style={{ color: "red" }}>Nama agama wajib diisi</span>
+      );
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -61,18 +68,18 @@ const Page = () => {
     try {
       if (isEdit) {
         await axios.put(url, form);
-        toastRef.current?.showToast('00', 'Data berhasil diperbarui');
+        toastRef.current?.showToast("00", "Data berhasil diperbarui");
       } else {
         await axios.post(url, form);
-        toastRef.current?.showToast('00', 'Data berhasil ditambahkan');
+        toastRef.current?.showToast("00", "Data berhasil ditambahkan");
       }
 
       fetchData();
       setDialogVisible(false);
-      setForm({ NAMAAGAMA: '' });
+      setForm({ NAMAAGAMA: "" });
     } catch (err) {
-      console.error('Gagal simpan data:', err);
-      toastRef.current?.showToast('01', 'Gagal menyimpan data');
+      console.error("Gagal simpan data:", err);
+      toastRef.current?.showToast("01", "Gagal menyimpan data");
     }
   };
 
@@ -84,18 +91,18 @@ const Page = () => {
   const handleDelete = (row) => {
     confirmDialog({
       message: `Yakin hapus '${row.NAMAAGAMA}'?`,
-      header: 'Konfirmasi Hapus',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Ya',
-      rejectLabel: 'Batal',
+      header: "Konfirmasi Hapus",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: "Ya",
+      rejectLabel: "Batal",
       accept: async () => {
         try {
           await axios.delete(`${API_URL}/agama/${row.IDAGAMA}`);
           fetchData();
-          toastRef.current?.showToast('00', 'Data berhasil dihapus');
+          toastRef.current?.showToast("00", "Data berhasil dihapus");
         } catch (err) {
-          console.error('Gagal hapus data:', err);
-          toastRef.current?.showToast('01', 'Gagal menghapus data');
+          console.error("Gagal hapus data:", err);
+          toastRef.current?.showToast("01", "Gagal menghapus data");
         }
       },
     });
@@ -108,21 +115,29 @@ const Page = () => {
 
       <h3 className="text-xl font-semibold mb-3">Master Agama</h3>
 
-      <HeaderBar
-        title=""
-        placeholder="Cari nama agama"
-        onSearch={(keyword) => {
-          if (!keyword) return fetchData();
-          const filtered = data.filter((item) =>
-            item.NAMAAGAMA.toLowerCase().includes(keyword.toLowerCase())
-          );
-          setData(filtered);
-        }}
-        onAddClick={() => {
-          setForm({ NAMAAGAMA: '' });
-          setDialogVisible(true);
-        }}
-      />
+      <div className="flex items-center justify-end">
+        <Button
+          icon="pi pi-sliders-h"
+          className="p-button-warning mt-3"
+          tooltip="Atur Print Margin"
+          onClick={() => setAdjustDialog(true)}
+        />
+        <HeaderBar
+          title=""
+          placeholder="Cari nama agama"
+          onSearch={(keyword) => {
+            if (!keyword) return fetchData();
+            const filtered = data.filter((item) =>
+              item.NAMAAGAMA.toLowerCase().includes(keyword.toLowerCase())
+            );
+            setData(filtered);
+          }}
+          onAddClick={() => {
+            setForm({ NAMAAGAMA: "" });
+            setDialogVisible(true);
+          }}
+        />
+      </div>
 
       <TabelAgama
         data={data}
@@ -135,13 +150,33 @@ const Page = () => {
         visible={dialogVisible}
         onHide={() => {
           setDialogVisible(false);
-          setForm({ NAMAAGAMA: '' });
+          setForm({ NAMAAGAMA: "" });
         }}
         onSubmit={handleSubmit}
         form={form}
         setForm={setForm}
         errors={errors}
       />
+
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        dataAgama={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: "90vw", height: "90vh" }}
+        header="Preview PDF"
+      >
+        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+      </Dialog>
     </div>
   );
 };
