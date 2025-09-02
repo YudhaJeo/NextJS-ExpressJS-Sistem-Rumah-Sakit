@@ -13,8 +13,7 @@ import * as XLSX from 'xlsx'
 export default function AdjustPrintMarginLaporan({
   adjustDialog,
   setAdjustDialog,
-  selectedRow,
-  dataInvoices = [], // ⬅️ tambahkan, untuk export semua data
+  dataInvoices = [],
   setPdfUrl,
   setFileName,
   setJsPdfPreviewOpen,
@@ -47,8 +46,40 @@ export default function AdjustPrintMarginLaporan({
     setDataAdjust((prev) => ({ ...prev, [name]: e.value }));
   };
 
-  // ========================== EXPORT PDF ==========================
-  async function exportPDF(detail, adjustConfig) {
+  const addHeader = (doc, title, marginLeft, marginTop, marginRight) => {
+    const pageWidth = doc.internal.pageSize.width;
+
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(41, 128, 185);
+    doc.text('RS BAYZA MEDICA', pageWidth / 2, marginTop + 5, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(80, 80, 80);
+    doc.text('Jl. A. Yani No. 84, Kota Madiun, Jawa Timur | Telp: (0351) 876-9090', pageWidth / 2, marginTop + 11, { align: 'center' });
+
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(marginLeft, marginTop + 14, pageWidth - marginRight, marginTop + 14);
+
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
+    doc.text(title, pageWidth / 2, marginTop + 25, { align: 'center' });
+
+    const today = new Date().toLocaleDateString('id-ID', {
+      day: 'numeric', month: 'long', year: 'numeric',
+    });
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'italic');
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 32, { align: 'left' });
+
+    return marginTop + 40;
+  };
+
+  async function exportPDF(adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,
       unit: 'mm',
@@ -67,67 +98,44 @@ export default function AdjustPrintMarginLaporan({
     const formatRupiah = (val) =>
       new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val || 0);
 
-    if (detail) {
-      // === Export satu invoice (detail) ===
-      doc.text(`Invoice: ${detail.NOINVOICE}`, marginLeft, marginTop + 10);
-      autoTable(doc, {
-        startY: marginTop + 20,
-        head: [['Field', 'Value']],
-        body: Object.entries(detail).map(([k, v]) => [k, String(v)]),
-        margin: { left: marginLeft, right: marginRight },
-        styles: { fontSize: 9 },
-      });
-    } else {
-      // === Export semua invoice (list) ===
-      doc.setFontSize(14);
-      doc.text('Laporan Daftar Invoice', doc.internal.pageSize.width / 2, marginTop, { align: 'center' });
+    const startY = addHeader(doc, 'LAPORAN DAFTAR INVOICE', marginLeft, marginTop, marginRight);
 
-      autoTable(doc, {
-        startY: marginTop + 10,
-        head: [['No Invoice', 'Nama Pasien', 'Asuransi', 'Tanggal', 'Total Tagihan', 'Deposit', 'Angsuran', 'Sisa', 'Status']],
-        body: dataInvoices.map((inv) => [
-          inv.NOINVOICE,
-          inv.NAMAPASIEN,
-          inv.ASURANSI,
-          formatTanggal(inv.TANGGALINVOICE),
-          formatRupiah(inv.TOTALTAGIHAN),
-          formatRupiah(inv.TOTALDEPOSIT),
-          formatRupiah(inv.TOTALANGSURAN),
-          formatRupiah(inv.SISA_TAGIHAN),
-          inv.STATUS,
-        ]),
-        margin: { left: marginLeft, right: marginRight },
-        styles: { fontSize: 9, cellPadding: 2 },
-        headStyles: { fillColor: [41, 128, 185], textColor: 255 },
-        alternateRowStyles: { fillColor: [248, 249, 250] },
-      });
-    }
+    autoTable(doc, {
+      startY: startY,
+      head: [['No Invoice', 'Nama Pasien', 'Asuransi', 'Tanggal', 'Total Tagihan', 'Deposit', 'Angsuran', 'Sisa', 'Status']],
+      body: dataInvoices.map((inv) => [
+        inv.NOINVOICE,
+        inv.NAMAPASIEN,
+        inv.ASURANSI,
+        formatTanggal(inv.TANGGALINVOICE),
+        formatRupiah(inv.TOTALTAGIHAN),
+        formatRupiah(inv.TOTALDEPOSIT),
+        formatRupiah(inv.TOTALANGSURAN),
+        formatRupiah(inv.SISA_TAGIHAN),
+        inv.STATUS,
+      ]),
+      margin: { left: marginLeft, right: marginRight },
+      styles: { fontSize: 9, cellPadding: 2 },
+      headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+      alternateRowStyles: { fillColor: [248, 249, 250] },
+    });
 
     return doc.output('datauristring');
   }
 
-  // ========================== EXPORT EXCEL ==========================
   const exportExcel = () => {
-    let ws;
-    if (selectedRow) {
-      // === Export satu invoice (detail) ===
-      ws = XLSX.utils.json_to_sheet([selectedRow]);
-    } else {
-      // === Export semua invoice ===
-      ws = XLSX.utils.json_to_sheet(dataInvoices);
-    }
+    const ws = XLSX.utils.json_to_sheet(dataInvoices);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Invoices');
-    XLSX.writeFile(wb, selectedRow ? `Invoice_${selectedRow.NOINVOICE}.xlsx` : 'Laporan_Invoice.xlsx');
+    XLSX.writeFile(wb, 'Laporan_Invoice.xlsx');
   };
 
-  // ========================== HANDLE PDF EXPORT ==========================
   const handleExportPdf = async () => {
     try {
       setLoadingExport(true);
-      const pdfDataUrl = await exportPDF(selectedRow, dataAdjust);
+      const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName(selectedRow ? `Invoice_${selectedRow.NOINVOICE}` : 'Laporan_Invoice');
+      setFileName('Laporan_Invoice');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {
@@ -159,7 +167,6 @@ export default function AdjustPrintMarginLaporan({
       onHide={() => setAdjustDialog(false)}
       header="Pengaturan Cetak"
       style={{ width: '50vw' }}
-      footer={footer}
     >
       <div className="grid p-fluid">
         <div className="col-12 md:col-6">
@@ -207,6 +214,7 @@ export default function AdjustPrintMarginLaporan({
           </div>
         </div>
       </div>
+      <Toolbar className="py-2 justify-content-end" end={footer} />
     </Dialog>
   );
 }
