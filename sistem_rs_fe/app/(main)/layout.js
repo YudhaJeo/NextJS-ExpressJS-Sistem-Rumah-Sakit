@@ -4,7 +4,7 @@ import Layout from '../../layout/layout';
 import Providers from '../providers';
 
 export const metadata = {
-  title: 'BAYZA Medica',
+  title: 'Bayza Medika',
   icons: {
     icon: '/favicon.ico',
   },
