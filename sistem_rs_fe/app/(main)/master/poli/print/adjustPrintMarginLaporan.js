@@ -95,7 +95,7 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
-    const startY = addHeader(doc, 'Poli', marginLeft, marginTop, marginRight);
+    const startY = addHeader(doc, 'MASTER POLI', marginLeft, marginTop, marginRight);
 
     autoTable(doc, {
       startY: startY,
