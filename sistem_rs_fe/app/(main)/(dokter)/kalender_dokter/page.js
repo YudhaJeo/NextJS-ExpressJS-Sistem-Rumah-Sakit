@@ -168,9 +168,14 @@ const KalenderPage = () => {
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
       <h3 className="text-xl font-semibold mb-3">Kalender Dokter</h3>
-      
       <div className="flex items-center justify-end">
-      <HeaderBar
+        <Button
+          icon="pi pi-print"
+          className="p-button-warning mt-3"
+          tooltip="Atur Print Margin"
+          onClick={() => setAdjustDialog(true)}
+        />
+        <HeaderBar
         placeholder="Cari Nama Dokter atau Tanggal..."
         onSearch={(keyword) => {
           if (!keyword) {
@@ -212,9 +217,6 @@ const KalenderPage = () => {
         dokterOptions={dokterOptions}
         allDokterOptions={allDokterOptions}
       />
-      <div className="flex items-center justify mt-4">
-        <Button label="Preview" severity="secondary" outlined onClick={() => setAdjustDialog(true)}/>
-      </div>
     <AdjustPrintMarginLaporan
             adjustDialog={adjustDialog}
             setAdjustDialog={setAdjustDialog}

@@ -241,6 +241,13 @@ const KomisiPage = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
+        <div className="flex items-center justify-end">
+        <Button
+          icon="pi pi-print"
+          className="p-button-warning mt-3"
+          tooltip="Atur Print Margin"
+          onClick={() => setAdjustDialog(true)}
+        />
         <HeaderBar
           placeholder="Cari nama dokter/pasien..."
           onSearch={handleSearch}
@@ -249,6 +256,7 @@ const KomisiPage = () => {
           setDialogVisible(true);
         }}
         />
+        </div>
       </div>
 
       <TabelKomisiDokter
@@ -270,9 +278,6 @@ const KomisiPage = () => {
         riwayatOptions={riwayatOptions}
         allRiwayatOptions={allRiwayatOptions}
       />
-      <div className="flex items-center justify mt-4">
-          <Button label="Preview" severity="secondary" outlined onClick={() => setAdjustDialog(true)}/>
-      </div>
           <AdjustPrintMarginLaporan
                   adjustDialog={adjustDialog}
                   setAdjustDialog={setAdjustDialog}
