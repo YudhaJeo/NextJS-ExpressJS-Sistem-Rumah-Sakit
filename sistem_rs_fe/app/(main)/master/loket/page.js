@@ -9,6 +9,10 @@ import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import TabelLoket from './components/tabelLoket';
 import FormDialogLoket from './components/formDialogLoket';
+import { Button } from "primereact/button";
+import AdjustPrintMarginLaporan from "./adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -17,14 +21,17 @@ const Page = () => {
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-
   const [form, setForm] = useState({
     NAMALOKET: '',
     KODE: '',
     DESKRIPSI: '',
   });
-
   const [errors, setErrors] = useState({});
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+  const PDFViewer = dynamic(() => import("./PDFViewer"), { ssr: false });
 
   const toastRef = useRef(null);
   const router = useRouter();
@@ -137,6 +144,13 @@ const Page = () => {
 
       <h3 className="text-xl font-semibold mb-3">Master Loket</h3>
 
+      <div className="flex items-center justify-end">
+        <Button
+          icon="pi pi-print"
+          className="p-button-warning mt-3"
+          tooltip="Atur Print Margin"
+          onClick={() => setAdjustDialog(true)}
+        />
       <HeaderBar
         title=""
         placeholder="Cari berdasarkan Nama Loket atau Kode"
@@ -146,6 +160,7 @@ const Page = () => {
           setDialogVisible(true);
         }}
       />
+      </div>
 
       <TabelLoket data={data} loading={loading} onEdit={handleEdit} onDelete={handleDelete} />
 
@@ -160,6 +175,26 @@ const Page = () => {
         setForm={setForm}
         errors={errors}
       />
+
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        dataLoket={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: "90vw", height: "90vh" }}
+        header="Preview PDF"
+      >
+        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+      </Dialog>
     </div>
   );
 };
