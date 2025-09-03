@@ -48,69 +48,40 @@ export default function AdjustPrintMarginLaporan({
 
   const addHeader = (doc, title, marginLeft, marginTop, marginRight) => {
     const pageWidth = doc.internal.pageSize.width;
-    const contentWidth = pageWidth - marginLeft - marginRight;
-
-    doc.setFillColor(245, 248, 255); 
-    doc.rect(marginLeft, marginTop, contentWidth, 45, 'F');
-    
-    doc.setFillColor(41, 128, 185); 
-    doc.rect(marginLeft, marginTop, contentWidth, 3, 'F');
 
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(41, 128, 185);
-    doc.text('RS BAYZA MEDIKA', pageWidth / 2, marginTop + 12, { align: 'center' });
+    doc.text('RS BAYZA MEDIKA', pageWidth / 2, marginTop + 5, { align: 'center' });
 
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(100, 100, 100);
-    doc.text('Melayani dengan Sepenuh Hati', pageWidth / 2 , marginTop + 18, { align: 'center' });
-
-    doc.setFontSize(10);  
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(80, 80, 80);
-    doc.text('Alamat: Jl. A. Yani No. 84, Kota Madiun, Jawa Timur', pageWidth / 2, marginTop + 25, { align: 'center' });
-    doc.text('Telepon: (0351) 876-9090', pageWidth / 2, marginTop + 30, { align: 'center' });
-
-    doc.setDrawColor(41, 128, 185);
-    doc.setLineWidth(1);
-    doc.line(marginLeft, marginTop + 38, pageWidth - marginRight, marginTop + 38);
-
-    doc.setDrawColor(200, 220, 240);
-    doc.setLineWidth(0.5);
-    doc.line(marginLeft, marginTop + 40, pageWidth - marginRight, marginTop + 40);
-
-    const titleY = marginTop + 45; 
-    const titleHeight = 12;
-    
-    doc.setFillColor(41, 128, 185);
-    doc.rect(marginLeft, titleY - 8, contentWidth, titleHeight, 'F');
-    
-    doc.setFontSize(16);
-    doc.setTextColor(255, 255, 255);
-    doc.text(title, pageWidth / 2, titleY - 1, { align: 'center' });
-
-    const today = new Date();
-    const dateStr = today.toLocaleDateString('id-ID', {
-      day: 'numeric', 
-      month: 'long', 
-      year: 'numeric',
-      weekday: 'long'
-    });
-    const timeStr = today.toLocaleTimeString('id-ID', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
-
-    const infoY = titleY + 15;
+    doc.text('Jl. A. Yani No. 84, Pangongangan, Kec. Manguharjo, Kota Madiun, Jawa Timur', pageWidth / 2, marginTop + 12, { align: 'center' });
 
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'italic');
+    doc.setFont('helvetica', 'normal');
     doc.setTextColor(80, 80, 80);
-    doc.text(`Dicetak: ${dateStr}`, marginLeft + 5, marginTop + 55, { align: 'left' });
+    doc.text('Telp: (0351) 876-9090', pageWidth / 2, marginTop + 17, { align: 'center' });
 
-    return marginTop + 60;
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(marginLeft, marginTop + 22, pageWidth - marginRight, marginTop + 22);
+
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
+    doc.text(title, pageWidth / 2, marginTop + 29, { align: 'center' });
+
+    const today = new Date().toLocaleDateString('id-ID', {
+      day: 'numeric', month: 'long', year: 'numeric',
+    });
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'italic');
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 37, { align: 'left' });
+
+    return marginTop + 43;
   };
 
   async function exportPDF(adjustConfig) {
@@ -148,7 +119,7 @@ export default function AdjustPrintMarginLaporan({
     const ws = XLSX.utils.json_to_sheet(dataPoli);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Poli');
-    XLSX.writeFile(wb, 'Poli.xlsx');
+    XLSX.writeFile(wb, 'Master Poli.xlsx');
   };
 
   const handleExportPdf = async () => {
@@ -156,7 +127,7 @@ export default function AdjustPrintMarginLaporan({
       setLoadingExport(true);
       const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName('Laporan_Invoice');
+      setFileName('Master_Poli');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {
