@@ -9,6 +9,10 @@ import TabelAsuransi from './components/tabelAsuransi';
 import FormDialogAsuransi from './components/formDialogAsuransi';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Button } from "primereact/button";
+import AdjustPrintMarginLaporan from "./adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -16,9 +20,13 @@ const Page = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-
   const [form, setForm] = useState({ NAMAASURANSI: '', KETERANGAN: '' });
   const [errors, setErrors] = useState({});
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+  const PDFViewer = dynamic(() => import("./PDFViewer"), { ssr: false });
 
   const toastRef = useRef(null);
   const router = useRouter();
@@ -104,6 +112,13 @@ const Page = () => {
 
       <h3 className="text-xl font-semibold mb-3">Master Asuransi</h3>
 
+      <div className="flex items-center justify-end">
+        <Button
+          icon="pi pi-print"
+          className="p-button-warning mt-3"
+          tooltip="Atur Print Margin"
+          onClick={() => setAdjustDialog(true)}
+        />
       <HeaderBar
         title=""
         placeholder="Cari nama asuransi"
@@ -119,6 +134,7 @@ const Page = () => {
           setDialogVisible(true);
         }}
       />
+      </div>
 
       <TabelAsuransi
         data={data}
@@ -138,6 +154,26 @@ const Page = () => {
         setForm={setForm}
         errors={errors}
       />
+
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        dataAsuransi={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: "90vw", height: "90vh" }}
+        header="Preview PDF"
+      >
+        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+      </Dialog>
     </div>
   );
 };
