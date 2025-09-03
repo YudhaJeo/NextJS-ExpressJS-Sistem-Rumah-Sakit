@@ -11,6 +11,10 @@ import FilterTanggal from '@/app/components/filterTanggal';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { getHariFromTanggal } from '@/utils/dataHelper';
+import AdjustPrintMarginLaporan from "./components/adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
+import { Button } from "primereact/button";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -23,6 +27,11 @@ const ReservasiPasienPage = () => {
   const [endDate, setEndDate] = useState(null);
   const [allDokterOptions, setAllDokterOptions] = useState([]);
   const [errors, setErrors] = useState({});
+  const PDFViewer = dynamic(() => import("./components/PDFViewer"), { ssr: false });
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
 
 
   const [formData, setFormData] = useState({
@@ -261,7 +270,7 @@ const ReservasiPasienPage = () => {
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
 
-      <h3 className="text-xl font-semibold mb-3">Reservasi Pasien</h3>
+      <h3 className="text-xl font-semibold mb-3">Reservasi Rawat Jalan</h3>
       <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
         <FilterTanggal
           startDate={startDate}
@@ -271,15 +280,22 @@ const ReservasiPasienPage = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
+         <div className="flex items-center justify-end">
+        <Button
+          icon="pi pi-print"
+          className="p-button-warning mt-3"
+          tooltip="Atur Print Margin"
+          onClick={() => setAdjustDialog(true)}
+        />
         <HeaderBar
-          title=""
-          placeholder="Cari nama atau NIK..."
+          placeholder="Cari nama dokter/pasien..."
           onSearch={handleSearch}
           onAddClick={() => {
-            resetForm();
-            setDialogVisible(true);
-          }}
+          resetForm();
+          setDialogVisible(true);
+        }}
         />
+        </div>
       </div>
 
       <TabelReservasiPasien
@@ -306,6 +322,25 @@ const ReservasiPasienPage = () => {
         setDokterOptions={setDokterOptions}
         allDokterOptions={allDokterOptions}
       />
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        dataReservasi={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+                      />
+                
+                      <Dialog
+                        visible={jsPdfPreviewOpen}
+                        onHide={() => setJsPdfPreviewOpen(false)}
+                        modal
+                        style={{ width: "90vw", height: "90vh" }}
+                        header="Preview PDF"
+                      >
+                        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+                      </Dialog>
     </div>
   );
 };
