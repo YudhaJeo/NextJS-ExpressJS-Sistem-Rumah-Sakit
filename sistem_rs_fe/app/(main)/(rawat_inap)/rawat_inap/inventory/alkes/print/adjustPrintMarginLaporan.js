@@ -48,69 +48,35 @@ export default function AdjustPrintMarginLaporan({
 
   const addHeader = (doc, title, marginLeft, marginTop, marginRight) => {
     const pageWidth = doc.internal.pageSize.width;
-    const contentWidth = pageWidth - marginLeft - marginRight;
 
-    doc.setFillColor(245, 248, 255); 
-    doc.rect(marginLeft, marginTop, contentWidth, 45, 'F');
-    
-    doc.setFillColor(41, 128, 185); 
-    doc.rect(marginLeft, marginTop, contentWidth, 3, 'F');
-
-    doc.setFontSize(16);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(41, 128, 185);
-    doc.text('RS BAYZA MEDIKA', pageWidth / 2, marginTop + 12, { align: 'center' });
+    doc.text('RS BAYZA MEDICA', pageWidth / 2, marginTop + 5, { align: 'center' });
 
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(100, 100, 100);
-    doc.text('Melayani dengan Sepenuh Hati', pageWidth / 2 , marginTop + 18, { align: 'center' });
-
-    doc.setFontSize(10);  
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(80, 80, 80);
-    doc.text('Alamat: Jl. A. Yani No. 84, Kota Madiun, Jawa Timur', pageWidth / 2, marginTop + 25, { align: 'center' });
-    doc.text('Telepon: (0351) 876-9090', pageWidth / 2, marginTop + 30, { align: 'center' });
+    doc.text('Jl. A. Yani No. 84, Kota Madiun, Jawa Timur | Telp: (0351) 876-9090', pageWidth / 2, marginTop + 11, { align: 'center' });
 
-    doc.setDrawColor(41, 128, 185);
-    doc.setLineWidth(1);
-    doc.line(marginLeft, marginTop + 38, pageWidth - marginRight, marginTop + 38);
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(marginLeft, marginTop + 14, pageWidth - marginRight, marginTop + 14);
 
-    doc.setDrawColor(200, 220, 240);
-    doc.setLineWidth(0.5);
-    doc.line(marginLeft, marginTop + 40, pageWidth - marginRight, marginTop + 40);
-
-    const titleY = marginTop + 45; 
-    const titleHeight = 12;
-    
-    doc.setFillColor(41, 128, 185);
-    doc.rect(marginLeft, titleY - 8, contentWidth, titleHeight, 'F');
-    
     doc.setFontSize(16);
-    doc.setTextColor(255, 255, 255);
-    doc.text(title, pageWidth / 2, titleY - 1, { align: 'center' });
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
+    doc.text(title, pageWidth / 2, marginTop + 25, { align: 'center' });
 
-    const today = new Date();
-    const dateStr = today.toLocaleDateString('id-ID', {
-      day: 'numeric', 
-      month: 'long', 
-      year: 'numeric',
-      weekday: 'long'
+    const today = new Date().toLocaleDateString('id-ID', {
+      day: 'numeric', month: 'long', year: 'numeric',
     });
-    const timeStr = today.toLocaleTimeString('id-ID', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    });
-
-    const infoY = titleY + 15;
-
     doc.setFontSize(10);
     doc.setFont('helvetica', 'italic');
-    doc.setTextColor(80, 80, 80);
-    doc.text(`Dicetak: ${dateStr}`, marginLeft + 5, marginTop + 55, { align: 'left' });
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 32, { align: 'left' });
 
-    return marginTop + 60;
+    return marginTop + 40;
   };
 
   async function exportPDF(adjustConfig) {
@@ -124,7 +90,15 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
-    const startY = addHeader(doc, 'DATA ALKES', marginLeft, marginTop, marginRight);
+    const formatTanggal = (tanggal) =>
+      tanggal
+        ? new Date(tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+        : '-';
+
+    const formatRupiah = (val) =>
+      new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val || 0);
+
+    const startY = addHeader(doc, 'LAPORAN DAFTAR ALAT KESEHATAN', marginLeft, marginTop, marginRight);
 
     autoTable(doc, {
       startY: startY,
