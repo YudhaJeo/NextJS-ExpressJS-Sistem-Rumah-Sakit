@@ -10,7 +10,7 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import TabelLoket from './components/tabelLoket';
 import FormDialogLoket from './components/formDialogLoket';
 import { Button } from "primereact/button";
-import AdjustPrintMarginLaporan from "./adjustPrintMarginLaporan";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 import { Dialog } from "primereact/dialog";
 import dynamic from "next/dynamic";
 
@@ -31,7 +31,7 @@ const Page = () => {
   const [pdfUrl, setPdfUrl] = useState("");
   const [fileName, setFileName] = useState("");
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const PDFViewer = dynamic(() => import("./PDFViewer"), { ssr: false });
+  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
 
   const toastRef = useRef(null);
   const router = useRouter();

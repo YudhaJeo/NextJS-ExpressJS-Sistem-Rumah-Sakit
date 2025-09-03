@@ -10,7 +10,7 @@ import HeaderBar from "@/app/components/headerbar";
 import ToastNotifier from "@/app/components/toastNotifier";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Button } from "primereact/button";
-import AdjustPrintMarginLaporan from "./adjustPrintMarginLaporan";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 import { Dialog } from "primereact/dialog";
 import dynamic from "next/dynamic";
 
@@ -25,7 +25,7 @@ const DokterPage = () => {
     const [pdfUrl, setPdfUrl] = useState("");
     const [fileName, setFileName] = useState("");
     const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-    const PDFViewer = dynamic(() => import("./PDFViewer"), { ssr: false });
+    const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
 
     const [formData, setFormData] = useState({
         IDDOKTER: 0,

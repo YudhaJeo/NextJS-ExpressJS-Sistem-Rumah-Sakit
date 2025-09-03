@@ -9,7 +9,7 @@ import FormPoli from "./components/formDialogPoli";
 import HeaderBar from "@/app/components/headerbar";
 import ToastNotifier from "@/app/components/toastNotifier";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import AdjustPrintMarginLaporan from "./adjustPrintMarginLaporan";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 import { Dialog } from "primereact/dialog";
 import dynamic from "next/dynamic";
 import { Button } from "primereact/button";
@@ -21,7 +21,7 @@ const PoliPage = () => {
   const [originalData, setOriginalData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const PDFViewer = dynamic(() => import("./PDFViewer"), { ssr: false });
+  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
   const [adjustDialog, setAdjustDialog] = useState(false);
   const [pdfUrl, setPdfUrl] = useState("");
   const [fileName, setFileName] = useState("");
