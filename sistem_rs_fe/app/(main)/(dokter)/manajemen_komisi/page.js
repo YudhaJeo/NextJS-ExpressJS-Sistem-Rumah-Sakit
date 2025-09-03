@@ -9,6 +9,11 @@ import FormDialogKomisi from "./components/formDialogKomisi";
 import HeaderBar from "@/app/components/headerbar";
 import ToastNotifier from "@/app/components/toastNotifier";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import AdjustPrintMarginLaporan from "./components/adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
+import { Button } from "primereact/button";
+import FilterTanggal from "@/app/components/filterTanggal";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,6 +23,13 @@ const KomisiPage = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [allRiwayatOptions, setAllRiwayatOptions] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const PDFViewer = dynamic(() => import("./components/PDFViewer"), { ssr: false });
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
   const [formData, setFormData] = useState({
     IDKOMISI: 0,
     IDRAWATJALAN: "",
@@ -182,6 +194,23 @@ const KomisiPage = () => {
       },
     });
   };
+  
+  const resetFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setData(originalData);
+  };
+
+  const handleDateFilter = () => {
+    if (!startDate && !endDate) return setData(originalData);
+    const filtered = originalData.filter((item) => {
+      const visitDate = new Date(item.TANGGALKUNJUNGAN);
+      const from = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+      const to = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+      return (!from || visitDate >= from) && (!to || visitDate <= to);
+    });
+    setData(filtered);
+  };
 
   const resetForm = () => {
     setFormData({
@@ -203,14 +232,24 @@ const KomisiPage = () => {
       <ConfirmDialog />
       <h3 className="text-xl font-semibold mb-3">Manajemen Komisi Dokter</h3>
 
-      <HeaderBar
-        placeholder="Cari nama pasien..."
-        onSearch={handleSearch}
-        onAddClick={() => {
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+        <FilterTanggal
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          handleDateFilter={handleDateFilter}
+          resetFilter={resetFilter}
+        />
+        <HeaderBar
+          placeholder="Cari nama dokter/pasien..."
+          onSearch={handleSearch}
+          onAddClick={() => {
           resetForm();
           setDialogVisible(true);
         }}
-      />
+        />
+      </div>
 
       <TabelKomisiDokter
         data={data}
@@ -231,6 +270,28 @@ const KomisiPage = () => {
         riwayatOptions={riwayatOptions}
         allRiwayatOptions={allRiwayatOptions}
       />
+      <div className="flex items-center justify mt-4">
+          <Button label="Preview" severity="secondary" outlined onClick={() => setAdjustDialog(true)}/>
+      </div>
+          <AdjustPrintMarginLaporan
+                  adjustDialog={adjustDialog}
+                  setAdjustDialog={setAdjustDialog}
+                  selectedRow={null}
+                  dataKomisi={data}
+                  setPdfUrl={setPdfUrl}
+                  setFileName={setFileName}
+                  setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+                />
+          
+                <Dialog
+                  visible={jsPdfPreviewOpen}
+                  onHide={() => setJsPdfPreviewOpen(false)}
+                  modal
+                  style={{ width: "90vw", height: "90vh" }}
+                  header="Preview PDF"
+                >
+                  <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+                </Dialog>
     </div>
   );
 };
