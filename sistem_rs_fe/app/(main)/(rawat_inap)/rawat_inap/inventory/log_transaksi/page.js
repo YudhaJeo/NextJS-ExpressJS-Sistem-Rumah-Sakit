@@ -9,6 +9,10 @@ import TabelPemesanan from "./components/tabelTransaksi";
 import DetailMasuk from "./components/detailMasuk";
 import DetailKeluar from "./components/detailKeluar";
 import FilterTanggal from "@/app/components/filterTanggal";
+import { Button } from "primereact/button";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -21,6 +25,13 @@ const MonitoringPemesananPage = () => {
   const [endDate, setEndDate] = useState(null);
   const [detailVisible, setDetailVisible] = useState(false);
   const [detailData, setDetailData] = useState(null);
+
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
+
 
   useEffect(() => {
     fetchData();
@@ -67,6 +78,7 @@ const MonitoringPemesananPage = () => {
       const merged = [...pemesananData, ...obatInapData, ...alkesInapData];
   
       setData(merged);
+      console.log(merged);
       setOriginalData(merged);
     } catch (err) {
       console.error("Gagal mengambil data transaksi:", err);
@@ -132,10 +144,18 @@ const MonitoringPemesananPage = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
-        <HeaderBar
-          placeholder="Cari berdasarkan supplier atau ID pemesanan..."
-          onSearch={handleSearch}
-        />
+        <div className='flex items-center justify-end'>
+          <Button
+            icon="pi pi-print"
+            className="p-button-warning mt-3"
+            tooltip="Atur Print Margin"
+            onClick={() => setAdjustDialog(true)}
+          />
+          <HeaderBar
+            placeholder="Cari berdasarkan supplier atau ID pemesanan..."
+            onSearch={handleSearch}
+          />
+        </div>
       </div>
 
       <TabelPemesanan data={data} loading={loading} onDetail={handleDetail} />
@@ -153,6 +173,26 @@ const MonitoringPemesananPage = () => {
           data={detailData}
         />
       ) : null}
+
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        data={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: "90vw", height: "90vh" }}
+        header="Preview PDF"
+      >
+        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+      </Dialog>
 
 
     </div>
