@@ -10,7 +10,7 @@ import FormDialogAgama from "./components/formDialogAgama";
 import ToastNotifier from "@/app/components/toastNotifier";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Button } from "primereact/button";
-import AdjustPrintMarginLaporan from "./adjustPrintMarginLaporan";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 import { Dialog } from "primereact/dialog";
 import dynamic from "next/dynamic";
 
@@ -26,14 +26,14 @@ const Page = () => {
   const [pdfUrl, setPdfUrl] = useState("");
   const [fileName, setFileName] = useState("");
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const PDFViewer = dynamic(() => import("./PDFViewer"), { ssr: false });
+  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
 
   const toastRef = useRef(null);
   const router = useRouter();
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [router]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -117,7 +117,7 @@ const Page = () => {
 
       <div className="flex items-center justify-end">
         <Button
-          icon="pi pi-sliders-h"
+          icon="pi pi-print"
           className="p-button-warning mt-3"
           tooltip="Atur Print Margin"
           onClick={() => setAdjustDialog(true)}

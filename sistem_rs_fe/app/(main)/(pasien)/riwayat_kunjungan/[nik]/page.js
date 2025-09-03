@@ -7,12 +7,13 @@ import axios from 'axios';
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
+import { Dialog } from 'primereact/dialog'
 import { ProgressSpinner } from 'primereact/progressspinner'
 import AdjustPrintMarginLaporan from '../components/AdjustPrintMarginLaporan'
 
 const PDFViewer = dynamic(
   () => import('../components/PDFViewer'),
-  { ssr: false } // <--- pastikan hanya di client
+  { ssr: false } 
 )
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -55,14 +56,14 @@ export default function DetailRiwayatKunjungan() {
       year: 'numeric',
     })
   }
-
+  
 const handleOpenAdjust = async (row) => {
   try {
     let res;
     if (row.JENIS === 'RAWAT JALAN') {
-      res = await axios.get(`${API_URL}/rawat_jalan/menu/riwayat_jalan/${row.IDRIWAYATJALAN}`);
+      res = await axios.get(`${API_URL}/riwayat_jalan/${row.IDRIWAYATJALAN}`);
     } else if (row.JENIS === 'RAWAT INAP') {
-      res = await axios.get(`${API_URL}/rawat_inap/menu/riwayat_inap/${row.IDRIWAYATINAP}`);
+      res = await axios.get(`${API_URL}/riwayat_inap/${row.IDRIWAYATINAP}`);
     }
 
     if (res?.data?.data) {
@@ -94,10 +95,10 @@ const handleOpenAdjust = async (row) => {
         onClick={() => handleDetail(row)}
       />
       <Button
-        icon="pi pi-print"
-        className="p-button-sm p-button-danger"
+        icon="pi pi-sliders-h"
+        className="p-button-sm p-button-warning"
         onClick={() => handleOpenAdjust(row)}
-        tooltip="Cetak PDF"
+        tooltip="Atur Margin & Cetak"
       />
     </div>
   )
@@ -145,13 +146,19 @@ const handleOpenAdjust = async (row) => {
         setJsPdfPreviewOpen={setJsPdfPreviewOpen}
       />
 
-      {jsPdfPreviewOpen && (
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: '90vw', height: '90vh' }}
+        header="Preview PDF"
+      >
         <PDFViewer
           pdfUrl={pdfUrl}
-          paperSize="A4"
           fileName={fileName}
+          paperSize={selectedRow?.paperSize || 'A4'}
         />
-      )}
+      </Dialog>
     </div>
   )
 }

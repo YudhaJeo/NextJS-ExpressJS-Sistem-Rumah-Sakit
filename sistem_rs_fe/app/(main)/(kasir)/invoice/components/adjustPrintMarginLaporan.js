@@ -56,7 +56,7 @@ export default function AdjustPrintMarginLaporan({
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(41, 128, 185);
-    doc.text('RS BAYZA MEDICA', pageWidth / 2, marginTop + 8, { align: 'center' });
+    doc.text('RS BAYZA MEDIKA', pageWidth / 2, marginTop + 8, { align: 'center' });
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');

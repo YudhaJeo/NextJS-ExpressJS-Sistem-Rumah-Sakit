@@ -168,7 +168,7 @@ const Dashboard = () => {
       <div className="card col-12 mb-2">
         <div className="flex justify-content-center md:justify-content-between align-items-center">
           <h1 className="text-xl font-semibold mb-3 text-center md:text-left flex-1">
-            Rumah Sakit Bayza Medica
+            Rumah Sakit Bayza Medika
           </h1>
           <span className="text-sm font-bold text-700">
             {new Date().toLocaleDateString('id-ID', {

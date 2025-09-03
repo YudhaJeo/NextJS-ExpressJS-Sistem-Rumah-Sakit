@@ -8,7 +8,11 @@ import TabelKalender from './components/tabelKalender';
 import FormDialogKalender from './components/formDialogKalender';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
+import { Button } from "primereact/button";
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import AdjustPrintMarginLaporan from "./components/adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,6 +22,11 @@ const KalenderPage = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [allDokterOptions, setAllDokterOptions] = useState([]);
+  const PDFViewer = dynamic(() => import("./components/PDFViewer"), { ssr: false });
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
   const [formData, setFormData] = useState({
     ID: 0,
     IDDOKTER: '',
@@ -159,8 +168,14 @@ const KalenderPage = () => {
       <ToastNotifier ref={toastRef} />
       <ConfirmDialog />
       <h3 className="text-xl font-semibold mb-3">Kalender Dokter</h3>
-
-      <HeaderBar
+      <div className="flex items-center justify-end">
+        <Button
+          icon="pi pi-print"
+          className="p-button-warning mt-3"
+          tooltip="Atur Print Margin"
+          onClick={() => setAdjustDialog(true)}
+        />
+        <HeaderBar
         placeholder="Cari Nama Dokter atau Tanggal..."
         onSearch={(keyword) => {
           if (!keyword) {
@@ -178,6 +193,7 @@ const KalenderPage = () => {
           setDialogVisible(true);
         }}
       />
+      </div>
 
       <TabelKalender
         data={data}
@@ -201,6 +217,25 @@ const KalenderPage = () => {
         dokterOptions={dokterOptions}
         allDokterOptions={allDokterOptions}
       />
+    <AdjustPrintMarginLaporan
+            adjustDialog={adjustDialog}
+            setAdjustDialog={setAdjustDialog}
+            selectedRow={null}
+            dataKalender={data}
+            setPdfUrl={setPdfUrl}
+            setFileName={setFileName}
+            setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+          />
+    
+          <Dialog
+            visible={jsPdfPreviewOpen}
+            onHide={() => setJsPdfPreviewOpen(false)}
+            modal
+            style={{ width: "90vw", height: "90vh" }}
+            header="Preview PDF"
+          >
+            <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+          </Dialog>
     </div>
   );
 };

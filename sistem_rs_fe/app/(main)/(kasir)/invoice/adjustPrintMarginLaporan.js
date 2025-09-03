@@ -49,24 +49,29 @@ export default function AdjustPrintMarginLaporan({
   const addHeader = (doc, title, marginLeft, marginTop, marginRight) => {
     const pageWidth = doc.internal.pageSize.width;
 
-    doc.setFontSize(14);
+    doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(41, 128, 185);
-    doc.text('RS BAYZA MEDICA', pageWidth / 2, marginTop + 5, { align: 'center' });
+    doc.text('RS BAYZA MEDIKA', pageWidth / 2, marginTop + 5, { align: 'center' });
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(80, 80, 80);
-    doc.text('Jl. A. Yani No. 84, Kota Madiun, Jawa Timur | Telp: (0351) 876-9090', pageWidth / 2, marginTop + 11, { align: 'center' });
+    doc.text('Jl. A. Yani No. 84, Pangongangan, Kec. Manguharjo, Kota Madiun, Jawa Timur', pageWidth / 2, marginTop + 12, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(80, 80, 80);
+    doc.text('Telp: (0351) 876-9090', pageWidth / 2, marginTop + 17, { align: 'center' });
 
     doc.setDrawColor(200, 200, 200);
     doc.setLineWidth(0.3);
-    doc.line(marginLeft, marginTop + 14, pageWidth - marginRight, marginTop + 14);
+    doc.line(marginLeft, marginTop + 22, pageWidth - marginRight, marginTop + 22);
 
-    doc.setFontSize(16);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
-    doc.text(title, pageWidth / 2, marginTop + 25, { align: 'center' });
+    doc.text(title, pageWidth / 2, marginTop + 29, { align: 'center' });
 
     const today = new Date().toLocaleDateString('id-ID', {
       day: 'numeric', month: 'long', year: 'numeric',
@@ -74,9 +79,9 @@ export default function AdjustPrintMarginLaporan({
     doc.setFontSize(10);
     doc.setFont('helvetica', 'italic');
     doc.setTextColor(100, 100, 100);
-    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 32, { align: 'left' });
+    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 37, { align: 'left' });
 
-    return marginTop + 40;
+    return marginTop + 43;
   };
 
   async function exportPDF(adjustConfig) {

@@ -8,11 +8,12 @@ import { InputNumber } from 'primereact/inputnumber'
 import { Toolbar } from 'primereact/toolbar'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
+import * as XLSX from 'xlsx'
 
 export default function AdjustPrintMarginLaporan({
   adjustDialog,
   setAdjustDialog,
-  selectedRow,
+  dataMetodebayar = [],
   setPdfUrl,
   setFileName,
   setJsPdfPreviewOpen,
@@ -45,71 +46,45 @@ export default function AdjustPrintMarginLaporan({
     setDataAdjust((prev) => ({ ...prev, [name]: e.value }));
   };
 
-  const addHeader = (doc, title, marginLeft, marginTop) => {
+  const addHeader = (doc, title, marginLeft, marginTop, marginRight) => {
     const pageWidth = doc.internal.pageSize.width;
-    const marginRight = parseFloat(dataAdjust.marginRight);
-
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(41, 128, 185);
-    doc.text('RS BAYZA MEDIKA', pageWidth / 2, marginTop + 6, { align: 'center' });
-
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(100, 100, 100);
-    doc.text('Jl. A. Yani No. 84, Kota Madiun, Jawa Timur | Telp: (0351) 876-9090',
-      pageWidth / 2, marginTop + 12, { align: 'center' });
-
-    doc.setDrawColor(200, 200, 200);
-    doc.setLineWidth(0.3);
-    doc.line(marginLeft, marginTop + 16, pageWidth - marginRight, marginTop + 16);
 
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
-    doc.setTextColor(0, 0, 0);
-    doc.text(title, pageWidth / 2, marginTop + 28, { align: 'center' });
-
-    return marginTop + 40;
-  };
-
-  const addSectionHeader = (doc, title, y, marginLeft) => {
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
     doc.setTextColor(41, 128, 185);
-    doc.text(title, marginLeft, y);
-    return y + 8;
-  };
+    doc.text('RS BAYZA MEDIKA', pageWidth / 2, marginTop + 5, { align: 'center' });
 
-  const addInfoRow = (doc, label, value, y, marginLeft, labelWidth = 40) => {
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(80, 80, 80);
-    doc.text(label, marginLeft, y);
+    doc.text('Jl. A. Yani No. 84, Pangongangan, Kec. Manguharjo, Kota Madiun, Jawa Timur', pageWidth / 2, marginTop + 12, { align: 'center' });
 
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(80, 80, 80);
+    doc.text('Telp: (0351) 876-9090', pageWidth / 2, marginTop + 17, { align: 'center' });
+
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(marginLeft, marginTop + 22, pageWidth - marginRight, marginTop + 22);
+
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
-    doc.text(`: ${value}`, marginLeft + labelWidth, y);
+    doc.text(title, pageWidth / 2, marginTop + 29, { align: 'center' });
 
-    return y + 5;
+    const today = new Date().toLocaleDateString('id-ID', {
+      day: 'numeric', month: 'long', year: 'numeric',
+    });
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'italic');
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 37, { align: 'left' });
+
+    return marginTop + 43;
   };
-
-  const formatTanggal = (tanggal) =>
-    tanggal
-      ? new Date(tanggal).toLocaleDateString('id-ID', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        })
-      : '-';
-
-  const formatRupiah = (val) =>
-    new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      maximumFractionDigits: 0,
-    }).format(Number(val) || 0);
-
-  async function exportPDF(detail, adjustConfig) {
+  
+  async function exportPDF(adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,
       unit: 'mm',
@@ -120,62 +95,40 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
-    let y = addHeader(doc, 'INVOICE PEMBAYARAN', marginLeft, marginTop);
+    const startY = addHeader(doc, 'MASTER METODE PEMBAYARAN', marginLeft, marginTop, marginRight);
 
-    y = addSectionHeader(doc, 'INFORMASI PASIEN', y, marginLeft);
-    y = addInfoRow(doc, 'No Pembayaran', detail.NOPEMBAYARAN, y, marginLeft);
-    y = addInfoRow(doc, 'No Invoice', detail.NOINVOICE, y, marginLeft);
-    y = addInfoRow(doc, 'Nama Pasien', detail.NAMAPASIEN, y, marginLeft);
-    y = addInfoRow(doc, 'NIK', detail.NIK, y, marginLeft);
-    y = addInfoRow(doc, 'Asuransi', detail.ASURANSI || '-', y, marginLeft);
-    y = addInfoRow(doc, 'Tanggal Bayar', formatTanggal(detail.TANGGALBAYAR), y, marginLeft);
-    y += 5;
-
-    y = addSectionHeader(doc, 'RINCIAN PEMBAYARAN', y, marginLeft);
     autoTable(doc, {
-      startY: y,
-      head: [['Keterangan', 'Isi']],
-      body: [
-        ['Metode Pembayaran', detail.METODEPEMBAYARAN],
-        ['Bank', detail.NAMA_BANK || '-'],
-        ['Jumlah Bayar', formatRupiah(detail.JUMLAHBAYAR)],
-        ['Keterangan', detail.KETERANGAN || '-'],
-      ],
-      styles: { fontSize: 10, cellPadding: 3 },
-      headStyles: {
-        fillColor: [41, 128, 185],
-        textColor: 255,
-        fontStyle: 'bold',
-      },
-      columnStyles: {
-        0: { fontStyle: 'bold', cellWidth: 60 },
-        1: { halign: 'right' },
-      },
+      startY: startY,
+      head: [['ID', 'Nama Metode', 'Fee (%)', 'Status', 'Keterangan']],
+      body: dataMetodebayar.map((metode) => [
+        metode.IDMETODE,
+        metode.NAMA,
+        metode.FEE_PERSEN,
+        metode.STATUS,
+        metode.KETERANGAN || '-',
+      ]),
       margin: { left: marginLeft, right: marginRight },
+      styles: { fontSize: 9, cellPadding: 2 },
+      headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+      alternateRowStyles: { fillColor: [248, 249, 250] },
     });
-
-    const yEnd = doc.lastAutoTable.finalY + 20;
-
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'italic');
-    doc.setTextColor(100, 100, 100);
-    doc.text(
-      'Terima kasih atas kepercayaan Anda menggunakan layanan kami.',
-      doc.internal.pageSize.width / 2,
-      yEnd,
-      { align: 'center' }
-    );
 
     return doc.output('datauristring');
   }
 
+  const exportExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(dataMetodebayar);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Metode Pembayaran');
+    XLSX.writeFile(wb, 'Master Metode Pembayaran.xlsx');
+  };
+
   const handleExportPdf = async () => {
-    if (!selectedRow) return;
     try {
       setLoadingExport(true);
-      const pdfDataUrl = await exportPDF(selectedRow, dataAdjust);
+      const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName(`Invoice_${selectedRow.NOINVOICE}`);
+      setFileName('Master_Metode_Pembayaran');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {
@@ -184,11 +137,17 @@ export default function AdjustPrintMarginLaporan({
   };
 
   const footer = () => (
-    <div className="flex flex-row">
+    <div className="flex flex-row gap-2">
+      <Button
+        label="Export Excel"
+        icon="pi pi-file-excel"
+        severity="success"
+        onClick={exportExcel}
+      />
       <Button
         label="Export PDF"
-        icon="pi pi-file"
-        className="p-button-danger"
+        icon="pi pi-file-pdf"
+        severity="danger"
         onClick={handleExportPdf}
         loading={loadingExport}
       />
