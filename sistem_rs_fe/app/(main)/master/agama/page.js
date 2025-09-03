@@ -33,7 +33,7 @@ const Page = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [router]);
 
   const fetchData = async () => {
     setLoading(true);

@@ -83,7 +83,7 @@ export default function AdjustPrintMarginLaporan({
 
     return marginTop + 43;
   };
-  
+
   async function exportPDF(adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,
@@ -125,7 +125,7 @@ export default function AdjustPrintMarginLaporan({
       setLoadingExport(true);
       const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName('Laporan_Invoice');
+      setFileName('Master_Agama');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {
