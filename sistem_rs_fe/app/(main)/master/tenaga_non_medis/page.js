@@ -7,6 +7,10 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import HeaderBar from "@/app/components/headerbar";
 import TabelTenagaNonMedis from "./components/tabelTenagaNonMedis";
 import FormDialogTenagaNonMedis from "./components/formDialogTenagaNonMedis";
+import { Button } from "primereact/button";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -16,7 +20,11 @@ const Page = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [errors, setErrors] = useState({});
   const toastRef = useRef(null);
-
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
   const [form, setForm] = useState({
     IDTENAGANONMEDIS: 0,
     KODETENAGANONMEDIS: "",
@@ -185,12 +193,20 @@ const Page = () => {
 
       <h3 className="text-xl font-semibold">Master Data Tenaga Non Medis</h3>
 
+      <div className="flex items-center justify-end">
+        <Button
+          icon="pi pi-print"
+          className="p-button-warning mt-3"
+          tooltip="Atur Print Margin"
+          onClick={() => setAdjustDialog(true)}
+        />
       <HeaderBar
         title=""
         placeholder="Cari kode atau nama..."
         onSearch={handleSearch}
         onAddClick={() => setDialogVisible(true)}
       />
+      </div>
 
       <TabelTenagaNonMedis
         data={data}
@@ -210,6 +226,26 @@ const Page = () => {
         setForm={setForm}
         inputClass={inputClass}
       />
+
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        dataNonmedis={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: "90vw", height: "90vh" }}
+        header="Preview PDF"
+      >
+        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+      </Dialog>
     </div>
   );
 };
