@@ -13,7 +13,7 @@ import * as XLSX from 'xlsx'
 export default function AdjustPrintMarginLaporan({
   adjustDialog,
   setAdjustDialog,
-  dataKomisi = [],
+  dataPoli = [],
   setPdfUrl,
   setFileName,
   setJsPdfPreviewOpen,
@@ -124,29 +124,16 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
-    const startY = addHeader(doc, 'Komisi Dokter', marginLeft, marginTop, marginRight);
+    const startY = addHeader(doc, 'Poli', marginLeft, marginTop, marginRight);
 
     autoTable(doc, {
       startY: startY,
-      head: [['ID', 'NIK', 'Nama Pasien', 'Nama Dokter', 'Tanggal', 'Nilai Komisi', 'Status', 'Keterangan']],
-      body: dataKomisi.map((komisi) => [
-        komisi.IDKOMISI,
-        komisi.NIK,
-        komisi.NAMAPASIEN,
-        komisi.NAMADOKTER,
-        new Date(komisi.TANGGALKUNJUNGAN).toLocaleString('id-ID', {
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        }),
-        Number(komisi.NILAIKOMISI).toLocaleString('id-ID', {
-          style: 'currency',
-          currency: 'IDR',
-          minimumFractionDigits: 0
-        }),
-        komisi.STATUS,
-        komisi.KETERANGAN
+      head: [['ID', 'Nama Poli', 'Kode', 'Zona']],
+      body: dataPoli.map((poli) => [
+        poli.IDPOLI,
+        poli.NAMAPOLI,
+        poli.KODE,
+        poli.ZONA,
       ]),
       margin: { left: marginLeft, right: marginRight },
       styles: { fontSize: 9, cellPadding: 2 },
@@ -158,10 +145,10 @@ export default function AdjustPrintMarginLaporan({
   }
 
   const exportExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(dataKomisi);
+    const ws = XLSX.utils.json_to_sheet(dataPoli);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Komisi Dokter');
-    XLSX.writeFile(wb, 'Komisi Dokter.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Poli');
+    XLSX.writeFile(wb, 'Poli.xlsx');
   };
 
   const handleExportPdf = async () => {
