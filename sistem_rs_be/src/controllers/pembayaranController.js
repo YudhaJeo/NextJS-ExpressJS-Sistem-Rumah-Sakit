@@ -85,7 +85,11 @@ export async function createPembayaran(req, res) {
 
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
-      .update({ STATUS: 'LUNAS' });
+      .update({
+        SISA_TAGIHAN: 0,
+        STATUS: 'LUNAS',
+        UPDATED_AT: db.fn.now()
+      });
 
     await trx.commit();
     res.status(201).json({
@@ -101,6 +105,7 @@ export async function createPembayaran(req, res) {
 }
 
 export async function updatePembayaran(req, res) {
+  const trx = await db.transaction();
   try {
     const { id } = req.params;
     const {
@@ -114,21 +119,28 @@ export async function updatePembayaran(req, res) {
       KETERANGAN
     } = req.body;
 
-    const invoice = await db('invoice').where('IDINVOICE', IDINVOICE).first();
+    const pembayaranLama = await trx('pembayaran').where('IDPEMBAYARAN', id).first();
+    if (!pembayaranLama) {
+      await trx.rollback();
+      return res.status(404).json({ success: false, message: 'Pembayaran tidak ditemukan' });
+    }
+
+    const invoice = await trx('invoice').where('IDINVOICE', IDINVOICE).first();
     if (!invoice) {
+      await trx.rollback();
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    const pasien = await db('pasien').where('NIK', NIK).first();
+    const pasien = await trx('pasien').where('NIK', NIK).first();
     if (!pasien) {
+      await trx.rollback();
       return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan' });
     }
 
     const idBankFinal = METODEPEMBAYARAN === 'Transfer Bank' ? IDBANK : null;
-    
     let idAsuransi = IDASURANSI || pasien.IDASURANSI;
 
-    const updated = await PembayaranModel.update(id, {
+    await trx('pembayaran').where('IDPEMBAYARAN', id).update({
       IDINVOICE,
       NIK,
       IDASURANSI: idAsuransi,
@@ -136,32 +148,61 @@ export async function updatePembayaran(req, res) {
       METODEPEMBAYARAN,
       IDBANK: idBankFinal,
       JUMLAHBAYAR,
-      KETERANGAN
+      KETERANGAN,
+      UPDATED_AT: trx.fn.now()
     });
 
-    if (!updated) {
-      return res.status(404).json({ success: false, message: 'Pembayaran tidak ditemukan' });
-    }
+    await trx('invoice')
+      .where('IDINVOICE', IDINVOICE)
+      .update({
+        SISA_TAGIHAN: 0,
+        STATUS: 'LUNAS',
+        UPDATED_AT: trx.fn.now()
+      });
 
+    await trx.commit();
     res.status(200).json({ success: true, message: 'Pembayaran berhasil diperbarui' });
   } catch (err) {
-    console.error('Update Error:', err);
+    await trx.rollback();
+    console.error('Update Pembayaran Error:', err);
     res.status(500).json({ success: false, message: err.message });
   }
 }
 
 export async function deletePembayaran(req, res) {
+  const trx = await db.transaction();
   try {
     const { id } = req.params;
-    const deleted = await PembayaranModel.remove(id);
 
-    if (!deleted) {
+    const pembayaran = await trx('pembayaran').where('IDPEMBAYARAN', id).first();
+    if (!pembayaran) {
+      await trx.rollback();
       return res.status(404).json({ success: false, message: 'Pembayaran tidak ditemukan' });
     }
 
+    const { IDINVOICE } = pembayaran;
+
+    await trx('pembayaran').where('IDPEMBAYARAN', id).del();
+
+    const invoice = await trx('invoice').where('IDINVOICE', IDINVOICE).first();
+    if (!invoice) {
+      await trx.rollback();
+      return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
+    }
+
+    await trx('invoice')
+      .where('IDINVOICE', IDINVOICE)
+      .update({
+        SISA_TAGIHAN: invoice.TOTALTAGIHAN - (invoice.TOTALDEPOSIT || 0),
+        STATUS: 'BELUM_LUNAS',
+        UPDATED_AT: trx.fn.now()
+      });
+
+    await trx.commit();
     res.status(200).json({ success: true, message: 'Pembayaran berhasil dihapus' });
   } catch (err) {
-    console.error('Delete Error:', err);
+    await trx.rollback();
+    console.error('Delete Pembayaran Error:', err);
     res.status(500).json({ success: false, message: err.message });
   }
 }
