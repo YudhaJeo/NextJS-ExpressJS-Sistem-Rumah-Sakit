@@ -121,7 +121,7 @@ const TabelLaporanPembayaran = ({ data, loading, onDelete }) => {
                     `Rp ${Number(rowData.TOTALPEMBAYARAN || 0).toLocaleString("id-ID")}`
                 }
             />
-            <Column field="METODEPEMBAYARAN" header="Metode Pembayaran" body={metodeBody} />
+            <Column field="METODE" header="Metode" body={metodeBody} />
             <Column field="STATUS" header="Status" body={statusBody} />
             <Column header="Aksi" body={actionBody} />
         </DataTable>

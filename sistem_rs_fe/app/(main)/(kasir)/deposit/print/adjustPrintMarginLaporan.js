@@ -13,7 +13,7 @@ import * as XLSX from 'xlsx'
 export default function AdjustPrintMarginLaporan({
   adjustDialog,
   setAdjustDialog,
-  dataInvoices = [],
+  dataDeposit = [], 
   setPdfUrl,
   setFileName,
   setJsPdfPreviewOpen,
@@ -95,29 +95,28 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
-    const formatTanggal = (tanggal) =>
-      tanggal
-        ? new Date(tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-        : '-';
-
     const formatRupiah = (val) =>
-      new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val || 0);
+      `Rp ${Number(val || 0).toLocaleString('id-ID', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })}`;
 
-    const startY = addHeader(doc, 'LAPORAN DAFTAR INVOICE', marginLeft, marginTop, marginRight);
+    const startY = addHeader(doc, 'LAPORAN DAFTAR DEPOSIT', marginLeft, marginTop, marginRight);
 
     autoTable(doc, {
       startY: startY,
-      head: [['No Invoice', 'Nama Pasien', 'Asuransi', 'Tanggal', 'Total Tagihan', 'Deposit', 'Angsuran', 'Sisa', 'Status']],
-      body: dataInvoices.map((inv) => [
-        inv.NOINVOICE,
-        inv.NAMAPASIEN,
-        inv.ASURANSI,
-        formatTanggal(inv.TANGGALINVOICE),
-        formatRupiah(inv.TOTALTAGIHAN),
-        formatRupiah(inv.TOTALDEPOSIT),
-        formatRupiah(inv.TOTALANGSURAN),
-        formatRupiah(inv.SISA_TAGIHAN),
-        inv.STATUS,
+      head: [['No Deposit', 'No Invoice', 'NIK', 'Nama Pasien', 'Nominal', 'Metode', 'Bank', 'Saldo Sisa', 'Status', 'Keterangan']],
+      body: dataDeposit.map((dep) => [
+        dep.NODEPOSIT,
+        dep.NOINVOICE,
+        dep.NIK,
+        dep.NAMAPASIEN,
+        formatRupiah(dep.NOMINAL),
+        dep.METODE,
+        dep.NAMA_BANK && dep.NAMA_BANK.trim() !== '' ? dep.NAMA_BANK : '-',
+        formatRupiah(dep.SALDO_SISA),
+        dep.STATUS,
+        dep.KETERANGAN && dep.KETERANGAN.trim() !== '' ? dep.KETERANGAN : '-',
       ]),
       margin: { left: marginLeft, right: marginRight },
       styles: { fontSize: 9, cellPadding: 2 },
@@ -129,10 +128,30 @@ export default function AdjustPrintMarginLaporan({
   }
 
   const exportExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(dataInvoices);
+    const formatRupiah = (val) =>
+      `Rp ${Number(val || 0).toLocaleString('id-ID', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })}`;
+      
+    const header = ['No Deposit', 'No Invoice', 'NIK', 'Nama Pasien', 'Nominal', 'Metode', 'Bank', 'Saldo Sisa', 'Status', 'Keterangan'];
+    const body = dataDeposit.map((dep) => ({
+      'No Deposit': dep.NODEPOSIT,
+      'No Invoice': dep.NOINVOICE,
+      'NIK': dep.NIK,
+      'Nama Pasien': dep.NAMAPASIEN,
+      'Nominal': formatRupiah(dep.NOMINAL),
+      'Metode': dep.METODE,
+      'Bank': dep.NAMA_BANK && dep.NAMA_BANK.trim() !== '' ? dep.NAMA_BANK : '-',
+      'Saldo Sisa': formatRupiah(dep.SALDO_SISA),
+      'Status': dep.STATUS,
+      'Keterangan': dep.KETERANGAN && dep.KETERANGAN.trim() !== '' ? dep.KETERANGAN : '-',
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(body, { header });
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Invoices');
-    XLSX.writeFile(wb, 'Laporan_Invoice.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Deposit');
+    XLSX.writeFile(wb, 'Laporan_Deposit.xlsx');
   };
 
   const handleExportPdf = async () => {
@@ -140,7 +159,7 @@ export default function AdjustPrintMarginLaporan({
       setLoadingExport(true);
       const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName('Laporan_Invoice');
+      setFileName('Laporan_Deposit');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {

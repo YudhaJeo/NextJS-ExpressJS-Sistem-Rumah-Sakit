@@ -55,7 +55,7 @@ export async function createAngsuran(req, res) {
       .first();
 
     const sudahDibayar = parseFloat(totalBayarSebelumnya.total) || 0;
-    const sisa = invoice.TOTALTAGIHAN - sudahDibayar;
+    const sisa = invoice.SISA_TAGIHAN;
 
     if (NOMINAL > sisa) {
       await trx.rollback();
@@ -86,7 +86,7 @@ export async function createAngsuran(req, res) {
       .where('IDINVOICE', IDINVOICE)
       .update({
         TOTALANGSURAN: totalSetelahBayar,
-        SISA_TAGIHAN: invoice.TOTALTAGIHAN - invoice.TOTALDEPOSIT - totalSetelahBayar,
+        SISA_TAGIHAN: invoice.TOTALTAGIHAN + invoice.TOTALDEPOSIT - totalSetelahBayar,
         STATUS: statusBaru,
         UPDATED_AT: db.fn.now()
       });
@@ -133,7 +133,7 @@ export async function updateAngsuran(req, res) {
     const totalLain = parseFloat(totalBayarLain.total) || 0;
     const totalSetelahUpdate = totalLain + NOMINAL;
 
-    if (totalSetelahUpdate > invoice.TOTALTAGIHAN) {
+    if (totalSetelahUpdate > invoice.TOTALTAGIHAN + invoice.TOTALDEPOSIT) {
       await trx.rollback();
       return res.status(400).json({ success: false, message: 'Nominal total melebihi sisa tagihan' });
     }
@@ -152,7 +152,7 @@ export async function updateAngsuran(req, res) {
       .where('IDINVOICE', IDINVOICE)
       .update({
         TOTALANGSURAN: totalSetelahUpdate,
-        SISA_TAGIHAN: invoice.TOTALTAGIHAN - invoice.TOTALDEPOSIT - totalSetelahUpdate,
+        SISA_TAGIHAN: invoice.TOTALTAGIHAN + invoice.TOTALDEPOSIT - totalSetelahUpdate,
         STATUS: statusBaru,
         UPDATED_AT: trx.fn.now()
       });
@@ -200,7 +200,7 @@ export async function deleteAngsuran(req, res) {
       .where('IDINVOICE', IDINVOICE)
       .update({
         TOTALANGSURAN: totalBayar,
-        SISA_TAGIHAN: invoice.TOTALTAGIHAN - invoice.TOTALDEPOSIT - totalBayar,
+        SISA_TAGIHAN: invoice.TOTALTAGIHAN + invoice.TOTALDEPOSIT - totalBayar,
         STATUS: statusBaru,
         UPDATED_AT: trx.fn.now()
       });

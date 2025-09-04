@@ -17,7 +17,7 @@ export const getAll = ({ startDate, endDate, nik, metode }) => {
             "i.NIK",
             "ps.NAMALENGKAP as NAMAPASIEN",
             "asr.NAMAASURANSI as ASURANSI",
-            db.raw("IFNULL(SUM(DISTINCT p.JUMLAHBAYAR),0) as TOTALPEMBAYARAN"), // ✅ hindari duplikat
+            db.raw("IFNULL(SUM(DISTINCT p.JUMLAHBAYAR),0) as TOTALPEMBAYARAN"), 
             db.raw("IFNULL(SUM(DISTINCT dp.JUMLAH_PEMAKAIAN),0) as TOTALDEPOSIT"),
             db.raw("IFNULL(SUM(DISTINCT a.NOMINAL),0) as TOTALANGSURAN"),
             db.raw("MAX(p.METODEPEMBAYARAN) as METODEPEMBAYARAN")

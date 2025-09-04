@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
@@ -10,6 +9,10 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import FilterTanggal from '@/app/components/filterTanggal';
 import TabelAngsuran from './components/tabelAngsuran';
 import FormDialogAngsuran from './components/formDialogAngsuran';
+import { Button } from 'primereact/button';
+import AdjustPrintMarginLaporan from './print/adjustPrintMarginLaporan';
+import { Dialog } from 'primereact/dialog';
+import dynamic from 'next/dynamic';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,6 +23,14 @@ const Page = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [invoiceOptions, setInvoiceOptions] = useState([]);
+  const [metodeOptions, setMetodeOptions] = useState([]);
+  const [bankOptions, setBankOptions] = useState([]);
+
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
 
   const [form, setForm] = useState({
     IDANGSURAN: 0,
@@ -29,18 +40,16 @@ const Page = () => {
     NAMAASURANSI: '',
     IDINVOICE: '',
     NOMINAL: 0,
-    TANGGAL: '',
+    TANGGALBAYAR: '',
     KETERANGAN: '',
     METODE: '',
     IDBANK: '',
   });
 
-  const [invoiceOptions, setInvoiceOptions] = useState([]);
-  const [metodeOptions, setMetodeOptions] = useState([]);
-  const [bankOptions, setBankOptions] = useState([]);
-
   const toastRef = useRef(null);
   const router = useRouter();
+
+  const PDFViewer = dynamic(() => import('./print/PDFViewer'), { ssr: false });
 
   useEffect(() => {
     fetchData();
@@ -62,17 +71,26 @@ const Page = () => {
     }
   };
 
+  const formatRupiah = (number) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(number);
+  };
+
   const fetchInvoices = async () => {
     try {
       const res = await axios.get(`${API_URL}/invoice`);
       const options = res.data.data
         .filter((inv) => inv.STATUS !== 'LUNAS')
         .map((inv) => ({
-          label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN}`,
+          label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN} | Sisa: ${formatRupiah(inv.SISA_TAGIHAN)}`,
           value: inv.IDINVOICE,
           NIK: inv.NIK,
           NAMAPASIEN: inv.NAMAPASIEN,
           NAMAASURANSI: inv.ASURANSI,
+          SISA_TAGIHAN: inv.SISA_TAGIHAN,
         }));
       console.log("Data Invoice:", options)
       setInvoiceOptions(options);
@@ -164,7 +182,7 @@ const Page = () => {
   const handleEdit = (row) => {
     setForm({
       ...row,
-      TANGGAL: row.TANGGAL?.split('T')[0] || '',
+      TANGGALBAYAR: row.TANGGALBAYAR?.split('T')[0] || '',
     });
     setDialogVisible(true);
   };
@@ -198,7 +216,7 @@ const Page = () => {
       NAMAASURANSI: '',
       IDINVOICE: '',
       NOMINAL: 0,
-      TANGGAL: '',
+      TANGGALBAYAR: '',
       KETERANGAN: '',
       METODE: '',
       IDBANK: '',
@@ -221,15 +239,23 @@ const Page = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
-        <HeaderBar
-          title=""
-          placeholder="Cari no invoice atau nama pasien..."
-          onSearch={handleSearch}
-          onAddClick={() => {
-            resetForm();
-            setDialogVisible(true);
-          }}
-        />
+        <div className="flex items-center gap-2">
+          <Button
+            icon="pi pi-sliders-h"
+            className="p-button-warning mt-3"
+            tooltip="Atur Print Margin"
+            onClick={() => setAdjustDialog(true)}
+          />
+          <HeaderBar
+            title=""
+            placeholder="Cari no invoice atau nama pasien..."
+            onSearch={handleSearch}
+            onAddClick={() => {
+              resetForm();
+              setDialogVisible(true);
+            }}
+          />
+        </div>
       </div>
 
       <TabelAngsuran
@@ -252,6 +278,30 @@ const Page = () => {
         metodeOptions={metodeOptions}
         bankOptions={bankOptions}
       />
+
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        dataAngsuran={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: '90vw', height: '90vh' }}
+        header="Preview PDF"
+      >
+        <PDFViewer
+          pdfUrl={pdfUrl}
+          fileName={fileName}
+          paperSize="A4"
+        />
+      </Dialog>
     </div>
   );
 };

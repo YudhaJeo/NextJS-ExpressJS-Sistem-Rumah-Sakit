@@ -9,7 +9,7 @@ import FilterTanggal from '@/app/components/filterTanggal';
 import TabelInvoice from './components/tabelInvoice';
 import HeaderBar from '@/app/components/headerbar';
 import { Button } from 'primereact/button';
-import AdjustPrintMarginLaporan from './adjustPrintMarginLaporan';
+import AdjustPrintMarginLaporan from './print/adjustPrintMarginLaporan';
 import { Dialog } from 'primereact/dialog';
 import dynamic from 'next/dynamic';
 
@@ -30,7 +30,7 @@ const Page = () => {
   const toastRef = useRef(null);
   const router = useRouter();
 
-  const PDFViewer = dynamic(() => import('./PDFViewer'), { ssr: false });
+  const PDFViewer = dynamic(() => import('./print/PDFViewer'), { ssr: false });
 
   useEffect(() => {
     fetchData();
@@ -114,7 +114,6 @@ const Page = () => {
           resetFilter={resetFilter}
         />
 
-        {/* Bagian kanan: tombol sliders + search (sejajar) */}
         <div className="flex items-center gap-2">
           <Button
             icon="pi pi-sliders-h"
@@ -139,11 +138,10 @@ const Page = () => {
         }
       />
 
-      {/* Dialog Adjust Print Margin Global */}
       <AdjustPrintMarginLaporan
         adjustDialog={adjustDialog}
         setAdjustDialog={setAdjustDialog}
-        selectedRow={null} // global, bukan per-row
+        selectedRow={null} 
         dataInvoices={data}
         setPdfUrl={setPdfUrl}
         setFileName={setFileName}

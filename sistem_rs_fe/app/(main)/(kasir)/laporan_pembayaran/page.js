@@ -8,6 +8,10 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import FilterTanggal from '@/app/components/filterTanggal';
 import TabelLaporanPembayaran from './components/tabelLaporanPembayaran';
 import HeaderBar from '@/app/components/headerbar';
+import { Button } from 'primereact/button';
+import AdjustPrintMarginLaporan from './print/adjustPrintMarginLaporan';
+import { Dialog } from 'primereact/dialog';
+import dynamic from 'next/dynamic';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,8 +22,15 @@ const Page = () => {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
 
+    const [adjustDialog, setAdjustDialog] = useState(false);
+    const [pdfUrl, setPdfUrl] = useState('');
+    const [fileName, setFileName] = useState('');
+    const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+
     const toastRef = useRef(null);
     const router = useRouter();
+
+    const PDFViewer = dynamic(() => import('./print/PDFViewer'), { ssr: false });
 
     useEffect(() => {
         fetchData();
@@ -102,11 +113,19 @@ const Page = () => {
                     handleDateFilter={handleDateFilter}
                     resetFilter={resetFilter}
                 />
-                <HeaderBar
-                    title=""
-                    placeholder="Cari no invoice atau nama pasien..."
-                    onSearch={handleSearch}
-                />
+                <div className="flex items-center gap-2">
+                    <Button
+                        icon="pi pi-sliders-h"
+                        className="p-button-warning mt-3"
+                        tooltip="Atur Print Margin"
+                        onClick={() => setAdjustDialog(true)}
+                    />
+                    <HeaderBar
+                        title=""
+                        placeholder="Cari no invoice atau nama pasien..."
+                        onSearch={handleSearch}
+                    />
+                </div>
             </div>
 
             <TabelLaporanPembayaran
@@ -114,6 +133,30 @@ const Page = () => {
                 loading={loading}
                 onDelete={handleDelete}
             />
+
+            <AdjustPrintMarginLaporan
+                adjustDialog={adjustDialog}
+                setAdjustDialog={setAdjustDialog}
+                selectedRow={null}
+                dataLaporan={data}
+                setPdfUrl={setPdfUrl}
+                setFileName={setFileName}
+                setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+            />
+
+            <Dialog
+                visible={jsPdfPreviewOpen}
+                onHide={() => setJsPdfPreviewOpen(false)}
+                modal
+                style={{ width: '90vw', height: '90vh' }}
+                header="Preview PDF"
+            >
+                <PDFViewer
+                    pdfUrl={pdfUrl}
+                    fileName={fileName}
+                    paperSize="A4"
+                />
+            </Dialog>
         </div>
     );
 };

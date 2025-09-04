@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
@@ -10,6 +9,10 @@ import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import FilterTanggal from '@/app/components/filterTanggal';
 import TabelDepositPenggunaan from './components/tabelDepositPenggunaan';
 import FormDialogDepositPenggunaan from './components/formDialogDepositPenggunaan';
+import { Button } from 'primereact/button';
+import AdjustPrintMarginLaporan from './print/adjustPrintMarginLaporan';
+import { Dialog } from 'primereact/dialog';
+import dynamic from 'next/dynamic';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -23,6 +26,11 @@ const Page = () => {
   const [depositOptions, setDepositOptions] = useState([]);
   const [invoiceOptions, setInvoiceOptions] = useState([]);
 
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+
   const [form, setForm] = useState({
     IDPENGGUNAAN: 0,
     IDDEPOSIT: null,
@@ -35,6 +43,8 @@ const Page = () => {
 
   const toastRef = useRef(null);
   const router = useRouter();
+
+  const PDFViewer = dynamic(() => import('./print/PDFViewer'), { ssr: false });
 
   useEffect(() => {
     fetchData();
@@ -198,7 +208,13 @@ const Page = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
-
+<div className="flex items-center gap-2">
+          <Button
+            icon="pi pi-sliders-h"
+            className="p-button-warning mt-3"
+            tooltip="Atur Print Margin"
+            onClick={() => setAdjustDialog(true)}
+          />
         <HeaderBar
           title=""
           placeholder="Cari no penggunaan atau no deposit..."
@@ -208,6 +224,7 @@ const Page = () => {
             setDialogVisible(true);
           }}
         />
+        </div>
       </div>
 
       <TabelDepositPenggunaan
@@ -229,6 +246,30 @@ const Page = () => {
         depositOptions={depositOptions}
         invoiceOptions={invoiceOptions}
       />
+
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null} 
+        dataDepositPenggunaan={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: '90vw', height: '90vh' }}
+        header="Preview PDF"
+      >
+        <PDFViewer
+          pdfUrl={pdfUrl}
+          fileName={fileName}
+          paperSize="A4"
+        />
+      </Dialog>
     </div>
   );
 };
