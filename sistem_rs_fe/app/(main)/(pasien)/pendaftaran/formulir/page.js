@@ -10,6 +10,10 @@ import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import FilterTanggal from '@/app/components/filterTanggal';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Button } from "primereact/button";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -22,6 +26,11 @@ const Page = () => {
   const [endDate, setEndDate] = useState(null);
   const [poliOptions, setPoliOptions] = useState([]);
   const [pasienOptions, setPasienOptions] = useState([]);
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
 
   const [form, setForm] = useState({
     IDPENDAFTARAN: 0,
@@ -40,7 +49,7 @@ const Page = () => {
     fetchData();
     fetchPasien();
     fetchPoli();
-  }, []);
+  }, [router]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -194,6 +203,16 @@ const Page = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
+      <div className="flex items-center justify-end">
+        <Button
+          icon="pi pi-print"
+          className="p-button-warning mt-3"
+          tooltip="Atur Print Margin"
+          onClick={() => {
+            handleDateFilter();
+            setAdjustDialog(true);
+          }}
+        />
         <HeaderBar
           title=""
           placeholder="Cari nama atau NIK..."
@@ -203,6 +222,7 @@ const Page = () => {
             setDialogVisible(true);
           }}
         />
+      </div>
       </div>
 
       <TabelPendaftaran
@@ -225,6 +245,25 @@ const Page = () => {
         pasienOptions={pasienOptions}
         poliOptions={poliOptions}
       />
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        dataFormulir={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: "90vw", height: "90vh" }}
+        header="Preview PDF"
+      >
+        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+      </Dialog>
     </div>
   );
 }
