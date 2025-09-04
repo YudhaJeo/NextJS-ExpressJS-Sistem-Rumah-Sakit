@@ -46,16 +46,51 @@ const MonitoringPemesananPage = () => {
         axios.get(`${API_URL}/alkes_inap`)
       ]);
   
-      const pemesananData = (Array.isArray(pemesananRes.data) ? pemesananRes.data : pemesananRes.data.data)
-        .filter(item => item.STATUS === 'DITERIMA')
-        .map(item => ({
-          ID: item.IDPEMESANAN,
-          TANGGAL: item.TGLPEMESANAN,
-          SUPPLIER: item.NAMASUPPLIER,
-          STATUS: 'MASUK',
-          TIPE: 'PEMESANAN',
-          ...item
-        }));
+      const pemesananList = (Array.isArray(pemesananRes.data) ? pemesananRes.data : pemesananRes.data.data)
+        .filter(item => item.STATUS === 'DITERIMA');
+  
+        const pemesananDetailData = await Promise.all(
+          pemesananList.map(async (item) => {
+            try {
+              const res = await axios.get(`${API_URL}/pemesanan/${item.IDPEMESANAN}`);
+              const detailList = res.data.details || []; // fix disini ✅
+        
+              const { jumlah, total } = detailList.reduce(
+                (acc, d) => {
+                  acc.jumlah += d.QTY;
+                  acc.total += d.QTY * d.HARGABELI;
+                  return acc;
+                },
+                { jumlah: 0, total: 0 }
+              );
+        
+              return {
+                ID: item.IDPEMESANAN,
+                TANGGAL: item.TGLPEMESANAN,
+                SUPPLIER: item.NAMASUPPLIER,
+                STATUS: 'MASUK',
+                TIPE: 'PEMESANAN',
+                JUMLAH: jumlah,
+                TOTAL: total,
+                ...item,
+                detail: detailList
+              };
+            } catch (err) {
+              console.error(`Gagal fetch detail untuk ID ${item.IDPEMESANAN}:`, err);
+              return {
+                ID: item.IDPEMESANAN,
+                TANGGAL: item.TGLPEMESANAN,
+                SUPPLIER: item.NAMASUPPLIER,
+                STATUS: 'MASUK',
+                TIPE: 'PEMESANAN',
+                JUMLAH: 0,
+                TOTAL: 0,
+                ...item,
+                detail: []
+              };
+            }
+          })
+        );        
   
       const obatInapData = (obatInapRes.data.data || []).map(item => ({
         ID: item.IDOBATINAP,
@@ -74,19 +109,19 @@ const MonitoringPemesananPage = () => {
         TIPE: 'ALKES_INAP',
         ...item
       }));
-  
-      const merged = [...pemesananData, ...obatInapData, ...alkesInapData];
+      const merged = [...pemesananDetailData, ...obatInapData, ...alkesInapData];
   
       setData(merged);
-      console.log(merged);
       setOriginalData(merged);
+      console.log(merged);
     } catch (err) {
       console.error("Gagal mengambil data transaksi:", err);
       toastRef.current?.showToast("01", "Gagal memuat data transaksi");
     } finally {
       setLoading(false);
     }
-  };  
+  };
+  
 
   const handleDetail = async (row) => {
     try {

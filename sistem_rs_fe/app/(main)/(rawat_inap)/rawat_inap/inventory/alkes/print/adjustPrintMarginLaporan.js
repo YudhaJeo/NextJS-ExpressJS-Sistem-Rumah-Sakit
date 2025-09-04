@@ -49,24 +49,29 @@ export default function AdjustPrintMarginLaporan({
   const addHeader = (doc, title, marginLeft, marginTop, marginRight) => {
     const pageWidth = doc.internal.pageSize.width;
 
-    doc.setFontSize(14);
+    doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(41, 128, 185);
-    doc.text('RS BAYZA MEDICA', pageWidth / 2, marginTop + 5, { align: 'center' });
+    doc.text('RS BAYZA MEDIKA', pageWidth / 2, marginTop + 5, { align: 'center' });
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(80, 80, 80);
-    doc.text('Jl. A. Yani No. 84, Kota Madiun, Jawa Timur | Telp: (0351) 876-9090', pageWidth / 2, marginTop + 11, { align: 'center' });
+    doc.text('Jl. A. Yani No. 84, Pangongangan, Kec. Manguharjo, Kota Madiun, Jawa Timur', pageWidth / 2, marginTop + 12, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(80, 80, 80);
+    doc.text('Telp: (0351) 876-9090', pageWidth / 2, marginTop + 17, { align: 'center' });
 
     doc.setDrawColor(200, 200, 200);
     doc.setLineWidth(0.3);
-    doc.line(marginLeft, marginTop + 14, pageWidth - marginRight, marginTop + 14);
+    doc.line(marginLeft, marginTop + 22, pageWidth - marginRight, marginTop + 22);
 
-    doc.setFontSize(16);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
-    doc.text(title, pageWidth / 2, marginTop + 25, { align: 'center' });
+    doc.text(title, pageWidth / 2, marginTop + 29, { align: 'center' });
 
     const today = new Date().toLocaleDateString('id-ID', {
       day: 'numeric', month: 'long', year: 'numeric',
@@ -74,11 +79,11 @@ export default function AdjustPrintMarginLaporan({
     doc.setFontSize(10);
     doc.setFont('helvetica', 'italic');
     doc.setTextColor(100, 100, 100);
-    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 32, { align: 'left' });
+    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 37, { align: 'left' });
 
-    return marginTop + 40;
+    return marginTop + 43;
   };
-
+  
   async function exportPDF(adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,
@@ -90,6 +95,8 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
+    const startY = addHeader(doc, 'DATA ALAT KESEHATAN', marginLeft, marginTop, marginRight);
+
     const formatTanggal = (tanggal) =>
       tanggal
         ? new Date(tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -97,8 +104,6 @@ export default function AdjustPrintMarginLaporan({
 
     const formatRupiah = (val) =>
       new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val || 0);
-
-    const startY = addHeader(doc, 'LAPORAN DAFTAR ALAT KESEHATAN', marginLeft, marginTop, marginRight);
 
     autoTable(doc, {
       startY: startY,
@@ -138,22 +143,7 @@ export default function AdjustPrintMarginLaporan({
   }
 
   const exportExcel = () => {
-    // urutkan dan format data sesuai tabel
-    const exportData = dataAlkes.map((alkes) => ({
-      ID: alkes.IDALKES,
-      'Kode Alkes': alkes.KODEALKES,
-      'Nama Alkes': alkes.NAMAALKES,
-      'Merek': alkes.MERKALKES,
-      'Jenis Alkes': alkes.JENISALKES,
-      'Stok': alkes.STOK,
-      'Harga Beli': new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(alkes.HARGABELI || 0),
-      'Harga Jual': new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(alkes.HARGAJUAL || 0),
-      'Tgl Kadaluarsa': alkes.TGLKADALUARSA,
-      'Supplier': alkes.NAMASUPPLIER,
-      'Lokasi': alkes.LOKASI,
-      'Deskripsi': alkes.DESKRIPSI,
-    }));
-    const ws = XLSX.utils.json_to_sheet(exportData);
+    const ws = XLSX.utils.json_to_sheet(dataAlkes);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Alkes');
     XLSX.writeFile(wb, 'Master_Alkes.xlsx');
@@ -164,7 +154,7 @@ export default function AdjustPrintMarginLaporan({
       setLoadingExport(true);
       const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName('Laporan_Alkes');
+      setFileName('Master_Alkes');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {

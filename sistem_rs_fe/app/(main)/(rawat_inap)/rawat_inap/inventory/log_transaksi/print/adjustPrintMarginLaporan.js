@@ -49,24 +49,29 @@ export default function AdjustPrintMarginLaporan({
   const addHeader = (doc, title, marginLeft, marginTop, marginRight) => {
     const pageWidth = doc.internal.pageSize.width;
 
-    doc.setFontSize(14);
+    doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(41, 128, 185);
-    doc.text('RS BAYZA MEDICA', pageWidth / 2, marginTop + 5, { align: 'center' });
+    doc.text('RS BAYZA MEDIKA', pageWidth / 2, marginTop + 5, { align: 'center' });
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(80, 80, 80);
-    doc.text('Jl. A. Yani No. 84, Kota Madiun, Jawa Timur | Telp: (0351) 876-9090', pageWidth / 2, marginTop + 11, { align: 'center' });
+    doc.text('Jl. A. Yani No. 84, Pangongangan, Kec. Manguharjo, Kota Madiun, Jawa Timur', pageWidth / 2, marginTop + 12, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(80, 80, 80);
+    doc.text('Telp: (0351) 876-9090', pageWidth / 2, marginTop + 17, { align: 'center' });
 
     doc.setDrawColor(200, 200, 200);
     doc.setLineWidth(0.3);
-    doc.line(marginLeft, marginTop + 14, pageWidth - marginRight, marginTop + 14);
+    doc.line(marginLeft, marginTop + 22, pageWidth - marginRight, marginTop + 22);
 
-    doc.setFontSize(16);
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
-    doc.text(title, pageWidth / 2, marginTop + 25, { align: 'center' });
+    doc.text(title, pageWidth / 2, marginTop + 29, { align: 'center' });
 
     const today = new Date().toLocaleDateString('id-ID', {
       day: 'numeric', month: 'long', year: 'numeric',
@@ -74,28 +79,11 @@ export default function AdjustPrintMarginLaporan({
     doc.setFontSize(10);
     doc.setFont('helvetica', 'italic');
     doc.setTextColor(100, 100, 100);
-    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 32, { align: 'left' });
+    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 37, { align: 'left' });
 
-    return marginTop + 40;
+    return marginTop + 43;
   };
-
-  // Fungsi bantu untuk format tanggal konsisten
-  function formatTanggal(tanggal) {
-    if (!tanggal) return '-';
-    // Jika string ISO (ada 'T'), format ke lokal
-    if (typeof tanggal === 'string' && tanggal.includes('T')) {
-      const d = new Date(tanggal);
-      if (!isNaN(d)) {
-        return d.toLocaleString('id-ID', {
-          day: '2-digit', month: '2-digit', year: 'numeric',
-          hour: '2-digit', minute: '2-digit', hour12: false
-        });
-      }
-    }
-    // Jika bukan ISO, tampilkan apa adanya
-    return tanggal;
-  }
-
+  
   async function exportPDF(adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,
@@ -107,23 +95,31 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
-    const startY = addHeader(doc, 'DATA LOG TRANSAKSI STOK OBAT DAN ALAT KESEHATAN', marginLeft, marginTop, marginRight);
+    const startY = addHeader(doc, 'DATA ALAT KESEHATAN', marginLeft, marginTop, marginRight);
+
+    const formatTanggal = (tanggal) =>
+      tanggal
+        ? new Date(tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+        : '-';
+
+    const formatRupiah = (val) =>
+      new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val || 0);
 
     autoTable(doc, {
       startY: startY,
       head: [[
-        'ID',
         'Tanggal',
         'Tipe',
         'Status',
+        'Jumlah',
         'Total'
       ]],
-      body: data.map((transaksi) => [
-        transaksi.ID,
-        formatTanggal(transaksi.TANGGAL),
-        transaksi.STATUS,
-        transaksi.TIPE,
-        new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(transaksi.TOTAL || 0),
+      body: data.map((alkes) => [
+        alkes.TANGGAL,
+        alkes.TIPE,
+        alkes.STATUS,
+        alkes.JUMLAH,
+        new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(alkes.TOTAL || 0),
       ]),
       margin: { left: marginLeft, right: marginRight },
       styles: { fontSize: 9, cellPadding: 2 },
@@ -135,19 +131,10 @@ export default function AdjustPrintMarginLaporan({
   }
 
   const exportExcel = () => {
-    // urutkan dan format data sesuai tabel
-    const exportData = data.map((transaksi) => ({
-      ID: transaksi.ID,
-      'Tanggal': transaksi.TANGGAL,
-      'Nama Transaksi': transaksi.STATUS,
-      'Status': transaksi.MERKTRANSAKSI,
-      'Tipe': transaksi.TIPE,
-      'Total': new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(transaksi.HARGABELI || 0),
-    }));
-    const ws = XLSX.utils.json_to_sheet(exportData);
+    const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Transaksi');
-    XLSX.writeFile(wb, 'Master_Transaksi.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Alkes');
+    XLSX.writeFile(wb, 'Master_Alkes.xlsx');
   };
 
   const handleExportPdf = async () => {
@@ -155,7 +142,7 @@ export default function AdjustPrintMarginLaporan({
       setLoadingExport(true);
       const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName('Laporan_Transaksi');
+      setFileName('Master_Alkes');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {
