@@ -13,7 +13,7 @@ import * as XLSX from 'xlsx'
 export default function AdjustPrintMarginLaporan({
   adjustDialog,
   setAdjustDialog,
-  dataAlkes = [],
+  data = [],
   setPdfUrl,
   setFileName,
   setJsPdfPreviewOpen,
@@ -108,30 +108,18 @@ export default function AdjustPrintMarginLaporan({
     autoTable(doc, {
       startY: startY,
       head: [[
-        'ID',
-        'Kode Alkes',
-        'Nama Alkes',
-        'Merek',
-        'Jenis Alkes',
-        'Stok',
-        'Harga Beli',
-        'Harga Jual',
-        'Tgl Kadaluarsa',
-        'Supplier',
-        'Lokasi',
+        'Tanggal',
+        'Tipe',
+        'Status',
+        'Jumlah',
+        'Total'
       ]],
-      body: dataAlkes.map((alkes) => [
-        alkes.IDALKES,
-        alkes.KODEALKES,
-        alkes.NAMAALKES,
-        alkes.MERKALKES,
-        alkes.JENISALKES,
-        alkes.STOK,
-        new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(alkes.HARGABELI || 0),
-        new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(alkes.HARGAJUAL || 0),
-        alkes.TGLKADALUARSA,
-        alkes.NAMASUPPLIER,
-        alkes.LOKASI,
+      body: data.map((alkes) => [
+        alkes.TANGGAL,
+        alkes.TIPE,
+        alkes.STATUS,
+        alkes.JUMLAH,
+        new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(alkes.TOTAL || 0),
       ]),
       margin: { left: marginLeft, right: marginRight },
       styles: { fontSize: 9, cellPadding: 2 },
@@ -143,7 +131,7 @@ export default function AdjustPrintMarginLaporan({
   }
 
   const exportExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(dataAlkes);
+    const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Alkes');
     XLSX.writeFile(wb, 'Master_Alkes.xlsx');

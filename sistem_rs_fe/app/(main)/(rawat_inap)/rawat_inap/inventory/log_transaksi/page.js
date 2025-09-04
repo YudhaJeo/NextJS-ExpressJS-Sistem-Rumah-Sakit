@@ -9,6 +9,10 @@ import TabelPemesanan from "./components/tabelTransaksi";
 import DetailMasuk from "./components/detailMasuk";
 import DetailKeluar from "./components/detailKeluar";
 import FilterTanggal from "@/app/components/filterTanggal";
+import { Button } from "primereact/button";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -21,6 +25,13 @@ const MonitoringPemesananPage = () => {
   const [endDate, setEndDate] = useState(null);
   const [detailVisible, setDetailVisible] = useState(false);
   const [detailData, setDetailData] = useState(null);
+
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
+
 
   useEffect(() => {
     fetchData();
@@ -35,16 +46,51 @@ const MonitoringPemesananPage = () => {
         axios.get(`${API_URL}/alkes_inap`)
       ]);
   
-      const pemesananData = (Array.isArray(pemesananRes.data) ? pemesananRes.data : pemesananRes.data.data)
-        .filter(item => item.STATUS === 'DITERIMA')
-        .map(item => ({
-          ID: item.IDPEMESANAN,
-          TANGGAL: item.TGLPEMESANAN,
-          SUPPLIER: item.NAMASUPPLIER,
-          STATUS: 'MASUK',
-          TIPE: 'PEMESANAN',
-          ...item
-        }));
+      const pemesananList = (Array.isArray(pemesananRes.data) ? pemesananRes.data : pemesananRes.data.data)
+        .filter(item => item.STATUS === 'DITERIMA');
+  
+        const pemesananDetailData = await Promise.all(
+          pemesananList.map(async (item) => {
+            try {
+              const res = await axios.get(`${API_URL}/pemesanan/${item.IDPEMESANAN}`);
+              const detailList = res.data.details || []; // fix disini ✅
+        
+              const { jumlah, total } = detailList.reduce(
+                (acc, d) => {
+                  acc.jumlah += d.QTY;
+                  acc.total += d.QTY * d.HARGABELI;
+                  return acc;
+                },
+                { jumlah: 0, total: 0 }
+              );
+        
+              return {
+                ID: item.IDPEMESANAN,
+                TANGGAL: item.TGLPEMESANAN,
+                SUPPLIER: item.NAMASUPPLIER,
+                STATUS: 'MASUK',
+                TIPE: 'PEMESANAN',
+                JUMLAH: jumlah,
+                TOTAL: total,
+                ...item,
+                detail: detailList
+              };
+            } catch (err) {
+              console.error(`Gagal fetch detail untuk ID ${item.IDPEMESANAN}:`, err);
+              return {
+                ID: item.IDPEMESANAN,
+                TANGGAL: item.TGLPEMESANAN,
+                SUPPLIER: item.NAMASUPPLIER,
+                STATUS: 'MASUK',
+                TIPE: 'PEMESANAN',
+                JUMLAH: 0,
+                TOTAL: 0,
+                ...item,
+                detail: []
+              };
+            }
+          })
+        );        
   
       const obatInapData = (obatInapRes.data.data || []).map(item => ({
         ID: item.IDOBATINAP,
@@ -63,18 +109,19 @@ const MonitoringPemesananPage = () => {
         TIPE: 'ALKES_INAP',
         ...item
       }));
-  
-      const merged = [...pemesananData, ...obatInapData, ...alkesInapData];
+      const merged = [...pemesananDetailData, ...obatInapData, ...alkesInapData];
   
       setData(merged);
       setOriginalData(merged);
+      console.log(merged);
     } catch (err) {
       console.error("Gagal mengambil data transaksi:", err);
       toastRef.current?.showToast("01", "Gagal memuat data transaksi");
     } finally {
       setLoading(false);
     }
-  };  
+  };
+  
 
   const handleDetail = async (row) => {
     try {
@@ -132,10 +179,18 @@ const MonitoringPemesananPage = () => {
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
         />
-        <HeaderBar
-          placeholder="Cari berdasarkan supplier atau ID pemesanan..."
-          onSearch={handleSearch}
-        />
+        <div className='flex items-center justify-end'>
+          <Button
+            icon="pi pi-print"
+            className="p-button-warning mt-3"
+            tooltip="Atur Print Margin"
+            onClick={() => setAdjustDialog(true)}
+          />
+          <HeaderBar
+            placeholder="Cari berdasarkan supplier atau ID pemesanan..."
+            onSearch={handleSearch}
+          />
+        </div>
       </div>
 
       <TabelPemesanan data={data} loading={loading} onDetail={handleDetail} />
@@ -153,6 +208,26 @@ const MonitoringPemesananPage = () => {
           data={detailData}
         />
       ) : null}
+
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        data={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: "90vw", height: "90vh" }}
+        header="Preview PDF"
+      >
+        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+      </Dialog>
 
 
     </div>
