@@ -45,8 +45,8 @@ const TabelLaporanPembayaran = ({ data, loading, onDelete }) => {
 
     const metodeBody = (row) => (
         <Tag
-            value={row.METODEPEMBAYARAN}
-            severity={metodeSeverity[row.METODEPEMBAYARAN] || metodeSeverity.DEFAULT}
+            value={row.METODE}
+            severity={metodeSeverity[row.METODE] || metodeSeverity.DEFAULT}
         />
     );
 

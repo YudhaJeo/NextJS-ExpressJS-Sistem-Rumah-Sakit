@@ -20,7 +20,7 @@ export const getAll = ({ startDate, endDate, nik, metode }) => {
             db.raw("IFNULL(SUM(DISTINCT p.JUMLAHBAYAR),0) as TOTALPEMBAYARAN"), 
             db.raw("IFNULL(SUM(DISTINCT dp.JUMLAH_PEMAKAIAN),0) as TOTALDEPOSIT"),
             db.raw("IFNULL(SUM(DISTINCT a.NOMINAL),0) as TOTALANGSURAN"),
-            db.raw("MAX(p.METODEPEMBAYARAN) as METODEPEMBAYARAN")
+            db.raw("COALESCE(MAX(p.METODEPEMBAYARAN), MAX(a.METODE), '-') as METODE")
         )
         .where("i.STATUS", "LUNAS")
         .groupBy(
