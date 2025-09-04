@@ -113,7 +113,6 @@ const MonitoringPemesananPage = () => {
   
       setData(merged);
       setOriginalData(merged);
-      console.log(merged);
     } catch (err) {
       console.error("Gagal mengambil data transaksi:", err);
       toastRef.current?.showToast("01", "Gagal memuat data transaksi");

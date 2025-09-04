@@ -21,9 +21,11 @@ const TabelTransaksi = ({ data, loading, onDetail }) => {
   }
 
   const statusBody = (rowData) => {
-    if (rowData.TIPE === 'PEMESANAN') return 'MASUK'
-    return 'KELUAR'
-  }
+    const severity = rowData.TIPE === 'PEMESANAN' ? 'success' : 'warning';
+    const label = rowData.TIPE === 'PEMESANAN' ? 'Masuk' : 'Keluar';
+  
+    return <Tag value={label} severity={severity} />;
+  };
 
   const tipeBody = (rowData) => {
     const severity =
@@ -66,6 +68,13 @@ const TabelTransaksi = ({ data, loading, onDetail }) => {
       <Column body={dateBody} header="Tanggal" />
       <Column body={tipeBody} header="Tipe" />
       <Column body={statusBody} header="Status" />
+      <Column field="JUMLAH" header="Jumlah" />
+      <Column 
+        header="Total" 
+        body={(row) =>
+          new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.TOTAL)
+        }
+        />
       <Column body={actionBody} header="Aksi" />
     </DataTable>
   )

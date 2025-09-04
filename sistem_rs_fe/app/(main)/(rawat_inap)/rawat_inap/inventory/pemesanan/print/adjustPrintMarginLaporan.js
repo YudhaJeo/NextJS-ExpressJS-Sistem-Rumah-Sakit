@@ -95,7 +95,7 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
-    const startY = addHeader(doc, 'DATA LOG TRANSAKSI', marginLeft, marginTop, marginRight);
+    const startY = addHeader(doc, 'DATA PEMESANAN', marginLeft, marginTop, marginRight);
 
     const formatTanggal = (tanggal) =>
       tanggal
@@ -109,17 +109,13 @@ export default function AdjustPrintMarginLaporan({
       startY: startY,
       head: [[
         'Tanggal',
-        'Tipe',
+        'Supplier',
         'Status',
-        'Jumlah',
-        'Total'
       ]],
-      body: data.map((alkes) => [
-        alkes.TANGGAL,
-        alkes.TIPE,
-        alkes.STATUS,
-        alkes.JUMLAH,
-        new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(alkes.TOTAL || 0),
+      body: data.map((pemesanan) => [
+        pemesanan.TGLPEMESANAN,
+        pemesanan.NAMASUPPPLIER,
+        pemesanan.STATUS,
       ]),
       margin: { left: marginLeft, right: marginRight },
       styles: { fontSize: 9, cellPadding: 2 },
@@ -133,8 +129,8 @@ export default function AdjustPrintMarginLaporan({
   const exportExcel = () => {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Alkes');
-    XLSX.writeFile(wb, 'Master_Alkes.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Pemesanan');
+    XLSX.writeFile(wb, 'Master_Pemesanan.xlsx');
   };
 
   const handleExportPdf = async () => {
@@ -142,7 +138,7 @@ export default function AdjustPrintMarginLaporan({
       setLoadingExport(true);
       const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName('Master_Alkes');
+      setFileName('Master_Pemesanan');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {

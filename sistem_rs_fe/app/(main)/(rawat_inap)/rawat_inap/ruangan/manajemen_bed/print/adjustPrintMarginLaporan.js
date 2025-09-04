@@ -95,7 +95,7 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
-    const startY = addHeader(doc, 'DATA LOG TRANSAKSI', marginLeft, marginTop, marginRight);
+    const startY = addHeader(doc, 'DATA BED', marginLeft, marginTop, marginRight);
 
     const formatTanggal = (tanggal) =>
       tanggal
@@ -108,18 +108,18 @@ export default function AdjustPrintMarginLaporan({
     autoTable(doc, {
       startY: startY,
       head: [[
-        'Tanggal',
-        'Tipe',
+        'ID',
+        'Nomor Bed',
+        'Nama Kamar',
         'Status',
-        'Jumlah',
-        'Total'
+        'Keterangan',
       ]],
-      body: data.map((alkes) => [
-        alkes.TANGGAL,
-        alkes.TIPE,
-        alkes.STATUS,
-        alkes.JUMLAH,
-        new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(alkes.TOTAL || 0),
+      body: data.map((bangsal) => [
+        bangsal.IDBED,
+        bangsal.NOMORBED,
+        bangsal.NAMAKAMAR,
+        bangsal.STATUS,
+        bangsal.KETERANGAN,
       ]),
       margin: { left: marginLeft, right: marginRight },
       styles: { fontSize: 9, cellPadding: 2 },
@@ -133,8 +133,8 @@ export default function AdjustPrintMarginLaporan({
   const exportExcel = () => {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Alkes');
-    XLSX.writeFile(wb, 'Master_Alkes.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Jenis');
+    XLSX.writeFile(wb, 'Master_Bed.xlsx');
   };
 
   const handleExportPdf = async () => {
@@ -142,7 +142,7 @@ export default function AdjustPrintMarginLaporan({
       setLoadingExport(true);
       const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName('Master_Alkes');
+      setFileName('Master_Bed');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {
