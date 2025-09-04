@@ -95,7 +95,7 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
-    const startY = addHeader(doc, 'DATA ALAT KESEHATAN', marginLeft, marginTop, marginRight);
+    const startY = addHeader(doc, 'DATA PEMESANAN', marginLeft, marginTop, marginRight);
 
     const formatTanggal = (tanggal) =>
       tanggal
