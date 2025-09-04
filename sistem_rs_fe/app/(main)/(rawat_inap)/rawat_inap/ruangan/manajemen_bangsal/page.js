@@ -7,7 +7,6 @@ import {
   useState 
 } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import TabelBangsal from './components/tabelBangsal';
 import FormDialogPasien from './components/formDialogBangsal';
