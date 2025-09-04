@@ -7,13 +7,16 @@ import {
   useState 
 } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import TabelBangsal from './components/tabelBangsal';
 import FormDialogPasien from './components/formDialogBangsal';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { Button } from "primereact/button";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -23,6 +26,12 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [bangsalOption, setBangsalOptions] = useState([]);
+
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
 
   const fetchBangsal = async () => {
     try {
@@ -53,7 +62,6 @@ const Page = () => {
   const [errors, setErrors] = useState({});
 
   const toastRef = useRef(null);
-  const router = useRouter();
 
   const fetchData = async () => {
     setLoading(true);
@@ -183,15 +191,23 @@ const Page = () => {
 
       <h3 className="text-xl font-semibold mb-3">Manajemen Data Bangsal</h3>
 
-      <HeaderBar
-        title=""
-        placeholder="Cari berdasarkan nama atau jenis bangsal"
-        onSearch={handleSearch}
-        onAddClick={() => {
-          resetForm();
-          setDialogVisible(true);
-        }}
-      />
+      <div className='flex items-center justify-end'>
+        <Button
+          icon="pi pi-print"
+          className="p-button-warning mt-3"
+          tooltip="Atur Print Margin"
+          onClick={() => setAdjustDialog(true)}
+        />
+        <HeaderBar
+          title=""
+          placeholder="Cari berdasarkan nama atau jenis bangsal"
+          onSearch={handleSearch}
+          onAddClick={() => {
+            resetForm();
+            setDialogVisible(true);
+          }}
+        />
+      </div>
 
       <TabelBangsal 
         data={data} 
@@ -210,9 +226,27 @@ const Page = () => {
         form={form}
         setForm={setForm}
         errors={errors}
-        // DROP DOWN OPTION
         bangsalOption={bangsalOption}
       />
+
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        data={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: "90vw", height: "90vh" }}
+        header="Preview PDF"
+      >
+        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+      </Dialog>
     </div>
   );
 };
