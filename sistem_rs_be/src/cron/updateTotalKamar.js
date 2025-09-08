@@ -4,7 +4,7 @@ import * as RawatInap from '../models/rawatInapModel.js';
 //  tiap jam 00:00
 cron.schedule('0 0 * * *', async () => {
   try {
-    console.log('Mulai update TOTALKAMAR harian...');
+    console.log('Mulai update Total Kamar harian...');
 
     const rawatInaps = await RawatInap.getAllAktif(); 
 
@@ -18,7 +18,7 @@ cron.schedule('0 0 * * *', async () => {
       await RawatInap.updateTotalKamar(rawat.IDRAWATINAP, totalKamar);
     }
 
-    console.log('Update TOTALKAMAR harian selesai.');
+    console.log('Update Total Kamar harian Selesai.');
   } catch (err) {
     console.error('Error update TOTALKAMAR harian:', err);
   }
