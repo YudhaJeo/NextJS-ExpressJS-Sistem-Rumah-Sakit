@@ -95,7 +95,7 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
-    const startY = addHeader(doc, 'DATA JENIS KAMAR', marginLeft, marginTop, marginRight);
+    const startY = addHeader(doc, 'DATA TAGIHAN SEMENTARA RAWAT INAP', marginLeft, marginTop, marginRight);
 
     const formatTanggal = (tanggal) =>
       tanggal
@@ -120,12 +120,12 @@ export default function AdjustPrintMarginLaporan({
       body: data.map((tagihan) => [
         tagihan.NAMALENGKAP,
         tagihan.NOMORBED,
-        tagihan.TANGGALMASUK,
-        tagihan.TOTAL_OBAT,
-        tagihan.TOTAL_ALKES,
-        tagihan.TOTAL_TINDAKAN,
-        tagihan.TOTALKAMAR,
-        tagihan.TOTAL_SEMENTARA,
+        formatTanggal(tagihan.TANGGALMASUK),
+        formatRupiah(tagihan.TOTAL_OBAT),
+        formatRupiah(tagihan.TOTAL_ALKES),
+        formatRupiah(tagihan.TOTAL_TINDAKAN),
+        formatRupiah(tagihan.TOTALKAMAR),
+        formatRupiah(tagihan.TOTAL_SEMENTARA),
       ]),
       margin: { left: marginLeft, right: marginRight },
       styles: { fontSize: 9, cellPadding: 2 },
@@ -140,7 +140,7 @@ export default function AdjustPrintMarginLaporan({
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Jenis');
-    XLSX.writeFile(wb, 'Master_Tagihan Sementara.xlsx');
+    XLSX.writeFile(wb, 'Master_Tagihan_Sementara.xlsx');
   };
 
   const handleExportPdf = async () => {
@@ -148,7 +148,7 @@ export default function AdjustPrintMarginLaporan({
       setLoadingExport(true);
       const pdfDataUrl = await exportPDF(dataAdjust);
       setPdfUrl(pdfDataUrl);
-      setFileName('Master_Tagihan Sementara');
+      setFileName('Master_Tagihan_Sementara');
       setAdjustDialog(false);
       setJsPdfPreviewOpen(true);
     } finally {
