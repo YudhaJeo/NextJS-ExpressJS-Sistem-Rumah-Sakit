@@ -66,7 +66,6 @@ const Page = () => {
   
   const [form, setForm] = useState(defaultForm);
 
-
   useEffect(() => {
     fetchRawatInap();
     fetchRawatJalan();
@@ -113,7 +112,6 @@ const Page = () => {
     }
   };
 
-  
   const fetchBed = async () => {
     try {
       const res = await axios.get(`${API_URL}/bed`);

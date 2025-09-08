@@ -13,6 +13,8 @@ import { Toast } from 'primereact/toast';
 import { useRef } from 'react';
 import dayjs from "dayjs";
 import Cookies from 'js-cookie';
+import AdjustPrintMarginLaporanDinamis from '../../print/AdjustPrintMarginLaporanDinamis';
+import { Dialog } from 'primereact/dialog';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -31,9 +33,16 @@ const TabObat = ({ tenagaMedisOptions, statusRawat }) => {
     TOTAL: 0
   });
 
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+  const [allObatInap, setAllObatInap] = useState([]);
+
   useEffect(() => {
-    fetchObat(); 
-  }, []); 
+    fetchObat();
+    fetchAllObatInap();
+  }, []);
 
   const fetchObat = async () => {
     try {
@@ -49,12 +58,21 @@ const TabObat = ({ tenagaMedisOptions, statusRawat }) => {
     }
   };
 
+  const fetchAllObatInap = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/obat_inap`);
+      setAllObatInap(res.data.data || []);
+    } catch (err) {
+      console.error('Gagal ambil seluruh data obat inap:', err);
+    }
+  };
+
   useEffect(() => {
     const idRawatInap = Cookies.get('idRawatInap');
     if (idRawatInap) {
       fetchData(idRawatInap);
     }
-  }, []); 
+  }, []);
 
   const fetchData = async (idRawatInap) => {
     if (!idRawatInap) return;
@@ -84,44 +102,43 @@ const TabObat = ({ tenagaMedisOptions, statusRawat }) => {
 
     try {
       const res = await axios.post(`${API_URL}/obat_inap`, payload);
-    
+
       if (res.data.status === 'success') {
-        toast.current.show({ 
-          severity: 'success', 
-          summary: 'Berhasil', 
-          detail: res.data.message, 
-          life: 3000 
+        toast.current.show({
+          severity: 'success',
+          summary: 'Berhasil',
+          detail: res.data.message,
+          life: 3000
         });
-    
+
         fetchData(idRawatInap);
-        setNewItem({ 
-          WAKTUPEMBERIAN: null, 
-          IDTENAGAMEDIS: null, 
-          IDOBAT: null, 
-          JUMLAH: 1, 
-          HARGA: 0, 
-          TOTAL: 0 
+        setNewItem({
+          WAKTUPEMBERIAN: null,
+          IDTENAGAMEDIS: null,
+          IDOBAT: null,
+          JUMLAH: 1,
+          HARGA: 0,
+          TOTAL: 0
         });
       } else {
-        toast.current.show({ 
-          severity: 'warn', 
-          summary: 'Peringatan', 
-          detail: res.data.message, 
-          life: 3000 
+        toast.current.show({
+          severity: 'warn',
+          summary: 'Peringatan',
+          detail: res.data.message,
+          life: 3000
         });
       }
     } catch (err) {
-      toast.current.show({ 
-        severity: 'error', 
-        summary: 'Error', 
-        detail: err.response?.data?.message || 'Terjadi kesalahan server', 
-        life: 3000 
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: err.response?.data?.message || 'Terjadi kesalahan server',
+        life: 3000
       });
       console.error('Gagal tambah data:', err);
     }
   };
 
-    
   const handleDelete = (row) => {
     confirmDialog({
       message: 'Yakin hapus data ini?',
@@ -132,7 +149,7 @@ const TabObat = ({ tenagaMedisOptions, statusRawat }) => {
         try {
           await axios.delete(`${API_URL}/obat_inap/${row.IDOBATINAP}`);
           toast.current.show({ severity: 'success', summary: 'Berhasil', detail: 'Data obat berhasil dihapus', life: 3000 });
-          fetchData(idRawatInap); 
+          fetchData(idRawatInap);
         } catch (err) {
           toast.current.show({ severity: 'error', summary: 'Gagal', detail: 'Gagal hapus data', life: 3000 });
           console.error('Gagal hapus data:', err);
@@ -140,11 +157,19 @@ const TabObat = ({ tenagaMedisOptions, statusRawat }) => {
       }
     });
   };
-  
 
   const formatRupiah = (val) =>
     new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' })
       .format(val || 0);
+
+  const columns = [
+    { label: 'Waktu', accessor: 'WAKTUPEMBERIAN', formatter: (v) => v ? new Date(v).toLocaleString() : '-' },
+    { label: 'Petugas', accessor: 'NAMATENAGAMEDIS' },
+    { label: 'Obat', accessor: 'NAMAOBAT' },
+    { label: 'Jumlah', accessor: 'JUMLAH' },
+    { label: 'Harga', accessor: 'HARGA', formatter: formatRupiah },
+    { label: 'Total', accessor: 'TOTAL', formatter: formatRupiah },
+  ];
 
   return (
     <div className="mt-4">
@@ -194,6 +219,15 @@ const TabObat = ({ tenagaMedisOptions, statusRawat }) => {
         />
         <InputNumber value={newItem.HARGA} disabled mode="currency" currency="IDR" locale="id-ID" />
         <Button label="Tambahkan" icon="pi pi-save" onClick={handleAdd} />
+
+        <div className="flex flex-row gap-2">
+          <Button
+            icon="pi pi-print"
+            tooltip="Cetak Data"
+            className="p-button-warning"
+            onClick={() => setAdjustDialog(true)}
+          />
+        </div>
       </div>
       )}
 
@@ -214,6 +248,26 @@ const TabObat = ({ tenagaMedisOptions, statusRawat }) => {
         )} style={{ width: '150px' }} />
         )}
       </DataTable>
+      <AdjustPrintMarginLaporanDinamis
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        title="DATA OBAT INAP"
+        columns={columns}
+        data={obatInapData}
+        allData={allObatInap}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: '90vw', height: '90vh' }}
+        header="Preview PDF"
+      >
+        <iframe src={pdfUrl} title={fileName} width="100%" height="700px" style={{ border: 'none' }} />
+      </Dialog>
     </div>
   );
 };
