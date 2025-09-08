@@ -118,7 +118,7 @@ const Page = () => {
           <Button
             icon="pi pi-sliders-h"
             className="p-button-warning mt-3"
-            tooltip="Atur Print Margin"
+            tooltip="Cetak Data"
             onClick={() => setAdjustDialog(true)}
           />
           <HeaderBar
