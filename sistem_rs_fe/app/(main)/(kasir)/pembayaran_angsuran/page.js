@@ -241,7 +241,7 @@ const Page = () => {
         />
         <div className="flex items-center gap-2">
           <Button
-            icon="pi pi-sliders-h"
+            icon="pi pi-print"
             className="p-button-warning mt-3"
             tooltip="Atur Print Margin"
             onClick={() => setAdjustDialog(true)}
