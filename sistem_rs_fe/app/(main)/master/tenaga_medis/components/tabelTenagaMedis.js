@@ -47,7 +47,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
               <div
                 className="w-9rem h-9rem sm:w-12rem sm:h-12rem border-round-lg shadow-2 cursor-pointer"
                 style={{
-                  backgroundImage: `url(${row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_URL}${row.FOTOPROFIL}` : "/no-image.png"})`,
+                  backgroundImage: `url(${row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_MINIO_URL}${row.FOTOPROFIL}` : "/no-image.png"})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat'
@@ -126,7 +126,6 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
       <div className="col-12 sm:col-6 md:col-4 lg:col-3 p-2" key={row.IDTENAGAMEDIS}>
         <Card className="h-full cursor-pointer hover:shadow-4 transition-all transition-duration-300">
           <div className="flex flex-column h-full">
-            {/* Header dengan status */}
             <div className="flex justify-content-between align-items-center mb-3">
               <Chip 
                 label={row.JENISTENAGAMEDIS} 
@@ -140,7 +139,6 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
               />
             </div>
             
-            {/* Foto dan info utama */}
             <div 
               className="flex flex-column align-items-center gap-3 py-3 flex-1"
               onClick={() => openDetail(row)}
@@ -148,7 +146,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
               <div
                 className="w-10rem h-10rem border-round-lg shadow-2 cursor-pointer"
                 style={{
-                  backgroundImage: `url(${row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_URL}${row.FOTOPROFIL}` : "/no-image.png"})`,
+                  backgroundImage: `url(${row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_MINIO_URL}${row.FOTOPROFIL}` : "/no-image.png"})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat'
@@ -169,8 +167,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                 </div>
               )}
             </div>
-            
-            {/* Action buttons */}
+          
             <Divider className="my-2" />
             <div className="flex justify-content-center gap-2">
               <Button
@@ -333,7 +330,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
               <div
                 className="w-12rem h-12rem mt-4 border-circle shadow-3"
                 style={{
-                  backgroundImage: `url(${selectedData.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_URL}${selectedData.FOTOPROFIL}` : "/no-image.png"})`,
+                  backgroundImage: `url(${row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_MINIO_URL}${row.FOTOPROFIL}` : "/no-image.png"})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat'
@@ -509,7 +506,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                       className="p-0"
                       onClick={() =>
                         window.open(
-                          `${process.env.NEXT_PUBLIC_URL}${selectedData.DOKUMENPENDUKUNG}`,
+                          `${process.env.NEXT_PUBLIC_MINIO_URL}${selectedData.DOKUMENPENDUKUNG}`,
                           "_blank"
                         )
                       }

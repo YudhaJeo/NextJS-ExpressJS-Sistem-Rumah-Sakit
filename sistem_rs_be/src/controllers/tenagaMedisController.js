@@ -1,6 +1,7 @@
-import * as TenagaMedis from '../models/tenagaMedisModel.js';
-import bcrypt from 'bcrypt';
-import multer from 'multer';
+import * as TenagaMedis from "../models/tenagaMedisModel.js";
+import bcrypt from "bcrypt";
+import { uploadToMinio } from "../core/utils/uploadMinio.js";
+import { deleteFromMinio } from "../core/utils/deleteMinio.js";
 
 const formatDate = (dateStr) => {
   if (!dateStr) return null;
@@ -53,12 +54,22 @@ export const createTenagaMedis = async (req, res) => {
     const kodeOtomatis = await generateKodeTenaga();
     const hashedPassword = await bcrypt.hash(body.PASSWORD, 10);
 
+    let fotoProfil = null;
+    let dokumenPendukung = null;
+
+    if (files?.FOTOPROFIL?.[0]) {
+      fotoProfil = await uploadToMinio(files.FOTOPROFIL[0], "tenaga_medis/foto_profile");
+    }
+    if (files?.DOKUMENPENDUKUNG?.[0]) {
+      dokumenPendukung = await uploadToMinio(files.DOKUMENPENDUKUNG[0], "tenaga_medis/dokumen");
+    }
+
     const data = {
       ...body,
       KODETENAGAMEDIS: kodeOtomatis,
       PASSWORD: hashedPassword,
-      FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_medis/${files.FOTOPROFIL[0].filename}` : null,
-      DOKUMENPENDUKUNG: files?.DOKUMENPENDUKUNG?.[0] ? `/uploads/tenaga_medis/${files.DOKUMENPENDUKUNG[0].filename}` : null,
+      FOTOPROFIL: fotoProfil,
+      DOKUMENPENDUKUNG: dokumenPendukung,
       TANGGALLAHIR: formatDate(body.TANGGALLAHIR),
       TGLEXPSTR: formatDate(body.TGLEXPSTR),
       TGLEXPSIP: formatDate(body.TGLEXPSIP),
@@ -67,19 +78,10 @@ export const createTenagaMedis = async (req, res) => {
     };
 
     await TenagaMedis.create(data);
-
-    res.status(201).json({ success: true, message: 'Tenaga medis created' });
+    res.status(201).json({ success: true, message: "Tenaga medis created" });
   } catch (err) {
     console.error(err);
-
-    if (err instanceof multer.MulterError) {
-      return res.status(400).json({ success: false, message: `Upload error: ${err.message}` });
-    }
-    if (err.message.includes('Hanya file gambar') || err.message.includes('file terlalu besar')) {
-      return res.status(400).json({ success: false, message: err.message });
-    }
-
-    res.status(500).json({ success: false, message: 'Failed to create tenaga medis' });
+    res.status(500).json({ success: false, message: "Failed to create tenaga medis" });
   }
 };
 
@@ -87,10 +89,28 @@ export const updateTenagaMedis = async (req, res) => {
   try {
     const { body, files } = req;
 
+    const existing = await TenagaMedis.getById(req.params.id);
+    if (!existing) {
+      return res.status(404).json({ success: false, message: "Tenaga medis not found" });
+    }
+
+    let fotoProfil = existing.FOTOPROFIL;
+    let dokumenPendukung = existing.DOKUMENPENDUKUNG;
+
+    if (files?.FOTOPROFIL?.[0]) {
+      await deleteFromMinio(existing.FOTOPROFIL);
+      fotoProfil = await uploadToMinio(files.FOTOPROFIL[0], "tenaga_medis/foto_profile");
+    }
+
+    if (files?.DOKUMENPENDUKUNG?.[0]) {
+      await deleteFromMinio(existing.DOKUMENPENDUKUNG);
+      dokumenPendukung = await uploadToMinio(files.DOKUMENPENDUKUNG[0], "tenaga_medis/dokumen");
+    }
+
     const data = {
       ...body,
-      FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_medis/${files.FOTOPROFIL[0].filename}` : null,
-      DOKUMENPENDUKUNG: files?.DOKUMENPENDUKUNG?.[0] ? `/uploads/tenaga_medis/${files.DOKUMENPENDUKUNG[0].filename}` : null,
+      FOTOPROFIL: fotoProfil,
+      DOKUMENPENDUKUNG: dokumenPendukung,
       TANGGALLAHIR: formatDate(body.TANGGALLAHIR),
       TGLEXPSTR: formatDate(body.TGLEXPSTR),
       TGLEXPSIP: formatDate(body.TGLEXPSIP),
@@ -98,37 +118,34 @@ export const updateTenagaMedis = async (req, res) => {
     };
 
     delete data.PASSWORD;
-    delete data.CREATED_AT;
 
     const result = await TenagaMedis.update(req.params.id, data);
     if (!result) {
-      return res.status(404).json({ success: false, message: 'Tenaga medis not found' });
+      return res.status(404).json({ success: false, message: "Tenaga medis not found" });
     }
 
-    res.status(200).json({ success: true, message: 'Tenaga medis updated' });
+    res.status(200).json({ success: true, message: "Tenaga medis updated" });
   } catch (err) {
-    console.error(err);
-
-    if (err instanceof multer.MulterError) {
-      return res.status(400).json({ success: false, message: `Upload error: ${err.message}` });
-    }
-    if (err.message.includes('Hanya file gambar') || err.message.includes('file terlalu besar')) {
-      return res.status(400).json({ success: false, message: err.message });
-    }
-
-    res.status(500).json({ success: false, message: 'Failed to update tenaga medis' });
+    console.error("❌ Gagal update tenaga medis:", err);
+    res.status(500).json({ success: false, message: "Failed to update tenaga medis" });
   }
 };
 
 export const deleteTenagaMedis = async (req, res) => {
   try {
-    const result = await TenagaMedis.remove(req.params.id);
-    if (!result) {
-      return res.status(404).json({ success: false, message: 'Tenaga medis not found' });
+    const data = await TenagaMedis.getById(req.params.id);
+    if (!data) {
+      return res.status(404).json({ success: false, message: "Tenaga medis not found" });
     }
-    res.status(200).json({ success: true, message: 'Tenaga medis deleted' });
+
+    await deleteFromMinio(data.FOTOPROFIL);
+    await deleteFromMinio(data.DOKUMENPENDUKUNG);
+
+    const result = await TenagaMedis.remove(req.params.id);
+
+    res.status(200).json({ success: true, message: "Tenaga medis & file berhasil dihapus" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: 'Failed to delete tenaga medis' });
+    res.status(500).json({ success: false, message: "Failed to delete tenaga medis" });
   }
 };
