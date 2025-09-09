@@ -83,8 +83,8 @@ const TabelRawatJalan = ({ data, loading, onEdit, onDelete, onDetail }) => {
         stripedRows
         responsiveLayout="scroll"
       >
+        <Column field='NOREKAMMEDIS' header='No Rekam Medis' />
         <Column field="NAMALENGKAP" header="Nama Pasien" />
-        <Column field="NIK" header="NIK" />
         <Column
           field="TANGGALKUNJUNGAN"
           header="Tgl Kunjungan"
