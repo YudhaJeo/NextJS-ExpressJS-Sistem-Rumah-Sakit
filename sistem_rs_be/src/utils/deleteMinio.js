@@ -1,4 +1,4 @@
-import minioClient from "../config/minio.js";
+import minioClient from "../core/config/minio.js";
 
 export const deleteFromMinio = async (filePath) => {
   if (!filePath) return;

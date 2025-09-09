@@ -1,4 +1,4 @@
-import minioClient from "../config/minio.js";
+import minioClient from "../core/config/minio.js";
 
 export const uploadToMinio = async (file, folder) => {
   return new Promise((resolve, reject) => {
