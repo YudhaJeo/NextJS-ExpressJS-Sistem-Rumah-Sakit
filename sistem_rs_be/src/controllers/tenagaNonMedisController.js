@@ -1,6 +1,7 @@
 import * as TenagaNonMedis from '../models/tenagaNonMedisModel.js';
-import bcrypt from 'bcrypt';
-import multer from 'multer';
+import bcrypt from "bcrypt";
+import { uploadToMinio } from "../utils/uploadMinio.js";
+import { deleteFromMinio } from "../utils/deleteMinio.js";
 
 const formatDate = (dateStr) => {
   if (!dateStr) return null;
@@ -53,12 +54,23 @@ export const createTenagaNonMedis = async (req, res) => {
     const kodeOtomatis = await generateKodeTenaga();
     const hashedPassword = await bcrypt.hash(body.PASSWORD, 10);
 
+    let fotoProfil = null;
+    let dokumenPendukung = null;
+
+    if(files?.FOTOPROFIL?.[0]) {
+      fotoProfil = await uploadToMinio(files.FOTOPROFIL[0], "tenaga_non_medis/foto_profile");
+    }
+
+    if(files?.DOKUMENPENDUKUNG?.[0]) {
+      dokumenPendukung = await uploadToMinio(files.DOKUMENPENDUKUNG[0], "tenaga_non_medis/dokumen");
+    }
+
     const data = {
       ...body,
       KODETENAGANONMEDIS: kodeOtomatis,
       PASSWORD: hashedPassword,
-      FOTOPROFIL: files?.FOTOPROFIL?.[0] ? `/uploads/tenaga_non_medis/${files.FOTOPROFIL[0].filename}` : null,
-      DOKUMENPENDUKUNG: files?.DOKUMENPENDUKUNG?.[0] ? `/uploads/tenaga_non_medis/${files.DOKUMENPENDUKUNG[0].filename}` : null,
+      FOTOPROFIL: fotoProfil,
+      DOKUMENPENDUKUNG: dokumenPendukung,
       TANGGALLAHIR: formatDate(body.TANGGALLAHIR),
       CREATED_AT: toMySQLDateTime(),
       UPDATED_AT: toMySQLDateTime(),
@@ -77,21 +89,26 @@ export const updateTenagaNonMedis = async (req, res) => {
   try {
     const { body, files } = req;
 
+    let fotoProfil = null;
+    let dokumenPendukung = null;
+    
+    if(files?.FOTOPROFIL?.[0]) {
+      fotoProfil = await uploadToMinio(files.FOTOPROFIL[0], "tenaga_non_medis/foto_profile");
+    }
+    
+    if(files?.DOKUMENPENDUKUNG?.[0]) {
+      dokumenPendukung = await uploadToMinio(files.DOKUMENPENDUKUNG[0], "tenaga_non_medis/dokumen");
+    }
+    
     const updateData = {
       ...body,
+      FOTOPROFIL: fotoProfil,
+      DOKUMENPENDUKUNG: dokumenPendukung,
       TANGGALLAHIR: formatDate(body.TANGGALLAHIR),
       UPDATED_AT: toMySQLDateTime(),
     };
 
-    if (files?.FOTOPROFIL?.[0]) {
-      updateData.FOTOPROFIL = `/uploads/tenaga_non_medis/${files.FOTOPROFIL[0].filename}`;
-    }
-    if (files?.DOKUMENPENDUKUNG?.[0]) {
-      updateData.DOKUMENPENDUKUNG = `/uploads/tenaga_non_medis/${files.DOKUMENPENDUKUNG[0].filename}`;
-    }
-
     delete updateData.PASSWORD;
-    delete updateData.CREATED_AT;
 
     const result = await TenagaNonMedis.update(req.params.id, updateData);
     if (!result) {
@@ -119,6 +136,10 @@ export const deleteTenagaNonMedis = async (req, res) => {
     if (!result) {
       return res.status(404).json({ success: false, message: 'Tenaga non medis not found' });
     }
+
+    await deleteFromMinio(result.FOTOPROFIL);
+    await deleteFromMinio(result.DOKUMENPENDUKUNG);
+
     res.status(200).json({ success: true, message: 'Tenaga non medis deleted' });
   } catch (err) {
     console.error(err);

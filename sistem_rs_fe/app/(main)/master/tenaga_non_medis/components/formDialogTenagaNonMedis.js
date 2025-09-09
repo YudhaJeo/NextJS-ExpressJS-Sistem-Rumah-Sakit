@@ -53,14 +53,14 @@ function FormDialogTenagaNonMedis({ visible, onHide, onSubmit, form, setForm }) 
       if (form.FOTOPROFIL) {
         setPreviewImage(
           typeof form.FOTOPROFIL === "string"
-            ? `/uploads/tenaga_non_medis/${form.FOTOPROFIL}`
+            ? `${process.env.NEXT_PUBLIC_MINIO_URL}${form.FOTOPROFIL}`
             : URL.createObjectURL(form.FOTOPROFIL)
         );
       }
       if (form.DOKUMENPENDUKUNG) {
         setPreviewDokumen(
           typeof form.DOKUMENPENDUKUNG === "string"
-            ? form.DOKUMENPENDUKUNG
+            ? `${process.env.NEXT_PUBLIC_MINIO_URL}${form.DOKUMENPENDUKUNG}`
             : form.DOKUMENPENDUKUNG.name
         );
       }

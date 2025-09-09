@@ -1,6 +1,6 @@
 import express from 'express';
 import { getAllTenagaNonMedis, getTenagaNonMedisById, createTenagaNonMedis, updateTenagaNonMedis, deleteTenagaNonMedis, } from '../controllers/tenagaNonMedisController.js';
-import { upload } from '../middlewares/multer.js';
+import { upload } from '../middlewares/multerUpload.js';
 
 const router = express.Router();
 
