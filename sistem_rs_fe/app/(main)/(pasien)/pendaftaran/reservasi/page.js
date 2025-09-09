@@ -11,6 +11,10 @@ import FilterTanggal from '@/app/components/filterTanggal';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { getHariFromTanggal } from '@/utils/dataHelper';
+import { Button } from "primereact/button";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -23,7 +27,11 @@ const ReservasiPasienPage = () => {
   const [endDate, setEndDate] = useState(null);
   const [allDokterOptions, setAllDokterOptions] = useState([]);
   const [errors, setErrors] = useState({});
-
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
 
   const [formData, setFormData] = useState({
     IDRESERVASI: 0,
@@ -262,6 +270,7 @@ const ReservasiPasienPage = () => {
       <ConfirmDialog />
 
       <h3 className="text-xl font-semibold mb-3">Reservasi Pasien</h3>
+
       <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
         <FilterTanggal
           startDate={startDate}
@@ -270,6 +279,16 @@ const ReservasiPasienPage = () => {
           setEndDate={setEndDate}
           handleDateFilter={handleDateFilter}
           resetFilter={resetFilter}
+        />
+      <div className="flex items-center justify-end">
+        <Button
+          icon="pi pi-print"
+          className="p-button-warning mt-3"
+          tooltip="Atur Print Margin"
+          onClick={() => {
+            handleDateFilter();
+            setAdjustDialog(true);
+          }}
         />
         <HeaderBar
           title=""
@@ -280,6 +299,7 @@ const ReservasiPasienPage = () => {
             setDialogVisible(true);
           }}
         />
+      </div>
       </div>
 
       <TabelReservasiPasien
@@ -306,6 +326,25 @@ const ReservasiPasienPage = () => {
         setDokterOptions={setDokterOptions}
         allDokterOptions={allDokterOptions}
       />
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        dataReservasi={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: "90vw", height: "90vh" }}
+        header="Preview PDF"
+      >
+        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+      </Dialog>
     </div>
   );
 };
