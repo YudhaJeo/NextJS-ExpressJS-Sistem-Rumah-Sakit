@@ -36,7 +36,6 @@ const TabRanap = () => {
 
         const style = getComputedStyle(document.documentElement);
 
-        // bar chart
         setBarChartData({
           labels: ['Aktif', 'Selesai', 'Tagihan', 'Laporan'],
           datasets: [
@@ -75,7 +74,6 @@ const TabRanap = () => {
           },
         });
 
-        // polar chart
         setPolarChartData({
           labels: ['Aktif', 'Selesai', 'Tagihan', 'Laporan'],
           datasets: [

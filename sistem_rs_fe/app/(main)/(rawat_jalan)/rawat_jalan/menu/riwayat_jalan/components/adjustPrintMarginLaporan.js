@@ -44,7 +44,6 @@ import autoTable from 'jspdf-autotable'
       setDataAdjust((prev) => ({ ...prev, [name]: e.value }))
     }
 
-  // Hanya bagian exportPDF yang diubah dari rawat inap
   async function exportPDF(detail, adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,

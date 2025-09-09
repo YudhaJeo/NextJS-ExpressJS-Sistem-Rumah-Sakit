@@ -32,7 +32,7 @@ const Page = () => {
 
   useEffect(() => {
     fetchData();
-  }, []); // pastikan hanya sekali saat mount
+  }, []); 
 
   const fetchData = async () => {
     try {
@@ -42,14 +42,12 @@ const Page = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      // Pastikan data aman
       const responseData = Array.isArray(res.data?.data)
         ? res.data.data
         : Array.isArray(res.data)
         ? res.data
         : [];
 
-      // Filter hanya status dikonfirmasi
       const filtered = responseData.filter(item => item.STATUS === 'Dikonfirmasi');
       setData(filtered);
       setOriginalData(filtered);

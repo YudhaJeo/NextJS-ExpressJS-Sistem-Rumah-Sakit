@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(main)\(rawat_inap)\rawat_inap\inventory\log_transaksi\components\detailKeluar.js
 'use client';
 import { Dialog } from 'primereact/dialog';
 import { DataTable } from 'primereact/datatable';

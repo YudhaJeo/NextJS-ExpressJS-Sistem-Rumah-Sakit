@@ -1,4 +1,3 @@
-// src/controllers/obatInapController.js
 import * as ObatInap from '../models/obatInapModel.js';
 import dayjs from 'dayjs';
 

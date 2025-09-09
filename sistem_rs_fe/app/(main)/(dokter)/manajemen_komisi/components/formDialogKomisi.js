@@ -22,7 +22,6 @@ const formatTanggal = (date) => {
   }).format(d);
 };
 
-
 const FormDialogKomisi = ({
   visible,
   formData,

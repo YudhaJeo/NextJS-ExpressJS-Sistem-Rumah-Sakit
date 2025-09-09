@@ -25,18 +25,15 @@ export default function TabelKalender({ refresh }) {
     try {
       const res = await axios.get(`${API_URL}/reservasi`);
 
-      // Filter hanya status "dikonfirmasi"
       const filteredData = res.data.filter(item => item.STATUS?.toLowerCase() === 'dikonfirmasi');
 
-      // Grup berdasarkan tanggal reservasi
       const grouped = filteredData.reduce((acc, item) => {
-        const date = item.TANGGALRESERVASI.split('T')[0]; // Ambil tanggal saja
+        const date = item.TANGGALRESERVASI.split('T')[0]; 
         if (!acc[date]) acc[date] = [];
         acc[date].push(item);
         return acc;
       }, {});
 
-      // Konversi menjadi event untuk kalender
       const data = Object.entries(grouped).map(([date, items]) => ({
         id: date,
         title: `${items.length} Reservasi`,

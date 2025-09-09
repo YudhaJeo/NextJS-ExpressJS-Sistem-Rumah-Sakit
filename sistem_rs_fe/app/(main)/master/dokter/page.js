@@ -135,12 +135,12 @@ const DokterPage = () => {
         if (!text) return [];
 
         return text.split(',').map((slot) => {
-            const trimmed = slot.trim(); // "Senin 10:00 - 12:00"
+            const trimmed = slot.trim(); 
             const firstSpaceIndex = trimmed.indexOf(' ');
-            const hari = trimmed.substring(0, firstSpaceIndex); // Senin
-            const jamString = trimmed.substring(firstSpaceIndex + 1); // "10:00 - 12:00"
+            const hari = trimmed.substring(0, firstSpaceIndex); 
+            const jamString = trimmed.substring(firstSpaceIndex + 1); 
 
-            const [mulai, selesai] = jamString.split('-').map(j => j.trim()); // "10:00", "12:00"
+            const [mulai, selesai] = jamString.split('-').map(j => j.trim()); 
 
             return {
                 HARI: hari,

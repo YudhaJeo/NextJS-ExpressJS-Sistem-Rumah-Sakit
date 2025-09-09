@@ -24,7 +24,6 @@ const DashboardKasir = () => {
 
         const style = getComputedStyle(document.documentElement);
 
-        // ===== Status Invoice =====
         const lunas = resData.statusInvoice?.LUNAS ?? 0;
         const belum = resData.statusInvoice?.BELUM_LUNAS ?? 0;
 
@@ -34,12 +33,12 @@ const DashboardKasir = () => {
             {
               data: [lunas, belum],
               backgroundColor: [
-                'rgba(40, 167, 69, 0.2)',   // hijau transparan
-                'rgba(220, 53, 69, 0.2)',   // merah transparan
+                'rgba(40, 167, 69, 0.2)',   
+                'rgba(220, 53, 69, 0.2)',   
               ],
               borderColor: [
-                '#28A745', // hijau solid
-                '#DC3545', // merah solid
+                '#28A745', 
+                '#DC3545', 
               ],
               borderWidth: 1,
             },
@@ -55,7 +54,6 @@ const DashboardKasir = () => {
           },
         });
 
-        // ===== Status Deposit =====
         const aktif = resData.statusDeposit?.AKTIF ?? 0;
         const habis = resData.statusDeposit?.HABIS ?? 0;
         const refund = resData.statusDeposit?.REFUND ?? 0;
@@ -66,9 +64,9 @@ const DashboardKasir = () => {
             {
               data: [aktif, habis, refund],
               backgroundColor: [
-                'rgba(0, 123, 255, 0.2)',   // biru transparan
-                'rgba(255, 193, 7, 0.2)',   // kuning transparan
-                'rgba(108, 117, 125, 0.2)', // abu transparan
+                'rgba(0, 123, 255, 0.2)',   
+                'rgba(255, 193, 7, 0.2)',   
+                'rgba(108, 117, 125, 0.2)', 
               ],
               borderColor: [
                 '#007BFF',

@@ -34,7 +34,6 @@ const Dashboard = () => {
 
         const style = getComputedStyle(document.documentElement);
 
-        // --- Chart Configuration (sama seperti sebelumnya) ---
         const labels = resData.chart?.labels ?? [];
         const values = resData.chart?.datasets?.[0]?.data ?? [];
         const backgroundColors = [

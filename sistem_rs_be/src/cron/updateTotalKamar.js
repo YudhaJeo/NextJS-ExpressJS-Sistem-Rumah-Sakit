@@ -1,7 +1,6 @@
 import cron from 'node-cron';
 import * as RawatInap from '../models/rawatInapModel.js';
 
-//  tiap jam 00:00
 cron.schedule('0 0 * * *', async () => {
   try {
     console.log('Mulai update Total Kamar harian...');

@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(main)\(rawat_inap)\rawat_inap\inventory\log_transaksi\page.js
 'use client';
 
 import axios from "axios";
@@ -53,7 +52,7 @@ const MonitoringPemesananPage = () => {
           pemesananList.map(async (item) => {
             try {
               const res = await axios.get(`${API_URL}/pemesanan/${item.IDPEMESANAN}`);
-              const detailList = res.data.details || []; // fix disini ✅
+              const detailList = res.data.details || []; 
         
               const { jumlah, total } = detailList.reduce(
                 (acc, d) => {

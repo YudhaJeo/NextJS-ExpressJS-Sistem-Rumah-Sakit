@@ -1,4 +1,3 @@
-// app\(dashboard)\(rawat_inap)\rawat_inap\manajemen-bangsal\page.js
 'use client';
 
 import { 

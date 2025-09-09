@@ -2,7 +2,6 @@ import db from '../core/config/knex.js';
 
 export const getDashboardInfo = async () => {
   try {
-    // --- Hitung data utama ---
     const jumlahPasien = await db('pasien').count('* as total');
     const jumlahDokter = await db('master_tenaga_medis').where('JENISTENAGAMEDIS', 'Dokter').count('* as total');
     const bedTersedia = await db('bed').where('STATUS', 'TERSEDIA').count('* as total');
@@ -28,8 +27,6 @@ export const getDashboardInfo = async () => {
     .orderBy('TANGGALRESERVASI', 'asc')
     .limit(10);  
 
-
-    // --- Ambil data kalender dokter ---
     const kalenderDokter = await db('kalender')
       .join('dokter', 'kalender.IDDOKTER', 'dokter.IDDOKTER')
       .join('master_tenaga_medis', 'dokter.IDTENAGAMEDIS', 'master_tenaga_medis.IDTENAGAMEDIS')
@@ -44,7 +41,6 @@ export const getDashboardInfo = async () => {
       .orderBy('TANGGAL', 'asc')
       .limit(10);
 
-    // --- Statistik umum untuk Bar Chart ---
     const chartData = {
       labels: ['Pasien', 'Dokter', 'Tersedia', 'Terisi'],
       datasets: [
@@ -61,18 +57,15 @@ export const getDashboardInfo = async () => {
       ]
     };
 
-    /// --- Tren Pasien per minggu (MySQL/MariaDB) ---
 const trenPasien = await db('pasien')
   .select(db.raw('DAYOFWEEK(TANGGALDAFTAR) as hari'), db.raw('COUNT(*) as total'))
   .groupBy('hari');
 
-// --- Tren Dokter per minggu ---
 const trenDokter = await db('master_tenaga_medis')
   .where('JENISTENAGAMEDIS', 'Dokter')
   .select(db.raw('DAYOFWEEK(CREATED_AT) as hari'), db.raw('COUNT(*) as total'))
   .groupBy('hari');
 
-// Mapping hasil ke array Senin–Minggu
 const hariLabels = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 
 const trend = {
@@ -87,7 +80,6 @@ const trend = {
   }),
 };
 
-    // --- Distribusi pasien per Poli (Pie Chart) ---
     const distribusiPasien = await db('pendaftaran')
       .join('poli', 'pendaftaran.IDPOLI', 'poli.IDPOLI')
       .select('poli.NAMAPOLI')
@@ -99,13 +91,11 @@ const trend = {
       data: distribusiPasien.map(r => r.total),
     };
 
-    // --- Bed Occupancy (Doughnut Chart) ---
     const bed = {
       total: totalBed[0].total,
       used: bedTerisi[0].total,
     };
 
-    // --- Return semua data ---
     return {
       cards: [
         {
@@ -133,10 +123,10 @@ const trend = {
           icon: 'pi pi-times-circle'
         }
       ],
-      chart: chartData,     // Bar Chart
-      trend,                // Line Chart
-      distribusi,           // Pie Chart
-      bed,                  // Doughnut Chart
+      chart: chartData,    
+      trend,               
+      distribusi,          
+      bed,                 
       kalender: kalenderDokter,
       reservasi: jumlahReservasi
     };
