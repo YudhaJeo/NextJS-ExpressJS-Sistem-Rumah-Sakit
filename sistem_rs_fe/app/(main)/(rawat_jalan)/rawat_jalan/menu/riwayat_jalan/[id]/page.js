@@ -81,7 +81,6 @@ export default function DetailRiwayatJalanPage() {
 
   const jenisBodyTemplate = (rowData) => {
     let severity = 'success';
-    // if (rowData.type === 'obat') severity = 'info';
     if (rowData.type === 'tindakan') severity = 'warning';
     return <Tag value={rowData.jenis} severity={severity} />;
   };

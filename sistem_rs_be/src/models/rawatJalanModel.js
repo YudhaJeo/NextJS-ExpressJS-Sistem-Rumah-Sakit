@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_be\src\models\rawatJalanModel.js
 import db from '../core/config/knex.js';
 
 export const getPendaftaranIdByRawatJalanId = async (id) => {

@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(main)\(rawat_inap)\rawat_inap\dashboard_tabs\RuanganTab.js
 'use client';
 
 import { useEffect, useState } from 'react';

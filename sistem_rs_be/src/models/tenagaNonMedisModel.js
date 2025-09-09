@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_be\src\models\tenagaNonMedisModel.js
 import db from '../core/config/knex.js';
 
 const TABLE = 'master_tenaga_non_medis';

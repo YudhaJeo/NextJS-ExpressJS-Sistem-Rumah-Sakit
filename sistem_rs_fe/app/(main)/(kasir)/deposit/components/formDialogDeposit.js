@@ -133,9 +133,9 @@ const FormDialogDeposit = ({
 
               let status = form.STATUS;
               if (saldoSisa === 0 && form.STATUS !== 'HABIS') {
-                status = 'HABIS'; // set default Habis kalau saldo 0
+                status = 'HABIS'; 
               } else if (saldoSisa > 0 && form.STATUS === 'HABIS') {
-                status = 'AKTIF'; // set balik ke Aktif kalau saldo > 0
+                status = 'AKTIF'; 
               }
 
               setForm({

@@ -1,4 +1,3 @@
-// src/controllers/alkesInapController.js
 import * as AlkesInap from '../models/alkesInapModel.js';
 import dayjs from 'dayjs';
 

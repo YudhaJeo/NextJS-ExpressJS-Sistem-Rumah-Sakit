@@ -72,7 +72,6 @@ export default function AdjustPrintMarginLaporan({
 
     let y = marginTop + 10;
 
-    // ===================== RAJAL ======================
     if (detail.JENIS === 'RAWAT JALAN') {
       doc.setFontSize(18);
       doc.text('Detail Rawat Jalan', doc.internal.pageSize.width / 2, y, { align: 'center' });
@@ -143,7 +142,6 @@ export default function AdjustPrintMarginLaporan({
       });
     }
 
-    // ===================== RANAP ======================
     if (detail.JENIS === 'RAWAT INAP') {
       doc.setFontSize(18);
       doc.text('Detail Rawat Inap', doc.internal.pageSize.width / 2, y, { align: 'center' });

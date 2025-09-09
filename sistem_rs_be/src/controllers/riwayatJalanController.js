@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_be\src\controllers\riwayatJalanController.js
 import * as RiwayatRawatJalan from '../models/riwayatJalanModel.js';
 
 export async function getAllRiwayatJalan(req, res) {

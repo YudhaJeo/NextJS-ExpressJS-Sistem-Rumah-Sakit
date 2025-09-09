@@ -101,7 +101,6 @@ function PDFViewer({ pdfUrl, paperSize, fileName }) {
                     paperWidthInMm = 216;
                     paperHeightInMm = 279;
                 } else if (paperSize === 'Legal') {
-                    // Tambahkan pilihan Legal
                     paperWidthInMm = 216;
                     paperHeightInMm = 356;
                 } else {

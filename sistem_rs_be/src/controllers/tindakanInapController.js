@@ -1,4 +1,3 @@
-// src/controllers/tindakanInapController.js
 import * as TindakanInap from '../models/tindakanInapModel.js';
 import dayjs from 'dayjs';
 

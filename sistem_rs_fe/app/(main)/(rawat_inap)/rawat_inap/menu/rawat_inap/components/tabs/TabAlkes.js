@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(dashboard)\(rawat_inap)\rawat_inap\menu\rawat_inap\components\tabs\TabAlkes.js
 'use client';
 import { useState, useEffect } from 'react';
 import axios from 'axios';

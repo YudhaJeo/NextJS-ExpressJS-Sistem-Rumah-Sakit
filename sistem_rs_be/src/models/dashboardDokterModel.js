@@ -49,7 +49,7 @@ export const getKalenderDokter = async () => {
       'kalender.TANGGAL',
       'kalender.KETERANGAN')
       .orderBy('tanggal', 'asc')
-      .limit(10); // limit biar dashboard nggak kebanyakan
+      .limit(10); 
   } catch (error) {
     console.error('Error getKalenderDokter:', error);
     throw error;

@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_be\src\routes\tenagaNonMedisRoutes.js
 import express from 'express';
 import { getAllTenagaNonMedis, getTenagaNonMedisById, createTenagaNonMedis, updateTenagaNonMedis, deleteTenagaNonMedis, } from '../controllers/tenagaNonMedisController.js';
 import { upload } from '../middlewares/multer.js';

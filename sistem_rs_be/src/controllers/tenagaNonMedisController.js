@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_be\src\controllers\tenagaNonMedisController.js
 import * as TenagaNonMedis from '../models/tenagaNonMedisModel.js';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
@@ -113,7 +112,6 @@ export const updateTenagaNonMedis = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to update tenaga non medis' });
   }
 };
-
 
 export const deleteTenagaNonMedis = async (req, res) => {
   try {

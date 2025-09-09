@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(dashboard)\master\tenaga_non_medis\components\formDialogTenagaNonMedis.js
 "use client";
 
 import axios from "axios";
