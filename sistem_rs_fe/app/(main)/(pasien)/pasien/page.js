@@ -6,6 +6,7 @@ import HeaderBar from '@/app/components/headerbar';
 import TabelPasien from './components/tabelPasien';
 import FormDialogPasien from './components/formDialogPasien';
 import ToastNotifier from '@/app/components/toastNotifier';
+import FilterTanggal from '@/app/components/filterTanggal';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { Button } from "primereact/button";
 import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
@@ -21,6 +22,8 @@ const Page = () => {
   const [dialogVisible, setDialogVisible] = useState(false);
   const [agamaOptions, setAgamaOptions] = useState([]);
   const [asuransiOptions, setAsuransiOptions] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [adjustDialog, setAdjustDialog] = useState(false);
   const [pdfUrl, setPdfUrl] = useState("");
   const [fileName, setFileName] = useState("");
@@ -172,6 +175,23 @@ const Page = () => {
     }
   };
 
+    const handleDateFilter = () => {
+    if (!startDate && !endDate) return setData(originalData);
+    const filtered = originalData.filter((item) => {
+      const visitDate = new Date(item.TANGGALDAFTAR);
+      const from = startDate ? new Date(startDate.setHours(0, 0, 0, 0)) : null;
+      const to = endDate ? new Date(endDate.setHours(23, 59, 59, 999)) : null;
+      return (!from || visitDate >= from) && (!to || visitDate <= to);
+    });
+    setData(filtered);
+  };
+
+  const resetFilter = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setData(originalData);
+  };
+
   const handleSubmit = async () => {
 
     if (!validateForm()) return;
@@ -263,12 +283,24 @@ const Page = () => {
 
       <h3 className="text-xl font-semibold mb-3">Master Data Pasien</h3>
 
+      <div className="flex flex-col md:flex-row justify-content-between md:items-center gap-4">
+        <FilterTanggal
+          startDate={startDate}
+          endDate={endDate}
+          setStartDate={setStartDate}
+          setEndDate={setEndDate}
+          handleDateFilter={handleDateFilter}
+          resetFilter={resetFilter}
+        />
       <div className="flex items-center justify-end">
         <Button
           icon="pi pi-print"
           className="p-button-warning mt-3"
           tooltip="Atur Print Margin"
-          onClick={() => setAdjustDialog(true)}
+          onClick={() => {
+            handleDateFilter();
+            setAdjustDialog(true);
+          }}
         />
       <HeaderBar
         title=""
@@ -279,6 +311,7 @@ const Page = () => {
           setDialogVisible(true);
         }}
       />
+      </div>
       </div>
 
       <TabelPasien
