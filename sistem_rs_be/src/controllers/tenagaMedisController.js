@@ -1,7 +1,7 @@
 import * as TenagaMedis from "../models/tenagaMedisModel.js";
 import bcrypt from "bcrypt";
-import { uploadToMinio } from "../core/utils/uploadMinio.js";
-import { deleteFromMinio } from "../core/utils/deleteMinio.js";
+import { uploadToMinio } from "../utils/uploadMinio.js";
+import { deleteFromMinio } from "../utils/deleteMinio.js";
 
 const formatDate = (dateStr) => {
   if (!dateStr) return null;
