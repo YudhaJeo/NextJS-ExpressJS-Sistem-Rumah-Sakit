@@ -91,9 +91,14 @@ export default function ProfilePage() {
       if (newData.file) {
         formData.append('file', newData.file)
       }
-  
-      await axios.put(`${API_URL}/profile`, formData)
-  
+
+      await axios.put(`${API_URL}/profile`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        }
+      })
+
       await fetchData(token)
       setDialogVisible(false)
       toastRef.current?.showToast('00', 'Data berhasil diperbarui')

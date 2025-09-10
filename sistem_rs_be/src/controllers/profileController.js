@@ -1,6 +1,6 @@
 import * as ProfileModel from '../models/profileModel.js';
-
-const EXPRESS_URL = process.env.EXPRESS_PUBLIC_URL;
+import { uploadToMinio } from '../utils/uploadMinio.js';
+import { deleteFromMinio } from '../utils/deleteMinio.js';
 
 export async function getUser(req, res) {
   try {
@@ -17,19 +17,15 @@ export async function getUser(req, res) {
       user.ROLE = user.JENISTENAGANONMEDIS;
     }
 
-    user.FOTOPROFIL = user.FOTOPROFIL
-      ? `${EXPRESS_URL}${user.FOTOPROFIL}`
-      : null;
+    // kirim path asli aja, jangan ditambah prefix
+    user.FOTOPROFIL = user.FOTOPROFIL || null;
 
-    res.json({
-      data: user
-    });
+    res.json({ data: user });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Gagal mengambil profil' });
   }
 }
-
 
 export async function updateUser(req, res) {
   try {
@@ -44,7 +40,18 @@ export async function updateUser(req, res) {
     const data = { NAMALENGKAP, EMAIL, NOHP };
 
     if (file) {
-      data.FOTOPROFIL = `/uploads/${sumber === 'medis' ? 'tenaga_medis' : 'tenaga_non_medis'}/${file.filename}`;
+      // hapus foto lama kalau ada
+      const oldUser = await ProfileModel.getById(id, sumber);
+      if (oldUser?.FOTOPROFIL) {
+        await deleteFromMinio(oldUser.FOTOPROFIL);
+      }
+
+      // upload baru ke MinIO
+      const folder = sumber === 'medis'
+        ? 'tenaga_medis/foto_profile'
+        : 'tenaga_non_medis/foto_profile';
+
+      data.FOTOPROFIL = await uploadToMinio(file, folder);
     }
 
     await ProfileModel.updateProfile(id, sumber, data);

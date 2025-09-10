@@ -2,6 +2,8 @@
 
 import { Skeleton } from 'primereact/skeleton'
 
+const BASE_URL = process.env.NEXT_PUBLIC_URL;
+
 export default function EditableData({ user, loading }) {
   if (loading) {
     return (
@@ -18,14 +20,13 @@ export default function EditableData({ user, loading }) {
   return (
     <div className="col-12 md:col-4">
       <div className="card align-items-center text-center">
-        {/* foto profil */}
         <div className="flex justify-content-center mb-4">
           {user.FOTOPROFIL ? (
-            <img
-              src={user.FOTOPROFIL}
-              alt="Preview"
-              className="w-10rem h-10rem border-circle object-cover border-1 shadow-2"
-            />
+              <img
+                src={user.FOTOPROFIL ? `${BASE_URL}${user.FOTOPROFIL}` : '/default.png'}
+                alt="Preview"
+                className="w-10rem h-10rem border-circle object-cover border-1 shadow-2"
+              />
           ) : (
             <div className="w-10rem h-10rem flex align-items-center justify-content-center border-circle bg-gray-100 border-1 surface-border shadow-1">
               <i className="pi pi-user text-4xl text-500"></i>
