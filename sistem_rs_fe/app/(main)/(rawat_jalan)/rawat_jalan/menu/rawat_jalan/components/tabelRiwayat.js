@@ -104,11 +104,11 @@ const TabelRawatJalan = ({ data, loading, onEdit, onDelete, onDetail }) => {
               row.FOTORESEP ? (
                 <div className="w-12 aspect-square overflow-hidden rounded cursor-pointer bg-gray-100">
                   <img
-                    src={`${URL_API}/uploads/rawat_jalan/${row.FOTORESEP}`}
+                    src={`${process.env.NEXT_PUBLIC_MINIO_URL}${row.FOTORESEP}`}
                     alt="Foto Resep"
                     className="w-full h-full object-cover"
                     onClick={() =>
-                      handlePreview(`${URL_API}/uploads/rawat_jalan/${row.FOTORESEP}`)
+                      handlePreview(`${process.env.NEXT_PUBLIC_MINIO_URL}${row.FOTORESEP}`)
                     }
                   />
                 </div>

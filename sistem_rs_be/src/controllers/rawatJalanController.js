@@ -2,6 +2,8 @@ import * as RawatJalanModel from '../models/rawatJalanModel.js';
 import * as RiwayatRawatJalan from '../models/riwayatJalanModel.js';
 import * as RawatInapModel from '../models/rawatInapModel.js';
 import db from '../core/config/knex.js';
+import { uploadToMinio } from "../utils/uploadMinio.js";
+import { deleteFromMinio } from "../utils/deleteMinio.js";
 
 export async function getAllRawatJalan(req, res) {
   try {
@@ -22,7 +24,10 @@ export async function getAllRawatJalan(req, res) {
 export async function createRawatJalan(req, res) {
   try {
     const { IDPENDAFTARAN, IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, KETERANGAN } = req.body;
-    const FOTORESEP = req.file ? req.file.filename : null;
+    let FOTORESEP = null;
+    if (req.file) {
+      FOTORESEP = await uploadToMinio(req.file, "rawat_jalan/foto_resep");
+    }
     await RawatJalanModel.createRawatJalan({
       IDPENDAFTARAN,
       IDDOKTER,
@@ -44,7 +49,18 @@ export async function updateRawatJalan(req, res) {
 
   try {
     const { IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, KETERANGAN } = req.body;
-    const FOTORESEP = req.file ? req.file.filename : null;
+    const existing = await RawatJalanModel.getRawatById(id);
+    if (!existing) {
+      return res.status(404).json({ message: "Data Rawat Jalan tidak ditemukan" });
+    }
+
+    let FOTORESEP = existing.FOTORESEP;
+    if (req.file) {
+      if (existing.FOTORESEP) {
+        await deleteFromMinio(existing.FOTORESEP);
+      }
+      FOTORESEP = await uploadToMinio(req.file, "rawat_jalan/foto_resep");
+    }
 
     await RawatJalanModel.updateRawatJalan(id, {
       IDDOKTER,
@@ -104,6 +120,11 @@ export async function updateRawatJalan(req, res) {
 export async function deleteRawatJalan(req, res) {
   try {
     const id = req.params.id;
+
+    const existing = await RawatJalanModel.getRawatById(id);
+    if (existing?.FOTORESEP) {
+      await deleteFromMinio(existing.FOTORESEP);
+    }
     await RawatJalanModel.deleteRawatJalan(id);
     res.json({ message: 'RawatJalan berhasil dihapus' });
   } catch (err) {

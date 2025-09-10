@@ -172,7 +172,7 @@ const FormDialogRawatJalan = ({
         )}
         {!fotoPreview && form.fotoResepLama && !form.FOTORESEP && (
           <img
-            src={`${API_URL}/uploads/rawat_jalan/${form.fotoResepLama}`}
+            src={`${process.env.NEXT_PUBLIC_MINIO_URL}${form.fotoResepLama}`}
             alt="Foto Resep Lama"
             className="w-16 h-16 object-cover mt-2 rounded"
           />

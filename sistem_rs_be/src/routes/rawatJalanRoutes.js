@@ -1,7 +1,7 @@
 import express from "express";
 import * as RawatJalanController from "../controllers/rawatJalanController.js";
 import * as TindakanJalanController from "../controllers/tindakanJalanController.js";
-import { upload } from '../middlewares/multer.js';
+import { upload } from '../middlewares/multerUpload.js';
 
 const router = express.Router();
 
