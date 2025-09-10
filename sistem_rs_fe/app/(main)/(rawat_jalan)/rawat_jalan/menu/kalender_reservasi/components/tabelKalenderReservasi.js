@@ -21,23 +21,34 @@ export default function TabelKalender({ refresh }) {
     fetchKalender();
   }, [refresh]);
 
+  const toLocalDateString = (dateInput) => {
+    const d = new Date(dateInput);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
   const fetchKalender = async () => {
     try {
       const res = await axios.get(`${API_URL}/reservasi`);
 
-      const filteredData = res.data.filter(item => item.STATUS?.toLowerCase() === 'dikonfirmasi');
+      const filteredData = res.data.filter(
+        (item) => item.STATUS?.toLowerCase() === 'dikonfirmasi'
+      );
 
       const grouped = filteredData.reduce((acc, item) => {
-        const date = item.TANGGALRESERVASI.split('T')[0]; 
-        if (!acc[date]) acc[date] = [];
-        acc[date].push(item);
+        const localDate = toLocalDateString(item.TANGGALRESERVASI);
+        if (!acc[localDate]) acc[localDate] = [];
+        acc[localDate].push(item);
         return acc;
       }, {});
 
       const data = Object.entries(grouped).map(([date, items]) => ({
         id: date,
         title: `${items.length} Reservasi`,
-        start: date,
+        start: date,      
+        allDay: true,   
         extendedProps: { items },
         color: '#60a5fa',
       }));
@@ -49,13 +60,13 @@ export default function TabelKalender({ refresh }) {
   };
 
   const handleEventClick = (info) => {
-    setSelectedEvents(info.event.extendedProps.items);
+    setSelectedEvents(info.event.extendedProps.items || []);
     setVisible(true);
   };
 
   const formatTanggal = (isoDate) => {
     if (!isoDate) return '-';
-    const date = new Date(isoDate);
+    const date = new Date(isoDate); 
     return new Intl.DateTimeFormat('id-ID', {
       weekday: 'long',
       day: '2-digit',
@@ -73,6 +84,7 @@ export default function TabelKalender({ refresh }) {
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         events={events}
+        timeZone="local"       
         displayEventTime={false}
         contentHeight="auto"
         expandRows={true}
