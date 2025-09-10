@@ -22,10 +22,20 @@ const FormDialogKalender = ({
 
   const handleDateChange = (e) => {
     const selectedDate = e.value;
-    const hariTanggal = selectedDate.toLocaleDateString('id-ID', { weekday: 'long' });
+
+    // format yyyy-mm-dd sesuai lokal (hindari mundur 1 hari)
+    const year = selectedDate.getFullYear();
+    const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+    const day = String(selectedDate.getDate()).padStart(2, '0');
+    const tanggalStr = `${year}-${month}-${day}`;
+
+    const hariTanggal = selectedDate.toLocaleDateString('id-ID', {
+      weekday: 'long',
+    });
+
     onChange({
       ...formData,
-      TANGGAL: selectedDate.toISOString().slice(0, 10),
+      TANGGAL: tanggalStr,
       HARI_TANGGAL: hariTanggal,
     });
   };

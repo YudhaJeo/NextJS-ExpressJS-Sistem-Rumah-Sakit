@@ -8,7 +8,7 @@ export const up = function (knex) {
     table.increments('ID').primary();
     table.integer('IDDOKTER').unsigned().notNullable()
       .references('IDDOKTER').inTable('dokter').onDelete('CASCADE');
-    table.date('TANGGAL').notNullable().unique();
+    table.date('TANGGAL').notNullable();
     table.enu('STATUS', ['libur', 'perjanjian']).notNullable();
     table.string('KETERANGAN', 100).notNullable();
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
