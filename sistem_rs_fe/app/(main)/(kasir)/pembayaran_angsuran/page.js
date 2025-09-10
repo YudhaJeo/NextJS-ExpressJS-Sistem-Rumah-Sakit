@@ -92,7 +92,6 @@ const Page = () => {
           NAMAASURANSI: inv.ASURANSI,
           SISA_TAGIHAN: inv.SISA_TAGIHAN,
         }));
-      console.log("Data Invoice:", options)
       setInvoiceOptions(options);
     } catch (err) {
       console.error('Gagal ambil data invoice:', err);
