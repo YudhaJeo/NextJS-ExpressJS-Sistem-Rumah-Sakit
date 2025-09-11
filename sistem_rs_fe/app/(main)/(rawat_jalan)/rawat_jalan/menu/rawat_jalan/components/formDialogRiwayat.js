@@ -100,18 +100,6 @@ const FormDialogRawatJalan = ({
         </div>
 
         <div>
-          <label className="font-medium">Status Rawat</label>
-          <Dropdown
-            className={classNames('w-full mt-2', { 'p-invalid': errors.STATUSRAWAT })}
-            value={form.STATUSRAWAT}
-            options={statusRawatOptions}
-            onChange={(e) => setForm({ ...form, STATUSRAWAT: e.value })}
-            placeholder="Pilih Status Rawat"
-          />
-          {errors.STATUSRAWAT && <small className="p-error">{errors.STATUSRAWAT}</small>}
-        </div>
-
-        <div>
           <label className="font-medium">Diagnosa</label>
           <InputText
             className={classNames('w-full mt-2', { 'p-invalid': errors.DIAGNOSA })}
@@ -142,6 +130,18 @@ const FormDialogRawatJalan = ({
             placeholder="Pilih Status"
           />
           {errors.STATUSKUNJUNGAN && <small className="p-error">{errors.STATUSKUNJUNGAN}</small>}
+        </div>
+
+        <div>
+          <label className="font-medium">Status Rawat</label>
+          <Dropdown
+            className={classNames('w-full mt-2', { 'p-invalid': errors.STATUSRAWAT })}
+            value={form.STATUSRAWAT}
+            options={statusRawatOptions}
+            onChange={(e) => setForm({ ...form, STATUSRAWAT: e.value })}
+            placeholder="Pilih Status Rawat"
+          />
+          {errors.STATUSRAWAT && <small className="p-error">{errors.STATUSRAWAT}</small>}
         </div>
         
         <div>
