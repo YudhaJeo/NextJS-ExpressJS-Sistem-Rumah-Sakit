@@ -93,6 +93,7 @@ const AppTopbar = forwardRef((props, ref) => {
                                     ? "pi pi-user"
                                     : undefined
                             }
+                            className="topbar-avatar"
                             size="xlarge"
                             shape="circle"
                             style={{ objectFit: 'cover', width: '3rem', height: '3rem', background: 'transparent' }}
