@@ -60,11 +60,11 @@ const AppMenu = () => {
       {
         label: "Fitur Pasien",
         items: [
-          { label: "Dashboard Pasien", icon: "pi pi-fw pi-chart-bar", to: "/dashboard" },
+          { label: "Dashboard Pasien", icon: "pi pi-fw pi-chart-bar", to: "/pasien/dashboard" },
           {
             label: "Master",
             items: [
-              { label: "Pasien", icon: "pi pi-fw pi-user", to: "/pasien" },
+              { label: "Pasien", icon: "pi pi-fw pi-user", to: "/pasien/master/pasien" },
             ],
           },
           {
@@ -74,22 +74,22 @@ const AppMenu = () => {
                 label: "Pendaftaran Pasien",
                 icon: "pi pi-fw pi-user-plus",
                 items: [
-                  { label: "Reservasi", icon: "pi pi-fw pi-calendar", to: "/pendaftaran/reservasi" },
-                  { label: "Formulir Pendaftaran", icon: "pi pi-fw pi-book", to: "/pendaftaran/formulir" },
+                  { label: "Reservasi", icon: "pi pi-fw pi-calendar", to: "/pasien/menu/pendaftaran/reservasi" },
+                  { label: "Formulir Pendaftaran", icon: "pi pi-fw pi-book", to: "/pasien/menu/pendaftaran/formulir" },
                 ],
               },
               {
                 label: "Rekam Medis",
                 icon: "pi pi-fw pi-folder-open",
                 items: [
-                  { label: "File Dokumen", icon: "pi pi-fw pi-file", to: "/rekam_medis/dokumen" },
+                  { label: "File Dokumen", icon: "pi pi-fw pi-file", to: "/pasien/menu/rekam_medis/dokumen" },
                 ],
               },
               {
                 label: "Laporan",
                 icon: "pi pi-fw pi-chart-bar",
                 items: [
-                  { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/riwayat_kunjungan" },
+                  { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/pasien/laporan/riwayat_kunjungan" },
                 ],
               },
             ],
@@ -99,18 +99,18 @@ const AppMenu = () => {
       {
         label: "Fitur Dokter",
         items: [
-          { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_dokter" },
+          { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dokter/dashboard" },
           {
             label: "Menu",
             items: [
-              { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
-              { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/manajemen_komisi" },
+              { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/dokter/menu/kalender_dokter" },
+              { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/dokter/menu/manajemen_komisi" },
               {
                 label: "Laporan",
                 icon: "pi pi-fw pi-chart-bar",
                 items: [
-                  { label: "Entri Drawing Rekam Medis", icon: "pi pi-fw pi-pencil", to: "/entri_rm" },
-                  { label: "Laporan dan Transaksi", icon: "pi pi-fw pi-file", to: "/laporan_komisi" },
+                  { label: "Entri Drawing Rekam Medis", icon: "pi pi-fw pi-pencil", to: "/dokter/menu/laporan/entri_rm" },
+                  { label: "Laporan dan Transaksi", icon: "pi pi-fw pi-file", to: "/dokter/menu/laporan/laporan_komisi" },
                 ],
               },
             ],
@@ -124,9 +124,9 @@ const AppMenu = () => {
            {
              label: "Reservasi & Kalender",
              items: [
-               { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi" },
-               { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/menu/kalender_reservasi" },
-               { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/riwayat_reservasi" },
+               { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi_kalender/reservasi" },
+               { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/menu/reservasi_kalender/kalender_reservasi" },
+               { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/reservasi_kalender/riwayat_reservasi" },
              ],
            },
           {
@@ -141,7 +141,7 @@ const AppMenu = () => {
       {
         label: "Fitur Rawat Inap",
         items: [
-          { label: "Dashboard Rawat Inap", icon: "pi pi-fw pi-chart-bar", to: "/rawat_inap" },
+          { label: "Dashboard Rawat Inap", icon: "pi pi-fw pi-chart-bar", to: "/rawat_inap/dashboard" },
           {
             label: "Inventory",
             items: [
@@ -173,11 +173,11 @@ const AppMenu = () => {
       {
         label: "Fitur Kasir & Sales",
         items: [
-          { label: "Dashboard Kasir", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_kasir" },
+          { label: "Dashboard Kasir", icon: "pi pi-fw pi-chart-bar", to: "/kasir/dashboard" },
           {
             label: "Master",
             items: [
-              { label: "Bank Account", icon: "pi pi-fw pi-building", to: "/bank_account" },
+              { label: "Bank Account", icon: "pi pi-fw pi-building", to: "/kasir/master/bank_account" },
             ],
           },
           {
@@ -187,20 +187,20 @@ const AppMenu = () => {
                 label: "Invoice & Pembayaran",
                 icon: "pi pi-fw pi-wallet",
                 items: [
-                  { label: "Invoice", icon: "pi pi-fw pi-receipt", to: "/invoice" },
-                  { label: "Pembayaran", icon: "pi pi-fw pi-money-bill", to: "/pembayaran" },
+                  { label: "Invoice", icon: "pi pi-fw pi-receipt", to: "/kasir/menu/invoice_pembayaran/invoice" },
+                  { label: "Pembayaran", icon: "pi pi-fw pi-money-bill", to: "/kasir/menu/invoice_pembayaran/pembayaran" },
                 ],
               },
-              { label: "Pembayaran Angsuran", icon: "pi pi-fw pi-credit-card", to: "/pembayaran_angsuran" },
+              { label: "Pembayaran Angsuran", icon: "pi pi-fw pi-credit-card", to: "/kasir/menu/pembayaran_angsuran" },
               {
                 label: "Deposit Pembayaran",
                 icon: "pi pi-fw pi-wallet",
                 items: [
-                  { label: "Deposit", icon: "pi pi-fw pi-money-bill", to: "/deposit" },
-                  { label: "Deposit Penggunaan", icon: "pi pi-fw pi-money-bill", to: "/deposit_penggunaan" },
+                  { label: "Deposit", icon: "pi pi-fw pi-money-bill", to: "/kasir/menu/deposit_pembayaran/deposit" },
+                  { label: "Deposit Penggunaan", icon: "pi pi-fw pi-money-bill", to: "/kasir/menu/deposit_pembayaran/deposit_penggunaan" },
                 ],
               },
-              { label: "Laporan Pembayaran", icon: "pi pi-fw pi-chart-bar", to: "/laporan_pembayaran" },
+              { label: "Laporan Pembayaran", icon: "pi pi-fw pi-chart-bar", to: "/kasir/menu/laporan_pembayaran" },
             ],
           },
         ],
@@ -218,8 +218,8 @@ const AppMenu = () => {
         label: "Antrian",
         icon: "pi pi-fw pi-list",
         items: [
-          { label: "Antrian Pendaftaran", icon: "pi pi-fw pi-users", to: "/antrian/data" },
-          { label: "Antrian Poli", icon: "pi pi-fw pi-users", to: "/antrian/antrian_poli" },
+          { label: "Antrian Pendaftaran", icon: "pi pi-fw pi-users", to: "/display/antrian/data" },
+          { label: "Antrian Poli", icon: "pi pi-fw pi-users", to: "/display/antrian/antrian_poli" },
         ],
       },
       {
@@ -237,11 +237,11 @@ const AppMenu = () => {
       {
         label: "Fitur Pasien",
         items: [
-          { label: "Dashboard Pasien", icon: "pi pi-fw pi-chart-bar", to: "/dashboard" },
+          { label: "Dashboard Pasien", icon: "pi pi-fw pi-chart-bar", to: "/pasien/dashboard" },
           {
             label: "Master",
             items: [
-              { label: "Pasien", icon: "pi pi-fw pi-user", to: "/pasien" },
+              { label: "Pasien", icon: "pi pi-fw pi-user", to: "/pasien/master/pasien" },
             ],
           },
           {
@@ -251,22 +251,22 @@ const AppMenu = () => {
                 label: "Pendaftaran Pasien",
                 icon: "pi pi-fw pi-user-plus",
                 items: [
-                  { label: "Reservasi", icon: "pi pi-fw pi-calendar", to: "/pendaftaran/reservasi" },
-                  { label: "Formulir Pendaftaran", icon: "pi pi-fw pi-book", to: "/pendaftaran/formulir" },
+                  { label: "Reservasi", icon: "pi pi-fw pi-calendar", to: "/pasien/menu/pendaftaran/reservasi" },
+                  { label: "Formulir Pendaftaran", icon: "pi pi-fw pi-book", to: "/pasien/menu/pendaftaran/formulir" },
                 ],
               },
               {
                 label: "Rekam Medis",
                 icon: "pi pi-fw pi-folder-open",
                 items: [
-                  { label: "File Dokumen", icon: "pi pi-fw pi-file", to: "/rekam_medis/dokumen" },
+                  { label: "File Dokumen", icon: "pi pi-fw pi-file", to: "/pasien/menu/rekam_medis/dokumen" },
                 ],
               },
               {
                 label: "Laporan",
                 icon: "pi pi-fw pi-chart-bar",
                 items: [
-                  { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/riwayat_kunjungan" },
+                  { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/pasien/laporan/riwayat_kunjungan" },
                 ],
               },
             ],
@@ -280,18 +280,18 @@ const AppMenu = () => {
       {
         label: "Fitur Dokter",
         items: [
-          { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_dokter" },
+          { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dokter/dashboard" },
           {
             label: "Menu",
             items: [
-              { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
-              { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/manajemen_komisi" },
+              { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/dokter/menu/kalender_dokter" },
+              { label: "Manajemen Komisi", icon: "pi pi-fw pi-money-bill", to: "/dokter/menu/manajemen_komisi" },
               {
                 label: "Laporan",
                 icon: "pi pi-fw pi-chart-bar",
                 items: [
-                  { label: "Entri Drawing Rekam Medis", icon: "pi pi-fw pi-pencil", to: "/entri_rm" },
-                  { label: "Laporan dan Transaksi", icon: "pi pi-fw pi-file", to: "/laporan_komisi" },
+                  { label: "Entri Drawing Rekam Medis", icon: "pi pi-fw pi-pencil", to: "/dokter/menu/laporan/entri_rm" },
+                  { label: "Laporan dan Transaksi", icon: "pi pi-fw pi-file", to: "/dokter/menu/laporan/laporan_komisi" },
                 ],
               },
             ],
@@ -305,9 +305,9 @@ const AppMenu = () => {
            {
              label: "Reservasi & Kalender",
              items: [
-               { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi" },
-               { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/menu/kalender_reservasi" },
-               { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/riwayat_reservasi" },
+               { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi_kalender/reservasi" },
+               { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/menu/reservasi_kalender/kalender_reservasi" },
+               { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/reservasi_kalender/riwayat_reservasi" },
              ],
            },
           {
@@ -322,7 +322,7 @@ const AppMenu = () => {
       {
         label: "Fitur Rawat Inap",
         items: [
-          { label: "Dashboard Rawat Inap", icon: "pi pi-fw pi-chart-bar", to: "/rawat_inap" },
+          { label: "Dashboard Rawat Inap", icon: "pi pi-fw pi-chart-bar", to: "/rawat_inap/dashboard" },
           {
             label: "Inventory",
             items: [
@@ -359,17 +359,17 @@ const AppMenu = () => {
         label: "Antrian",
         icon: "pi pi-fw pi-list",
         items: [
-          { label: "Antrian Poli", icon: "pi pi-fw pi-users", to: "/antrian/antrian_poli" },
+          { label: "Antrian Poli", icon: "pi pi-fw pi-users", to: "/display/antrian/antrian_poli" },
         ],
       },
       {
         label: "Fitur Dokter",
         items: [
-          { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_dokter" },
+          { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dokter/dashboard" },
           {
             label: "Menu",
             items: [
-              { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
+              { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/dokter/menu/kalender_dokter" },
             ],
           },
         ],
@@ -381,9 +381,9 @@ const AppMenu = () => {
            {
              label: "Reservasi & Kalender",
              items: [
-               { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi" },
-               { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/menu/kalender_reservasi" },
-               { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/riwayat_reservasi" },
+               { label: "Reservasi", icon: "pi pi-fw pi-calendar-plus", to: "/rawat_jalan/menu/reservasi_kalender/reservasi" },
+               { label: "Kalender Reservasi", icon: "pi pi-fw pi-calendar", to: "/rawat_jalan/menu/reservasi_kalender/kalender_reservasi" },
+               { label: "Riwayat Reservasi", icon: "pi pi-fw pi-history", to: "/rawat_jalan/menu/reservasi_kalender/riwayat_reservasi" },
              ],
            },
           {
@@ -403,17 +403,17 @@ const AppMenu = () => {
         label: "Antrian",
         icon: "pi pi-fw pi-list",
         items: [
-          { label: "Antrian Poli", icon: "pi pi-fw pi-users", to: "/antrian/antrian_poli" },
+          { label: "Antrian Poli", icon: "pi pi-fw pi-users", to: "/display/antrian/antrian_poli" },
         ],
       },
       {
         label: "Fitur Dokter",
         items: [
-          { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_dokter" },
+          { label: "Dashboard Dokter", icon: "pi pi-fw pi-chart-bar", to: "/dokter/dashboard" },
           {
             label: "Menu",
             items: [
-              { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/kalender_dokter" },
+              { label: "Kalender Dokter", icon: "pi pi-fw pi-book", to: "/dokter/menu/kalender_dokter" },
             ],
           },
         ],
@@ -421,7 +421,7 @@ const AppMenu = () => {
       {
         label: "Fitur Rawat Inap",
         items: [
-          { label: "Dashboard Rawat Inap", icon: "pi pi-fw pi-chart-bar", to: "/rawat_inap" },
+          { label: "Dashboard Rawat Inap", icon: "pi pi-fw pi-chart-bar", to: "/rawat_inap/dashboard" },
           {
             label: "Inventory",
             items: [
@@ -457,11 +457,11 @@ const AppMenu = () => {
       {
         label: "Fitur Kasir & Sales",
         items: [
-          { label: "Dashboard Kasir", icon: "pi pi-fw pi-chart-bar", to: "/dashboard_kasir" },
+          { label: "Dashboard Kasir", icon: "pi pi-fw pi-chart-bar", to: "/kasir/dashboard" },
           {
             label: "Master",
             items: [
-              { label: "Bank Account", icon: "pi pi-fw pi-building", to: "/bank_account" },
+              { label: "Bank Account", icon: "pi pi-fw pi-building", to: "/kasir/master/bank_account" },
             ],
           },
           {
@@ -471,20 +471,20 @@ const AppMenu = () => {
                 label: "Invoice & Pembayaran",
                 icon: "pi pi-fw pi-wallet",
                 items: [
-                  { label: "Invoice", icon: "pi pi-fw pi-receipt", to: "/invoice" },
-                  { label: "Pembayaran", icon: "pi pi-fw pi-money-bill", to: "/pembayaran" },
+                  { label: "Invoice", icon: "pi pi-fw pi-receipt", to: "/kasir/menu/invoice_pembayaran/invoice" },
+                  { label: "Pembayaran", icon: "pi pi-fw pi-money-bill", to: "/kasir/menu/invoice_pembayaran/pembayaran" },
                 ],
               },
-              { label: "Pembayaran Angsuran", icon: "pi pi-fw pi-credit-card", to: "/pembayaran_angsuran" },
+              { label: "Pembayaran Angsuran", icon: "pi pi-fw pi-credit-card", to: "/kasir/menu/pembayaran_angsuran" },
               {
                 label: "Deposit Pembayaran",
                 icon: "pi pi-fw pi-wallet",
                 items: [
-                  { label: "Deposit", icon: "pi pi-fw pi-money-bill", to: "/deposit" },
-                  { label: "Deposit Penggunaan", icon: "pi pi-fw pi-money-bill", to: "/deposit_penggunaan" },
+                  { label: "Deposit", icon: "pi pi-fw pi-money-bill", to: "/kasir/menu/deposit_pembayaran/deposit" },
+                  { label: "Deposit Penggunaan", icon: "pi pi-fw pi-money-bill", to: "/kasir/menu/deposit_pembayaran/deposit_penggunaan" },
                 ],
               },
-              { label: "Laporan Pembayaran", icon: "pi pi-fw pi-chart-bar", to: "/laporan_pembayaran" },
+              { label: "Laporan Pembayaran", icon: "pi pi-fw pi-chart-bar", to: "/kasir/menu/laporan_pembayaran" },
             ],
           },
         ],
