@@ -39,7 +39,6 @@ export async function createRawatJalan(req, res) {
     });
     res.json({ message: 'RawatJalan berhasil ditambahkan' });
   } catch (err) {
-    console.error('Insert Error:', err);
     res.status(500).json({ error: err.message });
   }
 }
@@ -112,7 +111,6 @@ export async function updateRawatJalan(req, res) {
 
     res.json({ message: 'RawatJalan berhasil diperbarui & sinkron dengan Rawat Inap' });
   } catch (err) {
-    console.error('Update Error:', err);
     res.status(500).json({ error: err.message });
   }
 }
@@ -137,7 +135,6 @@ export const getMonitoringRawatJalan = async (req, res) => {
     const data = await RawatJalanModel.getAllRawatJalan();
     res.json(data);
   } catch (error) {
-    console.error('Error getMonitoringRawatJalan:', error);
     res.status(500).json({ message: 'Gagal mengambil data rawat jalan' });
   }
 }
