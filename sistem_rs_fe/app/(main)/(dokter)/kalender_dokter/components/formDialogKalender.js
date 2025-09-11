@@ -54,7 +54,7 @@ const FormDialogKalender = ({
           onSubmit();
         }}
       >
-        <div>
+        <div className ="mt-2">
           <label>Nama Dokter</label>
           <Dropdown
             className="w-full mt-1"
@@ -66,7 +66,7 @@ const FormDialogKalender = ({
           />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Tanggal</label>
           <Calendar
             value={formData.TANGGAL ? new Date(formData.TANGGAL) : null}
@@ -77,7 +77,7 @@ const FormDialogKalender = ({
           />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Status</label>
           <Dropdown
             className="w-full mt-1"
@@ -88,7 +88,7 @@ const FormDialogKalender = ({
           />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Keterangan</label>
           <InputText
             value={formData.KETERANGAN}

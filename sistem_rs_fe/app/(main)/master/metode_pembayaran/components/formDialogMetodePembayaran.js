@@ -50,7 +50,7 @@ const FormDialogMetodePembayaran = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
-        <div>
+        <div className ="mt-2">
           <label>Nama Metode</label>
           <InputText
             className={inputClass('NAMA')}
@@ -62,7 +62,7 @@ const FormDialogMetodePembayaran = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Fee (%)</label>
           <InputNumber
             className="w-full mt-2"
@@ -75,7 +75,7 @@ const FormDialogMetodePembayaran = ({
           />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Status</label>
           <Dropdown
             className={inputClass('STATUS')}
@@ -92,7 +92,7 @@ const FormDialogMetodePembayaran = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Keterangan</label>
           <InputText
             className="w-full mt-2"

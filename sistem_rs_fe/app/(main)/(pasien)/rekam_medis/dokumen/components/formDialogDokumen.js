@@ -35,6 +35,8 @@ const FormDialogDokumen = ({
       >
         <div>
           <label className="font-medium">NIK Pasien</label>
+        <div className  ="mt-2">
+          <label>NIK Pasien</label>
           <Dropdown
             className={inputClass("NIK")}
             value={form.NIK}
@@ -54,8 +56,8 @@ const FormDialogDokumen = ({
           {errors.NIK && <small className="text-red-500">{errors.NIK}</small>}
         </div>
 
-        <div>
-          <label className="font-medium">Jenis Dokumen</label>
+        <div className  ="mt-2">
+          <label>Jenis Dokumen</label>
           <Dropdown
             className={inputClass("JENISDOKUMEN")}
             options={JenisDokumenOptions}

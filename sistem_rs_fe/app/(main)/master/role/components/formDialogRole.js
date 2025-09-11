@@ -23,7 +23,7 @@ const FormDialogRole = ({ visible, formData, onHide, onChange, onSubmit, errors 
           onSubmit();
         }}
       >
-        <div>
+        <div className ="mt-2">
           <label>Nama Role</label>
           <InputText
             className={inputClass('NAMAROLE')}
@@ -35,7 +35,7 @@ const FormDialogRole = ({ visible, formData, onHide, onChange, onSubmit, errors 
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Jenis Role</label>
           <Dropdown
             className={inputClass('JENISROLE')}
@@ -52,7 +52,7 @@ const FormDialogRole = ({ visible, formData, onHide, onChange, onSubmit, errors 
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Keterangan</label>
           <InputText
             className={inputClass('KETERANGAN')}

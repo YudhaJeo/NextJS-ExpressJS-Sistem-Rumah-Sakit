@@ -139,20 +139,21 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
               />
             </div>
             
-            <div 
-              className="flex flex-column align-items-center gap-3 py-3 flex-1"
-              onClick={() => openDetail(row)}
-            >
-              <div
-                className="w-10rem h-10rem border-round-lg shadow-2 cursor-pointer"
-                style={{
-                  backgroundImage: `url(${row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_MINIO_URL}${row.FOTOPROFIL}` : "/no-image.png"})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat'
-                }}
-                onClick={() => openDetail(row)}
-              />
+            {/* Foto dan info utama */}
+            <div className="flex flex-column align-items-center gap-3 py-3 flex-1" onClick={() => openDetail(row)}>
+              <div className="flex justify-content-center">
+                {row.FOTOPROFIL ? (
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_URL}${row.FOTOPROFIL}`}
+                    alt={row.NAMALENGKAP}
+                    className="w-10rem h-10rem border-round-lg shadow-2 object-cover cursor-pointer"
+                  />
+                ) : (
+                  <div className="w-10rem h-10rem flex align-items-center justify-content-center border-round-lg bg-gray-100 border-1 surface-border shadow-1 cursor-pointer">
+                    <i className="pi pi-user text-4xl text-500"></i>
+                  </div>
+                )}
+              </div>
               <h4 className="text-xl font-bold text-center m-0 line-height-3">
                 {row.NAMALENGKAP}
               </h4>
@@ -327,15 +328,17 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
           <div className="flex flex-column gap-4">
             {/* Foto Profil */}
             <div className="flex justify-content-center">
-              <div
-                className="w-12rem h-12rem mt-4 border-circle shadow-3"
-                style={{
-                  backgroundImage: `url(${row.FOTOPROFIL ? `${process.env.NEXT_PUBLIC_MINIO_URL}${row.FOTOPROFIL}` : "/no-image.png"})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat'
-                }}
-              />
+              {row.FOTOPROFIL ? (
+                <img
+                  src={`${process.env.NEXT_PUBLIC_URL}${row.FOTOPROFIL}`}
+                  alt={row.NAMALENGKAP}
+                  className="w-12rem h-12rem mt-4 border-circle shadow-3 object-cover"
+                />
+              ) : (
+                <div className="w-12rem h-12rem mt-4 flex align-items-center justify-content-center border-circle bg-gray-100 border-1 surface-border shadow-2">
+                  <i className="pi pi-user text-5xl text-500"></i>
+                </div>
+              )}
             </div>
 
             {/* Detail Information */}

@@ -48,7 +48,7 @@ const FormDialogPendaftaran = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">NIK</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.NIK })}
@@ -69,7 +69,7 @@ const FormDialogPendaftaran = ({
           {errors.NIK && <small className="p-error">{errors.NIK}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Tanggal Kunjungan</label>
           <Calendar
             className={classNames('w-full mt-2', { 'p-invalid': errors.TANGGALKUNJUNGAN })}
@@ -88,7 +88,7 @@ const FormDialogPendaftaran = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Keluhan</label>
           <InputText
             className={classNames('w-full mt-2', { 'p-invalid': errors.KELUHAN })}
@@ -99,7 +99,7 @@ const FormDialogPendaftaran = ({
           {errors.KELUHAN && <small className="p-error">{errors.KELUHAN}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Poli</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDPOLI })}
@@ -113,7 +113,7 @@ const FormDialogPendaftaran = ({
           {errors.IDPOLI && <small className="p-error">{errors.IDPOLI}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Status Kunjungan</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUSKUNJUNGAN })}

@@ -33,7 +33,7 @@ const FormDialogPasien = ({
           onSubmit();
         }}
       >
-        <div>
+        <div className ="mt-2">
           <label>No Rekam Medis</label>
           <InputText
             className="w-full mt-2"
@@ -43,7 +43,7 @@ const FormDialogPasien = ({
           />
         </div>
         
-        <div>
+        <div className ="mt-2">
           <label>Nama Lengkap</label>
           <InputText
             className={inputClass('NAMALENGKAP')}
@@ -53,7 +53,7 @@ const FormDialogPasien = ({
           {errors.NAMALENGKAP && <small className="text-red-500">{errors.NAMALENGKAP}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>NIK</label>
           <InputText
             className={inputClass('NIK')}
@@ -64,7 +64,7 @@ const FormDialogPasien = ({
           {errors.NIK && <small className="text-red-500">{errors.NIK}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Tanggal Lahir</label>
           <Calendar
             className={inputClass('TANGGALLAHIR')}
@@ -81,7 +81,7 @@ const FormDialogPasien = ({
           {errors.TANGGALLAHIR && <small className="text-red-500">{errors.TANGGALLAHIR}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Jenis Kelamin</label>
           <Dropdown
             className={inputClass('JENISKELAMIN')}
@@ -96,7 +96,7 @@ const FormDialogPasien = ({
           {errors.JENISKELAMIN && <small className="text-red-500">{errors.JENISKELAMIN}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Alamat Domisili</label>
           <InputText
             className={inputClass('ALAMAT')}
@@ -106,7 +106,7 @@ const FormDialogPasien = ({
           {errors.ALAMAT && <small className="text-red-500">{errors.ALAMAT}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Alamat KTP</label>
           <InputText
             className={inputClass('ALAMAT_KTP')}
@@ -116,7 +116,7 @@ const FormDialogPasien = ({
           {errors.ALAMAT_KTP && <small className="text-red-500">{errors.ALAMAT_KTP}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>No HP</label>
           <InputText
             className={inputClass('NOHP')}
@@ -127,7 +127,7 @@ const FormDialogPasien = ({
           {errors.NOHP && <small className="text-red-500">{errors.NOHP}</small>}
         </div>
         
-        <div>
+        <div className ="mt-2">
           <label>Usia</label>
           <InputText
             className={inputClass('USIA')}
@@ -138,7 +138,7 @@ const FormDialogPasien = ({
           {errors.USIA && <small className="text-red-500">{errors.USIA}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Agama</label>
           <Dropdown
             className={inputClass('IDAGAMA')}
@@ -151,7 +151,7 @@ const FormDialogPasien = ({
           {errors.IDAGAMA && <small className="text-red-500">{errors.IDAGAMA}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Golongan Darah</label>
           <Dropdown
             className={inputClass('GOLDARAH')}
@@ -168,7 +168,7 @@ const FormDialogPasien = ({
           {errors.GOLDARAH && <small className="text-red-500">{errors.GOLDARAH}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Asuransi</label>
           <Dropdown
             className={inputClass('IDASURANSI')}
@@ -180,7 +180,7 @@ const FormDialogPasien = ({
           {errors.IDASURANSI && <small className="text-red-500">{errors.IDASURANSI}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>No Asuransi</label>
           <InputText
             className="w-full mt-2"

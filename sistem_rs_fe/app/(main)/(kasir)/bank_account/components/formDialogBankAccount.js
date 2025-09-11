@@ -57,7 +57,7 @@ const FormDialogBankAccount = ({
         className="space-y-3"
         onSubmit={handleSubmit}
       >
-        <div>
+        <div className ="mt-2">
           <label>Nama Bank</label>
           <InputText
             className={inputClass('NAMA_BANK')}
@@ -69,7 +69,7 @@ const FormDialogBankAccount = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>No Rekening</label>
           <InputText
             className={inputClass('NO_REKENING')}
@@ -81,7 +81,7 @@ const FormDialogBankAccount = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Atas Nama</label>
           <InputText
             className={inputClass('ATAS_NAMA')}
@@ -93,7 +93,7 @@ const FormDialogBankAccount = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Cabang</label>
           <InputText
             className={inputClass('CABANG')}
@@ -105,7 +105,7 @@ const FormDialogBankAccount = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Kode Bank</label>
           <InputText
             className={inputClass('KODE_BANK')}
@@ -117,7 +117,7 @@ const FormDialogBankAccount = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Status</label>
           <Dropdown
             className={inputClass('STATUS')}
@@ -134,7 +134,7 @@ const FormDialogBankAccount = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Keterangan</label>
           <InputText
             className="w-full mt-2"

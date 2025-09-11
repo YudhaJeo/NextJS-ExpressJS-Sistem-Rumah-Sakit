@@ -22,7 +22,7 @@ const FormSupplier = ({ visible, formData, onHide, onChange, onSubmit, errors })
           onSubmit();
         }}
       >
-        <div>
+        <div className ="mt-2">
           <label>Nama Supplier</label>
           <InputText
             className={inputClass('NAMASUPPLIER')}
@@ -32,7 +32,7 @@ const FormSupplier = ({ visible, formData, onHide, onChange, onSubmit, errors })
           {errors.NAMASUPPLIER && <small className="text-red-500">{errors.NAMASUPPLIER}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Alamat</label>
           <InputText
             className={inputClass('ALAMAT')}
@@ -42,7 +42,7 @@ const FormSupplier = ({ visible, formData, onHide, onChange, onSubmit, errors })
           {errors.ALAMAT && <small className="text-red-500">{errors.ALAMAT}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Kota</label>
           <InputText
             className={inputClass('KOTA')}
@@ -52,7 +52,7 @@ const FormSupplier = ({ visible, formData, onHide, onChange, onSubmit, errors })
           {errors.KOTA && <small className="text-red-500">{errors.KOTA}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Telepon</label>
           <InputText
             className={inputClass('TELEPON')}
@@ -62,7 +62,7 @@ const FormSupplier = ({ visible, formData, onHide, onChange, onSubmit, errors })
           {errors.TELEPON && <small className="text-red-500">{errors.TELEPON}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Email</label>
           <InputText
             className={inputClass('EMAIL')}
@@ -72,7 +72,7 @@ const FormSupplier = ({ visible, formData, onHide, onChange, onSubmit, errors })
           {errors.EMAIL && <small className="text-red-500">{errors.EMAIL}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Nama Sales</label>
           <InputText
             className={inputClass('NAMASALES')}

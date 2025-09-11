@@ -35,6 +35,15 @@ const TabelDeposit = ({ data, loading, onEdit, onDelete }) => {
     );
   };
 
+  const tanggalBodyTemplate = (row) => {
+    const tgl = new Date(row.TANGGALDEPOSIT);
+    return tgl.toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
+
   const metodeBodyTemplate = (row) => (
     <Tag
       value={row.METODE}
@@ -74,6 +83,7 @@ const TabelDeposit = ({ data, loading, onEdit, onDelete }) => {
       <Column field="NOINVOICE" header="No Invoice" />
       <Column field="NIK" header="NIK" />
       <Column field="NAMAPASIEN" header="Nama" />
+      <Column field="TANGGALDEPOSIT" header="Tanggal" body={tanggalBodyTemplate} />
       <Column field="NOMINAL" header="Nominal" body={nominalBodyTemplate} />
       <Column field="METODE" header="Metode" body={metodeBodyTemplate} />
       <Column field="NAMA_BANK" header="Bank" body={bankBodyTemplate} />

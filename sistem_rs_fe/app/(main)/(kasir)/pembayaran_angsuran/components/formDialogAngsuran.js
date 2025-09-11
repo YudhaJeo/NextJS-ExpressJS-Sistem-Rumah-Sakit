@@ -72,7 +72,7 @@ const FormDialogAngsuran = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">No Angsuran</label>
           <InputText
             className="w-full mt-2"
@@ -81,7 +81,7 @@ const FormDialogAngsuran = ({
           />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">No Invoice</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDINVOICE })}
@@ -97,22 +97,22 @@ const FormDialogAngsuran = ({
           {errors.IDINVOICE && <small className="p-error">{errors.IDINVOICE}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">NIK</label>
           <InputText className="w-full mt-2" value={form.NIK || ''} readOnly />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Nama Pasien</label>
           <InputText className="w-full mt-2" value={form.NAMAPASIEN || ''} readOnly />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Asuransi</label>
           <InputText className="w-full mt-2" value={form.NAMAASURANSI || ''} readOnly />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Tanggal Bayar</label>
           <Calendar
             className={classNames('w-full mt-2', { 'p-invalid': errors.TANGGALBAYAR })}
@@ -131,7 +131,7 @@ const FormDialogAngsuran = ({
           {errors.TANGGALBAYAR && <small className="p-error">{errors.TANGGALBAYAR}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Jumlah Bayar</label>
           <InputNumber
             className={classNames('w-full mt-2', { 'p-invalid': errors.NOMINAL })}
@@ -144,7 +144,7 @@ const FormDialogAngsuran = ({
           {errors.NOMINAL && <small className="p-error">{errors.NOMINAL}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Metode Pembayaran</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.METODE })}
@@ -157,7 +157,7 @@ const FormDialogAngsuran = ({
         </div>
 
         {form.METODE === 'Transfer Bank' && (
-          <div>
+          <div className ="mt-2">
             <label className="font-medium">Pilih Bank</label>
             <Dropdown
               className="w-full mt-2"
@@ -171,7 +171,7 @@ const FormDialogAngsuran = ({
           </div>
         )}
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Keterangan</label>
           <InputText
             className="w-full mt-2"

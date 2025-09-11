@@ -80,7 +80,7 @@ const FormDialogPembayaran = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">No Pembayaran</label>
           <InputText
             className={classNames('w-full mt-2')}
@@ -90,7 +90,7 @@ const FormDialogPembayaran = ({
           {errors.NOPEMBAYARAN && <small className="p-error">{errors.NOPEMBAYARAN}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Invoice</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDINVOICE })}
@@ -106,7 +106,7 @@ const FormDialogPembayaran = ({
           {errors.IDINVOICE && <small className="p-error">{errors.IDINVOICE}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">NIK</label>
           <InputText
             className={classNames('w-full mt-2', { 'p-invalid': errors.NIK })}
@@ -116,7 +116,7 @@ const FormDialogPembayaran = ({
           {errors.NIK && <small className="p-error">{errors.NIK}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Nama Pasien</label>
           <InputText
             className={classNames('w-full mt-2', { 'p-invalid': errors.NAMAPASIEN })}
@@ -126,7 +126,7 @@ const FormDialogPembayaran = ({
           {errors.NAMAPASIEN && <small className="p-error">{errors.NAMAPASIEN}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Asuransi</label>
           <InputText
             className={classNames('w-full mt-2', { 'p-invalid': errors.ASURANSI })}
@@ -136,7 +136,7 @@ const FormDialogPembayaran = ({
           {errors.ASURANSI && <small className="p-error">{errors.ASURANSI}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Tanggal Bayar</label>
           <Calendar
             className={classNames('w-full mt-2', { 'p-invalid': errors.TANGGALBAYAR })}
@@ -155,7 +155,7 @@ const FormDialogPembayaran = ({
           {errors.TANGGALBAYAR && <small className="p-error">{errors.TANGGALBAYAR}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Metode Pembayaran</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.METODEPEMBAYARAN })}
@@ -176,7 +176,7 @@ const FormDialogPembayaran = ({
         </div>
 
         {form.METODEPEMBAYARAN === 'Transfer Bank' && (
-          <div>
+          <div className ="mt-2">
             <label className="font-medium">Pilih Rekening Bank</label>
             <Dropdown
               className="w-full mt-2"
@@ -192,7 +192,7 @@ const FormDialogPembayaran = ({
           </div>
         )}
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Jumlah Bayar</label>
           <InputNumber
             className={classNames('w-full mt-2', { 'p-invalid': errors.JUMLAHBAYAR })}
@@ -206,7 +206,7 @@ const FormDialogPembayaran = ({
           {errors.JUMLAHBAYAR && <small className="p-error">{errors.JUMLAHBAYAR}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Keterangan</label>
           <InputText
             className="w-full mt-2"
