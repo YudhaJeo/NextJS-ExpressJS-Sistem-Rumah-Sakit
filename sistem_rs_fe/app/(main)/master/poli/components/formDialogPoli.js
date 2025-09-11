@@ -22,7 +22,7 @@ const FormPoli = ({ visible, formData, onHide, onChange, onSubmit, errors }) => 
           onSubmit();
         }}
       >
-        <div>
+        <div className ="mt-2">
           <label>Nama Poli</label>
           <InputText
             className={inputClass('NAMAPOLI')}
@@ -32,7 +32,7 @@ const FormPoli = ({ visible, formData, onHide, onChange, onSubmit, errors }) => 
           {errors.NAMAPOLI && <small className="text-red-500">{errors.NAMAPOLI}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Kode</label>
           <InputText
             className={inputClass('KODE')}
@@ -42,7 +42,7 @@ const FormPoli = ({ visible, formData, onHide, onChange, onSubmit, errors }) => 
           {errors.KODE && <small className="text-red-500">{errors.KODE}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Zona</label>
           <InputText
             className={inputClass('ZONA')}

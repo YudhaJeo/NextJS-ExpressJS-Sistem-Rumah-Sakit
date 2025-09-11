@@ -40,7 +40,7 @@ const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit, poliO
           onSubmit();
         }}
       >
-        <div>
+        <div className ="mt-2">
           <label>Nama Dokter</label>
           <Dropdown
             className="w-full mt-2"
@@ -53,7 +53,7 @@ const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit, poliO
           />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Nama Poli</label>
           <Dropdown
             className="w-full mt-2"
@@ -66,7 +66,7 @@ const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit, poliO
           />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="block mb-2 font-semibold">Jadwal Praktek</label>
           {hariList.map((hari) => {
             const shifts = formData.JADWAL.filter(j => j.HARI === hari);

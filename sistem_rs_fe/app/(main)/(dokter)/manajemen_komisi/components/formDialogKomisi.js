@@ -47,7 +47,7 @@ const FormDialogKomisi = ({
           onSubmit();
         }}
       >
-        <div>
+        <div className ="mt-2">
           <label>Rawat Inap</label>
           <Dropdown
             className="w-full mt-1"
@@ -72,19 +72,19 @@ const FormDialogKomisi = ({
         </div>
 
         <div className="grid-cols-2 gap-3 text-sm text-gray-700">
-          <div>
+          <div className ="mt-2">
             <label>NIK</label>
             <InputText value={formData.NIK || ''} disabled className="w-full" />
           </div>
-          <div>
+          <div className ="mt-2">
             <label>Nama Pasien</label>
             <InputText value={formData.NAMAPASIEN || ''} disabled className="w-full" />
           </div>
-          <div>
+          <div className ="mt-2">
             <label>Nama Dokter</label>
             <InputText value={formData.NAMADOKTER || ''} disabled className="w-full" />
           </div>
-          <div>
+          <div className ="mt-2">
             <label>Tanggal</label>
             <InputText
               value={formatTanggal(formData.TANGGAL)}
@@ -94,7 +94,7 @@ const FormDialogKomisi = ({
           </div>
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Nilai Komisi</label>
           <InputNumber
             className="w-full"
@@ -108,7 +108,7 @@ const FormDialogKomisi = ({
           />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Status</label>
           <Dropdown
             className="w-full mt-1"
@@ -119,7 +119,7 @@ const FormDialogKomisi = ({
           />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Keterangan</label>
           <InputText
             value={formData.KETERANGAN || ''}
