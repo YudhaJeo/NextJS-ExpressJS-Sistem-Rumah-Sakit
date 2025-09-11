@@ -146,7 +146,8 @@ const FormDialogRawatJalan = ({
         
         <div className='mt-2'>
           <label className="font-medium">Upload Foto Resep</label>
-          <FileUpload
+          <FileUpload 
+            className ="mt-2"
             mode="basic"
             name="FOTORESEP"
             accept="image/*"
