@@ -158,7 +158,6 @@ const Dashboard = () => {
       title: card.title,
       value: card.value,
       icon: card.icon,
-      background: card.color + '20',
       border: card.color,
     })) ?? [];
 
@@ -197,7 +196,6 @@ const Dashboard = () => {
                         <div
                           className="flex align-items-center justify-content-center border-round"
                           style={{
-                            background: card.background,
                             width: '2.5rem',
                             height: '2.5rem',
                           }}
