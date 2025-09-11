@@ -49,15 +49,15 @@ const Page = () => {
   useEffect(() => {
     fetchData();
     fetchDepositOptions();
-    fetchInvoiceOptions();
   }, []);
 
   const fetchData = async () => {
     setLoading(true);
     try {
       const res = await axios.get(`${API_URL}/deposit_penggunaan`);
-      setData(res.data.data);
-      setOriginalData(res.data.data);
+      const sortedData = res.data.data.sort((a, b) => b.IDPENGGUNAAN - a.IDPENGGUNAAN);
+      setData(sortedData);
+      setOriginalData(sortedData);
     } catch (err) {
       console.error('Gagal ambil data penggunaan deposit:', err);
     } finally {
@@ -91,20 +91,11 @@ const Page = () => {
         label: `${item.label} - ${item.NAMAPASIEN} | Sisa: ${formatRupiah(item.SALDO_SISA)}`,
         nik: item.NIK,
         NAMAPASIEN: item.NAMAPASIEN,
+        NOINVOICE: item.NOINVOICE,
       })));
     } catch (err) {
       console.error('Gagal ambil daftar deposit:', err);
     }
-  };
-
-  const fetchInvoiceOptions = async () => {
-    const res = await axios.get(`${API_URL}/invoice`);
-    setInvoiceOptions(res.data.data.map(item => ({
-      value: item.IDINVOICE,
-      label: `${item.NOINVOICE} - ${item.NAMAPASIEN}`,
-      nik: item.NIK,
-      NAMAPASIEN: item.NAMAPASIEN,
-    })));
   };
 
   const handleDateFilter = () => {
