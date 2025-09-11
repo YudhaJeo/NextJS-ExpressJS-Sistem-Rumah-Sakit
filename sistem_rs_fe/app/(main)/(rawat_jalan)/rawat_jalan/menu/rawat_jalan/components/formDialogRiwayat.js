@@ -75,7 +75,7 @@ const FormDialogRawatJalan = ({
       draggable={false}
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
+        <div className='mt-2'>
           <label className="font-medium">Pendaftaran</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDPENDAFTARAN })}
@@ -87,7 +87,7 @@ const FormDialogRawatJalan = ({
           {errors.IDPENDAFTARAN && <small className="p-error">{errors.IDPENDAFTARAN}</small>}
         </div>
 
-        <div>
+        <div className="mt-2">
           <label className="font-medium">Nama Dokter</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDDOKTER })}
@@ -99,7 +99,7 @@ const FormDialogRawatJalan = ({
           {errors.IDDOKTER && <small className="p-error">{errors.IDDOKTER}</small>}
         </div>
 
-        <div>
+        <div className='mt-2'>
           <label className="font-medium">Diagnosa</label>
           <InputText
             className={classNames('w-full mt-2', { 'p-invalid': errors.DIAGNOSA })}
@@ -110,7 +110,7 @@ const FormDialogRawatJalan = ({
           {errors.DIAGNOSA && <small className="p-error">{errors.DIAGNOSA}</small>}
         </div>
 
-        <div>
+        <div className='mt-2'>
           <label className="font-medium">Keterangan</label>
           <InputText
             className="w-full mt-2"
@@ -120,7 +120,7 @@ const FormDialogRawatJalan = ({
           />
         </div>
 
-        <div>
+        <div className='mt-2'>
           <label className="font-medium">Status Kunjungan</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUSKUNJUNGAN })}
@@ -132,7 +132,7 @@ const FormDialogRawatJalan = ({
           {errors.STATUSKUNJUNGAN && <small className="p-error">{errors.STATUSKUNJUNGAN}</small>}
         </div>
 
-        <div>
+        <div className='mt-2'>
           <label className="font-medium">Status Rawat</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUSRAWAT })}
@@ -144,7 +144,7 @@ const FormDialogRawatJalan = ({
           {errors.STATUSRAWAT && <small className="p-error">{errors.STATUSRAWAT}</small>}
         </div>
         
-        <div>
+        <div className='mt-2'>
           <label className="font-medium">Upload Foto Resep</label>
           <FileUpload
             mode="basic"

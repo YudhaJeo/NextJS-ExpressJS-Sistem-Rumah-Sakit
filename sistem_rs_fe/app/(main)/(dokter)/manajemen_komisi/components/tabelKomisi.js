@@ -21,25 +21,29 @@ export const TabelKomisiDokter = ({ data, loading, onEdit, onDelete }) => {
 
   return (
     <DataTable
-      value={data}
+      value={[...(data || [])].sort((a, b) => new Date(b.TANGGALKUNJUNGAN) - new Date(a.TANGGALKUNJUNGAN))}
       paginator
       rows={10}
       loading={loading}
       size="small"
       scrollable
+      sortField="TANGGALKUNJUNGAN"
+      sortOrder={-1}  // -1 = descending
     >
       <Column field="NAMADOKTER" header="Nama Dokter" />
       <Column field="NAMAPASIEN" header="Nama Pasien" />
       <Column field="NIK" header="NIK" />
       <Column
-        field="TANGGAL"
+        field="TANGGALKUNJUNGAN"
         header="Tanggal Kunjungan"
         body={tanggalTemplate}
+        sortable
       />
       <Column
         field="NILAIKOMISI"
         header="Nilai Komisi"
         body={komisiTemplate}
+        sortable
       />
       <Column
         header="Status"

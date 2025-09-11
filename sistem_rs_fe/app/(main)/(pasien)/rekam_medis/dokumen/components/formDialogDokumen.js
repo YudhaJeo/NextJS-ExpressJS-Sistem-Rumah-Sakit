@@ -29,7 +29,7 @@ const FormDialogDokumen = ({
           onSubmit();
         }}
       >
-        <div>
+        <div className  ="mt-2">
           <label>NIK Pasien</label>
           <Dropdown
             className={inputClass("NIK")}
@@ -50,7 +50,7 @@ const FormDialogDokumen = ({
           {errors.NIK && <small className="text-red-500">{errors.NIK}</small>}
         </div>
 
-        <div>
+        <div className  ="mt-2">
           <label>Jenis Dokumen</label>
           <Dropdown
             className={inputClass("JENISDOKUMEN")}
@@ -62,7 +62,7 @@ const FormDialogDokumen = ({
           {errors.JENISDOKUMEN && <small className="text-red-500">{errors.JENISDOKUMEN}</small>}
         </div>
 
-        <div>
+        <div className  ="mt-2">
           <label>Unggah File</label>
           <input
             type="file"

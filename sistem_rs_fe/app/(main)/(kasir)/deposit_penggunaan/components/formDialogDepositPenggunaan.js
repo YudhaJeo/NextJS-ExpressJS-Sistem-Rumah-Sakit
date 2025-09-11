@@ -69,7 +69,7 @@ const FormDialogDepositPenggunaan = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">No Deposit</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDDEPOSIT })}
@@ -83,7 +83,7 @@ const FormDialogDepositPenggunaan = ({
           {errors.IDDEPOSIT && <small className="p-error">{errors.IDDEPOSIT}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">No Invoice</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDINVOICE })}
@@ -97,17 +97,17 @@ const FormDialogDepositPenggunaan = ({
           {errors.IDINVOICE && <small className="p-error">{errors.IDINVOICE}</small>}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">NIK</label>
           <InputText className="w-full mt-2" value={form.NIK || ''} readOnly />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Nama Pasien</label>
           <InputText className="w-full mt-2" value={form.NAMAPASIEN || ''} readOnly />
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Tanggal Pemakaian</label>
           <Calendar
             className={classNames('w-full mt-2', { 'p-invalid': errors.TANGGALPEMAKAIAN })}
@@ -128,7 +128,7 @@ const FormDialogDepositPenggunaan = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label className="font-medium">Jumlah Pemakaian</label>
           <InputNumber
             className={classNames('w-full mt-2', { 'p-invalid': errors.JUMLAH_PEMAKAIAN })}

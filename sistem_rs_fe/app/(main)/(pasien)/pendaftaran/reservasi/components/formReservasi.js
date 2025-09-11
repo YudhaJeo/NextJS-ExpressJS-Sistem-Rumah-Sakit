@@ -112,7 +112,7 @@ const FormReservasiPasien = ({
           onSubmit();
         }}
       >
-        <div>
+        <div className ="mt-2">
           <label>NIK</label>
           <Dropdown
             className={inputClass("NIK")}
@@ -184,7 +184,7 @@ const FormReservasiPasien = ({
           </div>
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Nama Dokter</label>
           <Dropdown
             className={inputClass("IDDOKTER")}
@@ -210,7 +210,7 @@ const FormReservasiPasien = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Jam Praktek</label>
           <Dropdown
             className={inputClass("JAMRESERVASI")}
@@ -237,7 +237,7 @@ const FormReservasiPasien = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Keluhan</label>
           <InputText
             className={inputClass("KETERANGAN")}
@@ -251,7 +251,7 @@ const FormReservasiPasien = ({
           )}
         </div>
 
-        <div>
+        <div className ="mt-2">
           <label>Status</label>
           <Dropdown
             className={inputClass("STATUS")}
