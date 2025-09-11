@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(main)/(rawat_inap)/rawat_inap/ruangan/jenis_bangsal/page.js", "app/(main)/(rawat_inap)/rawat_inap/ruangan/jenis_bangsal/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/(main)/rawat_inap/ruangan/jenis_bangsal/page.js", "app/(main)/rawat_inap/ruangan/jenis_bangsal/page.jsx"],
   "exclude": ["node_modules"]
 }
