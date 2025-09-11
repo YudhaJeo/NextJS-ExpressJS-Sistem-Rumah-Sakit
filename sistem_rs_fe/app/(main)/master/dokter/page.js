@@ -80,7 +80,6 @@ const DokterPage = () => {
     const fetchTenaga = async () => {
         try {
             const res = await axios.get(`${API_URL}/tenaga_medis`);
-            console.log('Data tenaga medis API:', res.data);
             const options = res.data.data.map((master_tenaga_medis) => ({
                 label: `${master_tenaga_medis.NAMALENGKAP} - ${master_tenaga_medis.JENISTENAGAMEDIS}`,
                 value: master_tenaga_medis.IDTENAGAMEDIS,
