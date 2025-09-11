@@ -16,14 +16,12 @@ const FormDialogDepositPenggunaan = ({
   form,
   setForm,
   depositOptions,
-  invoiceOptions,
 }) => {
   const [errors, setErrors] = useState({});
 
   const validate = () => {
     const newErrors = {};
     if (!form.IDDEPOSIT) newErrors.IDDEPOSIT = 'Deposit wajib dipilih';
-    if (!form.IDINVOICE) newErrors.IDINVOICE = 'Invoice wajib dipilih';
     if (!form.TANGGALPEMAKAIAN) newErrors.TANGGALPEMAKAIAN = 'Tanggal Pemakaian wajib diisi';
     if (!form.JUMLAH_PEMAKAIAN || form.JUMLAH_PEMAKAIAN <= 0)
       newErrors.JUMLAH_PEMAKAIAN = 'Jumlah Pemakaian harus lebih dari 0';
@@ -45,18 +43,11 @@ const FormDialogDepositPenggunaan = ({
       IDDEPOSIT: e.value,
       NIK: selected?.nik || '',
       NAMAPASIEN: selected?.NAMAPASIEN || '',
+      NOINVOICE: selected?.NOINVOICE || '', 
+      IDINVOICE: selected?.IDINVOICE || selected?.value || null
     });
   };
 
-  const handleInvoiceChange = (e) => {
-    const selected = invoiceOptions.find(opt => opt.value === e.value);
-    setForm({
-      ...form,
-      IDINVOICE: e.value,
-      NIK: selected?.nik || '',
-      NAMAPASIEN: selected?.NAMAPASIEN || '',
-    });
-  };
 
   return (
     <Dialog
@@ -85,16 +76,7 @@ const FormDialogDepositPenggunaan = ({
 
         <div className ="mt-2">
           <label className="font-medium">No Invoice</label>
-          <Dropdown
-            className={classNames('w-full mt-2', { 'p-invalid': errors.IDINVOICE })}
-            options={invoiceOptions}
-            value={form.IDINVOICE}
-            onChange={handleInvoiceChange}
-            placeholder="Pilih Invoice"
-            filter
-            showClear
-          />
-          {errors.IDINVOICE && <small className="p-error">{errors.IDINVOICE}</small>}
+          <InputText className="w-full mt-2" value={form.NOINVOICE || ''} readOnly />
         </div>
 
         <div className ="mt-2">

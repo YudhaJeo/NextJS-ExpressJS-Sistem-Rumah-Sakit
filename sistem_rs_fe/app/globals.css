@@ -19,3 +19,7 @@ html {
   border-color: var(--primary-color);
   font-color: var(--primary-color);
 }
+
+.p-avatar img {
+  object-fit: cover;
+}

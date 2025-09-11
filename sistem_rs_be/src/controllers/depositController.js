@@ -222,7 +222,8 @@ export async function getDepositOptions(req, res) {
         'deposit.NODEPOSIT as label',
         'deposit.SALDO_SISA',
         'pasien.NIK',
-        'pasien.NAMALENGKAP as NAMAPASIEN'
+        'pasien.NAMALENGKAP as NAMAPASIEN',
+        'invoice.NOINVOICE',
       );
     res.status(200).json({ success: true, data: rows });
   } catch (err) {
