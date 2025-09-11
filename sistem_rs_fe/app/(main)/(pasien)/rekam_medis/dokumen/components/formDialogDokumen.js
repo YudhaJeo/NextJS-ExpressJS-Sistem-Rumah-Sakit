@@ -3,6 +3,8 @@
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
+import { FileUpload } from "primereact/fileupload";
+import { useState } from "react";
 
 const FormDialogDokumen = ({
   visible,
@@ -15,6 +17,8 @@ const FormDialogDokumen = ({
   inputClass,
   JenisDokumenOptions,
 }) => {
+  const [fotoPreview, setFotoPreview] = useState(null);
+
   return (
     <Dialog
       header={form.IDDOKUMEN ? "Edit Dokumen" : "Tambah Dokumen"}
@@ -30,7 +34,7 @@ const FormDialogDokumen = ({
         }}
       >
         <div>
-          <label>NIK Pasien</label>
+          <label className="font-medium">NIK Pasien</label>
           <Dropdown
             className={inputClass("NIK")}
             value={form.NIK}
@@ -51,7 +55,7 @@ const FormDialogDokumen = ({
         </div>
 
         <div>
-          <label>Jenis Dokumen</label>
+          <label className="font-medium">Jenis Dokumen</label>
           <Dropdown
             className={inputClass("JENISDOKUMEN")}
             options={JenisDokumenOptions}
@@ -59,19 +63,40 @@ const FormDialogDokumen = ({
             onChange={(e) => setForm({ ...form, JENISDOKUMEN: e.value })}
             placeholder="Pilih"
           />
-          {errors.JENISDOKUMEN && <small className="text-red-500">{errors.JENISDOKUMEN}</small>}
+          {errors.JENISDOKUMEN && (
+            <small className="text-red-500">{errors.JENISDOKUMEN}</small>
+          )}
         </div>
 
         <div>
-          <label>Unggah File</label>
-          <input
-            type="file"
-            className={inputClass("file")}
-            onChange={(e) => {
-              const file = e.target.files[0];
-              setForm({ ...form, file });
+          <label className="font-medium">Upload Dokumen</label>
+          <FileUpload 
+            className="mt-2"
+            mode="basic"
+            name="file"
+            accept="image/*,.pdf"
+            maxFileSize={10000000}
+            auto
+            chooseLabel="Pilih File"
+            onSelect={(e) => {
+              if (e.files && e.files.length > 0) {
+                const file = e.files[0];
+                setForm({ ...form, file });
+                if (file.type.startsWith("image/")) {
+                  setFotoPreview(URL.createObjectURL(file));
+                } else {
+                  setFotoPreview(null);
+                }
+              }
             }}
           />
+          {fotoPreview && (
+            <img
+              src={fotoPreview}
+              alt="Preview"
+              className="mt-3 w-full h-40 object-contain border rounded"
+            />
+          )}
           {errors.file && <small className="text-red-500">{errors.file}</small>}
         </div>
 
