@@ -33,7 +33,6 @@ const FormDialogDokumen = ({
           onSubmit();
         }}
       >
-        <div>
           <label className="font-medium">NIK Pasien</label>
         <div className  ="mt-2">
           <label>NIK Pasien</label>
