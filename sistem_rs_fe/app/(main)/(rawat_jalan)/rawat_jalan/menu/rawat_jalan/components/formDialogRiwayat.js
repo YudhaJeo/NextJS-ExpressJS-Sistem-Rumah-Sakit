@@ -100,6 +100,27 @@ const FormDialogRawatJalan = ({
         </div>
 
         <div>
+          <label className="font-medium">Diagnosa</label>
+          <InputText
+            className={classNames('w-full mt-2', { 'p-invalid': errors.DIAGNOSA })}
+            value={form.DIAGNOSA || ''}
+            onChange={(e) => setForm({ ...form, DIAGNOSA: e.target.value })}
+            placeholder="Masukkan diagnosa"
+          />
+          {errors.DIAGNOSA && <small className="p-error">{errors.DIAGNOSA}</small>}
+        </div>
+
+        <div>
+          <label className="font-medium">Keterangan</label>
+          <InputText
+            className="w-full mt-2"
+            value={form.KETERANGAN || ''}
+            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
+            placeholder="Masukkan keterangan tambahan"
+          />
+        </div>
+
+        <div>
           <label className="font-medium">Status Kunjungan</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.STATUSKUNJUNGAN })}
@@ -122,28 +143,7 @@ const FormDialogRawatJalan = ({
           />
           {errors.STATUSRAWAT && <small className="p-error">{errors.STATUSRAWAT}</small>}
         </div>
-
-        <div>
-          <label className="font-medium">Diagnosa</label>
-          <InputText
-            className={classNames('w-full mt-2', { 'p-invalid': errors.DIAGNOSA })}
-            value={form.DIAGNOSA || ''}
-            onChange={(e) => setForm({ ...form, DIAGNOSA: e.target.value })}
-            placeholder="Masukkan diagnosa"
-          />
-          {errors.DIAGNOSA && <small className="p-error">{errors.DIAGNOSA}</small>}
-        </div>
-
-        <div>
-          <label className="font-medium">Keterangan</label>
-          <InputText
-            className="w-full mt-2"
-            value={form.KETERANGAN || ''}
-            onChange={(e) => setForm({ ...form, KETERANGAN: e.target.value })}
-            placeholder="Masukkan keterangan tambahan"
-          />
-        </div>
-
+        
         <div>
           <label className="font-medium">Upload Foto Resep</label>
           <FileUpload
@@ -164,19 +164,19 @@ const FormDialogRawatJalan = ({
         </div>
 
         {fotoPreview && (
-          <img
-            src={fotoPreview}
-            alt="Preview Foto Resep"
-            className="w-16 h-16 object-cover mt-2 rounded"
-          />
-        )}
-        {!fotoPreview && form.fotoResepLama && !form.FOTORESEP && (
-          <img
-            src={`${process.env.NEXT_PUBLIC_MINIO_URL}${form.fotoResepLama}`}
-            alt="Foto Resep Lama"
-            className="w-16 h-16 object-cover mt-2 rounded"
-          />
-        )}
+            <img
+              src={fotoPreview}
+              alt="Preview Foto Resep"
+              className="w-3 h-3 object-cover mt-2 rounded"
+            />
+          )}
+          {!fotoPreview && form.fotoResepLama && !form.FOTORESEP && (
+            <img
+              src={`${process.env.NEXT_PUBLIC_MINIO_URL}${form.fotoResepLama}`}
+              alt="Foto Resep Lama"
+              className="w-3 h-3 object-cover mt-2 rounded"
+            />
+          )}
 
         <div className="text-right pt-4">
           <Button

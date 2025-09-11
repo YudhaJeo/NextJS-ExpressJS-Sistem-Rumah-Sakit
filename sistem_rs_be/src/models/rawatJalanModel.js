@@ -31,6 +31,7 @@ export const getAllRawatJalan = () => {
       'r.IDPENDAFTARAN',
       db.raw('MAX(r.IDRAWATJALAN) as IDRAWATJALAN'),
       'r.IDDOKTER',
+      'ps.NOREKAMMEDIS',
       'ps.NAMALENGKAP',
       'ps.NIK',
       'ps.JENISKELAMIN',

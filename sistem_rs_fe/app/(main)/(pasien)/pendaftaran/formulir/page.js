@@ -146,10 +146,12 @@ const Page = () => {
   };
 
   const handleEdit = (row) => {
+    const poli = poliOptions.find((p) => p.label === row.POLI);
+
     setForm({
       ...row,
       TANGGALKUNJUNGAN: row.TANGGALKUNJUNGAN?.split('T')[0] || '',
-      IDPOLI: Number(row.IDPOLI),
+      IDPOLI: poli ? poli.value : null,
     });
     setDialogVisible(true);
   };
@@ -182,7 +184,7 @@ const Page = () => {
       NAMALENGKAP: '',
       TANGGALKUNJUNGAN: today,
       KELUHAN: '',
-      IDPOLI: '',
+      IDPOLI: null,
       STATUSKUNJUNGAN: 'Dalam Antrian',
     });
   };
