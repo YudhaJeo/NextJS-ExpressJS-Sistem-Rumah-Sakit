@@ -17,7 +17,6 @@ export async function getUser(req, res) {
       user.ROLE = user.JENISTENAGANONMEDIS;
     }
 
-    // kirim path asli aja, jangan ditambah prefix
     user.FOTOPROFIL = user.FOTOPROFIL || null;
 
     res.json({ data: user });
@@ -40,13 +39,11 @@ export async function updateUser(req, res) {
     const data = { NAMALENGKAP, EMAIL, NOHP };
 
     if (file) {
-      // hapus foto lama kalau ada
       const oldUser = await ProfileModel.getById(id, sumber);
       if (oldUser?.FOTOPROFIL) {
         await deleteFromMinio(oldUser.FOTOPROFIL);
       }
 
-      // upload baru ke MinIO
       const folder = sumber === 'medis'
         ? 'tenaga_medis/foto_profile'
         : 'tenaga_non_medis/foto_profile';
