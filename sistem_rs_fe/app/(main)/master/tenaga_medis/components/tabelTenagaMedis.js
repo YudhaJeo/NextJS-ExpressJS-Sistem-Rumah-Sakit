@@ -20,7 +20,7 @@ const statusSeverity = {
 
 const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
   const [layout, setLayout] = useState("grid");
-  const [selectedData, setSelectedData] = useState(null);
+  const [row, setSelectedData] = useState(null);
   const [dialogVisible, setDialogVisible] = useState(false);
 
   const getSeverity = (status) => {
@@ -272,7 +272,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
         outlined
         onClick={() => setDialogVisible(false)}
       />
-      {selectedData && (
+      {row && (
         <>
           <Button
             label="Edit"
@@ -280,7 +280,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
             severity="warning"
             onClick={() => {
               setDialogVisible(false);
-              onEdit(selectedData);
+              onEdit(row);
             }}
           />
           <Button
@@ -289,7 +289,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
             severity="danger"
             onClick={() => {
               setDialogVisible(false);
-              onDelete(selectedData);
+              onDelete(row);
             }}
           />
         </>
@@ -313,7 +313,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
         header={
           <div className="flex align-items-center gap-2">
             <i className="pi pi-user-md text-primary"></i>
-            <span>{selectedData?.NAMALENGKAP || "Detail Tenaga Medis"}</span>
+            <span>{row?.NAMALENGKAP || "Detail Tenaga Medis"}</span>
           </div>
         }
         visible={dialogVisible}
@@ -323,7 +323,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
         onHide={() => setDialogVisible(false)}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
       >
-        {selectedData && (
+        {row && (
           <div className="flex flex-column gap-4">
             {/* Foto Profil */}
             <div className="flex justify-content-center">
@@ -347,7 +347,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                       <i className="pi pi-id-card text-primary"></i>
                       <div>
                         <small className="text-600">Kode</small>
-                        <div className="font-semibold">{selectedData.KODETENAGAMEDIS}</div>
+                        <div className="font-semibold">{row.KODETENAGAMEDIS}</div>
                       </div>
                     </div>
                     
@@ -358,7 +358,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                       <div>
                         <small className="text-600">Jenis Kelamin</small>
                         <div className="font-semibold">
-                          {selectedData.JENISKELAMIN === "L" ? "Laki-laki" : "Perempuan"}
+                          {row.JENISKELAMIN === "L" ? "Laki-laki" : "Perempuan"}
                         </div>
                       </div>
                     </div>
@@ -370,7 +370,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                       <div>
                         <small className="text-600">Tempat / Tanggal Lahir</small>
                         <div className="font-semibold">
-                          {selectedData.TEMPATLAHIR} / {formatDate(selectedData.TANGGALLAHIR)}
+                          {row.TEMPATLAHIR} / {formatDate(row.TANGGALLAHIR)}
                         </div>
                       </div>
                     </div>
@@ -385,7 +385,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                       <i className="pi pi-phone text-primary"></i>
                       <div>
                         <small className="text-600">No HP</small>
-                        <div className="font-semibold">{selectedData.NOHP || "-"}</div>
+                        <div className="font-semibold">{row.NOHP || "-"}</div>
                       </div>
                     </div>
                     
@@ -395,7 +395,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                       <i className="pi pi-envelope text-primary"></i>
                       <div>
                         <small className="text-600">Email</small>
-                        <div className="font-semibold">{selectedData.EMAIL || "-"}</div>
+                        <div className="font-semibold">{row.EMAIL || "-"}</div>
                       </div>
                     </div>
                   </div>
@@ -410,7 +410,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                         <i className="pi pi-briefcase text-primary"></i>
                         <div>
                           <small className="text-600">Jenis Tenaga Medis</small>
-                          <div className="font-semibold">{selectedData.JENISTENAGAMEDIS}</div>
+                          <div className="font-semibold">{row.JENISTENAGAMEDIS}</div>
                         </div>
                       </div>
                     </div>
@@ -420,7 +420,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                         <i className="pi pi-star text-primary"></i>
                         <div>
                           <small className="text-600">Spesialisasi</small>
-                          <div className="font-semibold">{selectedData.SPESIALISASI || "-"}</div>
+                          <div className="font-semibold">{row.SPESIALISASI || "-"}</div>
                         </div>
                       </div>
                     </div>
@@ -430,7 +430,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                         <i className="pi pi-building text-primary"></i>
                         <div>
                           <small className="text-600">Unit Kerja</small>
-                          <div className="font-semibold">{selectedData.UNITKERJA}</div>
+                          <div className="font-semibold">{row.UNITKERJA}</div>
                         </div>
                       </div>
                     </div>
@@ -442,8 +442,8 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                           <small className="text-600">Status Kepegawaian</small>
                           <div className="mt-1">
                             <Tag
-                              value={selectedData.STATUSKEPEGAWAIAN}
-                              severity={getSeverity(selectedData.STATUSKEPEGAWAIAN)}
+                              value={row.STATUSKEPEGAWAIAN}
+                              severity={getSeverity(row.STATUSKEPEGAWAIAN)}
                               rounded
                             />
                           </div>
@@ -462,7 +462,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                         <i className="pi pi-id-card text-primary"></i>
                         <div className="flex-1">
                           <small className="text-600">No STR</small>
-                          <div className="font-semibold">{selectedData.NOSTR || "-"}</div>
+                          <div className="font-semibold">{row.NOSTR || "-"}</div>
                         </div>
                       </div>
                       
@@ -470,7 +470,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                         <i className="pi pi-calendar-times text-primary"></i>
                         <div>
                           <small className="text-600">Tgl Exp STR</small>
-                          <div className="font-semibold">{formatDate(selectedData.TGLEXPSTR)}</div>
+                          <div className="font-semibold">{formatDate(row.TGLEXPSTR)}</div>
                         </div>
                       </div>
                     </div>
@@ -480,7 +480,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                         <i className="pi pi-file text-primary"></i>
                         <div className="flex-1">
                           <small className="text-600">No SIP</small>
-                          <div className="font-semibold">{selectedData.NOSIP || "-"}</div>
+                          <div className="font-semibold">{row.NOSIP || "-"}</div>
                         </div>
                       </div>
                       
@@ -488,7 +488,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                         <i className="pi pi-calendar-times text-primary"></i>
                         <div>
                           <small className="text-600">Tgl Exp SIP</small>
-                          <div className="font-semibold">{formatDate(selectedData.TGLEXPSIP)}</div>
+                          <div className="font-semibold">{formatDate(row.TGLEXPSIP)}</div>
                         </div>
                       </div>
                     </div>
@@ -496,7 +496,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                 </Panel>
               </div>
 
-              {selectedData.DOKUMENPENDUKUNG && (
+              {row.DOKUMENPENDUKUNG && (
                 <div className="col-12">
                   <Panel header="Dokumen Pendukung">
                     <Button
@@ -506,7 +506,7 @@ const TabelTenagaMedis = ({ data, loading, onEdit, onDelete }) => {
                       className="p-0"
                       onClick={() =>
                         window.open(
-                          `${process.env.NEXT_PUBLIC_MINIO_URL}${selectedData.DOKUMENPENDUKUNG}`,
+                          `${process.env.NEXT_PUBLIC_MINIO_URL}${row.DOKUMENPENDUKUNG}`,
                           "_blank"
                         )
                       }

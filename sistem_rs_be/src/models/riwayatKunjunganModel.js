@@ -33,7 +33,6 @@ export async function getRiwayatByPasien(nik) {
 }
 
 export async function insertKunjungan({ NIK, JENIS, IDRIWAYATJALAN = null, IDRIWAYATINAP = null }) {
-  console.log('Inserting kunjungan:', { NIK, JENIS, IDRIWAYATJALAN, IDRIWAYATINAP });
   await db('riwayat_kunjungan').insert({
     NIK,
     JENIS,
