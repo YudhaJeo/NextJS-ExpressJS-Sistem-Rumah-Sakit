@@ -64,8 +64,9 @@ const Page = () => {
     setLoading(true);
     try {
       const res = await axios.get(`${API_URL}/pembayaran`);
-      setData(res.data.data);
-      setOriginalData(res.data.data);
+      const sortedData = res.data.data.sort((a, b) => b.IDPEMBAYARAN - a.IDPEMBAYARAN);
+      setData(sortedData);
+      setOriginalData(sortedData);
     } catch (err) {
       console.error('Gagal ambil data pembayaran:', err);
     } finally {
