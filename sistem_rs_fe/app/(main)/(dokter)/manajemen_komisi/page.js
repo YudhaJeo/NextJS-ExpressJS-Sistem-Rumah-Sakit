@@ -72,7 +72,6 @@ const KomisiPage = () => {
     setLoading(true);
     try {
       const res = await axios.get(`${API_URL}/komisi_dokter`);
-      console.log("komisi_dokter:", res.data);
       setData(res.data);
       setOriginalData(res.data);
     } catch (err) {
@@ -95,7 +94,6 @@ const KomisiPage = () => {
   const fetchRiwayat = async () => {
     try {
       const res = await axios.get(`${API_URL}/rawat_jalan`);
-      console.log("rawat_jalan:", res.data);
       const options = res.data.data.map((item) => ({
         label: `${item.NAMADOKTER} - ${item.NAMALENGKAP} (${formatTanggal(item.TANGGALKUNJUNGAN)})`,
         value: item.IDRAWATJALAN,
