@@ -141,7 +141,6 @@ export async function insertFromRawatJalan(rawatJalan) {
       JENIS: 'RAWAT JALAN',
       IDRIWAYATJALAN
     });
-    console.log('Kunjungan rajal inserted for NIK:', pasienData?.NIK, IDRIWAYATJALAN);
   }
 
   return IDRIWAYATJALAN;
