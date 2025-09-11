@@ -166,7 +166,6 @@ const DashboardPasien = () => {
                 <div
                   className="flex align-items-center justify-content-center border-round"
                   style={{
-                    background: card.background,
                     width: '2.5rem',
                     height: '2.5rem',
                   }}
