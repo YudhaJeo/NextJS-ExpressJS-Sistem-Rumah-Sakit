@@ -181,19 +181,20 @@ const DashboardDokter = () => {
       </div>
 
       <div className="col-12 md:col-6">
-        <Card>
-          <div className="flex justify-content-between mb-3">
+        <Card className= "mb-2">
+          <div className="flex justify-content-between">
             <span className="font-medium text-lg text-900">Statistik Dokter</span>
             <Tag value="Live" severity="info" />
           </div>
           <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
         </Card>
+
         <Card>
-          <div className="flex justify-content-between mb-3">
+          <div className="flex justify-content-between">
             <span className="font-medium text-lg text-900">Kalender Dokter</span>
             <Tag value="Live" severity="info" />
           </div>
-          <DataTable value={data?.kalender ?? []} paginator rows={3} responsiveLayout="scroll">
+          <DataTable value={data?.kalender ?? []} paginator rows={4} responsiveLayout="scroll">
             <Column field="NAMA_DOKTER" header="Nama Dokter" sortable />
             <Column
                 field="TANGGAL"
