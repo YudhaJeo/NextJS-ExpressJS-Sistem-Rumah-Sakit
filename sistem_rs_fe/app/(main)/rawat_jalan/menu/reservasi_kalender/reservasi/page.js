@@ -209,12 +209,21 @@ const ReservasiPasienPage = () => {
   };
 
   const handleEdit = (row) => {
-    setFormData({
-      ...row,
-      TANGGALRESERVASI: row.TANGGALRESERVASI?.split('T')[0] || '',
-    });
-    setDialogVisible(true);
-  };
+  let tanggal = '';
+  if (row.TANGGALRESERVASI) {
+    const d = new Date(row.TANGGALRESERVASI);
+    tanggal = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+      .toISOString()
+      .split('T')[0];
+  }
+
+  setFormData({
+    ...row,
+    TANGGALRESERVASI: tanggal,
+  });
+  setDialogVisible(true);
+};
+
 
   const handleDelete = (row) => {
     confirmDialog({

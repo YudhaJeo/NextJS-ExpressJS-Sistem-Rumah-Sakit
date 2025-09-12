@@ -72,9 +72,6 @@ export default function TabelKalender({ refresh }) {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
     }).format(date);
   };
 

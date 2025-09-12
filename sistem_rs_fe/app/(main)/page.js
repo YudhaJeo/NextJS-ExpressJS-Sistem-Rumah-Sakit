@@ -90,13 +90,33 @@ const Dashboard = () => {
             },
           ],
         });
-        setLineChartOptions({
-          plugins: { legend: { labels: { color: style.getPropertyValue('--text-color') } } },
-          scales: {
-            x: { ticks: { color: style.getPropertyValue('--text-color') } },
-            y: { ticks: { color: style.getPropertyValue('--text-color'), beginAtZero: true } },
+       setLineChartOptions({
+          plugins: {
+            legend: {
+              labels: {
+                color: style.getPropertyValue('--text-color')
+              }
+            }
           },
+          scales: {
+            x: {
+              ticks: {
+                color: style.getPropertyValue('--text-color')
+              }
+            },
+            y: {
+              beginAtZero: true, // mulai dari 0
+              suggestedMax: Math.max(
+                ...(resData.trend?.pasien ?? []),
+                ...(resData.trend?.dokter ?? [])
+              ) + 2, // kasih margin 2 biar gak mentok
+              ticks: {
+                color: style.getPropertyValue('--text-color')
+              }
+            }
+          }
         });
+
 
         const poliLabels = resData.distribusi?.labels ?? ['Umum', 'Gigi', 'Anak', 'Bedah'];
         const poliValues = resData.distribusi?.data ?? [10, 5, 7, 3];
@@ -257,7 +277,7 @@ const Dashboard = () => {
               {data?.table && (
                 <div className="col-12">
                   <Card>
-                    <div className="flex justify-content-between mb-3">
+                    <div className="flex justify-content-between mb-1">
                       <span className="font-medium text-lg text-900">Data Tabel Terkini</span>
                       <Tag value="Live" severity="info" />
                     </div>
@@ -272,7 +292,7 @@ const Dashboard = () => {
 
               <div className="col-12">
                 <Card>
-                  <div className="flex justify-content-between mb-3">
+                  <div className="flex justify-content-between mb-1">
                     <span className="font-medium text-lg text-900">Kalender Dokter</span>
                     <Tag value="Live" severity="info" />
                   </div>
@@ -313,7 +333,7 @@ const Dashboard = () => {
 
               <div className="col-12">
                 <Card>
-                  <div className="flex justify-content-between mb-3">
+                  <div className="flex justify-content-between mb-1">
                     <span className="font-medium text-lg text-900">Jadwal Reservasi</span>
                     <Tag value="Live" severity="info" />
                   </div>
@@ -354,6 +374,70 @@ const Dashboard = () => {
                         return <Tag value={status} severity={severity()} />;
                       }}
                     />
+                  </DataTable>
+                </Card>
+              </div>
+
+              <div className="col-12">
+                <Card>
+                  <div className="flex justify-content-between mb-1">
+                    <span className="font-medium text-lg text-900">Laporan Kasir</span>
+                    <Tag value="Live" severity="info" />
+                  </div>
+                  <DataTable value={data?.laporankasir ?? []} paginator rows={3} responsiveLayout="scroll">
+                   <Column field="NOINVOICE" header="No Invoice" />
+                               <Column field="NIK" header="NIK" />
+                               <Column field="NAMAPASIEN" header="Nama Pasien" />
+                               <Column field="ASURANSI" header="Asuransi" />
+                               <Column
+                                   field="TANGGALINVOICE"
+                                   header="Tgl Invoice"
+                                   body={(rowData) => {
+                                       const tgl = new Date(rowData.TANGGALINVOICE);
+                                       return tgl.toLocaleDateString("id-ID", {
+                                           day: "numeric",
+                                           month: "long",
+                                           year: "numeric",
+                                       });
+                                   }}
+                               />
+                               <Column
+                                   field="TOTALTAGIHAN"
+                                   header="Total Tagihan"
+                                   body={(rowData) =>
+                                       `Rp ${Number(rowData.TOTALTAGIHAN).toLocaleString("id-ID")}`
+                                   }
+                               />
+                               <Column
+                                   field="TOTALDEPOSIT"
+                                   header="Total Deposit"
+                                   body={(rowData) =>
+                                       `Rp ${Number(rowData.TOTALDEPOSIT).toLocaleString("id-ID")}`
+                                   }
+                               />
+                               <Column
+                                   field="TOTALANGSURAN"
+                                   header="Total Angsuran"
+                                   body={(rowData) =>
+                                       `Rp ${Number(rowData.TOTALANGSURAN).toLocaleString("id-ID")}`
+                                   }
+                               />
+                               <Column
+                                   field="SISA_TAGIHAN"
+                                   header="Sisa Tagihan"
+                                   body={(rowData) =>
+                                       `Rp ${Number(rowData.SISA_TAGIHAN || 0).toLocaleString("id-ID")}`
+                                   }
+                               />
+                               <Column
+                                   field="TOTALPEMBAYARAN"
+                                   header="Total Pembayaran"
+                                   body={(rowData) =>
+                                       `Rp ${Number(rowData.TOTALPEMBAYARAN || 0).toLocaleString("id-ID")}`
+                                   }
+                               />
+                               <Column field="METODE" header="Metode" />
+                               <Column field="STATUS" header="Status" />
                   </DataTable>
                 </Card>
               </div>

@@ -8,6 +8,41 @@ export const getDashboardInfo = async () => {
     const bedTerisi = await db('bed').where('STATUS', 'TERISI').count('* as total');
     const totalBed = await db('bed').count('* as total');
 
+    const laporankasir = await db('invoice as i')
+    .leftJoin("pembayaran as p", "i.IDINVOICE", "p.IDINVOICE")
+        .leftJoin("deposit_penggunaan as dp", "i.IDINVOICE", "dp.IDINVOICE")
+        .leftJoin("angsuran as a", "i.IDINVOICE", "a.IDINVOICE")
+        .leftJoin("pasien as ps", "i.NIK", "ps.NIK")
+        .leftJoin("asuransi as asr", "ps.IDASURANSI", "asr.IDASURANSI")
+        .select(
+            "i.IDINVOICE",
+            "i.NOINVOICE",
+            "i.TANGGALINVOICE",
+            "i.TOTALTAGIHAN",
+            "i.SISA_TAGIHAN",
+            "i.STATUS",
+            "i.NIK",
+            "ps.NAMALENGKAP as NAMAPASIEN",
+            "asr.NAMAASURANSI as ASURANSI",
+            db.raw("IFNULL(SUM(DISTINCT p.JUMLAHBAYAR),0) as TOTALPEMBAYARAN"), 
+            db.raw("IFNULL(SUM(DISTINCT dp.JUMLAH_PEMAKAIAN),0) as TOTALDEPOSIT"),
+            db.raw("IFNULL(SUM(DISTINCT a.NOMINAL),0) as TOTALANGSURAN"),
+            db.raw("COALESCE(MAX(p.METODEPEMBAYARAN), MAX(a.METODE), '-') as METODE")
+        )
+        .where("i.STATUS", "LUNAS")
+        .groupBy(
+            "i.IDINVOICE",
+            "i.NOINVOICE",
+            "i.TANGGALINVOICE",
+            "i.TOTALTAGIHAN",
+            "i.SISA_TAGIHAN",
+            "i.STATUS",
+            "i.NIK",
+            "ps.NAMALENGKAP",
+            "asr.NAMAASURANSI"
+        );
+
+
     const jumlahReservasi = await db('reservasi')
       .join('pasien', 'reservasi.NIK', 'pasien.NIK')
     .join('poli', 'reservasi.IDPOLI', 'poli.IDPOLI')
@@ -128,7 +163,8 @@ const trend = {
       distribusi,          
       bed,                 
       kalender: kalenderDokter,
-      reservasi: jumlahReservasi
+      reservasi: jumlahReservasi,
+      laporankasir: laporankasir,
     };
   } catch (error) {
     console.error('Error getDashboardInfo:', error);
