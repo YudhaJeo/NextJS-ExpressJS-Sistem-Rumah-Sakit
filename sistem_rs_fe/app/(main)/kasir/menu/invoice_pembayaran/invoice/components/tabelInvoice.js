@@ -67,7 +67,7 @@ const TabelInvoice = ({ data, loading, onDelete }) => {
   const actionBody = (rowData) => (
     <div className="flex gap-2">
       <a
-        href={`/invoice/${rowData.IDINVOICE}`}
+        href={`/kasir/menu/invoice_pembayaran/invoice/${rowData.IDINVOICE}`}
         target="_blank"
         rel="noopener noreferrer"
       >

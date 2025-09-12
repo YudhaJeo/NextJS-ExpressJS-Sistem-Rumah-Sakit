@@ -93,7 +93,7 @@ const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
   const actionBody = (row) => (
     <div className="flex gap-2">
       <a
-        href={`/pembayaran/${row.IDPEMBAYARAN}`}
+        href={`/kasir/menu/invoice_pembayaran/pembayaran/${row.IDPEMBAYARAN}`}
         target="_blank"
         rel="noopener noreferrer"
       >
