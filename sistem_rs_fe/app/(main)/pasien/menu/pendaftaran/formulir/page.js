@@ -55,8 +55,13 @@ const Page = () => {
     setLoading(true);
     try {
       const res = await axios.get(`${API_URL}/pendaftaran`);
-      setData(res.data.data);
-      setOriginalData(res.data.data);
+
+      const sorted = [...res.data.data].sort(
+        (a, b) => b.IDPENDAFTARAN - a.IDPENDAFTARAN
+      );
+
+      setData(sorted);
+      setOriginalData(sorted);
     } catch (err) {
       console.error('Gagal ambil data:', err);
     } finally {
