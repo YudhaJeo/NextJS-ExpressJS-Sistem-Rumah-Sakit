@@ -50,7 +50,7 @@ const TabelLaporanKomisi = ({ data, loading }) => {
   const actionBody = (rowData) => (
     <div className="flex gap-2 justify-center">
       <a
-        href={`/laporan_komisi/${rowData.IDKOMISI}`}
+        href={`/dokter/menu/laporan/laporan_komisi/${rowData.IDKOMISI}`}
         target="_blank"
         rel="noopener noreferrer"
       >
