@@ -13,8 +13,6 @@ const TabRuangan = () => {
   const [barChartOptions, setBarChartOptions] = useState({});
   const [polarChartData, setPolarChartData] = useState({});
   const [polarChartOptions, setPolarChartOptions] = useState({});
-  const [doughnutChartData, setDoughnutChartData] = useState({});
-  const [doughnutChartOptions, setDoughnutChartOptions] = useState({});
   const [radarChartData, setRadarChartData] = useState({});
   const [radarChartOptions, setRadarChartOptions] = useState({});
 
@@ -27,9 +25,15 @@ const TabRuangan = () => {
 
         const style = getComputedStyle(document.documentElement);
 
-        // Bar Chart (Horizontal)
         setBarChartData({
-          labels: ['Bed Tersedia', 'Bed Terisi', 'Jumlah Kamar', 'Jumlah Bangsal'],
+          labels: [
+            'Bed Tersedia',
+            'Bed Terisi',
+            'Jumlah Kamar',
+            'Jumlah Bangsal',
+            'Jumlah Jenis',
+            'Jumlah Bed'
+          ],
           datasets: [
             {
               label: 'Statistik Ruangan',
@@ -38,28 +42,34 @@ const TabRuangan = () => {
                 data.terisi,
                 data.jumlah_kamar,
                 data.jumlah_bangsal,
+                data.jumlah_jenis,
+                data.jumlah_bed,
               ],
               backgroundColor: [
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(153, 102, 255, 0.2)'
+                'rgba(46, 204, 113, 0.4)',  
+                'rgba(231, 76, 60, 0.4)',   
+                'rgba(52, 152, 219, 0.4)',  
+                'rgba(155, 89, 182, 0.4)',  
+                'rgba(241, 196, 15, 0.4)',  
+                'rgba(255, 105, 180, 0.4)', 
               ],
               borderColor: [
-                'rgb(255, 159, 64)',
-                'rgb(75, 192, 192)',
-                'rgb(54, 162, 235)',
-                'rgb(153, 102, 255)'
+                'rgb(46, 204, 113)',
+                'rgb(231, 76, 60)',
+                'rgb(52, 152, 219)',
+                'rgb(155, 89, 182)',
+                'rgb(241, 196, 15)',
+                'rgb(255, 105, 180)',       
               ],
               borderWidth: 1
-            },
-          ],
-        });
+            }
+          ]
+        });        
 
         setBarChartOptions({
-          indexAxis: 'y',
+          indexAxis: 'x',
           plugins: {
-            legend: { display: false },
+            legend: { display: true },
             tooltip: {
               callbacks: {
                 label: (context) => {
@@ -72,7 +82,7 @@ const TabRuangan = () => {
           },
           scales: {
             x: {
-              beginAtZero: true,
+              beginAtZero: false,
               grid: { color: style.getPropertyValue('--surface-border') },
               ticks: { 
                 color: style.getPropertyValue('--text-color'),
@@ -85,7 +95,6 @@ const TabRuangan = () => {
           },
         });
 
-        // Polar Chart
         setPolarChartData({
           labels: ['Bed Tersedia', 'Bed Terisi', 'Jumlah Kamar', 'Jumlah Bangsal'],
           datasets: [
@@ -131,45 +140,6 @@ const TabRuangan = () => {
           },
         });
 
-        // Doughnut Chart - Bed Utilization
-        const totalBed = data.tersedia + data.terisi;
-        setDoughnutChartData({
-          labels: ['Bed Terisi', 'Bed Tersedia'],
-          datasets: [
-            {
-              data: [data.terisi, data.tersedia],
-              backgroundColor: [
-                'rgba(75, 192, 192, 0.8)',
-                'rgba(255, 159, 64, 0.8)',
-              ],
-              borderColor: [
-                'rgb(75, 192, 192)',
-                'rgb(255, 159, 64)',
-              ],
-              borderWidth: 2,
-            },
-          ],
-        });
-
-        setDoughnutChartOptions({
-          cutout: '60%',
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { color: style.getPropertyValue('--text-color') },
-            },
-            tooltip: {
-              callbacks: {
-                label: (context) => {
-                  const percentage = ((context.parsed / totalBed) * 100).toFixed(1);
-                  return `${context.label}: ${context.parsed} bed (${percentage}%)`;
-                }
-              }
-            }
-          },
-        });
-
-        // Radar Chart - Kapasitas Overview
         setRadarChartData({
           labels: ['Bed Tersedia', 'Bed Terisi', 'Kamar', 'Bangsal'],
           datasets: [
@@ -250,7 +220,6 @@ const TabRuangan = () => {
 
   return (
     <div className="grid">
-      {/* Summary Cards */}
       {cards.map((card, i) => (
         <div className="col-12 md:col-6 xl:col-3" key={i}>
           <Card
@@ -283,7 +252,6 @@ const TabRuangan = () => {
         </div>
       ))}
 
-      {/* Metrics Summary Cards */}
       <div className="col-12 md:col-4">
         <Card className="shadow-2 h-full">
           <div className="text-center">
@@ -325,17 +293,6 @@ const TabRuangan = () => {
         </Card>
       </div>
 
-      {/* Charts Row 1 */}
-      <div className="col-12 lg:col-6">
-        <Card className="shadow-2 h-full">
-          <div className="flex justify-content-between align-items-center mb-3">
-            <span className="font-medium text-lg text-900">Distribusi Penggunaan Bed</span>
-            <Tag value="Live" severity="info" />
-          </div>
-          <Chart type="doughnut" data={doughnutChartData} options={doughnutChartOptions} className="w-full" />
-        </Card>
-      </div>
-
       <div className="col-12 lg:col-6">
         <Card className="shadow-2 h-full">
           <div className="flex justify-content-between align-items-center mb-3">
@@ -346,17 +303,6 @@ const TabRuangan = () => {
         </Card>
       </div>
 
-      {/* Charts Row 2 */}
-      <div className="col-12 lg:col-6">
-        <Card className="shadow-2 h-full">
-          <div className="flex justify-content-between align-items-center mb-3">
-            <span className="font-medium text-lg text-900">Statistik Fasilitas</span>
-            <Tag value="Live" severity="info" />
-          </div>
-          <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
-        </Card>
-      </div>
-
       <div className="col-12 lg:col-6">
         <Card className="shadow-2 h-full">
           <div className="flex justify-content-between align-items-center mb-3">
@@ -364,6 +310,16 @@ const TabRuangan = () => {
             <Tag value="Live" severity="info" />
           </div>
           <Chart type="polarArea" data={polarChartData} options={polarChartOptions} className="w-full" />
+        </Card>
+      </div>
+
+      <div className="col-12 lg:col-12">
+        <Card className="shadow-2 h-full">
+          <div className="flex justify-content-between align-items-center mb-3">
+            <span className="font-medium text-lg text-900">Statistik Fasilitas</span>
+            <Tag value="Live" severity="info" />
+          </div>
+          <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
         </Card>
       </div>
     </div>
