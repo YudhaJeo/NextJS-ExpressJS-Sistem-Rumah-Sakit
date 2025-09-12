@@ -92,6 +92,7 @@ const Page = () => {
         nik: item.NIK,
         NAMAPASIEN: item.NAMAPASIEN,
         NOINVOICE: item.NOINVOICE,
+        IDINVOICE: item.IDINVOICE,
       })));
     } catch (err) {
       console.error('Gagal ambil daftar deposit:', err);

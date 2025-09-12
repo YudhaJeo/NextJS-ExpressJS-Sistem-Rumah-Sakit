@@ -44,7 +44,7 @@ const FormDialogDepositPenggunaan = ({
       NIK: selected?.nik || '',
       NAMAPASIEN: selected?.NAMAPASIEN || '',
       NOINVOICE: selected?.NOINVOICE || '', 
-      IDINVOICE: selected?.IDINVOICE || selected?.value || null
+      IDINVOICE: selected?.IDINVOICE || null,
     });
   };
 

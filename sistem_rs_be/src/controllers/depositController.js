@@ -223,6 +223,7 @@ export async function getDepositOptions(req, res) {
         'deposit.SALDO_SISA',
         'pasien.NIK',
         'pasien.NAMALENGKAP as NAMAPASIEN',
+        'invoice.IDINVOICE',
         'invoice.NOINVOICE',
       );
     res.status(200).json({ success: true, data: rows });
