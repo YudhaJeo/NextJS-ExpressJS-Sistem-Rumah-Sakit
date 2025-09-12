@@ -63,8 +63,11 @@ const ReservasiPasienPage = () => {
     try {
       const res = await axios.get(`${API_URL}/reservasi`);
       const transformed = transformJadwalHariIni(res.data);
-      setData(transformed);
-      setOriginalData(transformed);
+
+      const sorted = [...transformed].sort((a, b) => b.IDRESERVASI - a.IDRESERVASI);
+
+      setData(sorted);
+      setOriginalData(sorted);
     } catch (err) {
       console.error('Gagal mengambil data:', err);
     } finally {
