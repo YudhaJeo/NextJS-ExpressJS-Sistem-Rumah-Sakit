@@ -40,7 +40,6 @@ const TabRanap = () => {
 
         const style = getComputedStyle(document.documentElement);
 
-        // Bar Chart (Horizontal)
         setBarChartData({
           labels: ['Aktif', 'Selesai', 'Tagihan', 'Laporan'],
           datasets: [
@@ -89,7 +88,6 @@ const TabRanap = () => {
           },
         });
 
-        // Polar Chart
         setPolarChartData({
           labels: ['Aktif', 'Selesai', 'Tagihan', 'Laporan'],
           datasets: [
@@ -126,17 +124,16 @@ const TabRanap = () => {
           },
         });
 
-        // Doughnut Chart
         setDoughnutChartData({
           labels: ['Aktif', 'Selesai', 'Tagihan', 'Laporan'],
           datasets: [
             {
               data: [data.aktif, data.selesai, data.tagihan, data.laporan],
               backgroundColor: [
-                'rgba(255, 159, 64, 0.8)',
-                'rgba(75, 192, 192, 0.8)',
-                'rgba(54, 162, 235, 0.8)',
-                'rgba(153, 102, 255, 0.8)',
+                'rgba(255, 159, 64, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
               ],
               borderColor: [
                 'rgb(255, 159, 64)',
@@ -168,7 +165,6 @@ const TabRanap = () => {
           },
         });
 
-        // Line Chart untuk trend
         const trendLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'];
         setLineChartData({
           labels: trendLabels,
@@ -179,11 +175,13 @@ const TabRanap = () => {
               borderColor: 'rgb(255, 159, 64)',
               backgroundColor: 'rgba(255, 159, 64, 0.1)',
               tension: 0.4,
+              fill: true,
             },
             {
               label: 'Rawat Inap Selesai',
               data: [data.selesai * 0.7, data.selesai * 0.8, data.selesai * 0.9, data.selesai, data.selesai * 1.2, data.selesai],
               borderColor: 'rgb(75, 192, 192)',
+              borderDash: [5, 5],
               backgroundColor: 'rgba(75, 192, 192, 0.1)',
               tension: 0.4,
             },
@@ -261,7 +259,6 @@ const TabRanap = () => {
 
   return (
     <div className="grid">
-      {/* Summary Cards */}
       {cards.map((card, i) => (
         <div className="col-12 md:col-6 xl:col-3" key={i}>
           <Card
@@ -294,7 +291,6 @@ const TabRanap = () => {
         </div>
       ))}
 
-      {/* Total Summary Card */}
       <div className="col-12">
         <Card className="shadow-2">
           <div className="flex align-items-center justify-content-between">
@@ -315,7 +311,26 @@ const TabRanap = () => {
         </Card>
       </div>
 
-      {/* Charts Row 1 */}
+      <div className="col-12 lg:col-6">
+        <Card className="shadow-2 h-full">
+          <div className="flex justify-content-between align-items-center mb-3">
+            <span className="font-medium text-lg text-900">Statistik Rawat Inap</span>
+            <Tag value="Live" severity="info" />
+          </div>
+          <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
+        </Card>
+      </div>
+
+      <div className="col-12 lg:col-6">
+        <Card className="shadow-2 h-full">
+          <div className="flex justify-content-between align-items-center mb-3">
+            <span className="font-medium text-lg text-900">Trend 6 Bulan Terakhir</span>
+            <Tag value="Estimasi" severity="warning" />
+          </div>
+          <Chart type="line" data={lineChartData} options={lineChartOptions} className="w-full" />
+        </Card>
+      </div>
+
       <div className="col-12 lg:col-6">
         <Card className="shadow-2 h-full">
           <div className="flex justify-content-between align-items-center mb-3">
@@ -336,26 +351,6 @@ const TabRanap = () => {
         </Card>
       </div>
 
-      {/* Charts Row 2 */}
-      <div className="col-12 lg:col-6">
-        <Card className="shadow-2 h-full">
-          <div className="flex justify-content-between align-items-center mb-3">
-            <span className="font-medium text-lg text-900">Statistik Rawat Inap</span>
-            <Tag value="Live" severity="info" />
-          </div>
-          <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
-        </Card>
-      </div>
-
-      <div className="col-12 lg:col-6">
-        <Card className="shadow-2 h-full">
-          <div className="flex justify-content-between align-items-center mb-3">
-            <span className="font-medium text-lg text-900">Trend 6 Bulan Terakhir</span>
-            <Tag value="Estimasi" severity="warning" />
-          </div>
-          <Chart type="line" data={lineChartData} options={lineChartOptions} className="w-full" />
-        </Card>
-      </div>
     </div>
   );
 };
