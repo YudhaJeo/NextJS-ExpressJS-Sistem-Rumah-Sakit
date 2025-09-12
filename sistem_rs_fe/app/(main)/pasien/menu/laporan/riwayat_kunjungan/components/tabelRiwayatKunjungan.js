@@ -11,13 +11,6 @@ import axios from "axios";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const TabelRiwayatKunjungan = ({ data, loading }) => {
-  const [adjustDialog, setAdjustDialog] = useState(false);
-  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState("");
-  const [fileName, setFileName] = useState("");
-  const [selectedRow, setSelectedRow] = useState(null);
-
-  const PDFViewer = dynamic(() => import("./PDFViewer"), { ssr: false });
 
   const formatTanggal = (tanggal) => {
     if (!tanggal) return "-";
@@ -45,7 +38,7 @@ const TabelRiwayatKunjungan = ({ data, loading }) => {
   const actionBody = (rowData) => (
     <div className="flex gap-2 justify-center">
       <a
-        href={`/riwayat_kunjungan/${rowData.NIK}`}
+        href={`/pasien/menu/laporan/riwayat_kunjungan/${rowData.NIK}`}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -84,20 +77,6 @@ const TabelRiwayatKunjungan = ({ data, loading }) => {
           style={{ width: "150px", textAlign: "center" }}
         />
       </DataTable>
-
-      <Dialog
-        visible={jsPdfPreviewOpen}
-        onHide={() => setJsPdfPreviewOpen(false)}
-        modal
-        style={{ width: "90vw", height: "90vh" }}
-        header="Preview PDF"
-      >
-        <PDFViewer
-          pdfUrl={pdfUrl}
-          fileName={fileName}
-          paperSize={selectedRow?.paperSize || "A4"}
-        />
-      </Dialog>
     </>
   );
 };

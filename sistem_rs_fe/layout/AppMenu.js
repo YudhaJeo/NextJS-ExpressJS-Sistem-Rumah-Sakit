@@ -89,7 +89,7 @@ const AppMenu = () => {
                 label: "Laporan",
                 icon: "pi pi-fw pi-chart-bar",
                 items: [
-                  { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/pasien/laporan/riwayat_kunjungan" },
+                  { label: "Riwayat Kunjungan", icon: "pi pi-fw pi-history", to: "/pasien/menu/laporan/riwayat_kunjungan" },
                 ],
               },
             ],
