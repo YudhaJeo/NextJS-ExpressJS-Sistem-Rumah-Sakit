@@ -57,15 +57,12 @@ export default function Page() {
   const fetchData = async () => {
     try {
       const res = await axios.get(`${API_URL}/dokumen`);
-      setData(res.data.data);
-      setOriginalData(res.data.data);
+      const sortedData = res.data.data.sort((a, b) => b.IDDOKUMEN - a.IDDOKUMEN);
+      setData(sortedData);
+      setOriginalData(sortedData);
     } catch (err) {
       console.error("Gagal mengambil data dokumen:", err);
     }
-  };
-
-  const showToast = (severity, summary, detail) => {
-    toastRef.current?.show({ severity, summary, detail, life: 3000 });
   };
 
   const validateForm = () => {

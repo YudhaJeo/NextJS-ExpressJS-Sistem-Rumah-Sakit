@@ -33,7 +33,6 @@ const FormDialogDokumen = ({
           onSubmit();
         }}
       >
-          <label className="font-medium">NIK Pasien</label>
         <div className  ="mt-2">
           <label>NIK Pasien</label>
           <Dropdown
@@ -69,8 +68,8 @@ const FormDialogDokumen = ({
           )}
         </div>
 
-        <div>
-          <label className="font-medium">Upload Dokumen</label>
+        <div className ="mt-2">
+          <label>Upload Dokumen</label>
           <FileUpload 
             className="mt-2"
             mode="basic"
