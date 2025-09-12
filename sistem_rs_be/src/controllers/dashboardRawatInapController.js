@@ -12,6 +12,14 @@ export const getRuanganDashboard = async (req, res) => {
       .count('IDBED as count')
       .first();
 
+    const NAMAJENIS = await db('jenis_bangsal')
+      .count('IDJENISBANGSAL as count')
+      .first();
+
+    const BED = await db('bed')
+      .count('IDBED as count')
+      .first();
+
     const KAMAR = await db('kamar')
       .count('IDKAMAR as count')
       .first();
@@ -24,8 +32,10 @@ export const getRuanganDashboard = async (req, res) => {
       data: {
         tersedia: Number(TERSEDIA.count),
         terisi: Number(TERISI.count),
-        jumlah_kamar: Number(KAMAR.count),
+        jumlah_jenis: Number(NAMAJENIS.count),
         jumlah_bangsal: Number(BANGSAL.count),
+        jumlah_kamar: Number(KAMAR.count),
+        jumlah_bed: Number(BED.count),
       }
     });
   } catch (err) {

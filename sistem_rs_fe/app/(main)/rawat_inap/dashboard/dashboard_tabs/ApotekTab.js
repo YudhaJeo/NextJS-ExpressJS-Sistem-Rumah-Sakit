@@ -47,7 +47,6 @@ const TabApotek = () => {
           'rgb(153, 102, 255)',
         ];
 
-        // Bar Chart (Horizontal)
         setBarChartData({
           labels,
           datasets: [{
@@ -87,14 +86,13 @@ const TabApotek = () => {
           }
         });
 
-        // Doughnut Chart - Inventory Distribution
         setDoughnutChartData({
           labels: ['Obat', 'Alkes'],
           datasets: [{
             data: [result.totalObat, result.totalAlkes],
             backgroundColor: [
-              'rgba(255, 159, 64, 0.8)',
-              'rgba(75, 192, 192, 0.8)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
             ],
             borderColor: [
               'rgb(255, 159, 64)',
@@ -150,7 +148,6 @@ const TabApotek = () => {
           }
         });
 
-        // Radar Chart - Performance Overview
         const maxValue = Math.max(...values);
         setRadarChartData({
           labels: ['Obat', 'Alkes', 'Supplier', 'Pemesanan'],
@@ -220,13 +217,11 @@ const TabApotek = () => {
 
   const totalInventory = (data.totalObat ?? 0) + (data.totalAlkes ?? 0);
   const obatPercentage = totalInventory > 0 ? Math.round(((data.totalObat ?? 0) / totalInventory) * 100) : 0;
-  const alkesPercentage = totalInventory > 0 ? Math.round(((data.totalAlkes ?? 0) / totalInventory) * 100) : 0;
   const avgItemPerSupplier = (data.totalSupplier ?? 0) > 0 ? Math.round(totalInventory / data.totalSupplier) : 0;
   const orderRatio = totalInventory > 0 ? Math.round(((data.totalPemesanan ?? 0) / totalInventory) * 100) : 0;
 
   return (
     <div className="grid">
-      {/* Summary Cards */}
       {cards.map((card, i) => (
         <div className="col-12 md:col-6 xl:col-3" key={i}>
           <Card
@@ -259,7 +254,6 @@ const TabApotek = () => {
         </div>
       ))}
 
-      {/* Metrics Summary Cards */}
       <div className="col-12 md:col-3">
         <Card className="shadow-2 h-full">
           <div className="text-center">
@@ -318,7 +312,6 @@ const TabApotek = () => {
         </Card>
       </div>
 
-      {/* Charts Row 1 */}
       <div className="col-12 lg:col-6">
         <Card className="shadow-2 h-full">
           <div className="flex justify-content-between align-items-center mb-3">
@@ -339,7 +332,6 @@ const TabApotek = () => {
         </Card>
       </div>
 
-      {/* Charts Row 2 */}
       <div className="col-12 lg:col-6">
         <Card className="shadow-2 h-full">
           <div className="flex justify-content-between align-items-center mb-3">
