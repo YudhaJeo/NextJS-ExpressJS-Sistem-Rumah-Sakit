@@ -40,8 +40,9 @@ const Page = () => {
     setLoading(true);
     try {
       const res = await axios.get(`${API_URL}/invoice`);
-      setData(res.data.data);
-      setOriginalData(res.data.data);
+       const sortedData = res.data.data.sort((a, b) => b.IDINVOICE - a.IDINVOICE);
+      setData(sortedData);
+      setOriginalData(sortedData);
     } catch (err) {
       console.error('Gagal ambil data invoice:', err);
     } finally {
