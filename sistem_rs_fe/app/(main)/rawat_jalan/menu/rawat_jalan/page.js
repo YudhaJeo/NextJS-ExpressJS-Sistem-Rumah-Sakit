@@ -9,7 +9,7 @@ import FilterTanggal from "@/app/components/filterTanggal";
 import FormDialogRawatJalan from "./components/formDialogRiwayat";
 import TabelRawatJalan from "./components/tabelRiwayat";
 import { Toast } from "primereact/toast";
-import HeaderBar from "@/app/components/headerbar";
+import HeaderBar from './components/customHeaderBar';
 import DetailRawatJalan from "./components/detailRawatJalan";
 import { Button } from "primereact/button";
 import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
@@ -48,6 +48,8 @@ const RawatJalanPage = () => {
   const [fileName, setFileName] = useState("");
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
   const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
+
+  const [statusFilter, setStatusFilter] = useState("");
 
   const toastRef = useRef(null);
   const toastUpload = useRef(null);
@@ -207,6 +209,39 @@ const RawatJalanPage = () => {
     });
   };
 
+  const statusOptions = [
+    { label: "Semua", value: "SEMUA"},
+    { label: "Dalam Antrian", value: "Dalam Antrian" },
+    { label: "Diperiksa", value: "Diperiksa" },
+    { label: "Selesai", value: "Selesai" },
+    { label: "Batal", value: "Batal" },
+  ];
+
+  const handleSearch = (keyword, status = statusFilter) => {
+    let filtered = originalData;
+  
+    if (keyword) {
+      filtered = filtered.filter((item) =>
+        item.STATUSKUNJUNGAN?.toLowerCase().includes(keyword.toLowerCase()) ||
+        item.NAMALENGKAP?.toLowerCase().includes(keyword.toLowerCase()) ||
+        item.NOREKAMMEDIS?.toLowerCase().includes(keyword.toLowerCase()) ||
+        item.POLI?.toLowerCase().includes(keyword.toLowerCase()) ||
+        item.STATUSRAWAT?.toLowerCase().includes(keyword.toLowerCase()) 
+      );
+    }
+  
+    if (status !== "SEMUA") {
+      filtered = filtered.filter((item) => item.STATUSKUNJUNGAN === status);
+    }
+  
+    setData(filtered);
+  };
+
+  const handleStatusChange = (e) => {
+    setStatusFilter(e.value);
+    handleSearch("", e.value); 
+  };
+
   return (
     <div className="card p-4">
       <ToastNotifier ref={toastRef} />
@@ -227,7 +262,7 @@ const RawatJalanPage = () => {
       <div className="flex items-center justify-end">
         <Button
           icon="pi pi-print"
-          className="p-button-warning mt-3"
+          className="p-button-warning mt-3 mr-2"
           tooltip="Atur Print Margin"
           onClick={() => {
             handleDateFilter();
@@ -236,16 +271,11 @@ const RawatJalanPage = () => {
         />
         <HeaderBar
           title=""
-          placeholder="Cari nama pasien atau status kunjungan"
-          onSearch={(keyword) => {
-            if (!keyword) return fetchData();
-            const filtered = data.filter(
-              (item) =>
-                item.STATUSKUNJUNGAN.toLowerCase().includes(keyword.toLowerCase()) ||
-                item.NAMALENGKAP.toLowerCase().includes(keyword.toLowerCase())
-            );
-            setData(filtered);
-          }}
+          placeholder="Cari pasien"
+          onSearch={handleSearch}
+          statusFilter={statusFilter}
+          statusOptions={statusOptions}
+          handleStatusChange={handleStatusChange}
         />
       </div>
       </div>
