@@ -35,13 +35,7 @@ export async function getAngsuranByInvoice(req, res) {
 export async function createAngsuran(req, res) {
   const trx = await db.transaction();
   try {
-    const {
-      IDINVOICE,
-      NOMINAL,
-      METODE,
-      IDBANK,
-      KETERANGAN
-    } = req.body;
+    const { IDINVOICE, NOMINAL, METODE, IDBANK, KETERANGAN } = req.body;
 
     const invoice = await trx('invoice').where('IDINVOICE', IDINVOICE).first();
     if (!invoice) {
@@ -49,15 +43,7 @@ export async function createAngsuran(req, res) {
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    const totalBayarSebelumnya = await trx('angsuran')
-      .where('IDINVOICE', IDINVOICE)
-      .sum({ total: 'NOMINAL' })
-      .first();
-
-    const sudahDibayar = parseFloat(totalBayarSebelumnya.total) || 0;
-    const sisa = invoice.SISA_TAGIHAN;
-
-    if (NOMINAL > sisa) {
+    if (NOMINAL > invoice.SISA_TAGIHAN) {
       await trx.rollback();
       return res.status(400).json({ success: false, message: 'Nominal melebihi sisa tagihan' });
     }
@@ -79,15 +65,15 @@ export async function createAngsuran(req, res) {
       KETERANGAN
     }, trx);
 
-    const totalSetelahBayar = sudahDibayar + NOMINAL;
-    const statusBaru = totalSetelahBayar >= invoice.TOTALTAGIHAN ? 'LUNAS' : 'BELUM_LUNAS';
+    const totalSetelahBayar = (invoice.TOTALANGSURAN || 0) + NOMINAL;
+    const sisaTagihanBaru = invoice.SISA_TAGIHAN - NOMINAL;
 
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
         TOTALANGSURAN: totalSetelahBayar,
-        SISA_TAGIHAN: invoice.TOTALTAGIHAN + invoice.TOTALDEPOSIT - totalSetelahBayar,
-        STATUS: statusBaru,
+        SISA_TAGIHAN: sisaTagihanBaru,
+        STATUS: sisaTagihanBaru <= 0 ? 'LUNAS' : 'BELUM_LUNAS',
         UPDATED_AT: db.fn.now()
       });
 
@@ -104,13 +90,7 @@ export async function updateAngsuran(req, res) {
   const trx = await db.transaction();
   try {
     const { id } = req.params;
-    const {
-      IDINVOICE,
-      NOMINAL,
-      METODE,
-      IDBANK,
-      KETERANGAN
-    } = req.body;
+    const { IDINVOICE, NOMINAL, METODE, IDBANK, KETERANGAN } = req.body;
 
     const angsuranLama = await trx('angsuran').where('IDANGSURAN', id).first();
     if (!angsuranLama) {
@@ -124,18 +104,13 @@ export async function updateAngsuran(req, res) {
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    const totalBayarLain = await trx('angsuran')
-      .where('IDINVOICE', IDINVOICE)
-      .andWhereNot('IDANGSURAN', id)
-      .sum({ total: 'NOMINAL' })
-      .first();
+    // rollback dulu angsuran lama
+    const totalAngsuranSebelum = (invoice.TOTALANGSURAN || 0) - angsuranLama.NOMINAL;
+    const sisaTagihanSebelum = (invoice.SISA_TAGIHAN || 0) + angsuranLama.NOMINAL;
 
-    const totalLain = parseFloat(totalBayarLain.total) || 0;
-    const totalSetelahUpdate = totalLain + NOMINAL;
-
-    if (totalSetelahUpdate > invoice.TOTALTAGIHAN + invoice.TOTALDEPOSIT) {
+    if (NOMINAL > sisaTagihanSebelum) {
       await trx.rollback();
-      return res.status(400).json({ success: false, message: 'Nominal total melebihi sisa tagihan' });
+      return res.status(400).json({ success: false, message: 'Nominal melebihi sisa tagihan' });
     }
 
     await trx('angsuran').where('IDANGSURAN', id).update({
@@ -146,14 +121,15 @@ export async function updateAngsuran(req, res) {
       UPDATED_AT: trx.fn.now()
     });
 
-    const statusBaru = totalSetelahUpdate >= invoice.TOTALTAGIHAN ? 'LUNAS' : 'BELUM_LUNAS';
+    const totalSetelahUpdate = totalAngsuranSebelum + NOMINAL;
+    const sisaTagihanBaru = sisaTagihanSebelum - NOMINAL;
 
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
         TOTALANGSURAN: totalSetelahUpdate,
-        SISA_TAGIHAN: invoice.TOTALTAGIHAN + invoice.TOTALDEPOSIT - totalSetelahUpdate,
-        STATUS: statusBaru,
+        SISA_TAGIHAN: sisaTagihanBaru,
+        STATUS: sisaTagihanBaru <= 0 ? 'LUNAS' : 'BELUM_LUNAS',
         UPDATED_AT: trx.fn.now()
       });
 
@@ -178,30 +154,23 @@ export async function deleteAngsuran(req, res) {
     }
 
     const { IDINVOICE } = angsuran;
-
-    await trx('angsuran').where('IDANGSURAN', id).del();
-
-    const totalAngsuran = await trx('angsuran')
-      .where('IDINVOICE', IDINVOICE)
-      .sum({ total: 'NOMINAL' })
-      .first();
-
-    const totalBayar = parseFloat(totalAngsuran.total) || 0;
-
     const invoice = await trx('invoice').where('IDINVOICE', IDINVOICE).first();
     if (!invoice) {
       await trx.rollback();
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    const statusBaru = totalBayar >= invoice.TOTALTAGIHAN ? 'LUNAS' : 'BELUM_LUNAS';
+    await trx('angsuran').where('IDANGSURAN', id).del();
+
+    const totalSetelahHapus = (invoice.TOTALANGSURAN || 0) - angsuran.NOMINAL;
+    const sisaTagihanBaru = (invoice.SISA_TAGIHAN || 0) + angsuran.NOMINAL;
 
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
-        TOTALANGSURAN: totalBayar,
-        SISA_TAGIHAN: invoice.TOTALTAGIHAN + invoice.TOTALDEPOSIT - totalBayar,
-        STATUS: statusBaru,
+        TOTALANGSURAN: totalSetelahHapus,
+        SISA_TAGIHAN: sisaTagihanBaru,
+        STATUS: sisaTagihanBaru <= 0 ? 'LUNAS' : 'BELUM_LUNAS',
         UPDATED_AT: trx.fn.now()
       });
 
