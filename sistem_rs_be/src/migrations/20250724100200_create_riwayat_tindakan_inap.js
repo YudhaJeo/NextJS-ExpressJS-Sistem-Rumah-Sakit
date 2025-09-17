@@ -1,5 +1,3 @@
-// sistem_rs_be\src\migrations\20250724100200_create_riwayat_tindakan_inap.js
-
 export const up = function (knex) {
   return knex.schema.createTable('riwayat_tindakan_inap', (table) => {
     table.increments('IDRIWAYATTINDAKANINAP').primary();

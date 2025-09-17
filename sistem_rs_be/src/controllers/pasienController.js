@@ -21,8 +21,6 @@ export async function createPasien(req, res) {
     res.json({ message: 'Pasien berhasil ditambahkan' });
   } catch (err) {
     res.status(500).json({ error: err.message });
-    console.log(req.body)
-    console.log(err)
   }
 }
 

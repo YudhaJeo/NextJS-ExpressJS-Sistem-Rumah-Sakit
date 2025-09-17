@@ -1,4 +1,3 @@
-// src/migrations/20250718130000_create_tindakan_inap.js
 export const up = function (knex) {
   return knex.schema.createTable('tindakan_inap', (table) => {
       table.increments('IDTINDAKANINAP').primary();

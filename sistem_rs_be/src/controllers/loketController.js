@@ -18,8 +18,6 @@ export async function createLoket(req, res) {
     res.json({ message: 'Loket berhasil ditambahkan' });
   } catch (err) {
     res.status(500).json({ error: err.message });
-    console.log(req.body);
-    console.log(err);
   }
 }
 

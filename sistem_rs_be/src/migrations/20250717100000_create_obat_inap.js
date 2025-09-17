@@ -1,4 +1,3 @@
-// src/migrations/20250715130000_create_obat_inap.js
 export const up = function (knex) {
   return knex.schema.createTable('obat_inap', (table) => {
       table.increments('IDOBATINAP').primary();

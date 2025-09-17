@@ -1,4 +1,3 @@
-// src/migrations/20250630090200_create_asuransi_table.js
 export const up = function (knex) {
     return knex.schema.createTable('asuransi', (table) => {
       table.increments('IDASURANSI').primary();

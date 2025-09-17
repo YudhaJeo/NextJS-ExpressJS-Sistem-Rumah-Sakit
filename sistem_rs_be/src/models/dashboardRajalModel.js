@@ -56,18 +56,3 @@ export const getKalenderDokter = async () => {
     throw error;
   }
 };
-
-
-
-// export const getStatistikBulanan = async () => {
-//   try {
-//     return await db('laporan_dokter')
-//       .select(db.raw('MONTH(TANGGAL) as bulan'), db.raw('COUNT(*) as total'))
-//       .whereRaw('YEAR(TANGGAL) = YEAR(CURDATE())')
-//       .groupByRaw('MONTH(TANGGAL)')
-//       .orderBy('bulan', 'asc');
-//   } catch (error) {
-//     console.error('Error getStatistikBulanan:', error);
-//     throw error;
-//   }
-// };

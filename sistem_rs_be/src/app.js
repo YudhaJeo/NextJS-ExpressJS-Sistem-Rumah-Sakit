@@ -12,7 +12,6 @@ import asuransiRoutes from './routes/asuransiRoutes.js';
 import agamaRoutes from './routes/agamaRoutes.js';
 import loketRoutes from './routes/loketRoutes.js';
 import antrianRoutes from './routes/antrianRoutes.js';
-import printerRoutes from './routes/printerRoutes.js';
 import poliRoutes from './routes/poliRoutes.js';
 import dokterRoutes from './routes/dokterRoutes.js';
 import dashboardPasienRoutes from './routes/dashboardPasienRoutes.js';
@@ -57,14 +56,12 @@ import dashboardApotekRoutes from './routes/dashboardApotekRoutes.js';
 import dashboardRajalRoutes from './routes/dashboardRajalRoutes.js';
 import laporanPembayaranRoutes from './routes/laporanPembayaranRoutes.js';
 
-const NEXT_URL = process.env.NEXT_PUBLIC_URL;
-
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({ 
-    origin: `${NEXT_URL}`, 
-    credentials: true 
+    origin: '*', 
+    credentials: false 
 }));
 
 app.get(/^\/uploads\/(.*)/, async (req, res) => {
@@ -90,7 +87,6 @@ app.use('/api/asuransi', asuransiRoutes)
 app.use('/api/agama', agamaRoutes);
 app.use('/api/loket', loketRoutes);
 app.use('/api/antrian', antrianRoutes);
-app.use('/api/printer', printerRoutes);
 app.use('/api/poli', poliRoutes);
 app.use('/api/dokter', dokterRoutes);
 app.use('/api/jenis_bangsal', jenisBangsalRoutes);

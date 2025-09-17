@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_be\src\routes\riwayatJalanRoutes.js
 import express from 'express';
 import * as RiwayatJalanController from '../controllers/riwayatJalanController.js';
 

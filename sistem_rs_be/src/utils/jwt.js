@@ -6,6 +6,6 @@ export const generateToken = async (payload) => {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS512' })
     .setIssuedAt()
-    .setExpirationTime('1d') // expired dalam 1 hari
+    .setExpirationTime('1d') 
     .sign(secret);
 };

@@ -1,5 +1,3 @@
-// sistem_rs_be\src\migrations\20250726100200_create_riwayat_tindakan_jalan.js
-
 export const up = function (knex) {
   return knex.schema.createTable('riwayat_tindakan_jalan', (table) => {
     table.increments('IDRIWAYATTINDAKANJALAN').primary();

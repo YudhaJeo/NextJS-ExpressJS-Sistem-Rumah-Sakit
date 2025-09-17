@@ -1,5 +1,3 @@
-// src/migrations/20250715120000_create_tindakan_medis.js
-
 export const up = function (knex) {
   return knex.schema.createTable('tindakan_medis', (table) => {
     table.increments('IDTINDAKAN').primary();
