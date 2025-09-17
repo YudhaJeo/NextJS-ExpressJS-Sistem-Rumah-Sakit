@@ -57,14 +57,12 @@ import dashboardApotekRoutes from './routes/dashboardApotekRoutes.js';
 import dashboardRajalRoutes from './routes/dashboardRajalRoutes.js';
 import laporanPembayaranRoutes from './routes/laporanPembayaranRoutes.js';
 
-const NEXT_URL = process.env.NEXT_PUBLIC_URL;
-
 const app = express();
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({ 
-    origin: `${NEXT_URL}`, 
-    credentials: true 
+    origin: '*', 
+    credentials: false 
 }));
 
 app.get(/^\/uploads\/(.*)/, async (req, res) => {
