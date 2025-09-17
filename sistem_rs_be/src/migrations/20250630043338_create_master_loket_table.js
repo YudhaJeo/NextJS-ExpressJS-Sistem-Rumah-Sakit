@@ -4,7 +4,7 @@
  */
 export const up = function (knex) {
   return knex.schema.createTable('loket', (table) => {
-    table.increments('NO').primary(); // ID utama (auto increment)
+    table.increments('NO').primary(); 
     table.string('NAMALOKET', 100).notNullable();
     table.string('KODE', 10).unique().notNullable();
     table.string('DESKRIPSI', 255);

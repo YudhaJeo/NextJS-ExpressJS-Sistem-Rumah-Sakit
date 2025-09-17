@@ -1,4 +1,3 @@
-// src/migrations/20250630090100_create_agama_table.js
 export const up = function (knex) {
     return knex.schema.createTable('agama', (table) => {
       table.increments('IDAGAMA').primary();

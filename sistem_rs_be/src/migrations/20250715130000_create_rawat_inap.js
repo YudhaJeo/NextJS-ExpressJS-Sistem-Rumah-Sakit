@@ -1,5 +1,3 @@
-// src/migrations/20250715130000_create_rawat_inap.js
-
 export const up = function (knex) {
   return knex.schema.createTable('rawat_inap', (table) => {
     table.increments('IDRAWATINAP').primary();

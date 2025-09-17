@@ -1,4 +1,3 @@
-// src/migrations/20250714120000_create_alkes_table.js
 export const up = function (knex) {
   return knex.schema.createTable('alkes', (table) => {
     table.increments('IDALKES').primary(); 

@@ -104,7 +104,6 @@ export async function updateAngsuran(req, res) {
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    // rollback dulu angsuran lama
     const totalAngsuranSebelum = (invoice.TOTALANGSURAN || 0) - angsuranLama.NOMINAL;
     const sisaTagihanSebelum = (invoice.SISA_TAGIHAN || 0) + angsuranLama.NOMINAL;
 

@@ -1,4 +1,3 @@
-  // src/migrations/20250705111500_create_bed_table.js
   export const up = function (knex) {
     return knex.schema.createTable('bed', (table) => {
       table.increments('IDBED').primary();

@@ -184,7 +184,6 @@ export async function insertFromRawatInap(rawatInap) {
       JENIS: 'RAWAT INAP',
       IDRIWAYATINAP,
     });
-    console.log('✅ Kunjungan ranap inserted:', pasienData.NIK, IDRIWAYATINAP);
   }
 
   return IDRIWAYATINAP;

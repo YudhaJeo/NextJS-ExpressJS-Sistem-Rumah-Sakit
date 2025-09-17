@@ -1,5 +1,3 @@
-// sistem_rs_be\src\migrations\20250724100000_create_riwayat_rawat_inap.js
-
 export const up = function (knex) {
   return knex.schema.createTable('riwayat_rawat_inap', (table) => {
     table.increments('IDRIWAYATINAP').primary();

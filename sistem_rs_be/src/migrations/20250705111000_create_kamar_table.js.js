@@ -1,4 +1,3 @@
-// src/migrations/20250705111000_create_kamar_table.js
 export const up = function (knex) {
     return knex.schema.createTable('kamar', (table) => {
       table.increments('IDKAMAR').primary();

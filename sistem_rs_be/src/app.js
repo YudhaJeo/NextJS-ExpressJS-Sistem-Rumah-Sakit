@@ -12,7 +12,6 @@ import asuransiRoutes from './routes/asuransiRoutes.js';
 import agamaRoutes from './routes/agamaRoutes.js';
 import loketRoutes from './routes/loketRoutes.js';
 import antrianRoutes from './routes/antrianRoutes.js';
-import printerRoutes from './routes/printerRoutes.js';
 import poliRoutes from './routes/poliRoutes.js';
 import dokterRoutes from './routes/dokterRoutes.js';
 import dashboardPasienRoutes from './routes/dashboardPasienRoutes.js';
@@ -88,7 +87,6 @@ app.use('/api/asuransi', asuransiRoutes)
 app.use('/api/agama', agamaRoutes);
 app.use('/api/loket', loketRoutes);
 app.use('/api/antrian', antrianRoutes);
-app.use('/api/printer', printerRoutes);
 app.use('/api/poli', poliRoutes);
 app.use('/api/dokter', dokterRoutes);
 app.use('/api/jenis_bangsal', jenisBangsalRoutes);

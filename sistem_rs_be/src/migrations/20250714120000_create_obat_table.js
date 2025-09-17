@@ -1,4 +1,3 @@
-// src/migrations/20250714120000_create_obat_table.js
 export const up = function (knex) {
     return knex.schema.createTable('obat', (table) => {
       table.increments('IDOBAT').primary(); 

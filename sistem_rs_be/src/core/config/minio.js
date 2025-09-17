@@ -13,7 +13,6 @@ const minioClient = new Client({
   const exists = await minioClient.bucketExists(bucketName).catch(() => false);
   if (!exists) {
     await minioClient.makeBucket(bucketName, "us-east-1");
-    console.log("✅ Bucket 'uploads' created");
   }
 })();
 

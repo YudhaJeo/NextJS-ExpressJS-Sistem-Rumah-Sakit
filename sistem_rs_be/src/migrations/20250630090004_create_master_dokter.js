@@ -1,4 +1,3 @@
-// src/migrations/20250630090300_create_master_dokter_table.js
 export const up = function (knex) {
   return knex.schema.createTable('dokter', (table) => {
     table.increments('IDDOKTER').primary();

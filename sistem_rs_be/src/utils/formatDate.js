@@ -18,7 +18,6 @@ export const formatMariaDBDatetime = (argsDate) => {
   const minutes = pad(date.getMinutes());
   const seconds = pad(date.getSeconds());
 
-  console.log(`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`);
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };

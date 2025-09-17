@@ -1,6 +1,5 @@
 import express from 'express';
 import * as DepositController from '../controllers/depositController.js';
-import { verifyToken } from '../middlewares/jwt.js';
 
 const router = express.Router();
 
