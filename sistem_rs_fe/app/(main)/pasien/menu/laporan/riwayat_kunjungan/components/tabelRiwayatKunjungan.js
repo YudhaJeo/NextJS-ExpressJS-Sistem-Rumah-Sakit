@@ -1,14 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { Dialog } from "primereact/dialog";
-import dynamic from "next/dynamic";
-import axios from "axios";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const TabelRiwayatKunjungan = ({ data, loading }) => {
 
@@ -20,19 +14,6 @@ const TabelRiwayatKunjungan = ({ data, loading }) => {
       month: "long",
       year: "numeric",
     });
-  };
-
-  const handleOpenAdjust = async (rowData) => {
-    try {
-      const res = await axios.get(
-        `${API_URL}/riwayat_kunjungan/${rowData.NIK}`
-      );
-      setSelectedRow(res.data.data);
-      setAdjustDialog(true);
-    } catch (err) {
-      console.error("Gagal ambil detail:", err);
-      alert("Gagal mengambil detail riwayat kunjungan");
-    }
   };
 
   const actionBody = (rowData) => (
