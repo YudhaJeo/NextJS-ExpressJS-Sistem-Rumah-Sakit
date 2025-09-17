@@ -2,8 +2,6 @@
 
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 import TabelDokter from "./components/tabelDokter";
 import FormDokter from "./components/formDialogDokter";
 import HeaderBar from "@/app/components/headerbar";

@@ -4,7 +4,6 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
-import React from 'react';
 
 const TabelPrinter = ({ data, loading, onEdit, onDelete }) => {
   const statusTemplate = (rowData) => {

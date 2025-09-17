@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { Card } from 'primereact/card';
 import { Chart } from 'primereact/chart';
 import { Tag } from 'primereact/tag';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 

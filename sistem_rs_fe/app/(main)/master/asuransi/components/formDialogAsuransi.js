@@ -3,7 +3,6 @@
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import React from 'react';
 
 const FormDialogAsuransi = ({ visible, onHide, onSubmit, form, setForm, errors }) => {
   const inputClass = (field) =>

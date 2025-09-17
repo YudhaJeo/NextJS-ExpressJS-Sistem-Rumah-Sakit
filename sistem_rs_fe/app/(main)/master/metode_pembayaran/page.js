@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import TabelMetodePembayaran from './components/tabelMetodePembayaran';
 import FormDialogMetodePembayaran from './components/formDialogMetodePembayaran';

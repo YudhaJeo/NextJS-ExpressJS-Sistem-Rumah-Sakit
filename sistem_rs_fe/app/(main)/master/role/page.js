@@ -2,8 +2,6 @@
 
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import TabelRole from './components/tabelRole';
 import FormDialogRole from './components/formDialogRole';
 import HeaderBar from '@/app/components/headerbar';
@@ -35,7 +33,6 @@ const PageRole = () => {
   const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
 
   const toastRef = useRef(null);
-  const router = useRouter();
 
   useEffect(() => {
     fetchRole();

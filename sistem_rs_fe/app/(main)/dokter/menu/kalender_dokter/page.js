@@ -2,7 +2,6 @@
 
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import TabelKalender from './components/tabelKalender';
 import FormDialogKalender from './components/formDialogKalender';

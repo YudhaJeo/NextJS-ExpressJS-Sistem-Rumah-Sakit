@@ -2,8 +2,6 @@
 
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 import TabelPoli from "./components/tabelPoli";
 import FormPoli from "./components/formDialogPoli";
 import HeaderBar from "@/app/components/headerbar";
@@ -37,7 +35,6 @@ const PoliPage = () => {
   const [errors, setErrors] = useState({});
 
   const toastRef = useRef(null);
-  const router = useRouter();
 
   useEffect(() => {
     fetchPoli();

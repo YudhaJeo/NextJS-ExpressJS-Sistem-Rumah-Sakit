@@ -2,8 +2,6 @@
 
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import TabelReservasiPasien from './components/tabelReservasi';
 import FormReservasiPasien from './components/formReservasi';
 import HeaderBar from '@/app/components/headerbar';

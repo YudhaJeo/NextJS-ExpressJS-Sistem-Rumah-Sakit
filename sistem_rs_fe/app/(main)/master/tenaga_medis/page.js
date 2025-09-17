@@ -2,8 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import HeaderBar from "@/app/components/headerbar";
@@ -29,7 +27,6 @@ const Page = () => {
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
   const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
   const toastRef = useRef(null);
-  const router = useRouter();
 
   const [form, setForm] = useState({
     IDTENAGAMEDIS: 0,

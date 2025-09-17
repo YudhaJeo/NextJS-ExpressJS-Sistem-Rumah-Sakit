@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import TabelPendaftaran from './components/tabelFormulir';
 import FormDialogPendaftaran from './components/formDialogFormulir';
