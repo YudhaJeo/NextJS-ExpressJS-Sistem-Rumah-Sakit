@@ -9,7 +9,7 @@ import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { ProgressSpinner } from 'primereact/progressspinner'
-import AdjustPrintMarginLaporan from '../components/AdjustPrintMarginLaporan'
+import AdjustPrintMarginLaporan from './components/AdjustPrintMarginLaporan'
 
 const PDFViewer = dynamic(
   () => import('../components/PDFViewer'),
