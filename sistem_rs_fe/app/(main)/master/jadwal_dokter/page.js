@@ -55,6 +55,7 @@ const DokterPage = () => {
             const res = await axios.get(`${API_URL}/dokter`);
             setData(res.data);
             setOriginalData(res.data);
+            console.log("Fetch Dokter", res.data)
         } catch (err) {
             console.error('Gagal mengambil data:', err);
         } finally {
@@ -68,7 +69,7 @@ const DokterPage = () => {
                 label: `${poli.IDPOLI} - ${poli.NAMAPOLI}`,
                 value: poli.IDPOLI,
             }));
-
+            console.log("Fetch Poli:", options)
             setPoliOptions(options);
         } catch (err) {
             console.error('Gagal ambil data poli:', err);
@@ -77,17 +78,34 @@ const DokterPage = () => {
 
     const fetchTenaga = async () => {
         try {
-            const res = await axios.get(`${API_URL}/tenaga_medis`);
-            const options = res.data.data.map((master_tenaga_medis) => ({
-                label: `${master_tenaga_medis.NAMALENGKAP} - ${master_tenaga_medis.JENISTENAGAMEDIS}`,
-                value: master_tenaga_medis.IDTENAGAMEDIS,
-            }));
-
-            setTenagaOptions(options);
+          const resTenaga = await axios.get(`${API_URL}/tenaga_medis`);
+          const tenagaData = resTenaga.data.data;
+      
+          const dokterOnly = tenagaData.filter(
+            (tenaga) => tenaga.JENISTENAGAMEDIS === "Dokter"
+          );
+      
+          const resDokter = await axios.get(`${API_URL}/dokter`);
+          const dokterData = resDokter.data;
+      
+          const options = dokterOnly.map((tenaga) => {
+            const dokter = dokterData.find(
+              (d) => d.IDTENAGAMEDIS === tenaga.IDTENAGAMEDIS
+            );
+      
+            return {
+              label: `${tenaga.NAMALENGKAP} - ${dokter ? dokter.NAMAPOLI : ""}`,
+              value: tenaga.IDTENAGAMEDIS,
+              IDPOLI: dokter ? dokter.IDPOLI : null,
+              NAMAPOLI: dokter ? dokter.NAMAPOLI : null,
+            };
+          });
+      
+          setTenagaOptions(options);
         } catch (err) {
-            console.error('Gagal ambil data tenaga:', err);
+          console.error("Gagal ambil data tenaga/dokter:", err);
         }
-    };
+    };      
 
     const handleSearch = (keyword) => {
         if (!keyword) {

@@ -4,6 +4,7 @@ import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
+import { InputText } from 'primereact/inputtext';
 
 const hariList = ['Senin', 'Selasa', 'Rabu', 'Kamis', "Jum'at"];
 
@@ -39,31 +40,36 @@ const FormDialogDokter = ({ visible, formData, onHide, onChange, onSubmit, poliO
           onSubmit();
         }}
       >
-        <div className ="mt-2">
+        <div className="mt-2">
           <label>Nama Dokter</label>
           <Dropdown
             className="w-full mt-2"
             options={tenagaOptions}
             value={formData.IDTENAGAMEDIS}
-            onChange={(e) => onChange({ ...formData, IDTENAGAMEDIS: e.value })}
+            onChange={(e) => {
+              const selected = tenagaOptions.find((opt) => opt.value === e.value);
+              onChange({ 
+                ...formData, 
+                IDTENAGAMEDIS: e.value,
+                IDPOLI: selected ? selected.IDPOLI : formData.IDPOLI,   
+                NAMAPOLI: selected ? selected.NAMAPOLI : formData.NAMAPOLI 
+              });
+            }}
             placeholder="Pilih Dokter"
             filter
             showClear
           />
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label>Nama Poli</label>
-          <Dropdown
+          <InputText
+            readOnly
             className="w-full mt-2"
-            options={poliOptions}
-            value={formData.IDPOLI}
-            onChange={(e) => onChange({ ...formData, IDPOLI: e.value })}
-            placeholder="Pilih Poli"
-            filter
-            showClear
+            value={formData.NAMAPOLI || ""} 
           />
         </div>
+
 
         <div className ="mt-2">
           <label className="block mb-2 font-semibold">Jadwal Praktek</label>

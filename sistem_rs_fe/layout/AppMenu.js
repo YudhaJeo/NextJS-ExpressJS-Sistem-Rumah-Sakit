@@ -46,7 +46,7 @@ const AppMenu = () => {
               { label: "Asuransi", icon: "pi pi-fw pi-id-card", to: "/master/asuransi" },
               { label: "Agama", icon: "pi pi-fw pi-building-columns", to: "/master/agama" },
               { label: "Poli", icon: "pi pi-fw pi-warehouse", to: "/master/poli" },
-              { label: "Jadwal Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/dokter" },
+              { label: "Jadwal Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/jadwal_dokter" },
               { label: "Role", icon: "pi pi-fw pi-users", to: "/master/role" },
               { label: "Tindakan Medis", icon: "pi pi-fw pi-heart", to: "/master/tindakan_medis" },
               { label: "Tenaga Medis", icon: "pi pi-fw pi-users", to: "/master/tenaga_medis" },
@@ -229,7 +229,7 @@ const AppMenu = () => {
             label: "Master",
             items: [
               { label: "Loket", icon: "pi pi-fw pi-ticket", to: "/master/loket" },
-              { label: "Jadwal Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/dokter" },
+              { label: "Jadwal Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/jadwal_dokter" },
             ],
           },
         ],
