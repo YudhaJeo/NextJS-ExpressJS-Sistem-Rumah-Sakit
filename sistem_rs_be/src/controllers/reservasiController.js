@@ -33,24 +33,6 @@ export async function createReservasi(req, res) {
       KETERANGAN,
     });
 
-    const pasien = await trx('pasien').where('NIK', NIK).first();
-    if (!pasien) {
-      await trx.rollback();
-      return res.status(400).json({ error: 'Pasien tidak ditemukan' });
-    }
-
-    const tanggalInvoice = new Date().toISOString().split('T')[0];
-    const NOINVOICE = await generateNoInvoice(tanggalInvoice, trx);
-
-    await trx('invoice').insert({
-      NOINVOICE,
-      NIK,
-      IDASURANSI: pasien.IDASURANSI || null,
-      TANGGALINVOICE: tanggalInvoice,
-      TOTALTAGIHAN: 0,
-      STATUS: 'BELUM_LUNAS',
-    });
-
     await trx.commit();
     res.json({ message: 'Reservasi dan invoice berhasil ditambahkan' });
   } catch (err) {
