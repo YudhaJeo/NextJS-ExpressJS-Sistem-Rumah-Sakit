@@ -68,23 +68,15 @@ export async function createDeposit(req, res) {
       KETERANGAN,
     });
 
-    const totalDeposit = await trx('deposit')
+    const totalSaldo = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
-      .sum('NOMINAL as total')
+      .sum('SALDO_SISA as total')
       .first();
-
-    const newTotalDeposit = totalDeposit.total || 0;
-
-    const sisaTagihan = invoice.TOTALTAGIHAN + newTotalDeposit - invoice.TOTALANGSURAN;
-    const newStatus = sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
-        TOTALDEPOSIT: newTotalDeposit,
-        SISA_TAGIHAN: sisaTagihan,
-        STATUS: newStatus,
-        UPDATED_AT: trx.fn.now(),
+        TOTALDEPOSIT: totalSaldo.total || 0,
       });
 
     await trx.commit();
@@ -135,23 +127,15 @@ export async function updateDeposit(req, res) {
       return res.status(404).json({ success: false, message: 'Deposit tidak ditemukan' });
     }
 
-    const totalDeposit = await trx('deposit')
+    const totalSaldo = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
-      .sum('NOMINAL as total')
+      .sum('SALDO_SISA as total')
       .first();
-
-    const newTotalDeposit = totalDeposit.total || 0;
-
-    const sisaTagihan = invoice.TOTALTAGIHAN + newTotalDeposit - invoice.TOTALANGSURAN;
-    const newStatus = sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
-        TOTALDEPOSIT: newTotalDeposit,
-        SISA_TAGIHAN: sisaTagihan,
-        STATUS: newStatus,
-        UPDATED_AT: trx.fn.now(),
+        TOTALDEPOSIT: totalSaldo.total || 0,
       });
 
     await trx.commit();
@@ -183,23 +167,15 @@ export async function deleteDeposit(req, res) {
 
     await trx('deposit').where('IDDEPOSIT', id).del();
 
-    const totalDeposit = await trx('deposit')
+    const totalSaldo = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
-      .sum('NOMINAL as total')
+      .sum('SALDO_SISA as total')
       .first();
-
-    const newTotalDeposit = totalDeposit.total || 0;
-
-    const sisaTagihan = invoice.TOTALTAGIHAN + newTotalDeposit - invoice.TOTALANGSURAN;
-    const newStatus = sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
-        TOTALDEPOSIT: newTotalDeposit,
-        SISA_TAGIHAN: sisaTagihan,
-        STATUS: newStatus,
-        UPDATED_AT: trx.fn.now(),
+        TOTALDEPOSIT: totalSaldo.total || 0,
       });
 
     await trx.commit();
