@@ -49,8 +49,6 @@ export async function createPenggunaan(req, res) {
       STATUS: newSaldo === 0 ? 'HABIS' : 'AKTIF'
     });
 
-    await trx('invoice').where('IDINVOICE', IDINVOICE).decrement('SISA_TAGIHAN', JUMLAH_PEMAKAIAN);
-
     await PenggunaanModel.create({
       IDDEPOSIT,
       IDINVOICE,
@@ -81,7 +79,6 @@ export async function updatePenggunaan(req, res) {
 
     await trx('deposit').where('IDDEPOSIT', penggunaanLama.IDDEPOSIT).increment('SALDO_SISA', penggunaanLama.JUMLAH_PEMAKAIAN);
     await trx('deposit').where('IDDEPOSIT', penggunaanLama.IDDEPOSIT).update({ STATUS: 'AKTIF' });
-    await trx('invoice').where('IDINVOICE', penggunaanLama.IDINVOICE).increment('SISA_TAGIHAN', penggunaanLama.JUMLAH_PEMAKAIAN);
 
     const depositBaru = await trx('deposit').where('IDDEPOSIT', IDDEPOSIT).first();
     if (!depositBaru) {
@@ -137,7 +134,6 @@ export async function deletePenggunaan(req, res) {
 
     await trx('deposit').where('IDDEPOSIT', penggunaan.IDDEPOSIT).increment('SALDO_SISA', penggunaan.JUMLAH_PEMAKAIAN);
     await trx('deposit').where('IDDEPOSIT', penggunaan.IDDEPOSIT).update({ STATUS: 'AKTIF' });
-    await trx('invoice').where('IDINVOICE', penggunaan.IDINVOICE).increment('SISA_TAGIHAN', penggunaan.JUMLAH_PEMAKAIAN);
 
     const deleted = await PenggunaanModel.remove(id, trx);
     if (!deleted) {
