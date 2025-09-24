@@ -18,7 +18,8 @@ export async function getAllRiwayatJalan() {
       'pendaftaran.TANGGALKUNJUNGAN',
       'pendaftaran.KELUHAN',
       'poli.NAMAPOLI as POLI',
-      'master_tenaga_medis.NAMALENGKAP as NAMADOKTER'
+      'master_tenaga_medis.NAMALENGKAP as NAMADOKTER',
+      'rawat_jalan.STATUSRAWAT'
     )
     .orderBy('riwayat_rawat_jalan.IDRIWAYATJALAN', 'desc');
 }
@@ -40,7 +41,8 @@ export async function getRiwayatJalanById(id) {
       'pendaftaran.TANGGALKUNJUNGAN',
       'pendaftaran.KELUHAN',
       'poli.NAMAPOLI as POLI',
-      'master_tenaga_medis.NAMALENGKAP as NAMADOKTER'
+      'master_tenaga_medis.NAMALENGKAP as NAMADOKTER',
+      'rawat_jalan.STATUSRAWAT'
     )
     .where('riwayat_rawat_jalan.IDRIWAYATJALAN', id)
     .first();

@@ -5,13 +5,14 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
+import { Tag } from "primereact/tag";
 import dynamic from 'next/dynamic'
 import AdjustPrintMarginLaporan from './adjustPrintMarginLaporan'
 import axios from 'axios'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
-const TabelRiwayatJalan = ({ data, loading }) => {
+const TabelRiwayatJalan = ({ data, loading, rajalOptions }) => {
   const [adjustDialog, setAdjustDialog] = useState(false)
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false)
   const [pdfUrl, setPdfUrl] = useState('')
@@ -72,6 +73,26 @@ const TabelRiwayatJalan = ({ data, loading }) => {
         <Column field="DIAGNOSA" header="Hasil Diagnosa" />
         <Column field="TOTALTINDAKAN" header="Total Tindakan" body={(r) => (r.TOTALTINDAKAN)} />
         <Column field="TOTALBIAYA" header="Tagihan Total" body={(r) => formatRupiah(r.TOTALBIAYA)} />
+        <Column
+  header="Status Rawat"
+  body={(row) => {
+    const status = row.STATUSRAWAT;
+
+    const severity = () => {
+      switch (status) {
+        case "Rawat Jalan":
+          return "info";   // biru
+        case "Rawat Inap":
+          return "success"; // hijau
+        default:
+          return "warning";
+      }
+    };
+
+    return <Tag value={status} severity={severity()} />;
+  }}
+/>
+
         <Column field="TANGGALRAWAT" header="Tanggal Rawat" body={(r) => formatTanggal(r.TANGGALRAWAT)} />
         <Column header="Aksi" body={actionBody} style={{ width: '150px', textAlign: 'center' }} />
       </DataTable>
