@@ -36,8 +36,6 @@ const TabelObat = ({ data, loading, onEdit, onDelete }) => {
           }).format(rowData.HARGAJUAL || 0)
         }
       />
-      <Column field="TGLKADALUARSA" header="Tgl Kadaluarsa" />
-      <Column field="NAMASUPPLIER" header="Supplier" />
       <Column field="LOKASI" header="Lokasi" />
       <Column field="DESKRIPSI" header="Deskripsi" />
 

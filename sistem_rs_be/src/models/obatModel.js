@@ -1,19 +1,10 @@
 import db from '../core/config/knex.js';
 
 export const getAll = () =>
-    db('obat as o')
-        .leftJoin('master_supplier as s', 'o.SUPPLIERID', 's.SUPPLIERID')
-        .select(
-            'o.*',
-            's.NAMASUPPLIER'
-        );
+  db('obat').select('*').orderBy('IDOBAT', 'desc');
 
 export const getById = (id) =>
-    db('obat as o')
-        .leftJoin('master_supplier as s', 'o.SUPPLIERID', 's.SUPPLIERID')
-        .select('o.*', 's.NAMASUPPLIER')
-        .where('o.IDOBAT', id)
-        .first();
+    db('obat').where({ IDOBAT: id }).first();
 
 export const createObat = (data) =>
     db('obat').insert({
@@ -24,8 +15,6 @@ export const createObat = (data) =>
         STOK: data.STOK || 0,
         HARGABELI: data.HARGABELI,
         HARGAJUAL: data.HARGAJUAL,
-        TGLKADALUARSA: data.TGLKADALUARSA,
-        SUPPLIERID: data.SUPPLIERID || null,
         LOKASI: data.LOKASI,
         DESKRIPSI: data.DESKRIPSI,
     });
@@ -41,8 +30,6 @@ export const updateObat = (id, data) =>
             STOK: data.STOK,
             HARGABELI: data.HARGABELI,
             HARGAJUAL: data.HARGAJUAL,
-            TGLKADALUARSA: data.TGLKADALUARSA,
-            SUPPLIERID: data.SUPPLIERID || null,
             LOKASI: data.LOKASI,
             DESKRIPSI: data.DESKRIPSI,
             UPDATED_AT: db.fn.now(),

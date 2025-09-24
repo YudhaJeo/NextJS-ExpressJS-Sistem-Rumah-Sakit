@@ -15,9 +15,7 @@ export const up = function (knex) {
     table.integer('STOK').unsigned().defaultTo(0);
     table.double('HARGABELI').notNullable();
     table.double('HARGAJUAL').notNullable();
-    table.string('TGLKADALUARSA', 50).notNullable();
     table.string('LOKASI', 50).notNullable();
-    table.integer("SUPPLIERID").unsigned().references("SUPPLIERID").inTable("master_supplier").onDelete("SET NULL").onUpdate("CASCADE");
     table.text('DESKRIPSI').nullable();
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
     table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());

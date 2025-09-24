@@ -119,25 +119,6 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
         </div>
 
         <div className="mt-2">
-          <label>Tanggal Kadaluarsa</label>
-            <Calendar
-              className={classNames('w-full mt-2', { 'p-invalid': errors.TGLKADALUARSA })}
-              dateFormat="yy-mm-dd"
-              value={form.TGLKADALUARSA ? new Date(form.TGLKADALUARSA) : undefined}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  TGLKADALUARSA: e.value?.toISOString().split('T')[0] || '',
-                })
-              }
-              showIcon
-            />
-          {errors.TGLKADALUARSA && (
-            <small className="text-red-500">{errors.TGLKADALUARSA}</small>
-          )}
-        </div>
-
-        <div className="mt-2">
           <label>Lokasi</label>
           <InputText
             className={inputClass('LOKASI')}
@@ -145,22 +126,6 @@ const FormAlkes = ({ visible, onHide, onSubmit, form, setForm, errors, supplierO
             onChange={(e) => setForm({ ...form, LOKASI: e.target.value })}
           />
           {errors.LOKASI && <small className="text-red-500">{errors.LOKASI}</small>}
-        </div>
-
-        <div className="mt-2">
-          <label>Supplier</label> 
-            <Dropdown
-              className={classNames('w-full mt-2', { 'p-invalid': errors.SUPPLIERID })}
-              options={supplierOptions} 
-              value={form.SUPPLIERID}
-              onChange={(e) => setForm({ ...form, SUPPLIERID: e.value })}
-              placeholder="Pilih Supplier"
-              filter
-              showClear
-            />
-            {errors.SUPPLIERID && (
-              <small className="text-red-500">{errors.SUPPLIERID}</small>
-            )}
         </div>
 
         <div className="mt-2">
