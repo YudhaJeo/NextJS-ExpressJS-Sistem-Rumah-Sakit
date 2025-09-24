@@ -68,7 +68,7 @@ export async function createDeposit(req, res) {
       KETERANGAN,
     });
 
-    const totalSaldo = await trx('deposit')
+    const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
       .sum('SALDO_SISA as total')
       .first();
@@ -76,7 +76,8 @@ export async function createDeposit(req, res) {
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
-        TOTALDEPOSIT: totalSaldo.total || 0,
+        TOTALDEPOSIT: totalDeposit.total || 0,
+        UPDATED_AT: trx.fn.now(),
       });
 
     await trx.commit();
@@ -127,7 +128,7 @@ export async function updateDeposit(req, res) {
       return res.status(404).json({ success: false, message: 'Deposit tidak ditemukan' });
     }
 
-    const totalSaldo = await trx('deposit')
+    const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
       .sum('SALDO_SISA as total')
       .first();
@@ -135,7 +136,8 @@ export async function updateDeposit(req, res) {
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
-        TOTALDEPOSIT: totalSaldo.total || 0,
+        TOTALDEPOSIT: totalDeposit.total || 0,
+        UPDATED_AT: trx.fn.now(),
       });
 
     await trx.commit();
@@ -167,7 +169,7 @@ export async function deleteDeposit(req, res) {
 
     await trx('deposit').where('IDDEPOSIT', id).del();
 
-    const totalSaldo = await trx('deposit')
+    const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
       .sum('SALDO_SISA as total')
       .first();
@@ -175,7 +177,8 @@ export async function deleteDeposit(req, res) {
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
-        TOTALDEPOSIT: totalSaldo.total || 0,
+        TOTALDEPOSIT: totalDeposit.total || 0,
+        UPDATED_AT: trx.fn.now(),
       });
 
     await trx.commit();

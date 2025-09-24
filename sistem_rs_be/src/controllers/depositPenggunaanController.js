@@ -49,6 +49,18 @@ export async function createPenggunaan(req, res) {
       STATUS: newSaldo === 0 ? 'HABIS' : 'AKTIF'
     });
 
+    const totalDeposit = await trx('deposit')
+      .where('IDINVOICE', IDINVOICE)
+      .sum('SALDO_SISA as total')
+      .first();
+
+    await trx('invoice')
+      .where('IDINVOICE', IDINVOICE)
+      .update({
+        TOTALDEPOSIT: totalDeposit.total || 0,
+        UPDATED_AT: trx.fn.now()
+      });
+
     await PenggunaanModel.create({
       IDDEPOSIT,
       IDINVOICE,
@@ -96,6 +108,18 @@ export async function updatePenggunaan(req, res) {
       SALDO_SISA: saldoAkhir,
       STATUS: saldoAkhir === 0 ? 'HABIS' : 'AKTIF',
     });
+
+    const totalDeposit = await trx('deposit')
+      .where('IDINVOICE', IDINVOICE)
+      .sum('SALDO_SISA as total')
+      .first();
+
+    await trx('invoice')
+      .where('IDINVOICE', IDINVOICE)
+      .update({
+        TOTALDEPOSIT: totalDeposit.total || 0,
+        UPDATED_AT: trx.fn.now(),
+      });
 
     await trx('invoice').where('IDINVOICE', IDINVOICE).decrement('SISA_TAGIHAN', JUMLAH_PEMAKAIAN);
 
