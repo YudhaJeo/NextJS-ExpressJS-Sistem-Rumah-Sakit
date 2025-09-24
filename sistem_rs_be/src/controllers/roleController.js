@@ -1,3 +1,4 @@
+import * as RoleModel from '../models/roleModel.js';
 import db from '../core/config/knex.js';
 
 export const getRolesTenagaMedis = async (req, res) => {
@@ -28,24 +29,19 @@ export const getRolesTenagaNonMedis = async (req, res) => {
 
 export const getRoles = async (req, res) => {
   try {
-    const roles = await db('ROLE').select('*');
-    res.status(200).json(roles);
+    const roles = await RoleModel.getAllRoles();
+    res.json(roles);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Gagal mengambil data role' });
+    res.status(500).json({ message: error.message });
   }
-};
+}
 
 export const getRole = async (req, res) => {
   try {
-    const role = await db('ROLE')
-      .where({ IDROLE: req.params.id })
-      .first();
-
+    const role = await RoleModel.getRoleById(req.params.id);
     if (!role) return res.status(404).json({ message: 'Role tidak ditemukan' });
-    res.status(200).json(role);
+    res.json(role);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Gagal mengambil data role' });
+    res.status(500).json({ message: error.message });
   }
 };
