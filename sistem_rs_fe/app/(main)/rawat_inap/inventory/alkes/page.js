@@ -23,8 +23,6 @@ const defaultForm = {
   STOK: 0,
   HARGABELI: null,
   HARGAJUAL: null,
-  TGLKADALUARSA: '',
-  SUPPLIERID: null,
   LOKASI: '',
   DESKRIPSI: ''
 };
@@ -99,14 +97,8 @@ const Page = () => {
     if (form.HARGAJUAL === null || isNaN(form.HARGAJUAL))
       newErrors.HARGAJUAL = <span style={{ color: 'red' }}>Harga jual wajib diisi</span>;
 
-    if (!(form.TGLKADALUARSA || '').trim())
-      newErrors.TGLKADALUARSA = <span style={{ color: 'red' }}>Tanggal kadaluarsa wajib diisi</span>;
-
     if (!(form.LOKASI || '').trim())
       newErrors.LOKASI = <span style={{ color: 'red' }}>Lokasi rak wajib diisi</span>;
-
-    if (!form.SUPPLIERID)
-      newErrors.SUPPLIERID = <span style={{ color: 'red' }}>Supplier wajib dipilih</span>;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -148,8 +140,6 @@ const Page = () => {
       STOK: row.STOK ?? 0,
       HARGABELI: row.HARGABELI ?? 0,
       HARGAJUAL: row.HARGAJUAL ?? 0,
-      TGLKADALUARSA: row.TGLKADALUARSA || '',
-      SUPPLIERID: row.SUPPLIERID ?? null,
       LOKASI: row.LOKASI || '',
       DESKRIPSI: row.DESKRIPSI || ''
     });

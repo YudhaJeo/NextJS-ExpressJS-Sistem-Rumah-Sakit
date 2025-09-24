@@ -35,6 +35,12 @@ export default function Page() {
   const [errors, setErrors] = useState({});
   const toastRef = useRef(null);
 
+  const showToast = (severity, summary, detail) => {
+    if (toastRef.current) {
+      toastRef.current.show({ severity, summary, detail, life: 3000 });
+    }
+  };
+
   useEffect(() => {
     fetchData();
     fetchPasien();

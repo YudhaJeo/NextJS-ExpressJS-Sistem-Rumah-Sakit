@@ -70,20 +70,13 @@ export async function createDeposit(req, res) {
 
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
-      .sum('NOMINAL as total')
+      .sum('SALDO_SISA as total')
       .first();
-
-    const newTotalDeposit = totalDeposit.total || 0;
-
-    const sisaTagihan = invoice.TOTALTAGIHAN + newTotalDeposit - invoice.TOTALANGSURAN;
-    const newStatus = sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
-        TOTALDEPOSIT: newTotalDeposit,
-        SISA_TAGIHAN: sisaTagihan,
-        STATUS: newStatus,
+        TOTALDEPOSIT: totalDeposit.total || 0,
         UPDATED_AT: trx.fn.now(),
       });
 
@@ -137,20 +130,13 @@ export async function updateDeposit(req, res) {
 
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
-      .sum('NOMINAL as total')
+      .sum('SALDO_SISA as total')
       .first();
-
-    const newTotalDeposit = totalDeposit.total || 0;
-
-    const sisaTagihan = invoice.TOTALTAGIHAN + newTotalDeposit - invoice.TOTALANGSURAN;
-    const newStatus = sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
-        TOTALDEPOSIT: newTotalDeposit,
-        SISA_TAGIHAN: sisaTagihan,
-        STATUS: newStatus,
+        TOTALDEPOSIT: totalDeposit.total || 0,
         UPDATED_AT: trx.fn.now(),
       });
 
@@ -185,20 +171,13 @@ export async function deleteDeposit(req, res) {
 
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
-      .sum('NOMINAL as total')
+      .sum('SALDO_SISA as total')
       .first();
-
-    const newTotalDeposit = totalDeposit.total || 0;
-
-    const sisaTagihan = invoice.TOTALTAGIHAN + newTotalDeposit - invoice.TOTALANGSURAN;
-    const newStatus = sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS';
 
     await trx('invoice')
       .where('IDINVOICE', IDINVOICE)
       .update({
-        TOTALDEPOSIT: newTotalDeposit,
-        SISA_TAGIHAN: sisaTagihan,
-        STATUS: newStatus,
+        TOTALDEPOSIT: totalDeposit.total || 0,
         UPDATED_AT: trx.fn.now(),
       });
 

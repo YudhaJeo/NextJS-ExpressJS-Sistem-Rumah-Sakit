@@ -26,14 +26,12 @@ export async function insertObat(req, res) {
     try {
         const {
             KODEOBAT, NAMAOBAT, MERKOBAT, JENISOBAT, STOK,
-            HARGABELI, HARGAJUAL, TGLKADALUARSA,
-            SUPPLIERID, LOKASI, DESKRIPSI
+            HARGABELI, HARGAJUAL, LOKASI, DESKRIPSI
         } = req.body;
 
         await Obat.createObat({
             KODEOBAT, NAMAOBAT, MERKOBAT, JENISOBAT, STOK,
-            HARGABELI, HARGAJUAL, TGLKADALUARSA,
-            SUPPLIERID, LOKASI, DESKRIPSI
+            HARGABELI, HARGAJUAL, LOKASI, DESKRIPSI
         });
 
         res.json({ message: 'Data obat berhasil ditambahkan' });
@@ -48,8 +46,7 @@ export async function updateObat(req, res) {
         const id = req.params.id;
         const {
             KODEOBAT, NAMAOBAT, MERKOBAT, JENISOBAT, STOK,
-            HARGABELI, HARGAJUAL, TGLKADALUARSA,
-            SUPPLIERID, LOKASI, DESKRIPSI
+            HARGABELI, HARGAJUAL, LOKASI, DESKRIPSI
         } = req.body;
 
         const existing = await Obat.getById(id);
@@ -57,8 +54,7 @@ export async function updateObat(req, res) {
 
         await Obat.updateObat(id, {
             KODEOBAT, NAMAOBAT, MERKOBAT, JENISOBAT, STOK,
-            HARGABELI, HARGAJUAL, TGLKADALUARSA,
-            SUPPLIERID, LOKASI, DESKRIPSI
+            HARGABELI, HARGAJUAL, LOKASI, DESKRIPSI
         });
 
         res.json({ message: 'Data obat berhasil diperbarui' });
