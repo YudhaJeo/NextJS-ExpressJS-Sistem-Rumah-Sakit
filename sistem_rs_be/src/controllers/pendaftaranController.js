@@ -1,6 +1,5 @@
 import * as PendaftaranModel from '../models/pendaftaranModel.js';
 import * as RawatJalanModel from '../models/rawatJalanModel.js';
-import { generateNoInvoice } from '../utils/generateNoInvoice.js';
 import db from '../core/config/knex.js';
 
 export async function createPendaftaran(req, res) {
@@ -43,23 +42,6 @@ export async function createPendaftaran(req, res) {
       },
       trx
     );
-
-    const pasien = await trx('pasien').where({ NIK }).first();
-    if (!pasien) {
-      throw new Error('Pasien tidak ditemukan untuk pembuatan invoice.');
-    }
-
-    const tanggalInvoice = new Date().toISOString().split('T')[0];
-    const NOINVOICE = await generateNoInvoice(tanggalInvoice, trx);
-
-    await trx('invoice').insert({
-      NOINVOICE,
-      NIK,
-      IDASURANSI: pasien.IDASURANSI || null,
-      TANGGALINVOICE: tanggalInvoice,
-      TOTALTAGIHAN: 0,
-      STATUS: 'BELUM_LUNAS',
-    });
 
     await trx.commit();
     res.status(201).json({ message: 'Pendaftaran, Rawat Jalan, dan Invoice berhasil dibuat.' });

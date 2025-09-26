@@ -4,6 +4,7 @@ import * as RawatInapModel from '../models/rawatInapModel.js';
 import db from '../core/config/knex.js';
 import { uploadToMinio } from "../utils/uploadMinio.js";
 import { deleteFromMinio } from "../utils/deleteMinio.js";
+import { generateNoInvoice } from '../utils/generateNoInvoice.js';
 
 export async function getAllRawatJalan(req, res) {
   try {
@@ -45,6 +46,7 @@ export async function createRawatJalan(req, res) {
 
 export async function updateRawatJalan(req, res) {
   const id = req.params.id;
+  const trx = await db.transaction();
 
   try {
     const { IDDOKTER, STATUSKUNJUNGAN, STATUSRAWAT, DIAGNOSA, KETERANGAN } = req.body;
@@ -105,7 +107,31 @@ export async function updateRawatJalan(req, res) {
         FOTORESEP: updated.FOTORESEP,
         TOTALTINDAKAN,
         TOTALBIAYA,
-      };
+    };
+
+    const pasien = await trx('pasien')
+      .join('pendaftaran', 'pasien.NIK', 'pendaftaran.NIK')
+      .join('rawat_jalan', 'pendaftaran.IDPENDAFTARAN', 'rawat_jalan.IDPENDAFTARAN')
+      .where('rawat_jalan.IDRAWATJALAN', updated.IDRAWATJALAN)
+      .select('pasien.NIK', 'pasien.IDASURANSI')
+      .first();
+    if (!pasien) {
+      throw new Error('Pasien tidak ditemukan untuk pembuatan invoice.');
+    }
+
+    const tanggalInvoice = new Date().toISOString().split('T')[0];
+    const NOINVOICE = await generateNoInvoice(tanggalInvoice, trx);
+  
+    await trx('invoice').insert({
+      NOINVOICE,
+      NIK: pasien.NIK,
+      IDASURANSI: pasien.IDASURANSI || null,
+      TANGGALINVOICE: tanggalInvoice,
+      TOTALTAGIHAN: 0,
+      STATUS: 'BELUM_LUNAS',
+    });
+  
+      await trx.commit();
       await RiwayatRawatJalan.insertFromRawatJalan(dataRiwayat);
     }
 

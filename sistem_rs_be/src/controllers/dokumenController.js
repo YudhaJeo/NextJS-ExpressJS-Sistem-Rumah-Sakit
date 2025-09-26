@@ -8,7 +8,7 @@ export const getAllDokumen = async (req, res) => {
     const dokumen = await DokumenModel.getAll();
     res.json({ data: dokumen });
   } catch (err) {
-    console.error("🔥 getAllDokumen Error:", err);
+    console.error("getAllDokumen Error:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -36,7 +36,7 @@ export const createDokumen = async (req, res) => {
     const inserted = await DokumenModel.create(newDokumen);
     res.status(201).json({ message: "Dokumen berhasil disimpan", data: inserted });
   } catch (err) {
-    console.error("🔥 createDokumen Error:", err);
+    console.error("createDokumen Error:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -74,7 +74,7 @@ export const updateDokumen = async (req, res) => {
     const updated = await DokumenModel.update(id, updatedData);
     res.json({ message: "Dokumen berhasil diperbarui", data: updated });
   } catch (err) {
-    console.error("🔥 updateDokumen Error:", err);
+    console.error("updateDokumen Error:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -95,7 +95,7 @@ export const deleteDokumen = async (req, res) => {
     await DokumenModel.remove(id);
     res.json({ message: "Dokumen berhasil dihapus" });
   } catch (err) {
-    console.error("🔥 deleteDokumen Error:", err);
+    console.error("deleteDokumen Error:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -109,7 +109,7 @@ export const downloadDokumen = async (req, res) => {
     res.attachment(filename);
     fileStream.pipe(res);
   } catch (err) {
-    console.error("🔥 downloadDokumen Error:", err);
+    console.error("downloadDokumen Error:", err);
     res.status(500).json({ error: err.message });
   }
 };
@@ -123,13 +123,14 @@ export const downloadById = async (req, res) => {
       return res.status(404).json({ error: "Dokumen tidak ditemukan" });
     }
 
-    const objectName = dokumen.LOKASIFILE; 
+    const objectName = dokumen.LOKASIFILE.replace(/^\/?uploads\//, "");
+
     const fileStream = await minioClient.getObject("uploads", objectName);
 
     res.attachment(dokumen.NAMAFILE);
     fileStream.pipe(res);
   } catch (err) {
-    console.error("🔥 downloadById Error:", err);
+    console.error("downloadById Error:", err);
     res.status(500).json({ error: err.message });
   }
 };
