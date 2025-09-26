@@ -55,7 +55,6 @@ const DokterPage = () => {
             const res = await axios.get(`${API_URL}/dokter`);
             setData(res.data);
             setOriginalData(res.data);
-            console.log("Fetch Dokter", res.data)
         } catch (err) {
             console.error('Gagal mengambil data:', err);
         } finally {
@@ -69,7 +68,6 @@ const DokterPage = () => {
                 label: `${poli.IDPOLI} - ${poli.NAMAPOLI}`,
                 value: poli.IDPOLI,
             }));
-            console.log("Fetch Poli:", options)
             setPoliOptions(options);
         } catch (err) {
             console.error('Gagal ambil data poli:', err);
