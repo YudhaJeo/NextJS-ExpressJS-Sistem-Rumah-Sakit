@@ -83,6 +83,12 @@ function DisplayAntrian() {
     };
   }, []);
 
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+
   useEffect(() => {
     if (typeof window !== 'undefined' && window.qz) {
       window.qz.websocket.connect().catch(err => {
@@ -99,9 +105,7 @@ function DisplayAntrian() {
   }, []);
 
   useEffect(() => {
-    const updateSize = () =>
-      setScreenSize({ width: window.innerWidth, height: window.innerHeight });
-
+    const updateSize = () => setScreenSize({ width: window.innerWidth, height: window.innerHeight });
     updateSize();
     window.addEventListener('resize', updateSize);
     return () => window.removeEventListener('resize', updateSize);
@@ -111,11 +115,8 @@ function DisplayAntrian() {
     const handleFullScreenChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
     };
-
     document.addEventListener('fullscreenchange', handleFullScreenChange);
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullScreenChange);
-    };
+    return () => document.removeEventListener('fullscreenchange', handleFullScreenChange);
   }, []);
 
   useEffect(() => {
@@ -168,9 +169,7 @@ function DisplayAntrian() {
 
   const toggleFullScreen = () => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch((err) => {
-        console.error("Failed to enter full screen:", err);
-      });
+      document.documentElement.requestFullscreen().catch(console.error);
     } else {
       document.exitFullscreen();
     }
@@ -265,14 +264,15 @@ function DisplayAntrian() {
     const hasQueue = currentNumber !== '-';
     const isActive = loket.AKTIF !== false;
 
+    const cardStyle = getCardStyle(index);
+
     return (
       <div key={index} className={`col-${12 / config.cols}`}>
         <Card
           header={
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <i className={`pi pi-circle-fill text-sm ${isActive ? 'text-green-500' : 'text-red-500'}`} />
-                <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{loket.NAMALOKET}</span>
+            <div className="flex justify-content-between pt-4 px-4">
+              <div className="flex align-items-center gap-2">
+                <span className="font-bold text-lg">{loket.NAMALOKET}</span>
               </div>
               <Tag
                 value={hasQueue ? 'Tersedia' : 'Kosong'}
@@ -282,37 +282,34 @@ function DisplayAntrian() {
             </div>
           }
           footer={
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.5rem' }}>
+            <div className="flex justify-content-center mt-2">
               <Button
                 label="Ambil Tiket"
                 icon="pi pi-ticket"
                 onClick={() => handleAmbilTiket(loket.NAMALOKET)}
                 disabled={loading || !isActive}
                 loading={loading}
-                style={{ width: '100%' }}
+                className="w-full"
                 size="small"
                 severity={hasQueue ? 'success' : 'info'}
               />
             </div>
           }
-          style={getCardStyle(index)}
+          className={`h-full ${cardStyle}`}
         >
-          <div style={{ textAlign: 'center' }}>
-            <small style={{ color: '#757575', fontWeight: '500' }}>Loket #{loket.NO}</small>
-            <div style={{ fontSize: '0.75rem', color: '#757575', margin: '0.5rem 0' }}>
-              Nomor Antrian Saat Ini
-            </div>
-            <div style={{
-              fontSize: config.numberSize,
-              fontWeight: 'bold',
-              padding: '0.5rem',
-              border: '2px dashed #ccc',
-              borderRadius: '6px'
-            }}>
+          <div className="text-center">
+            <small className="text-color-secondary font-medium">Loket {loket.NO}</small>
+            <div className="text-xs text-color-secondary mt-1 mb-2">Nomor Antrian Saat Ini</div>
+            <div
+              className="text-center font-bold py-2 border-2 border-dashed border-300 border-round"
+              style={{
+                fontSize: config.numberSize,
+              }}
+            >
               {currentNumber}
             </div>
             {hasQueue && (
-              <Badge value="Siap Dilayani" severity="success" className="animate-pulse text-xs" />
+              <Badge value="Siap Dilayani" severity="success" className="animate-pulse text-xs mt-2" />
             )}
           </div>
         </Card>
@@ -323,7 +320,7 @@ function DisplayAntrian() {
   const config = getResponsiveConfig(screenSize, loketList.length);
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden relative">
+    <div className="h-screen flex flex-column overflow-hidden relative">
       {!isFullScreen && (
         <div className="fixed bottom-4 right-4 z-[999]">
           <Button
@@ -340,27 +337,30 @@ function DisplayAntrian() {
 
       <Toast ref={toast} position="top-right" />
 
-      <div className="text-black px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-4">
+      <div className="px-6 py-4 flex justify-content-between align-items-center flex-wrap gap-4">
+        <div className="flex align-items-center gap-4">
           <img src="/layout/images/logo.png" alt="Logo" className="h-[50px]" />
           <h2 className="text-lg font-semibold text-black m-0">RUMAH SAKIT</h2>
         </div>
-        <div className="font-bold text-sm">
-          {time?.toLocaleString('id-ID', {
-            weekday: 'long',
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          })}
-        </div>
+
+        {hydrated && (
+          <div className="font-bold text-sm text-right">
+            {time?.toLocaleString('id-ID', {
+              weekday: 'long',
+              day: '2-digit',
+              month: 'long',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit'
+            })}
+          </div>
+        )}
       </div>
 
-      <div className={`px-[${config.containerPadding}] pb-2 shrink-0`} />
+      <div className={`px-${config.containerPadding} flex-shrink-0`} />
 
-      <div className={`flex-1 overflow-auto px-[${config.containerPadding}] pt-0`}>
+      <div className={`flex-1 overflow-auto px-${config.containerPadding} p-4`}>
         {loading ? (
           <LoadingState />
         ) : loketList.length === 0 ? (
@@ -373,9 +373,9 @@ function DisplayAntrian() {
       </div>
 
       {!loading && loketList.length > 0 && (
-        <div className={`px-[${config.containerPadding}] pt-2 shrink-0`}>
+        <div className={`px-${config.containerPadding} flex-shrink-0`}>
           <Divider />
-          <div className="flex justify-center gap-8 text-center">
+          <div className="flex justify-content-center gap-8 p-4 text-center">
             <Stats
               count={loketList.filter((l) => l.AKTIF !== false).length}
               label="Loket Aktif"
