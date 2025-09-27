@@ -7,7 +7,6 @@ import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
-import { InputText } from "primereact/inputtext";
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Divider } from 'primereact/divider';
 
@@ -264,14 +263,15 @@ function DisplayAntrianPoli() {
     const hasQueue = currentNumber !== '-';
     const isActive = poli.AKTIF !== false;
 
+    const cardStyle = getCardStyle(index);
+
     return (
       <div key={index} className={`col-${12 / config.cols}`}>
         <Card
           header={
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <i className={`pi pi-circle-fill text-sm ${isActive ? 'text-green-500' : 'text-red-500'}`} />
-                <span style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{poli.NAMAPOLI}</span>
+            <div className="flex justify-content-between pt-4 px-4">
+              <div className="flex align-items-center gap-2">
+                <span className="font-bold text-lg">{poli.NAMAPOLI}</span>
               </div>
               <Tag
                 value={hasQueue ? 'Tersedia' : 'Kosong'}
@@ -281,31 +281,28 @@ function DisplayAntrianPoli() {
             </div>
           }
           footer={
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '0.5rem' }}>
+            <div className="flex justify-content-center mt-2">
               <Button
                 label="Ambil Tiket"
                 icon="pi pi-ticket"
                 onClick={() => handleAmbilTiket(poli.NAMAPOLI)}
                 disabled={loading || !isActive}
                 loading={loading}
-                style={{ width: '100%' }}
+                className="w-full"
                 size="small"
                 severity={hasQueue ? 'success' : 'info'}
               />
             </div>
           }
-          style={getCardStyle(index)}
+          className={`h-full ${cardStyle}`}
         >
           <div className="text-center">
-            <small className="text-gray-600 font-medium">Poli {poli.IDPOLI}</small>
-            <div className="text-xs text-gray-600 mt-1 mb-2">Nomor Antrian Saat Ini</div>
+            <small className="text-color-secondary font-medium">Poli {poli.IDPOLI}</small>
+            <div className="text-xs text-color-secondary mt-1 mb-2">Nomor Antrian Saat Ini</div>
             <div
+              className="text-center font-bold py-2 border-2 border-dashed border-300 border-round"
               style={{
                 fontSize: config.numberSize,
-                fontWeight: 'bold',
-                padding: '0.5rem',
-                border: '2px dashed #ccc',
-                borderRadius: '6px'
               }}
             >
               {currentNumber}
@@ -320,18 +317,9 @@ function DisplayAntrianPoli() {
   };
 
   const config = getResponsiveConfig(screenSize, poliList.length);
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const onSearch = (value) => {
-    setSearchTerm(value);
-  };
-
-  const filteredPoliList = poliList.filter((p) =>
-    p.NAMAPOLI?.toLowerCase().includes(searchTerm)
-  );
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden relative">
+    <div className="h-screen flex flex-column overflow-hidden relative">
       {!isFullScreen && (
         <div className="fixed bottom-4 right-4 z-[999]">
           <Button
@@ -348,20 +336,11 @@ function DisplayAntrianPoli() {
 
       <Toast ref={toast} position="top-right" />
 
-      <div className="text-black px-6 py-4 flex justify-between items-center flex-wrap gap-4">
-        <div className="flex items-center gap-4">
+      <div className="px-6 py-4 flex justify-content-between align-items-center flex-wrap gap-4">
+        <div className="flex align-items-center gap-4">
           <img src="/layout/images/logo.png" alt="Logo" className="h-[50px]" />
           <h2 className="text-lg font-semibold text-black m-0">RUMAH SAKIT</h2>
         </div>
-
-        <span className="p-input-icon-left w-64">
-          <i className="pi pi-search ml-3" />
-          <InputText
-            placeholder="Cari Poli..."
-            className="w-full pl-6"
-            onChange={(e) => onSearch(e.target.value.toLowerCase())}
-          />
-        </span>
 
         {hydrated && (
           <div className="font-bold text-sm text-right">
@@ -378,24 +357,24 @@ function DisplayAntrianPoli() {
         )}
       </div>
 
-      <div className={`px-[${config.containerPadding}] pb-2 shrink-0`} />
+      <div className={`px-${config.containerPadding} flex-shrink-0`} />
 
-      <div className={`flex-1 overflow-auto px-[${config.containerPadding}] pt-0`}>
+      <div className={`flex-1 overflow-auto px-${config.containerPadding} p-4`}>
         {loading ? (
           <LoadingState />
         ) : poliList.length === 0 ? (
           <EmptyState />
         ) : (
           <div className="h-full">
-            <div className="grid">{filteredPoliList.map(renderCard)}</div>
+            <div className="grid">{poliList.map(renderCard)}</div>
           </div>
         )}
       </div>
 
       {!loading && poliList.length > 0 && (
-        <div className={`px-[${config.containerPadding}] pt-2 shrink-0`}>
+        <div className={`px-${config.containerPadding} flex-shrink-0`}>
           <Divider />
-          <div className="flex justify-center gap-8 text-center">
+          <div className="flex justify-content-center gap-8 p-4 text-center">
             <Stats
               count={poliList.filter((p) => p.AKTIF !== false).length}
               label="Poli Aktif"
