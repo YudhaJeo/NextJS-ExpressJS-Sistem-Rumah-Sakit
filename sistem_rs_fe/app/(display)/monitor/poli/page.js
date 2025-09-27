@@ -222,36 +222,57 @@ function MonitorAntrianPoli() {
     const hasQueue = currentNumber !== "-";
     const isActive = poli.AKTIF !== false;
 
+    const cardStyle = getCardStyle(index);
+
     return (
       <div key={index} className={`col-${12 / config.cols}`}>
         <Card
           header={
-            <div className="flex justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <i
-                  className={`pi pi-circle-fill text-sm ${isActive ? "text-green-500" : "text-red-500"
-                    }`}
-                />
-                <span className="font-bold text-base">{poli.NAMAPOLI}</span>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                margin: "0.5rem",
+              }}
+            >
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginTop: "0.5rem" }}
+              >
+                <span style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                  {poli.NAMAPOLI}
+                </span>
               </div>
               <Tag
+                className="mt-2"
                 value={hasQueue ? "Sedang Dipanggil" : "Kosong"}
                 severity={hasQueue ? "info" : "warning"}
               />
             </div>
           }
-          style={getCardStyle(index)}
+          style={cardStyle}
         >
-          <div className="text-center">
-            <small className="text-gray-500 font-medium">
+          <div style={{ textAlign: "center" }}>
+            <small style={{ color: "#757575", fontWeight: "500" }}>
               Poli #{poli.IDPOLI}
             </small>
-            <div className="text-sm text-gray-600 my-2">
+
+            <div
+              style={{
+                fontSize: "0.75rem",
+                color: "#757575",
+                margin: "0.5rem 0",
+              }}
+            >
               Nomor Antrian Saat Ini
             </div>
             <div
-              className="font-bold border-2 border-dashed border-gray-300 rounded-md"
-              style={{ fontSize: config.numberSize, padding: "0.5rem" }}
+              style={{
+                fontSize: config.numberSize,
+                fontWeight: "bold",
+                padding: "0.5rem",
+                border: "2px dashed #ccc",
+                borderRadius: "6px",
+              }}
             >
               {currentNumber}
             </div>
@@ -264,7 +285,8 @@ function MonitorAntrianPoli() {
                 />
               </div>
             )}
-            <div className="mt-2">
+
+            <div style={{ marginTop: "0.5rem" }}>
               <Tag
                 value={`Antrian Belum Dipanggil: ${getJumlahBelumDipanggil(
                   poli.NAMAPOLI
@@ -280,11 +302,11 @@ function MonitorAntrianPoli() {
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-white">
+    <div className="surface-ground h-screen flex flex-column overflow-hidden relative">
       <Toast ref={toast} position="top-right" />
 
       {!isFullScreen && (
-        <div className="fixed bottom-4 right-4 z-50">
+        <div className="fixed bottom-4 right-4 z-5">
           <Button
             icon="pi pi-window-maximize"
             onClick={toggleFullScreen}
@@ -298,7 +320,7 @@ function MonitorAntrianPoli() {
       )}
 
       {!userHasInteracted && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/50">
+        <div className="absolute inset-0 z-5 flex align-items-center justify-content-center bg-black-alpha-50">
           <Button
             label="Mulai Tampilkan Antrian"
             icon="pi pi-play"
@@ -308,10 +330,10 @@ function MonitorAntrianPoli() {
         </div>
       )}
 
-      <div className="text-black px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <img src="/layout/images/logo.png" alt="Logo" className="h-[50px]" />
-          <h2 className="text-lg font-semibold m-0">RUMAH SAKIT</h2>
+      <div className="surface-section px-6 py-4 flex justify-content-between align-items-center">
+        <div className="flex align-items-center gap-3">
+          <img src="/layout/images/logo.png" alt="Logo" style={{ height: '50px' }} />
+          <h2 className="text-lg font-semibold text-color m-0">RUMAH SAKIT</h2>
         </div>
         <div className="font-bold text-sm">
           {time?.toLocaleString("id-ID", {
@@ -326,39 +348,39 @@ function MonitorAntrianPoli() {
         </div>
       </div>
 
-      <div className="bg-blue-100 py-3 overflow-hidden">
+      <div className="surface-section py-3 overflow-hidden">
         <marquee
           behavior="scroll"
           direction="left"
           scrollamount="2"
-          className="text-blue-900 font-semibold text-2xl"
+          className="text-primary-700 font-semibold text-xl"
         >
-          Selamat datang di RSUD Bayza Medika • Harap menunggu dengan tertib •
-          Gunakan masker • Jaga jarak • Cuci tangan sebelum masuk ruangan •
-          Antrian akan dipanggil sesuai urutan • Terima kasih atas kesabaran
-          Anda 🙏
+          Selamat datang di RSUD Bayza Medika • Harap menunggu dengan tertib • Gunakan masker • Jaga jarak •
+          Cuci tangan sebelum masuk ruangan • Antrian akan dipanggil sesuai urutan • Terima kasih atas kesabaran Anda
         </marquee>
       </div>
 
       <div
-        className="flex-1 overflow-auto"
-        style={{ padding: config.containerPadding }}
+        className={`flex-1 overflow-auto px-${config.containerPadding} p-4`}
       >
         {loading ? (
-          <div className="flex flex-col items-center justify-center h-full">
-            <ProgressSpinner style={{ width: "50px", height: "50px" }} />
-            <p className="text-black font-medium mt-4 text-base">
+          <div className="flex flex-column align-items-center justify-content-center h-full">
+            <ProgressSpinner
+              style={{ width: "50px", height: "50px" }}
+              strokeWidth="4"
+            />
+            <p className="text-color font-medium mt-4 text-base">
               <i className="pi pi-spin pi-spinner mr-2" />
               Memuat data...
             </p>
           </div>
         ) : poliList.length === 0 ? (
-          <div className="text-center h-full flex flex-col items-center justify-center">
-            <i className="pi pi-inbox text-[2rem] text-black mb-4" />
-            <h3 className="text-lg font-semibold text-black mb-2">
-              Tidak Ada Loket Tersedia
+          <div className="text-center h-full flex flex-column align-items-center justify-content-center">
+            <i className="pi pi-inbox text-2xl text-color mb-4" />
+            <h3 className="text-lg font-semibold text-color mb-2">
+              Tidak Ada Poli Tersedia
             </h3>
-            <p className="text-black">
+            <p className="text-color">
               Silakan hubungi administrator untuk informasi lebih lanjut
             </p>
           </div>
@@ -368,13 +390,29 @@ function MonitorAntrianPoli() {
       </div>
 
       {!loading && poliList.length > 0 && (
-        <div className={`px-[${config.containerPadding}] pt-2 shrink-0`}>
+        <div className={`px-${config.containerPadding} p-2 flex-shrink-0`}>
           <Divider />
-          <div className="flex justify-center flex-wrap gap-8 text-center">
-            <Stat label="Loket Aktif" value={poliList.filter((l) => l.AKTIF !== false).length} severity="success" />
-            <Stat label="Antrian Dipanggil" value={antrianList.filter((a) => a.STATUS === "Dipanggil").length} severity="info" />
-            <Stat label="Belum Dipanggil" value={antrianList.filter((a) => a.STATUS === "Belum").length} severity="danger" />
-            <Stat label="Total Loket" value={poliList.length} severity="warning" />
+          <div className="flex justify-content-center flex-wrap gap-8 text-center">
+            <Stat 
+              label="Poli Aktif" 
+              value={poliList.filter((l) => l.AKTIF !== false).length} 
+              severity="success" 
+            />
+            <Stat 
+              label="Antrian Dipanggil" 
+              value={antrianList.filter((a) => a.STATUS === "Dipanggil").length} 
+              severity="info" 
+            />
+            <Stat 
+              label="Antrian Belum Dipanggil" 
+              value={antrianList.filter((a) => a.STATUS === "Belum").length} 
+              severity="danger" 
+            />
+            <Stat 
+              label="Total Poli" 
+              value={poliList.length} 
+              severity="warning" 
+            />
           </div>
         </div>
       )}
@@ -383,13 +421,13 @@ function MonitorAntrianPoli() {
 }
 
 const Stat = ({ label, value, severity }) => (
-  <div className="flex flex-col items-center">
+  <div className="flex flex-column align-items-center">
     <Tag
       value={value}
       severity={severity}
       className="text-base font-bold mb-1 px-3 py-2"
     />
-    <span className="text-sm text-black">{label}</span>
+    <span className="text-sm text-color">{label}</span>
   </div>
 );
 
