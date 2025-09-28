@@ -9,6 +9,8 @@ import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Divider } from 'primereact/divider';
+import { usePrinterManager } from '@/utils/printerManager';
+import PrinterSelector from '@/components/PrinterSelector';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -68,6 +70,7 @@ function DisplayAntrian() {
   const [time, setTime] = useState(null);
 
   const toast = useRef(null);
+  const { getPrinterConfig } = usePrinterManager();
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -259,6 +262,21 @@ function DisplayAntrian() {
     }
   };
 
+  const handleCetakAntrian = async () => {
+    try {
+      // Gunakan printer yang dipilih
+      const config = getPrinterConfig();
+      
+      // ... sisa kode pencetakan tetap sama ...
+    } catch (error) {
+      toast.current.show({
+        severity: 'error',
+        summary: 'Kesalahan',
+        detail: error.message || 'Printer belum dipilih'
+      });
+    }
+  };
+
   const renderCard = (loket, index) => {
     const currentNumber = getAntrianByLoket(loket.NAMALOKET);
     const hasQueue = currentNumber !== '-';
@@ -342,6 +360,9 @@ function DisplayAntrian() {
           <img src="/layout/images/logo.png" alt="Logo" className="h-[50px]" />
           <h2 className="text-lg font-semibold text-black m-0">RUMAH SAKIT</h2>
         </div>
+
+        {/* Tambahkan PrinterSelector di sini */}
+        <PrinterSelector />
 
         {hydrated && (
           <div className="font-bold text-sm text-right">
