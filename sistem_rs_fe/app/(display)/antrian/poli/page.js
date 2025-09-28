@@ -9,6 +9,8 @@ import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Divider } from 'primereact/divider';
+import { usePrinterManager } from '@/utils/printerManager';
+import PrinterSelector from '@/components/PrinterSelector';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -68,6 +70,7 @@ function DisplayAntrianPoli() {
   const [time, setTime] = useState(null);
 
   const toast = useRef(null);
+  const { getPrinterConfig } = usePrinterManager();
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -91,9 +94,49 @@ function DisplayAntrianPoli() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.qz) {
-      window.qz.websocket.connect().catch(err => {
-        console.error("QZ Tray belum siap:", err);
-      });
+      const connectQzTray = async () => {
+        try {
+          // Coba disconnect terlebih dahulu jika ada koneksi aktif
+          if (window.qz.websocket?.disconnect) {
+            try {
+              await window.qz.websocket.disconnect();
+            } catch (disconnectError) {
+              console.log('Gagal disconnect (mungkin tidak ada koneksi aktif):', disconnectError);
+            }
+          }
+
+          // Sambungkan kembali dengan timeout
+          await Promise.race([
+            window.qz.websocket.connect(),
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('Koneksi WebSocket timeout')), 5000)
+            )
+          ]);
+
+          console.log('QZ Tray websocket berhasil tersambung');
+        } catch (err) {
+          console.error("QZ Tray koneksi gagal:", err);
+          
+          // Tangani berbagai jenis error koneksi
+          const connectionErrorMessages = [
+            'An open connection with QZ Tray already exists',
+            'Connection attempt cancelled by user',
+            'WebSocket is closed before the connection is established',
+            'Koneksi WebSocket timeout',
+            'Cannot read properties of null (reading \'sendData\')'
+          ];
+
+          const isConnectionError = connectionErrorMessages.some(msg => 
+            err.message.includes(msg)
+          );
+
+          if (isConnectionError) {
+            console.log('Koneksi bermasalah, abaikan');
+          }
+        }
+      };
+
+      connectQzTray();
     }
   }, []);
 
@@ -176,10 +219,29 @@ function DisplayAntrianPoli() {
 
   const printStruk = async (nomorBaru, poliName) => {
     try {
-      if (!window.qz) throw new Error("QZ Tray belum tersedia");
+      if (!window.qz) throw new Error("QZ Tray tidak tersedia");
 
-      await window.qz.websocket.connect();
-      const config = window.qz.configs.create("POS-58");
+      // Pastikan websocket tersedia dan terhubung
+      if (!window.qz.websocket) {
+        throw new Error("WebSocket tidak tersedia");
+      }
+
+      // Coba sambungkan websocket dengan timeout
+      await Promise.race([
+        window.qz.websocket.connect(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Koneksi WebSocket timeout')), 5000)
+        )
+      ]);
+
+      // Pastikan konfigurasi printer tersedia
+      const config = window.qz.configs?.create 
+        ? window.qz.configs.create("POS-58")
+        : null;
+
+      if (!config) {
+        throw new Error("Konfigurasi printer tidak dapat dibuat");
+      }
 
       const now = new Date();
       const jam = now
@@ -220,10 +282,36 @@ function DisplayAntrianPoli() {
         '\x1D\x56\x01'
       ];
 
+      // Pastikan metode print tersedia
+      if (!window.qz.print) {
+        throw new Error("Metode print tidak tersedia");
+      }
+
       await window.qz.print(config, data);
-      await window.qz.websocket.disconnect();
+      
+      // Disconnect websocket setelah print
+      try {
+        await window.qz.websocket.disconnect();
+      } catch (disconnectError) {
+        console.log('Gagal disconnect websocket:', disconnectError);
+      }
     } catch (err) {
       console.error("Gagal print:", err);
+      
+      // Tangani berbagai jenis error
+      const printErrorMessages = [
+        'Cannot read properties of null (reading \'sendData\')',
+        'Connection attempt cancelled by user',
+        'WebSocket is closed before the connection is established'
+      ];
+
+      const isPrintError = printErrorMessages.some(msg => 
+        err.message.includes(msg)
+      );
+
+      if (isPrintError) {
+        console.log('Error pencetakan dapat diabaikan');
+      }
     }
   };
 
@@ -255,6 +343,21 @@ function DisplayAntrianPoli() {
     } catch (err) {
       showToast('error', 'Gagal mengambil tiket.');
       console.error('Error tacking ticket:', err)
+    }
+  };
+
+  const handleCetakAntrian = async () => {
+    try {
+      // Gunakan printer yang dipilih
+      const config = getPrinterConfig();
+      
+      // ... sisa kode pencetakan tetap sama ...
+    } catch (error) {
+      toast.current.show({
+        severity: 'error',
+        summary: 'Kesalahan',
+        detail: error.message || 'Printer belum dipilih'
+      });
     }
   };
 
@@ -341,6 +444,9 @@ function DisplayAntrianPoli() {
           <img src="/layout/images/logo.png" alt="Logo" className="h-[50px]" />
           <h2 className="text-lg font-semibold text-black m-0">RUMAH SAKIT</h2>
         </div>
+
+        {/* Tambahkan PrinterSelector di sini */}
+        <PrinterSelector />
 
         {hydrated && (
           <div className="font-bold text-sm text-right">
