@@ -84,7 +84,7 @@ const DetailRawatJalan = ({ visible, onHide, rawatJalan }) => {
         <Button label="Tambah" icon="pi pi-plus" onClick={addTindakan} />
       </div>
 
-      <DataTable value={tindakan} paginator rows={5}>
+      <DataTable value={tindakan} paginator rows={20} rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]}>
         <Column field="NAMATINDAKAN" header="Tindakan" />
         <Column field="JUMLAH" header="Jumlah" />
         <Column field="HARGA" header="Harga"

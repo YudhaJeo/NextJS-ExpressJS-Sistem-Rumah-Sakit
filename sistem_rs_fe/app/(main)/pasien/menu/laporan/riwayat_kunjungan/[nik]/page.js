@@ -120,7 +120,7 @@ const handleOpenAdjust = async (row) => {
           value={data}
           stripedRows
           paginator
-          rows={10}
+          rows={10} rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]}
           emptyMessage="Belum ada riwayat untuk pasien ini."
         >
           <Column field="JENIS" header="Jenis" />

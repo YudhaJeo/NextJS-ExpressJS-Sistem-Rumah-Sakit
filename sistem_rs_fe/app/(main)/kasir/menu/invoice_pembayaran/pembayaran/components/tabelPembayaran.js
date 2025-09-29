@@ -124,7 +124,7 @@ const TabelPembayaran = ({ data, loading, onEdit, onDelete }) => {
       <DataTable
         value={data}
         paginator
-        rows={10}
+        rows={10} rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]}
         loading={loading}
         size="small"
         scrollable

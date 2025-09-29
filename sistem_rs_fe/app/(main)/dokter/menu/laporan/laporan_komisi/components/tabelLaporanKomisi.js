@@ -67,7 +67,7 @@ const TabelLaporanKomisi = ({ data, loading }) => {
 
   return (
     <>
-      <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
+      <DataTable value={data} paginator rows={10} rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]} loading={loading} size="small" scrollable>
         <Column field="NAMADOKTER" header="Dokter" />
         <Column field="NAMAPASIEN" header="Pasien" />
         <Column field="TANGGALKUNJUNGAN" header="Total Tagihan" body={(r) => formatTanggal(r.TANGGALKUNJUNGAN)} />
