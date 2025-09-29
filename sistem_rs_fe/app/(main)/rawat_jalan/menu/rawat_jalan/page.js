@@ -63,7 +63,7 @@ const RawatJalanPage = () => {
       }));
       setDokterOptions(options);
     } catch (err) {
-      console.error("Gagal ambil data Dokter:", err);
+      toastRef.current?.showToast("01", "Gagal ambil data Dokter");
     }
   }
 
@@ -102,8 +102,7 @@ const RawatJalanPage = () => {
 
       setPendaftaranOptions(options);
     } catch (err) {
-      console.error("Gagal ambil data monitoring:", err);
-      toastRef.current?.showToast("01", "Gagal mengambil data dari server");
+      toastRef.current?.showToast("01", "Gagal ambil data monitoring");
     } finally {
       setLoading(false);
     }
@@ -168,8 +167,8 @@ const RawatJalanPage = () => {
       setDialogVisible(false);
       resetForm();
     } catch (err) {
-      console.error("Gagal simpan data:", err);
-      toastRef.current?.showToast("01", "Gagal menyimpan data");
+      const errorMessage = err.response?.data?.error || err.response?.data?.message || "Gagal menyimpan data";
+      toastRef.current?.showToast("01", errorMessage);
     }
   };
 
@@ -202,8 +201,8 @@ const RawatJalanPage = () => {
           toastRef.current?.showToast("00", "Data berhasil dihapus");
           fetchData(unitKerja);
         } catch (err) {
-          console.error("Gagal hapus data:", err);
-          toastRef.current?.showToast("01", "Gagal menghapus data");
+          const errorMessage = err.response?.data?.error || "Gagal menghapus data";
+          toastRef.current?.showToast("01", errorMessage);
         }
       },
     });
