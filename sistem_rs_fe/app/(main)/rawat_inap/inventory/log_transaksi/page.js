@@ -110,8 +110,11 @@ const MonitoringPemesananPage = () => {
       }));
       const merged = [...pemesananDetailData, ...obatInapData, ...alkesInapData];
   
-      setData(merged);
-      setOriginalData(merged);
+      // Urutkan data berdasarkan tanggal terbaru
+      const sortedData = merged.sort((a, b) => new Date(b.TANGGAL) - new Date(a.TANGGAL));
+
+      setData(sortedData);
+      setOriginalData(sortedData);
     } catch (err) {
       console.error("Gagal mengambil data transaksi:", err);
       toastRef.current?.showToast("01", "Gagal memuat data transaksi");
@@ -144,12 +147,15 @@ const MonitoringPemesananPage = () => {
   const handleDateFilter = () => {
     if (!startDate && !endDate) return setData(originalData);
     const filtered = originalData.filter((item) => {
-      const visitDate = new Date(item.TGLPEMESANAN);
+      // Gunakan TANGGAL untuk semua tipe transaksi
+      const visitDate = new Date(item.TANGGAL);
       const from = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
       const to = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
       return (!from || visitDate >= from) && (!to || visitDate <= to);
     });
-    setData(filtered);
+    // Tetap urutkan setelah filter
+    const sortedFiltered = filtered.sort((a, b) => new Date(b.TANGGAL) - new Date(a.TANGGAL));
+    setData(sortedFiltered);
   };
 
   const handleSearch = (keyword) => {

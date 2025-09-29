@@ -17,7 +17,6 @@ export async function getAllRawatJalan(req, res) {
 
     res.json({ data });
   } catch (err) {
-    console.error('🔥 ERROR GET /rawat_jalan:', err);
     res.status(500).json({ error: err.message });
   }
 }
@@ -38,7 +37,7 @@ export async function createRawatJalan(req, res) {
       KETERANGAN,
       FOTORESEP
     });
-    res.json({ message: 'RawatJalan berhasil ditambahkan' });
+    res.json({ message: 'Rawat Jalan berhasil ditambahkan' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -53,6 +52,36 @@ export async function updateRawatJalan(req, res) {
     const existing = await RawatJalanModel.getRawatById(id);
     if (!existing) {
       return res.status(404).json({ message: "Data Rawat Jalan tidak ditemukan" });
+    }
+
+    const dokter = await trx('dokter')
+      .where('IDDOKTER', IDDOKTER)
+      .first();
+    if (!dokter) {
+      await trx.rollback();
+      return res.status(400).json({ message: "Dokter tidak valid" });
+    }
+
+    const pendaftaran = await trx('pendaftaran')
+      .where('IDPENDAFTARAN', existing.IDPENDAFTARAN)
+      .first();
+    if (!pendaftaran) {
+      await trx.rollback();
+      return res.status(400).json({ message: "Data Pendaftaran tidak valid" });
+    }
+
+    if (STATUSRAWAT === "Rawat Inap") {
+      const existingInap = await db('rawat_inap')
+        .where('IDRAWATJALAN', id)
+        .first();
+
+      if (!existingInap) {
+        const bedTersedia = await db('bed').where('STATUS', 'TERSEDIA').first();
+        if (!bedTersedia) {
+          await trx.rollback();
+          return res.status(400).json({ message: "Tidak ada bed tersedia untuk Rawat Inap" });
+        }
+      }
     }
 
     let FOTORESEP = existing.FOTORESEP;
@@ -81,16 +110,17 @@ export async function updateRawatJalan(req, res) {
 
       if (!existingInap) {
         const bedTersedia = await db('bed').where('STATUS', 'TERSEDIA').first();
-        if (!bedTersedia) {
-          return res.status(400).json({ message: "Tidak ada bed tersedia" });
-        }
-
+        
         await RawatInapModel.create({
           IDRAWATJALAN: updated.IDRAWATJALAN,
           IDBED: bedTersedia.IDBED,
           TANGGALMASUK: new Date(),
           CATATAN: 'Otomatis dari Rawat Jalan'
         });
+
+        await trx('bed')
+          .where('IDBED', bedTersedia.IDBED)
+          .update({ STATUS: 'TERISI' });
       }
     }
 
@@ -107,36 +137,40 @@ export async function updateRawatJalan(req, res) {
         FOTORESEP: updated.FOTORESEP,
         TOTALTINDAKAN,
         TOTALBIAYA,
-    };
+      };
 
-    const pasien = await trx('pasien')
-      .join('pendaftaran', 'pasien.NIK', 'pendaftaran.NIK')
-      .join('rawat_jalan', 'pendaftaran.IDPENDAFTARAN', 'rawat_jalan.IDPENDAFTARAN')
-      .where('rawat_jalan.IDRAWATJALAN', updated.IDRAWATJALAN)
-      .select('pasien.NIK', 'pasien.IDASURANSI')
-      .first();
-    if (!pasien) {
-      throw new Error('Pasien tidak ditemukan untuk pembuatan invoice.');
-    }
+      const pasien = await trx('pasien')
+        .join('pendaftaran', 'pasien.NIK', 'pendaftaran.NIK')
+        .join('rawat_jalan', 'pendaftaran.IDPENDAFTARAN', 'rawat_jalan.IDPENDAFTARAN')
+        .where('rawat_jalan.IDRAWATJALAN', updated.IDRAWATJALAN)
+        .select('pasien.NIK', 'pasien.IDASURANSI')
+        .first();
+      if (!pasien) {
+        await trx.rollback();
+        throw new Error('Pasien tidak ditemukan untuk pembuatan invoice.');
+      }
 
-    const tanggalInvoice = new Date().toISOString().split('T')[0];
-    const NOINVOICE = await generateNoInvoice(tanggalInvoice, trx);
-  
-    await trx('invoice').insert({
-      NOINVOICE,
-      NIK: pasien.NIK,
-      IDASURANSI: pasien.IDASURANSI || null,
-      TANGGALINVOICE: tanggalInvoice,
-      TOTALTAGIHAN: 0,
-      STATUS: 'BELUM_LUNAS',
-    });
-  
+      const tanggalInvoice = new Date().toISOString().split('T')[0];
+      const NOINVOICE = await generateNoInvoice(tanggalInvoice, trx);
+    
+      await trx('invoice').insert({
+        NOINVOICE,
+        NIK: pasien.NIK,
+        IDASURANSI: pasien.IDASURANSI || null,
+        TANGGALINVOICE: tanggalInvoice,
+        TOTALTAGIHAN: 0,
+        STATUS: 'BELUM_LUNAS',
+      });
+    
       await trx.commit();
       await RiwayatRawatJalan.insertFromRawatJalan(dataRiwayat);
+    } else {
+      await trx.commit();
     }
 
     res.json({ message: 'RawatJalan berhasil diperbarui & sinkron dengan Rawat Inap' });
   } catch (err) {
+    await trx.rollback();
     res.status(500).json({ error: err.message });
   }
 }

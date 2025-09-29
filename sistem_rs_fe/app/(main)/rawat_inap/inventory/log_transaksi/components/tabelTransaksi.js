@@ -60,10 +60,15 @@ const TabelTransaksi = ({ data, loading, onDetail }) => {
       loading={loading}
       paginator
       rows={20}
+      rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]}
       responsiveLayout="scroll"
       emptyMessage="Tidak ada data transaksi stok"
     >
-      <Column field="ID" header="ID" />
+      <Column 
+        header="No" 
+        body={(rowData, { rowIndex }) => rowIndex + 1} 
+        style={{ width: '60px', textAlign: 'center' }} 
+      />
       <Column body={dateBody} header="Tanggal" />
       <Column body={tipeBody} header="Tipe" />
       <Column body={statusBody} header="Status" />
