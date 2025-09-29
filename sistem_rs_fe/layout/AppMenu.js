@@ -171,7 +171,7 @@ const AppMenu = () => {
         ],
       },
       {
-        label: "Fitur Kasir & Sales",
+        label: "Fitur Kasir",
         items: [
           { label: "Dashboard Kasir", icon: "pi pi-fw pi-chart-bar", to: "/kasir/dashboard" },
           {
