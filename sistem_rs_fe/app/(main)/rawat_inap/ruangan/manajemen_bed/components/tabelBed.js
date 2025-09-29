@@ -7,7 +7,7 @@ import { Tag } from "primereact/tag";
 
 const TabelBed = ({ data, loading, onEdit, onDelete }) => {
   return (
-    <DataTable value={data} paginator rows={10} loading={loading} size="small" scrollable>
+    <DataTable value={data} paginator rows={10} rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]} loading={loading} size="small" scrollable>
       <Column field="NOMORBED" header="Nomor Bed" />
       <Column
         field="IDKAMAR"

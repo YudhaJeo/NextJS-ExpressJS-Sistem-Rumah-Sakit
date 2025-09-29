@@ -23,7 +23,7 @@ const DetailMasuk = ({ visible, onHide, data }) => {
         <p><b>Status:</b> {data.pemesanan?.STATUS}</p>
       </div>
 
-      <DataTable value={data.details} paginator rows={5}>
+      <DataTable value={data.details} paginator rows={20} rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]}>
         <Column field="JENISBARANG" header="Jenis" />
         <Column field="NAMABARANG" header="ID Barang" />
         <Column field="QTY" header="Qty" />

@@ -9,7 +9,7 @@ const MyTabel = ({ data, loading, onEdit, onDelete }) => {
   return (
     <DataTable
       value={data}
-      paginator rows={10}
+      paginator rows={10} rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]}
       loading={loading}
       size="small">
       <Column field="IDTINDAKAN" header="ID" />

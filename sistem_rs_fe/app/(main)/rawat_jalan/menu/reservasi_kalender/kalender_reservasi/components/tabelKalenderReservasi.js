@@ -109,7 +109,7 @@ export default function TabelKalender({ refresh }) {
         }
       >
         {selectedEvents.length > 0 && (
-          <DataTable value={selectedEvents} paginator rows={5} responsiveLayout="scroll">
+          <DataTable value={selectedEvents} paginator rows={20} rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]} responsiveLayout="scroll">
             <Column field="NAMALENGKAP" header="Pasien" />
             <Column field="NAMADOKTER" header="Dokter" />
             <Column field="NAMAPOLI" header="Poli" />

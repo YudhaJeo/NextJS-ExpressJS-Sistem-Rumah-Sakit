@@ -15,7 +15,8 @@ const DetailKeluar = ({ visible, onHide, data }) => {
     >
       <div className="mb-3">
         <p><b>Tanggal Pemberian:</b> {new Date(data.TANGGAL).toLocaleString('id-ID')}</p>
-        <p><b>Pasien:</b> {data.NAMALENGKAP} (Bed {data.NOMORBED})</p>
+        <p><b>Pasien:</b> {data.NAMALENGKAP} </p>
+        <p><b>Bed:</b> {data.NOMORBED}</p>
         <p><b>Perawat:</b> {data.NAMAPERAWAT}</p>
         <p><b>Tipe:</b> {data.TIPE}</p>
       </div>
