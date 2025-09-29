@@ -78,14 +78,14 @@ export async function createAngsuran(req, res) {
       .where('IDINVOICE', IDINVOICE)
       .update({ TOTALDEPOSIT: totalDeposit.total || 0 });
 
+    const tanggalBayar = new Date().toISOString();
+    const NOANGSURAN = await generateNoAngsuran(tanggalBayar, trx);
+
     if (sisaBayar > 0) {
       if (METODE === 'Transfer Bank' && !IDBANK) {
         await trx.rollback();
         return res.status(400).json({ success: false, message: 'Bank wajib dipilih untuk Transfer Bank' });
       }
-
-      const tanggalBayar = new Date().toISOString();
-      const NOANGSURAN = await generateNoAngsuran(tanggalBayar, trx);
 
       await AngsuranModel.create({
         NOANGSURAN,
@@ -97,7 +97,7 @@ export async function createAngsuran(req, res) {
       }, trx);
 
       const totalSetelahBayar = (invoice.TOTALANGSURAN || 0) + sisaBayar;
-      const sisaTagihanBaru = invoice.SISA_TAGIHAN - NOMINAL; 
+      const sisaTagihanBaru = invoice.SISA_TAGIHAN - NOMINAL;
 
       await trx('invoice')
         .where('IDINVOICE', IDINVOICE)
@@ -108,6 +108,15 @@ export async function createAngsuran(req, res) {
           UPDATED_AT: trx.fn.now()
         });
     } else {
+      await AngsuranModel.create({
+        NOANGSURAN,
+        IDINVOICE,
+        NOMINAL: NOMINAL,
+        METODE: 'Deposit',
+        IDBANK: null,
+        KETERANGAN: 'Pembayaran dengan deposit penuh'
+      }, trx);
+
       const sisaTagihanBaru = invoice.SISA_TAGIHAN - NOMINAL;
       await trx('invoice')
         .where('IDINVOICE', IDINVOICE)
