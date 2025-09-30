@@ -26,7 +26,6 @@ const FormDialogAngsuran = ({
     if (!form.IDINVOICE) newErrors.IDINVOICE = 'Invoice wajib dipilih';
     if (!form.TANGGALBAYAR) newErrors.TANGGALBAYAR = 'Tanggal bayar wajib diisi';
     if (!form.NOMINAL || form.NOMINAL <= 0) newErrors.NOMINAL = 'Jumlah harus lebih dari 0';
-    if (!form.METODE) newErrors.METODE = 'Metode wajib dipilih';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -39,27 +38,32 @@ const FormDialogAngsuran = ({
   };
 
   const handleInvoiceChange = (e) => {
-    const selectedInvoice = invoiceOptions.find((inv) => inv.value === e.value);
-    if (selectedInvoice) {
-      setForm({
-        ...form,
-        IDINVOICE: selectedInvoice.value,
-        NOINVOICE: selectedInvoice.label,
-        NIK: selectedInvoice.NIK || '',
-        NAMAPASIEN: selectedInvoice.NAMAPASIEN || '',
-        NAMAASURANSI: selectedInvoice.NAMAASURANSI || '',
-      });
-    } else {
-      setForm({
-        ...form,
-        IDINVOICE: '',
-        NOINVOICE: '',
-        NIK: '',
-        NAMAPASIEN: '',
-        NAMAASURANSI: '',
-      });
-    }
-  };
+  const selectedInvoice = invoiceOptions.find((inv) => inv.value === e.value);
+  if (selectedInvoice) {
+    setForm({
+      ...form,
+      IDINVOICE: selectedInvoice.value,
+      NOINVOICE: selectedInvoice.label,
+      NIK: selectedInvoice.NIK || '',
+      NAMAPASIEN: selectedInvoice.NAMAPASIEN || '',
+      NAMAASURANSI: selectedInvoice.NAMAASURANSI || '',
+      TOTALDEPOSIT: selectedInvoice.TOTALDEPOSIT || 0, 
+      METODE: selectedInvoice.TOTALDEPOSIT > 0 ? 'Deposit' : '', 
+    });
+  } else {
+    setForm({
+      ...form,
+      IDINVOICE: '',
+      NOINVOICE: '',
+      NIK: '',
+      NAMAPASIEN: '',
+      NAMAASURANSI: '',
+      TOTALDEPOSIT: 0,
+      METODE: '',
+    });
+  }
+};
+
 
   return (
     <Dialog
@@ -69,7 +73,7 @@ const FormDialogAngsuran = ({
         setErrors({});
         onHide();
       }}
-      style={{ width: '40vw' }}
+      style={{ width: '60vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
         <div className ="mt-2">
@@ -144,30 +148,28 @@ const FormDialogAngsuran = ({
           {errors.NOMINAL && <small className="p-error">{errors.NOMINAL}</small>}
         </div>
 
-        <div className ="mt-2">
-          <label className="font-medium">Metode Pembayaran</label>
-          <Dropdown
-            className={classNames('w-full mt-2', { 'p-invalid': errors.METODE })}
-            value={form.METODE}
-            options={metodeOptions}
-            onChange={(e) => setForm({ ...form, METODE: e.value })}
-            placeholder="Pilih Metode"
-          />
-          {errors.METODE && <small className="p-error">{errors.METODE}</small>}
-        </div>
-
-        {form.METODE === 'Transfer Bank' && (
-          <div className ="mt-2">
-            <label className="font-medium">Pilih Bank</label>
-            <Dropdown
+        {form.TOTALDEPOSIT > 0 && form.TOTALDEPOSIT >= form.SISA_TAGIHAN ? (
+          <div className="mt-2">
+            <label className="font-medium">Metode Pembayaran</label>
+            <InputText
               className="w-full mt-2"
-              value={form.IDBANK}
-              options={bankOptions}
-              onChange={(e) => setForm({ ...form, IDBANK: e.value })}
-              placeholder="Pilih Bank"
-              showClear
-              filter
+              value="Deposit"
+              readOnly
             />
+          </div>
+        ) : (
+          <div className="mt-2">
+            <label className="font-medium">Metode Pembayaran</label>
+            <Dropdown
+              className={classNames('w-full mt-2', { 'p-invalid': errors.METODEPEMBAYARAN })}
+              value={form.METODEPEMBAYARAN}
+              options={metodeOptions}
+              onChange={(e) => setForm({ ...form, METODEPEMBAYARAN: e.value })}
+              placeholder="Pilih Metode"
+            />
+            {errors.METODEPEMBAYARAN && (
+              <small className="p-error">{errors.METODEPEMBAYARAN}</small>
+            )}
           </div>
         )}
 

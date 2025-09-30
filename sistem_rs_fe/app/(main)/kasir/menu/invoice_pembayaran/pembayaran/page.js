@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -45,10 +44,10 @@ const Page = () => {
     JUMLAHBAYAR: 0,
     TANGGALBAYAR: '',
     KETERANGAN: '',
+    TOTALDEPOSIT: 0,
   });
 
   const toastRef = useRef(null);
-  const router = useRouter();
 
   const PDFViewer = dynamic(() => import('./print/PDFViewer'), { ssr: false });
 
@@ -74,6 +73,14 @@ const Page = () => {
     }
   };
 
+  const formatRupiah = (number) => {
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    }).format(number);
+  };
+
   const fetchInvoices = async () => {
     try {
       const res = await axios.get(`${API_URL}/invoice`);
@@ -81,12 +88,13 @@ const Page = () => {
         .filter((inv) => inv.STATUS !== 'LUNAS')
         .map((inv) => {
           return {
-            label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN}`,
+            label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN} | Sisa Tagihan: ${formatRupiah(inv.SISA_TAGIHAN)} - Deposit: ${formatRupiah(inv.TOTALDEPOSIT || 0)}`,
             value: inv.IDINVOICE,
             NIK: inv.NIK,
             NAMAPASIEN: inv.NAMAPASIEN,
             NAMAASURANSI: inv.NAMAASURANSI,
             SISA_TAGIHAN: inv.SISA_TAGIHAN,
+            TOTALDEPOSIT: inv.TOTALDEPOSIT || 0,
           };
         });
       setInvoiceOptions(options);

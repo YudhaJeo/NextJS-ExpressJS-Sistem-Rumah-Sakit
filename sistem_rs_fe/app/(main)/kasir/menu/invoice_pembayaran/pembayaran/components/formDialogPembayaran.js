@@ -28,7 +28,6 @@ const FormDialogPembayaran = ({
     if (!form.NIK) newErrors.NIK = 'NIK wajib ada';
     if (!form.NAMAPASIEN) newErrors.NAMAPASIEN = 'Nama Pasien wajib ada';
     if (!form.ASURANSI) newErrors.ASURANSI = 'Asuransi wajib ada';
-    if (!form.METODEPEMBAYARAN) newErrors.METODEPEMBAYARAN = 'Metode wajib dipilih';
     if (!form.JUMLAHBAYAR || form.JUMLAHBAYAR <= 0)
       newErrors.JUMLAHBAYAR = 'Jumlah bayar harus lebih dari 0';
     if (!form.TANGGALBAYAR) newErrors.TANGGALBAYAR = 'Tanggal Bayar wajib diisi';
@@ -43,31 +42,38 @@ const FormDialogPembayaran = ({
     }
   };
 
-  const handleInvoiceChange = (e) => {
-    const selectedInvoice = invoiceOptions.find((inv) => inv.value === e.value);
-    if (selectedInvoice) {
-      const pasien = pasienOptions.find((p) => selectedInvoice.label.includes(p.label.split(' - ')[1]));
-      setForm({
-        ...form,
-        IDINVOICE: selectedInvoice.value,
-        NOINVOICE: selectedInvoice.label.split(' - ')[0],
-        NIK: pasien?.value || '',
-        NAMAPASIEN: pasien?.label.split(' - ')[1] || '',
-        ASURANSI: pasien?.NAMAASURANSI || '',
-        JUMLAHBAYAR: selectedInvoice.SISA_TAGIHAN || 0,
-      });
-    } else {
-      setForm({
-        ...form,
-        IDINVOICE: '',
-        NOINVOICE: '',
-        NIK: '',
-        NAMAPASIEN: '',
-        ASURANSI: '',
-        JUMLAHBAYAR: 0,
-      });
-    }
-  };
+const handleInvoiceChange = (e) => {
+  const selectedInvoice = invoiceOptions.find((inv) => inv.value === e.value);
+  if (selectedInvoice) {
+    const pasien = pasienOptions.find((p) =>
+      selectedInvoice.label.includes(p.label.split(' - ')[1])
+    );
+    setForm({
+      ...form,
+      IDINVOICE: selectedInvoice.value,
+      NOINVOICE: selectedInvoice.label.split(' - ')[0],
+      NIK: pasien?.value || '',
+      NAMAPASIEN: pasien?.label.split(' - ')[1] || '',
+      ASURANSI: pasien?.NAMAASURANSI || '',
+      JUMLAHBAYAR: selectedInvoice.SISA_TAGIHAN || 0,
+      TOTALDEPOSIT: selectedInvoice.TOTALDEPOSIT || 0,
+      METODEPEMBAYARAN: selectedInvoice.TOTALDEPOSIT > 0 ? 'Deposit' : '',
+    });
+  } else {
+    setForm({
+      ...form,
+      IDINVOICE: '',
+      NOINVOICE: '',
+      NIK: '',
+      NAMAPASIEN: '',
+      ASURANSI: '',
+      JUMLAHBAYAR: 0,
+      TOTALDEPOSIT: 0,  
+      METODEPEMBAYARAN: '',
+    });
+  }
+};
+
 
   return (
     <Dialog
@@ -155,25 +161,28 @@ const FormDialogPembayaran = ({
           {errors.TANGGALBAYAR && <small className="p-error">{errors.TANGGALBAYAR}</small>}
         </div>
 
-        <div className ="mt-2">
-          <label className="font-medium">Metode Pembayaran</label>
-          <Dropdown
-            className={classNames('w-full mt-2', { 'p-invalid': errors.METODEPEMBAYARAN })}
-            options={metodeOptions}
-            value={form.METODEPEMBAYARAN}
-            onChange={(e) => {
-              if (e.value !== 'Transfer Bank') {
-                setForm({ ...form, METODEPEMBAYARAN: e.value, IDBANK: null });
-              } else {
-                setForm({ ...form, METODEPEMBAYARAN: e.value });
-              }
-            }}
-            placeholder="Pilih Metode"
-          />
-          {errors.METODEPEMBAYARAN && (
-            <small className="p-error">{errors.METODEPEMBAYARAN}</small>
-          )}
-        </div>
+        {form.TOTALDEPOSIT > 0 ? (
+          <div className="mt-2">
+            <label className="font-medium">Metode Pembayaran</label>
+            <InputText
+              className="w-full mt-2"
+              value="Deposit"
+              readOnly
+            />
+          </div>
+        ) : (
+          <div className="mt-2">
+            <label className="font-medium">Metode Pembayaran</label>
+            <Dropdown
+              className={classNames('w-full mt-2', { 'p-invalid': errors.METODEPEMBAYARAN })}
+              value={form.METODEPEMBAYARAN}
+              options={metodeOptions}
+              onChange={(e) => setForm({ ...form, METODEPEMBAYARAN: e.value })}
+              placeholder="Pilih Metode"
+            />
+            {errors.METODEPEMBAYARAN && <small className="p-error">{errors.METODEPEMBAYARAN}</small>}
+          </div>
+        )}
 
         {form.METODEPEMBAYARAN === 'Transfer Bank' && (
           <div className ="mt-2">
@@ -201,7 +210,7 @@ const FormDialogPembayaran = ({
             mode="currency"
             currency="IDR"
             locale="id-ID"
-            readOnly
+            readOnly={form.METODEPEMBAYARAN === 'Deposit'}
           />
           {errors.JUMLAHBAYAR && <small className="p-error">{errors.JUMLAHBAYAR}</small>}
         </div>

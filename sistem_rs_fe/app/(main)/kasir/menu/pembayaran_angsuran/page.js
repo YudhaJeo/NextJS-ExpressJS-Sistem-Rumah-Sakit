@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
 import HeaderBar from '@/app/components/headerbar';
 import ToastNotifier from '@/app/components/toastNotifier';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -47,7 +46,6 @@ const Page = () => {
   });
 
   const toastRef = useRef(null);
-  const router = useRouter();
 
   const PDFViewer = dynamic(() => import('./print/PDFViewer'), { ssr: false });
 
@@ -86,12 +84,13 @@ const Page = () => {
       const options = res.data.data
         .filter((inv) => inv.STATUS !== 'LUNAS')
         .map((inv) => ({
-          label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN} | Sisa: ${formatRupiah(inv.SISA_TAGIHAN)}`,
+          label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN} | Sisa Tagihan: ${formatRupiah(inv.SISA_TAGIHAN)} - Deposit: ${formatRupiah(inv.TOTALDEPOSIT || 0)}`,
           value: inv.IDINVOICE,
           NIK: inv.NIK,
           NAMAPASIEN: inv.NAMAPASIEN,
           NAMAASURANSI: inv.ASURANSI,
           SISA_TAGIHAN: inv.SISA_TAGIHAN,
+          TOTALDEPOSIT: inv.TOTALDEPOSIT || 0,
         }));
       setInvoiceOptions(options);
     } catch (err) {
