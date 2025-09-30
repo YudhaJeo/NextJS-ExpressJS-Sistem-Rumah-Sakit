@@ -27,13 +27,13 @@ export async function insertAlkes(req, res) {
         const {
             KODEALKES, NAMAALKES, MERKALKES, JENISALKES, STOK,
             HARGABELI, HARGAJUAL, TGLKADALUARSA,
-            SUPPLIERID, LOKASI, DESKRIPSI
+            IDSUPPLIER, LOKASI, DESKRIPSI
         } = req.body;
 
         await Alkes.createAlkes({
             KODEALKES, NAMAALKES, MERKALKES, JENISALKES, STOK,
             HARGABELI, HARGAJUAL, TGLKADALUARSA,
-            SUPPLIERID, LOKASI, DESKRIPSI
+            IDSUPPLIER, LOKASI, DESKRIPSI
         });
 
         res.json({ message: 'Data alkes berhasil ditambahkan' });
@@ -49,7 +49,7 @@ export async function updateAlkes(req, res) {
         const {
             KODEALKES, NAMAALKES, MERKALKES, JENISALKES, STOK,
             HARGABELI, HARGAJUAL, TGLKADALUARSA,
-            SUPPLIERID, LOKASI, DESKRIPSI
+            IDSUPPLIER, LOKASI, DESKRIPSI
         } = req.body;
 
         const existing = await Alkes.getById(id);
@@ -58,7 +58,7 @@ export async function updateAlkes(req, res) {
         await Alkes.updateAlkes(id, {
             KODEALKES, NAMAALKES, MERKALKES, JENISALKES, STOK,
             HARGABELI, HARGAJUAL, TGLKADALUARSA,
-            SUPPLIERID, LOKASI, DESKRIPSI
+            IDSUPPLIER, LOKASI, DESKRIPSI
         });
 
         res.json({ message: 'Data alkes berhasil diperbarui' });

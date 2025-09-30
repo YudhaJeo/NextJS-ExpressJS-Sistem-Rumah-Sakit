@@ -9,7 +9,7 @@ import { classNames } from 'primereact/utils';
 
 const initialForm = () => ({
   TGLPEMESANAN: new Date().toISOString().split('T')[0],
-  SUPPLIERID: null,
+  IDSUPPLIER: null,
   details: []
 });
 
@@ -23,7 +23,7 @@ const FormPemesanan = ({ visible, onHide, onSubmit, suppliers, obat, alkes }) =>
   const validate = () => {
     const newErrors = {};
     if (!form.TGLPEMESANAN) newErrors.TGLPEMESANAN = 'Tanggal pemesanan harus diisi';
-    if (!form.SUPPLIERID) newErrors.SUPPLIERID = 'Supplier harus dipilih';
+    if (!form.IDSUPPLIER) newErrors.IDSUPPLIER = 'Supplier harus dipilih';
     if (form.details.length === 0) newErrors.details = 'Minimal satu barang harus diisi';
 
     form.details.forEach((d, idx) => {
@@ -96,15 +96,15 @@ const FormPemesanan = ({ visible, onHide, onSubmit, suppliers, obat, alkes }) =>
         <div>
           <label>Supplier</label>
           <Dropdown
-            className={inputClass('SUPPLIERID')}
-            value={form.SUPPLIERID}
-            options={(suppliers || []).map(s => ({ label: s.NAMASUPPLIER, value: s.SUPPLIERID }))}
-            onChange={(e) => setForm({ ...form, SUPPLIERID: e.value })}
+            className={inputClass('IDSUPPLIER')}
+            value={form.IDSUPPLIER}
+            options={(suppliers || []).map(s => ({ label: s.NAMASUPPLIER, value: s.IDSUPPLIER }))}
+            onChange={(e) => setForm({ ...form, IDSUPPLIER: e.value })}
             placeholder="Pilih Supplier"
             filter
             showClear
           />
-          {errors.SUPPLIERID && <small className="text-red-500">{errors.SUPPLIERID}</small>}
+          {errors.IDSUPPLIER && <small className="text-red-500">{errors.IDSUPPLIER}</small>}
         </div>
 
         {/* Detail Barang */}

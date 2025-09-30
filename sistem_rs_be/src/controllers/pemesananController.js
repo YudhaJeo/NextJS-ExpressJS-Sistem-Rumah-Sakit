@@ -7,11 +7,11 @@ export const index = async (req, res) => {
 
 export const store = async (req, res) => {
   try {
-    const { TGLPEMESANAN, SUPPLIERID, details } = req.body;
+    const { TGLPEMESANAN, IDSUPPLIER, details } = req.body;
 
     const [inserted] = await PemesananModel.createPemesanan({
       TGLPEMESANAN,
-      SUPPLIERID,
+      IDSUPPLIER,
       STATUS: 'PENDING',
     });
 

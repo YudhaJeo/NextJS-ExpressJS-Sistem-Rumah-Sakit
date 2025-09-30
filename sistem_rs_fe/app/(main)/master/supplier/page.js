@@ -20,7 +20,7 @@ const SupplierPage = () => {
   const [loading, setLoading] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [formData, setFormData] = useState({
-    SUPPLIERID: 0,
+    IDSUPPLIER: 0,
     NAMASUPPLIER: "",
     ALAMAT: "",
     KOTA: "",
@@ -83,9 +83,9 @@ const SupplierPage = () => {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    const isEdit = !!formData.SUPPLIERID;
+    const isEdit = !!formData.IDSUPPLIER;
     const url = isEdit
-      ? `${API_URL}/supplier/${formData.SUPPLIERID}`
+      ? `${API_URL}/supplier/${formData.IDSUPPLIER}`
       : `${API_URL}/supplier`;
 
     try {
@@ -119,7 +119,7 @@ const SupplierPage = () => {
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/supplier/${row.SUPPLIERID}`);
+          await axios.delete(`${API_URL}/supplier/${row.IDSUPPLIER}`);
           fetchPoli();
           toastRef.current?.showToast('00', 'Data berhasil dihapus');
         } catch (err) {
@@ -132,7 +132,7 @@ const SupplierPage = () => {
 
   const resetForm = () => {
     setFormData({
-    SUPPLIERID: 0,
+    IDSUPPLIER: 0,
     NAMASUPPLIER: "",
     ALAMAT: "",
     KOTA: "",

@@ -65,7 +65,7 @@ const Page = () => {
       const res = await axios.get(`${API_URL}/supplier`);
       const options = res.data.map((item) => ({
         label: item.NAMASUPPLIER,
-        value: item.SUPPLIERID,
+        value: item.IDSUPPLIER,
       }));
       setSupplierOptions(options);
     } catch (err) {
