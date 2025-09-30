@@ -19,6 +19,10 @@ const FormDialogPasien = ({
   const inputClass = (field) =>
     errors[field] ? 'p-invalid w-full mt-2' : 'w-full mt-2';
 
+  const selectedAsuransi = asuransiOptions.find(
+    (opt) => opt.value === form.IDASURANSI
+  );
+
   return (
     <Dialog
       header={form.IDPASIEN ? 'Edit Pasien' : 'Tambah Pasien'}
@@ -33,7 +37,7 @@ const FormDialogPasien = ({
           onSubmit();
         }}
       >
-        <div className ="mt-2">
+        <div className="mt-2">
           <label>No Rekam Medis</label>
           <InputText
             className="w-full mt-2"
@@ -42,18 +46,22 @@ const FormDialogPasien = ({
             readOnly
           />
         </div>
-        
-        <div className ="mt-2">
+
+        <div className="mt-2">
           <label>Nama Lengkap</label>
           <InputText
             className={inputClass('NAMALENGKAP')}
             value={form.NAMALENGKAP}
-            onChange={(e) => setForm({ ...form, NAMALENGKAP: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, NAMALENGKAP: e.target.value })
+            }
           />
-          {errors.NAMALENGKAP && <small className="text-red-500">{errors.NAMALENGKAP}</small>}
+          {errors.NAMALENGKAP && (
+            <small className="text-red-500">{errors.NAMALENGKAP}</small>
+          )}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label>NIK</label>
           <InputText
             className={inputClass('NIK')}
@@ -61,15 +69,19 @@ const FormDialogPasien = ({
             value={form.NIK}
             onChange={(e) => setForm({ ...form, NIK: e.target.value })}
           />
-          {errors.NIK && <small className="text-red-500">{errors.NIK}</small>}
+          {errors.NIK && (
+            <small className="text-red-500">{errors.NIK}</small>
+          )}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label>Tanggal Lahir</label>
           <Calendar
             className={inputClass('TANGGALLAHIR')}
             dateFormat="yy-mm-dd"
-            value={form.TANGGALLAHIR ? new Date(form.TANGGALLAHIR) : undefined}
+            value={
+              form.TANGGALLAHIR ? new Date(form.TANGGALLAHIR) : undefined
+            }
             onChange={(e) =>
               setForm({
                 ...form,
@@ -78,10 +90,12 @@ const FormDialogPasien = ({
             }
             showIcon
           />
-          {errors.TANGGALLAHIR && <small className="text-red-500">{errors.TANGGALLAHIR}</small>}
+          {errors.TANGGALLAHIR && (
+            <small className="text-red-500">{errors.TANGGALLAHIR}</small>
+          )}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label>Jenis Kelamin</label>
           <Dropdown
             className={inputClass('JENISKELAMIN')}
@@ -90,33 +104,43 @@ const FormDialogPasien = ({
               { label: 'Perempuan', value: 'P' },
             ]}
             value={form.JENISKELAMIN}
-            onChange={(e) => setForm({ ...form, JENISKELAMIN: e.value })}
+            onChange={(e) =>
+              setForm({ ...form, JENISKELAMIN: e.value })
+            }
             placeholder="Pilih"
           />
-          {errors.JENISKELAMIN && <small className="text-red-500">{errors.JENISKELAMIN}</small>}
+          {errors.JENISKELAMIN && (
+            <small className="text-red-500">{errors.JENISKELAMIN}</small>
+          )}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label>Alamat Domisili</label>
           <InputText
             className={inputClass('ALAMAT')}
             value={form.ALAMAT}
             onChange={(e) => setForm({ ...form, ALAMAT: e.target.value })}
           />
-          {errors.ALAMAT && <small className="text-red-500">{errors.ALAMAT}</small>}
+          {errors.ALAMAT && (
+            <small className="text-red-500">{errors.ALAMAT}</small>
+          )}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label>Alamat KTP</label>
           <InputText
             className={inputClass('ALAMAT_KTP')}
             value={form.ALAMAT_KTP}
-            onChange={(e) => setForm({ ...form, ALAMAT_KTP: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, ALAMAT_KTP: e.target.value })
+            }
           />
-          {errors.ALAMAT_KTP && <small className="text-red-500">{errors.ALAMAT_KTP}</small>}
+          {errors.ALAMAT_KTP && (
+            <small className="text-red-500">{errors.ALAMAT_KTP}</small>
+          )}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label>No HP</label>
           <InputText
             className={inputClass('NOHP')}
@@ -124,10 +148,12 @@ const FormDialogPasien = ({
             maxLength={13}
             onChange={(e) => setForm({ ...form, NOHP: e.target.value })}
           />
-          {errors.NOHP && <small className="text-red-500">{errors.NOHP}</small>}
+          {errors.NOHP && (
+            <small className="text-red-500">{errors.NOHP}</small>
+          )}
         </div>
-        
-        <div className ="mt-2">
+
+        <div className="mt-2">
           <label>Usia</label>
           <InputText
             className={inputClass('USIA')}
@@ -135,10 +161,12 @@ const FormDialogPasien = ({
             maxLength={3}
             onChange={(e) => setForm({ ...form, USIA: e.target.value })}
           />
-          {errors.USIA && <small className="text-red-500">{errors.USIA}</small>}
+          {errors.USIA && (
+            <small className="text-red-500">{errors.USIA}</small>
+          )}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label>Agama</label>
           <Dropdown
             className={inputClass('IDAGAMA')}
@@ -146,12 +174,13 @@ const FormDialogPasien = ({
             value={form.IDAGAMA}
             onChange={(e) => setForm({ ...form, IDAGAMA: e.value })}
             placeholder="Pilih"
-          >
-          </Dropdown>
-          {errors.IDAGAMA && <small className="text-red-500">{errors.IDAGAMA}</small>}
+          />
+          {errors.IDAGAMA && (
+            <small className="text-red-500">{errors.IDAGAMA}</small>
+          )}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label>Golongan Darah</label>
           <Dropdown
             className={inputClass('GOLDARAH')}
@@ -165,30 +194,42 @@ const FormDialogPasien = ({
             onChange={(e) => setForm({ ...form, GOLDARAH: e.value })}
             placeholder="Pilih"
           />
-          {errors.GOLDARAH && <small className="text-red-500">{errors.GOLDARAH}</small>}
+          {errors.GOLDARAH && (
+            <small className="text-red-500">{errors.GOLDARAH}</small>
+          )}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label>Asuransi</label>
           <Dropdown
             className={inputClass('IDASURANSI')}
             options={asuransiOptions}
             value={form.IDASURANSI}
-            onChange={(e) => setForm({ ...form, IDASURANSI: e.value })}
+            onChange={(e) =>
+              setForm({ ...form, IDASURANSI: e.value, NOASURANSI: '' })
+            }
             placeholder="Pilih"
           />
-          {errors.IDASURANSI && <small className="text-red-500">{errors.IDASURANSI}</small>}
+          {errors.IDASURANSI && (
+            <small className="text-red-500">{errors.IDASURANSI}</small>
+          )}
         </div>
 
-        <div className ="mt-2">
-          <label>No Asuransi</label>
-          <InputText
-            className="w-full mt-2"
-            value={form.NOASURANSI}
-            onChange={(e) => setForm({ ...form, NOASURANSI: e.target.value })}
-          />
-          {errors.NOASURANSI && <small className="text-red-500">{errors.NOASURANSI}</small>}
-        </div>
+        {selectedAsuransi?.label !== 'Umum' && (
+          <div className="mt-2">
+            <label>No Asuransi</label>
+            <InputText
+              className="w-full mt-2"
+              value={form.NOASURANSI}
+              onChange={(e) =>
+                setForm({ ...form, NOASURANSI: e.target.value })
+              }
+            />
+            {errors.NOASURANSI && (
+              <small className="text-red-500">{errors.NOASURANSI}</small>
+            )}
+          </div>
+        )}
 
         <div className="text-right pt-3">
           <Button type="submit" label="Simpan" icon="pi pi-save" />
