@@ -117,7 +117,7 @@ const Page = () => {
     const options = res.data.data
       .filter((b) => b.STATUS === 'AKTIF')
       .map((b) => ({
-        label: `${b.NAMA_BANK} - ${b.NO_REKENING}`,
+        label: `${b.NAMA_BANK} - ${b.NO_REKENING} a.n ${b.ATAS_NAMA}`,
         value: b.IDBANK,
       }));
     setBankOptions(options);
