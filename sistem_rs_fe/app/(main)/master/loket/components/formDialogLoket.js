@@ -10,7 +10,7 @@ const FormDialogLoket = ({ visible, onHide, onSubmit, form, setForm, errors }) =
 
   return (
     <Dialog
-      header={form.NO ? 'Edit Loket' : 'Tambah Loket'}
+      header={form.IDLOKET ? 'Edit Loket' : 'Tambah Loket'}
       visible={visible}
       onHide={onHide}
       style={{ width: '30vw' }}

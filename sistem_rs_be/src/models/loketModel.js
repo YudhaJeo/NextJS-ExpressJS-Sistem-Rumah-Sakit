@@ -9,13 +9,13 @@ export const create = (data) => {
 };
 
 export const update = (id, data) => {
-  return db('loket').where('NO', id).update(data);
+  return db('loket').where('IDLOKET', id).update(data);
 };
 
 export const remove = (id) => {
-  return db('loket').where('NO', id).del();
+  return db('loket').where('IDLOKET', id).del();
 };
 
 export const getById = (id) => {
-  return db('loket').where('NO', id).first();
+  return db('loket').where('IDLOKET', id).first();
 };

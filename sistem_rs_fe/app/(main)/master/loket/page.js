@@ -77,9 +77,9 @@ const Page = () => {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    const isEdit = !!form.NO;
+    const isEdit = !!form.IDLOKET;
     const url = isEdit
-      ? `${API_URL}/loket/${form.NO}`
+      ? `${API_URL}/loket/${form.IDLOKET}`
       : `${API_URL}/loket`;
 
     try {
@@ -114,7 +114,7 @@ const Page = () => {
       rejectLabel: 'Batal',
       accept: async () => {
         try {
-          await axios.delete(`${API_URL}/loket/${row.NO}`);
+          await axios.delete(`${API_URL}/loket/${row.IDLOKET}`);
           fetchData();
           toastRef.current?.showToast('00', 'Data loket berhasil dihapus');
         } catch (err) {

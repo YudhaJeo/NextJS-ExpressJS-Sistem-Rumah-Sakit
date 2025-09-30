@@ -231,7 +231,7 @@ function MonitorAntrian() {
         >
           <div style={{ textAlign: "center" }}>
             <small style={{ color: "#757575", fontWeight: "500" }}>
-              Loket #{loket.NO}
+              Loket #{loket.IDLOKET}
             </small>
 
             <div

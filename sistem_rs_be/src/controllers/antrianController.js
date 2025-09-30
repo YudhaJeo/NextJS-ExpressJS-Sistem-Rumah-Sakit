@@ -27,7 +27,7 @@ export const createAntrian = async (req, res) => {
     }
 
     const last = await db('antrian')
-      .where('LOKET_ID', loket.NO)
+      .where('LOKET_ID', loket.IDLOKET)
       .andWhere('NO_ANTRIAN', 'like', `${loket.KODE}%`)
       .orderBy('ID', 'desc')
       .first();
@@ -46,7 +46,7 @@ export const createAntrian = async (req, res) => {
 
     const newAntrian = {
       NO_ANTRIAN,
-      LOKET_ID: loket.NO,
+      LOKET_ID: loket.IDLOKET,
       STATUS: 'Belum',
     };
 
@@ -106,7 +106,7 @@ export const resetByLoket = async (req, res) => {
     }
 
     await db('antrian')
-      .where('LOKET_ID', loketData.NO)
+      .where('LOKET_ID', loketData.IDLOKET)
       .del();
 
     const broadcastUpdate = req.app.get('broadcastUpdate');
