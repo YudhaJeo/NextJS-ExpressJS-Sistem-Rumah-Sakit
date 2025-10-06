@@ -36,22 +36,19 @@ const LoginPage = () => {
       setTimeout(() => {
         switch (res.data.role) {
           case "dokter":
-            router.push("/dashboard_dokter");
+            router.push("/dokter/dashboard");
             break;
           case "perawatpoli":
-            router.push("/dashboard_dokter");
+            router.push("/rawat_jalan/dashboard");
             break;
           case "perawatrawatinap":
-            router.push("/dashboard_dokter");
-            break;
-          case "adminutama":
-            router.push("/");
+            router.push("/rawat_inap/dashboard");
             break;
           case "superadmin":
             router.push("/");
             break;
           case "kasir":
-            router.push("/dashboard_kasir");
+            router.push("/kasir/dashboard");
             break;
           default:
             router.push("/");
