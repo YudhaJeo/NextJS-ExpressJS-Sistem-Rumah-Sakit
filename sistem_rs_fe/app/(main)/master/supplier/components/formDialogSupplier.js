@@ -10,7 +10,7 @@ const FormSupplier = ({ visible, formData, onHide, onChange, onSubmit, errors })
 
   return (
     <Dialog
-      header={formData.SUPPLIERID ? "Edit Supplier" : "Tambah Supplier"}
+      header={formData.IDSUPPLIER ? "Edit Supplier" : "Tambah Supplier"}
       visible={visible}
       onHide={onHide}
       style={{ width: "30vw" }}

@@ -2,7 +2,7 @@ import db from '../core/config/knex.js';
 
 export const findAllAntrian = () => {
   return db('antrian')
-    .join('loket', 'antrian.LOKET_ID', 'loket.NO')
+    .join('loket', 'antrian.LOKET_ID', 'loket.IDLOKET')
     .select('antrian.*', 'loket.NAMALOKET as LOKET');
 };
 

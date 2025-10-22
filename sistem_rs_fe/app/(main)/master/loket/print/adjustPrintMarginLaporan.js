@@ -101,7 +101,7 @@ export default function AdjustPrintMarginLaporan({
       startY: startY,
       head: [['ID', 'Nama Loket', 'Kode', 'Deskripsi']],
       body: dataLoket.map((loket) => [
-        loket.NO,
+        loket.IDLOKET,
         loket.NAMALOKET,
         loket.KODE,
         loket.DESKRIPSI || '-',

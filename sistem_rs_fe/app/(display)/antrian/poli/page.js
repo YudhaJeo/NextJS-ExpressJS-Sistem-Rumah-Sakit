@@ -332,7 +332,7 @@ function DisplayAntrianPoli() {
             NO_ANTRIAN: nomorBaru,
             POLI: poliName,
             STATUS: 'Belum',
-            POLI_ID: poli.NO,
+            POLI_ID: poli.IDLOKET,
             CREATED_AT: new Date().toISOString(),
           },
         ]);

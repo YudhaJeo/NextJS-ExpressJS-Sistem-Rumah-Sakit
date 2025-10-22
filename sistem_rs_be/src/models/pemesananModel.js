@@ -2,7 +2,7 @@ import db from '../core/config/knex.js';
 
 export const getAllPemesanan = () =>
   db('pemesanan as p')
-    .leftJoin('master_supplier as s', 'p.SUPPLIERID', 's.SUPPLIERID')
+    .leftJoin('master_supplier as s', 'p.IDSUPPLIER', 's.IDSUPPLIER')
     .select('p.*', 's.NAMASUPPLIER');
 
 export const getPemesananDetail = (id) =>

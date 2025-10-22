@@ -101,7 +101,7 @@ export default function AdjustPrintMarginLaporan({
       startY: startY,
       head: [['ID', 'Nama Supplier', 'Alamat', 'Kota', 'No. Telp', 'Email', 'Nama Sales']],
       body: dataSupplier.map((supplier) => [
-        supplier.SUPPLIERID,
+        supplier.IDSUPPLIER,
         supplier.NAMASUPPLIER,
         supplier.ALAMAT,
         supplier.KOTA,

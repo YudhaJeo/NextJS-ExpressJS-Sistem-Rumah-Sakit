@@ -248,7 +248,7 @@ function DisplayAntrian() {
             NO_ANTRIAN: nomorBaru,
             LOKET: loketName,
             STATUS: 'Belum',
-            LOKET_ID: loket.NO,
+            LOKET_ID: loket.IDLOKET,
             CREATED_AT: new Date().toISOString(),
           },
         ]);
@@ -316,7 +316,7 @@ function DisplayAntrian() {
           className={`h-full ${cardStyle}`}
         >
           <div className="text-center">
-            <small className="text-color-secondary font-medium">Loket {loket.NO}</small>
+            <small className="text-color-secondary font-medium">Loket {loket.IDLOKET}</small>
             <div className="text-xs text-color-secondary mt-1 mb-2">Nomor Antrian Saat Ini</div>
             <div
               className="text-center font-bold py-2 border-2 border-dashed border-300 border-round"

@@ -5,7 +5,7 @@ export const getAll = () => {
 };
 
 export const getById = (id) => {
-    return db('master_supplier').where('SUPPLIERID', id).first();
+    return db('master_supplier').where('IDSUPPLIER', id).first();
 };
 
 export const create = (data) => {
@@ -13,9 +13,9 @@ export const create = (data) => {
 };
 
 export const update = (id, data) => {
-    return db('master_supplier').where('SUPPLIERID', id).update(data);
+    return db('master_supplier').where('IDSUPPLIER', id).update(data);
 };
 
 export const remove = (id) => {
-    return db('master_supplier').where('SUPPLIERID', id).del();
+    return db('master_supplier').where('IDSUPPLIER', id).del();
 };

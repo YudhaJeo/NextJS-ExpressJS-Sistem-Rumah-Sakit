@@ -7,8 +7,8 @@ export async function up(knex) {
     table.increments('IDPEMESANAN').primary();
     table.string('TGLPEMESANAN').notNullable();
     table.enum('STATUS', ['PENDING', 'DITERIMA', 'DIBATALKAN']).defaultTo('PENDING');
-    table.integer('SUPPLIERID').unsigned()
-      .references('SUPPLIERID').inTable('master_supplier')
+    table.integer('IDSUPPLIER').unsigned()
+      .references('IDSUPPLIER').inTable('master_supplier')
       .onDelete('SET NULL');
     table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
     table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());
