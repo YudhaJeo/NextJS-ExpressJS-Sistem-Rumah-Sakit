@@ -55,6 +55,7 @@ import pemesananRoutes from './routes/pemesananRoutes.js';
 import dashboardApotekRoutes from './routes/dashboardApotekRoutes.js';
 import dashboardRajalRoutes from './routes/dashboardRajalRoutes.js';
 import laporanPembayaranRoutes from './routes/laporanPembayaranRoutes.js';
+import beritaRoutes from './routes/beritaRoutes.js';
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -131,5 +132,6 @@ app.use('/api/pemesanan', pemesananRoutes);
 app.use('/api/dashboard_apotek', dashboardApotekRoutes);
 app.use('/api/dashboard_rajal', dashboardRajalRoutes);
 app.use('/api/laporan_pembayaran', laporanPembayaranRoutes);
+app.use('/api/berita', beritaRoutes);
 
 export default app;
