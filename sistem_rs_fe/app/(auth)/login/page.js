@@ -23,7 +23,11 @@ const LoginPage = () => {
     try {
       const res = await axios.post(`${URL}/login`, { email, password });
 
-      Cookies.set("token", res.data.token);
+      Cookies.set("token", res.data.token, {
+        expires: 1,
+        path: "/",
+        sameSite: "lax",
+      });      
       Cookies.set("username", res.data.username);
       Cookies.set("role", res.data.role, { expires: 1 });
       Cookies.set("profile", res.data.profile, { expires: 1 });
