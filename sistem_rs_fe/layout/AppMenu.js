@@ -53,6 +53,8 @@ const AppMenu = () => {
               { label: "Tenaga Non Medis", icon: "pi pi-fw pi-users", to: "/master/tenaga_non_medis" },
               { label: "Metode Pembayaran", icon: "pi pi-fw pi-credit-card", to: "/master/metode_pembayaran" },
               { label: "Supplier", icon: "pi pi-fw pi-user", to: "/master/supplier" },
+              { label: "Berita", icon: "pi pi-fw pi-send", to: "/master/berita" },
+              { label: "Kritik Saran", icon: "pi pi-fw pi-inbox", to: "/master/kritik_saran" },
             ],
           },
         ],
@@ -230,6 +232,8 @@ const AppMenu = () => {
             items: [
               { label: "Loket", icon: "pi pi-fw pi-ticket", to: "/master/loket" },
               { label: "Jadwal Dokter", icon: "pi pi-fw pi-graduation-cap", to: "/master/jadwal_dokter" },
+              { label: "Berita", icon: "pi pi-fw pi-send", to: "/master/berita" },
+              { label: "Kritik Saran", icon: "pi pi-fw pi-inbox", to: "/master/kritik_saran" },
             ],
           },
         ],

@@ -60,7 +60,7 @@ const LoginPage = () => {
           default:
             router.push("/");
         }
-      }, 400);
+      }, 100);
     } catch (err) {
       if (toastRef.current) {
         toastRef.current.showToast(
