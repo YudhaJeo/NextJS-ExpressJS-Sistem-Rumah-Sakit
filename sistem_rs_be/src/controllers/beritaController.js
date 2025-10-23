@@ -64,13 +64,11 @@ export const updateBerita = async (req, res) => {
 
     if (file) {
       try {
-        // Hapus file lama di MinIO
-        await deleteFromMinio(minioClient, "uploads", beritaLama.PRATINJAU);
+        await deleteFromMinio(beritaLama.PRATINJAU);
       } catch (e) {
-        console.warn("Gagal hapus file lama:", e.message);
+        console.warn("⚠️ Gagal hapus file lama:", e.message);
       }
 
-      // Upload file baru ke MinIO
       const newPath = await uploadToMinio(file, "berita");
       PRATINJAU = newPath;
     }
@@ -105,9 +103,9 @@ export const deleteBerita = async (req, res) => {
     }
 
     try {
-      await deleteFromMinio(minioClient, "uploads", berita.PRATINJAU);
+      await deleteFromMinio(berita.PRATINJAU);
     } catch (e) {
-      console.warn("Gagal hapus file dari MinIO:", e.message);
+      console.warn("⚠️ Gagal hapus file dari MinIO:", e.message);
     }
 
     await BeritaModel.remove(id);

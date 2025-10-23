@@ -6,8 +6,6 @@ export const deleteFromMinio = async (filePath) => {
   try {
     const objectName = filePath.replace(/^\/?uploads\//, "");
     await minioClient.removeObject("uploads", objectName);
-
-    console.log(`✅ File dihapus dari MinIO: ${objectName}`);
   } catch (err) {
     console.error(`⚠️ Gagal hapus file dari MinIO: ${filePath}`, err);
   }
