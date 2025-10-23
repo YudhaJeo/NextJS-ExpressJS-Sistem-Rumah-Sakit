@@ -4,7 +4,7 @@ import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { FileUpload } from "primereact/fileupload";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const FormDialogBerita = ({
   visible,
@@ -17,6 +17,10 @@ const FormDialogBerita = ({
 }) => {
   const [fotoPreview, setFotoPreview] = useState(null);
 
+  useEffect(() => {
+    if (visible === true) setFotoPreview(null);
+  }, [visible]);  
+  
   return (
     <Dialog
       header={form.IDBERITA ? "Edit Berita" : "Tambah Berita"}
