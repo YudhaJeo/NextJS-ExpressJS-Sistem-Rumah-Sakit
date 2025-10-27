@@ -50,17 +50,6 @@ const TabelLaporanPembayaran = ({ data, loading, onDelete }) => {
         />
     );
 
-    const actionBody = (rowData) => (
-        <div className="flex gap-2">
-            <Button
-                icon="pi pi-trash"
-                size="small"
-                severity="danger"
-                onClick={() => onDelete(rowData)}
-            />
-        </div>
-    );
-
     return (
         <DataTable
             value={data}
@@ -123,7 +112,6 @@ const TabelLaporanPembayaran = ({ data, loading, onDelete }) => {
             />
             <Column field="METODE" header="Metode" body={metodeBody} />
             <Column field="STATUS" header="Status" body={statusBody} />
-            <Column header="Aksi" body={actionBody} />
         </DataTable>
     );
 };
