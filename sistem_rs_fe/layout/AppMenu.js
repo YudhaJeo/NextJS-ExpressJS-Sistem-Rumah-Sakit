@@ -55,6 +55,7 @@ const AppMenu = () => {
               { label: "Supplier", icon: "pi pi-fw pi-user", to: "/master/supplier" },
               { label: "Berita", icon: "pi pi-fw pi-send", to: "/master/berita" },
               { label: "Kritik Saran", icon: "pi pi-fw pi-inbox", to: "/master/kritik_saran" },
+              { label: "Notifikasi", icon: "pi pi-fw pi-bell", to: "/master/notifikasi" },
             ],
           },
         ],
