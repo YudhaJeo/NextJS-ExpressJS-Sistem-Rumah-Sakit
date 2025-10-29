@@ -6,7 +6,7 @@ export const up = function (knex) {
     table.string('DESKRIPSISINGKAT', 255).notNullable();
     table.string('PRATINJAU', 255).notNullable();
     table.text('URL');
-    table.timestamp('CRAETED_AT').defaultTo(knex.fn.now());
+    table.timestamp('CREATED_AT').defaultTo(knex.fn.now());
     table.timestamp('UPDATED_AT').defaultTo(knex.fn.now());
   });
 };

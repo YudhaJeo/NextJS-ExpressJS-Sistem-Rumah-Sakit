@@ -1,9 +1,11 @@
 export const up = function (knex) {
   return knex.schema.createTable('kritik_saran', (table) => {
     table.increments('IDKRITIKSARAN').primary();
-    table.string('NIK', 20).nullable();
+    table.string('NIK', 20).notNullable();
     table.foreign('NIK')
-      .references('NIK').inTable('pasien').onDelete('SET NULL');
+      .references('NIK')
+      .inTable('pasien')
+      .onDelete('CASCADE');
     table.enum('JENIS', ['Pelayanan', 'Fasilitas', 'Dokter', 'Perawat', 'Lainnya']).notNullable();
     table.text('PESAN').notNullable();
 
