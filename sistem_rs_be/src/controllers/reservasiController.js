@@ -1,6 +1,5 @@
 import * as ReservasiModel from '../models/reservasiModel.js';
 import db from '../core/config/knex.js';
-import { generateNoInvoice } from '../utils/generateNoInvoice.js';
 
 export async function getAllReservasi(req, res) {
   try {
@@ -90,6 +89,33 @@ export async function updateReservasi(req, res) {
           STATUSRAWAT: "Rawat Jalan",
           DIAGNOSA: "",
           KETERANGAN,
+        });
+      }
+
+      let existingNotif = await trx("notifikasi_user")
+      .where({ NIK, JUDUL: "Reservasi dikonfirmasi" })
+      .first();
+    
+      if (!existingNotif) {
+        const detail = await trx("poli")
+          .join("dokter", "dokter.IDPOLI", "poli.IDPOLI")
+          .join("master_tenaga_medis", "dokter.IDTENAGAMEDIS", "master_tenaga_medis.IDTENAGAMEDIS")
+          .select("poli.NAMAPOLI", "master_tenaga_medis.NAMALENGKAP as NAMADOKTER")
+          .where("poli.IDPOLI", IDPOLI)
+          .andWhere("dokter.IDDOKTER", IDDOKTER)
+          .first();
+
+        const namaPoli = detail?.NAMAPOLI || `Poli ${IDPOLI}`;
+        const namaDokter = detail?.NAMADOKTER || `Dokter ${IDDOKTER}`;
+      
+        await trx("notifikasi_user").insert({
+          NIK,
+          TANGGALRESERVASI,
+          JUDUL: "Reservasi dikonfirmasi",
+          PESAN: `Reservasi anda dikonfirmasi. Silakan datang pada tanggal ${TANGGALRESERVASI} di poli ${namaPoli} bersama dokter ${namaDokter}.`,
+          IDPOLI,
+          IDDOKTER,
+          STATUS: false
         });
       }
     }
