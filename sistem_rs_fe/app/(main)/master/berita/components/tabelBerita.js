@@ -13,12 +13,10 @@ export default function TabelBerita({ data, onEdit, onDelete, loading }) {
       );
     }
   
-    // Hilangkan awalan slash biar gak double slash nanti
     const cleanPath = rowData.PRATINJAU.startsWith("/")
       ? rowData.PRATINJAU.substring(1)
       : rowData.PRATINJAU;
   
-    // Gunakan MINIO_URL sebagai base
     const imageUrl = `${MINIO_URL}/${cleanPath}`;
   
     return (

@@ -1,5 +1,3 @@
-"use client";
-
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
@@ -11,6 +9,7 @@ export default function TabelKritikSaran({ data, loading }) {
       loading={loading}
       paginator
       rows={10}
+      rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]}
       responsiveLayout="scroll"
     >
       <Column field="NIK" header="NIK" />
