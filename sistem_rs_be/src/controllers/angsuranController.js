@@ -150,10 +150,10 @@ export async function createAngsuran(req, res) {
 export async function updateAngsuran(req, res) {
   const trx = await db.transaction();
   try {
-    const { IDANGSURAN } = req.params;
+    const { id } = req.params;
     const { NOMINAL, METODE, IDBANK, KETERANGAN } = req.body;
 
-    const angsuran = await trx('angsuran').where('IDANGSURAN', IDANGSURAN).first();
+    const angsuran = await trx('angsuran').where('IDANGSURAN', id).first();
     if (!angsuran) {
       await trx.rollback();
       return res.status(404).json({ success: false, message: 'Angsuran tidak ditemukan' });
@@ -203,7 +203,7 @@ export async function updateAngsuran(req, res) {
 
     if (sisaBayar > 0) {
       await trx('angsuran')
-        .where('IDANGSURAN', IDANGSURAN)
+        .where('IDANGSURAN', id) 
         .update({
           NOMINAL: sisaBayar,
           METODE,
@@ -213,7 +213,7 @@ export async function updateAngsuran(req, res) {
         });
     } else {
       await trx('angsuran')
-        .where('IDANGSURAN', IDANGSURAN)
+        .where('IDANGSURAN', id)
         .update({
           NOMINAL,
           METODE: 'Deposit',
@@ -235,6 +235,7 @@ export async function updateAngsuran(req, res) {
 
     await trx.commit();
     res.json({ success: true, message: 'Angsuran berhasil diperbarui' });
+
   } catch (err) {
     await trx.rollback();
     console.error('Update Angsuran Error:', err);

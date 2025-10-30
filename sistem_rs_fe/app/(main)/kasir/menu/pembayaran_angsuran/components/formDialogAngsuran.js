@@ -108,7 +108,7 @@ const FormDialogAngsuran = ({
 
         <div className ="mt-2">
           <label className="font-medium">Nama Pasien</label>
-          <InputText className="w-full mt-2" value={form.NAMAPASIEN || ''} readOnly />
+          <InputText className="w-full mt-2" value={form.NAMAPASIEN || form.NAMALENGKAP || ''} readOnly />
         </div>
 
         <div className ="mt-2">
@@ -148,7 +148,7 @@ const FormDialogAngsuran = ({
           {errors.NOMINAL && <small className="p-error">{errors.NOMINAL}</small>}
         </div>
 
-        {form.TOTALDEPOSIT > 0 && form.TOTALDEPOSIT >= form.SISA_TAGIHAN ? (
+        {form.TOTALDEPOSIT > 0 && form.NOMINAL <= form.TOTALDEPOSIT ? (
           <div className="mt-2">
             <label className="font-medium">Metode Pembayaran</label>
             <InputText
@@ -161,14 +161,14 @@ const FormDialogAngsuran = ({
           <div className="mt-2">
             <label className="font-medium">Metode Pembayaran</label>
             <Dropdown
-              className={classNames('w-full mt-2', { 'p-invalid': errors.METODEPEMBAYARAN })}
-              value={form.METODEPEMBAYARAN}
+              className={classNames('w-full mt-2', { 'p-invalid': errors.METODE })}
+              value={form.METODE}
               options={metodeOptions}
-              onChange={(e) => setForm({ ...form, METODEPEMBAYARAN: e.value })}
+              onChange={(e) => setForm({ ...form, METODE: e.value })}
               placeholder="Pilih Metode"
             />
-            {errors.METODEPEMBAYARAN && (
-              <small className="p-error">{errors.METODEPEMBAYARAN}</small>
+            {errors.METODE && (
+              <small className="p-error">{errors.METODE}</small>
             )}
           </div>
         )}

@@ -9,6 +9,7 @@ const metodeSeverity = {
   'Cash': 'success',
   'Transfer Bank': 'info',
   'QRIS': 'warning',
+  'Deposit': 'danger',
   DEFAULT: 'secondary',
 };
 
