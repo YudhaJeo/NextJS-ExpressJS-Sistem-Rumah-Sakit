@@ -53,15 +53,61 @@ export async function createPembayaran(req, res) {
       await trx.rollback();
       return res.status(400).json({ success: false, message: 'Pasien tidak ditemukan' });
     }
+
     let idAsuransi = IDASURANSI || pasien.IDASURANSI;
 
-    let sisaTagihan = invoice.SISA_TAGIHAN;
+    // === Ambil sisa tagihan awal ===
+    let sisaTagihan = invoice.SISA_TAGIHAN || invoice.TOTALTAGIHAN || 0;
     let sisaBayar = JUMLAHBAYAR;
 
+    // === Cek deposit aktif ===
     const deposits = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
       .andWhere('STATUS', 'AKTIF');
 
+    // === Jika tidak ada deposit ===
+    if (!deposits.length) {
+      // Bayar langsung tanpa deposit
+      sisaTagihan -= JUMLAHBAYAR;
+      if (sisaTagihan < 0) sisaTagihan = 0;
+
+      const NOPEMBAYARAN = await generateNoPembayaran(
+        TANGGALBAYAR || new Date().toISOString(),
+        trx
+      );
+
+      await PembayaranModel.create(
+        {
+          NOPEMBAYARAN,
+          IDINVOICE,
+          NIK,
+          IDASURANSI: idAsuransi,
+          TANGGALBAYAR: TANGGALBAYAR || db.fn.now(),
+          METODEPEMBAYARAN,
+          IDBANK: METODEPEMBAYARAN === 'Transfer Bank' ? IDBANK : null,
+          JUMLAHBAYAR,
+          KETERANGAN: KETERANGAN || 'Pembayaran tanpa deposit'
+        },
+        trx
+      );
+
+      await trx('invoice')
+        .where('IDINVOICE', IDINVOICE)
+        .update({
+          SISA_TAGIHAN: sisaTagihan,
+          STATUS: sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS',
+          TOTALDEPOSIT: 0,
+          UPDATED_AT: trx.fn.now()
+        });
+
+      await trx.commit();
+      return res.status(201).json({
+        success: true,
+        message: 'Pembayaran berhasil dilakukan tanpa deposit',
+      });
+    }
+
+    // === Jika ada deposit, pakai logika lama ===
     for (const dep of deposits) {
       if (sisaTagihan <= 0 || sisaBayar <= 0) break;
 
@@ -104,11 +150,6 @@ export async function createPembayaran(req, res) {
     );
 
     if (sisaBayar > 0) {
-      if (METODEPEMBAYARAN === 'Transfer Bank' && !IDBANK) {
-        await trx.rollback();
-        return res.status(400).json({ success: false, message: 'Bank wajib dipilih untuk Transfer Bank' });
-      }
-
       await PembayaranModel.create(
         {
           NOPEMBAYARAN,
