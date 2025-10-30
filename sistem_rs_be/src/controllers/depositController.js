@@ -70,6 +70,7 @@ export async function createDeposit(req, res) {
 
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
+      .andWhere('STATUS', 'AKTIF')
       .sum('SALDO_SISA as total')
       .first();
 
@@ -130,6 +131,7 @@ export async function updateDeposit(req, res) {
 
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
+      .andWhere('STATUS', 'AKTIF')
       .sum('SALDO_SISA as total')
       .first();
 
@@ -171,6 +173,7 @@ export async function deleteDeposit(req, res) {
 
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
+      .andWhere('STATUS', 'AKTIF')
       .sum('SALDO_SISA as total')
       .first();
 

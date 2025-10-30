@@ -142,3 +142,26 @@ export async function getInvoiceOptions(req, res) {
     res.status(500).json({ success: false, message: err.message });
   }
 }
+
+export async function getInvoiceUmum(req, res) {
+  try {
+    const invoices = await db('invoice')
+      .join('pasien', 'invoice.NIK', 'pasien.NIK')
+      .leftJoin('asuransi', 'invoice.IDASURANSI', 'asuransi.IDASURANSI')
+      .where('asuransi.NAMAASURANSI', 'Umum')
+      .select(
+        'invoice.IDINVOICE',
+        'invoice.NOINVOICE',
+        'invoice.NIK',
+        'pasien.NAMALENGKAP as NAMAPASIEN',
+        'invoice.TOTALTAGIHAN',
+        'invoice.STATUS',
+        'asuransi.NAMAASURANSI as ASURANSI'
+      );
+
+    res.status(200).json({ success: true, data: invoices });
+  } catch (err) {
+    console.error('Error getInvoiceUmum:', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+}
