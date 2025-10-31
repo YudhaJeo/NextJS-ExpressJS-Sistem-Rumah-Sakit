@@ -189,7 +189,7 @@ export async function createPembayaran(req, res) {
         METODEPEMBAYARAN: 'Deposit',
         IDBANK: null,
         JUMLAHBAYAR: jumlahBayarOtomatis,
-        KETERANGAN: 'Pembayaran otomatis menggunakan deposit',
+        KETERANGAN: 'Pembayaran menggunakan deposit',
         CREATED_AT: trx.fn.now(),
         UPDATED_AT: trx.fn.now(),
       });
@@ -231,7 +231,7 @@ export async function createPembayaran(req, res) {
       METODEPEMBAYARAN,
       IDBANK: METODEPEMBAYARAN === 'Transfer Bank' ? IDBANK : null,
       JUMLAHBAYAR,
-      KETERANGAN: 'Pembayaran umum lainnya',
+      KETERANGAN: 'Pembayaran pasien asuransi secara lunas',
       CREATED_AT: trx.fn.now(),
       UPDATED_AT: trx.fn.now(),
     });
