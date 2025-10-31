@@ -4,16 +4,18 @@ import { useEffect, useState } from 'react';
 import { Card } from 'primereact/card';
 import { Chart } from 'primereact/chart';
 import { Tag } from 'primereact/tag';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const DashboardKasir = () => {
   const [data, setData] = useState(null);
-  const [invoiceChart, setInvoiceChart] = useState({});
-  const [invoiceChartOptions, setInvoiceChartOptions] = useState({});
-  const [depositChart, setDepositChart] = useState({});
-  const [depositChartOptions, setDepositChartOptions] = useState({});
+  const [barChartData, setBarChartData] = useState({});
+  const [barChartOptions, setBarChartOptions] = useState({});
+  const [polarChartData, setPolarChartData] = useState({});
+  const [polarChartOptions, setPolarChartOptions] = useState({});
 
   useEffect(() => {
     axios
@@ -24,61 +26,71 @@ const DashboardKasir = () => {
 
         const style = getComputedStyle(document.documentElement);
 
-        const lunas = resData.statusInvoice?.LUNAS ?? 0;
-        const belum = resData.statusInvoice?.BELUM_LUNAS ?? 0;
+        const labels = ['Total Invoice', 'Total Pembayaran', 'Total Deposit', 'Total Angsuran'];
+        const values = [
+          resData.totalInvoice ?? 0,
+          resData.totalPembayaran ?? 0,
+          resData.totalDeposit ?? 0,
+          resData.totalAngsuran ?? 0,
+        ];
 
-        setInvoiceChart({
-          labels: ['LUNAS', 'BELUM LUNAS'],
+        const backgroundColors = [
+          'rgba(0, 123, 255, 0.2)',
+          'rgba(40, 167, 69, 0.2)',
+          'rgba(255, 193, 7, 0.2)',
+          'rgba(111, 66, 193, 0.2)',
+        ];
+
+        const borderColors = [
+          '#007BFF',
+          '#28A745',
+          '#FFC107',
+          '#6F42C1',
+        ];
+
+        setBarChartData({
+          labels,
           datasets: [
             {
-              data: [lunas, belum],
-              backgroundColor: [
-                'rgba(40, 167, 69, 0.2)',   
-                'rgba(220, 53, 69, 0.2)',   
-              ],
-              borderColor: [
-                '#28A745', 
-                '#DC3545', 
-              ],
+              label: 'Statistik Kasir',
+              data: values,
+              backgroundColor: backgroundColors,
+              borderColor: borderColors,
               borderWidth: 1,
             },
           ],
         });
 
-        setInvoiceChartOptions({
+        setBarChartOptions({
+          indexAxis: 'y',
           plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { color: style.getPropertyValue('--text-color') },
+            legend: { display: false },
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              ticks: { color: style.getPropertyValue('--text-color') },
+              grid: { color: style.getPropertyValue('--surface-border') },
+            },
+            y: {
+              ticks: { color: style.getPropertyValue('--text-color') },
             },
           },
         });
 
-        const aktif = resData.statusDeposit?.AKTIF ?? 0;
-        const habis = resData.statusDeposit?.HABIS ?? 0;
-        const refund = resData.statusDeposit?.REFUND ?? 0;
-
-        setDepositChart({
-          labels: ['AKTIF', 'HABIS', 'REFUND'],
+        setPolarChartData({
+          labels,
           datasets: [
             {
-              data: [aktif, habis, refund],
-              backgroundColor: [
-                'rgba(0, 123, 255, 0.2)',   
-                'rgba(255, 193, 7, 0.2)',   
-                'rgba(108, 117, 125, 0.2)', 
-              ],
-              borderColor: [
-                '#007BFF',
-                '#FFC107',
-                '#6C757D',
-              ],
+              data: values,
+              backgroundColor: backgroundColors,
+              borderColor: borderColors,
               borderWidth: 1,
             },
           ],
         });
 
-        setDepositChartOptions({
+        setPolarChartOptions({
           plugins: {
             legend: {
               position: 'bottom',
@@ -157,21 +169,46 @@ const DashboardKasir = () => {
 
       <div className="col-12 md:col-6">
         <Card>
-          <div className="flex justify-content-between mb-3">
-            <span className="font-medium text-lg text-900">Status Invoice</span>
+          <div className="flex justify-content-between mb-5">
+            <span className="font-medium text-lg text-900">Perbandingan Data Keuangan</span>
             <Tag value="Live" severity="info" />
           </div>
-          <Chart type="pie" data={invoiceChart} options={invoiceChartOptions} className="w-full" />
+          <Chart type="polarArea" data={polarChartData} options={polarChartOptions} className="w-full" />
         </Card>
       </div>
 
       <div className="col-12 md:col-6">
-        <Card>
-          <div className="flex justify-content-between mb-3">
-            <span className="font-medium text-lg text-900">Status Deposit</span>
+        <Card className="mb-2">
+          <div className="flex justify-content-between">
+            <span className="font-medium text-lg text-900">Statistik Keuangan</span>
             <Tag value="Live" severity="info" />
           </div>
-          <Chart type="pie" data={depositChart} options={depositChartOptions} className="w-full" />
+          <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
+        </Card>
+
+        <Card>
+          <div className="flex justify-content-between mb-3">
+            <span className="font-medium text-lg text-900">Transaksi Terbaru</span>
+            <Tag value="Live" severity="info" />
+          </div>
+          <DataTable value={data?.transaksi ?? []} paginator rows={4} responsiveLayout="scroll">
+            <Column field="nomor_invoice" header="No. Invoice" sortable />
+            <Column field="nama_pasien" header="Nama Pasien" sortable />
+            <Column field="status_pembayaran" header="Status" sortable />
+            <Column
+              field="tanggal"
+              header="Tanggal"
+              body={(rowData) => new Date(rowData.tanggal).toLocaleDateString('id-ID')}
+              sortable
+            />
+            <Column
+              field="total"
+              header="Total (Rp)"
+              body={(rowData) =>
+                rowData.total?.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
+              }
+            />
+          </DataTable>
         </Card>
       </div>
     </div>
