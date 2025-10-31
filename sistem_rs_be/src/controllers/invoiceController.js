@@ -148,16 +148,23 @@ export async function getInvoiceUmum(req, res) {
     const invoices = await db('invoice')
       .join('pasien', 'invoice.NIK', 'pasien.NIK')
       .leftJoin('asuransi', 'invoice.IDASURANSI', 'asuransi.IDASURANSI')
-      .where('asuransi.NAMAASURANSI', 'Umum')
+      .where('invoice.STATUS', 'BELUM_LUNAS')
+      .andWhere((builder) => {
+        builder.where('asuransi.NAMAASURANSI', 'Umum').orWhereNull('asuransi.NAMAASURANSI');
+      })
       .select(
         'invoice.IDINVOICE',
         'invoice.NOINVOICE',
         'invoice.NIK',
         'pasien.NAMALENGKAP as NAMAPASIEN',
         'invoice.TOTALTAGIHAN',
+        'invoice.TOTALDEPOSIT',
+        'invoice.TOTALANGSURAN',
+        'invoice.SISA_TAGIHAN',
         'invoice.STATUS',
-        'asuransi.NAMAASURANSI as ASURANSI'
-      );
+        db.raw('COALESCE(asuransi.NAMAASURANSI, "Umum") as ASURANSI')
+      )
+      .orderBy('invoice.IDINVOICE', 'desc');
 
     res.status(200).json({ success: true, data: invoices });
   } catch (err) {

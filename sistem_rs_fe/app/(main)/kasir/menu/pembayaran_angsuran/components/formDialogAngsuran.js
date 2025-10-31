@@ -73,7 +73,7 @@ const FormDialogAngsuran = ({
         setErrors({});
         onHide();
       }}
-      style={{ width: '60vw' }}
+      style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
         <div className ="mt-2">

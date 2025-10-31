@@ -56,18 +56,14 @@ export async function createPembayaran(req, res) {
 
     let idAsuransi = IDASURANSI || pasien.IDASURANSI;
 
-    // === Ambil sisa tagihan awal ===
     let sisaTagihan = invoice.SISA_TAGIHAN || invoice.TOTALTAGIHAN || 0;
     let sisaBayar = JUMLAHBAYAR;
 
-    // === Cek deposit aktif ===
     const deposits = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
       .andWhere('STATUS', 'AKTIF');
 
-    // === Jika tidak ada deposit ===
     if (!deposits.length) {
-      // Bayar langsung tanpa deposit
       sisaTagihan -= JUMLAHBAYAR;
       if (sisaTagihan < 0) sisaTagihan = 0;
 
@@ -107,7 +103,6 @@ export async function createPembayaran(req, res) {
       });
     }
 
-    // === Jika ada deposit, pakai logika lama ===
     for (const dep of deposits) {
       if (sisaTagihan <= 0 || sisaBayar <= 0) break;
 
