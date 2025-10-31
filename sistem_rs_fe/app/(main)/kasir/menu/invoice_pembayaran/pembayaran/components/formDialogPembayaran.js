@@ -42,38 +42,49 @@ const FormDialogPembayaran = ({
     }
   };
 
-const handleInvoiceChange = (e) => {
-  const selectedInvoice = invoiceOptions.find((inv) => inv.value === e.value);
-  if (selectedInvoice) {
-    const pasien = pasienOptions.find((p) =>
-      selectedInvoice.label.includes(p.label.split(' - ')[1])
-    );
-    setForm({
-      ...form,
-      IDINVOICE: selectedInvoice.value,
-      NOINVOICE: selectedInvoice.label.split(' - ')[0],
-      NIK: pasien?.value || '',
-      NAMAPASIEN: pasien?.label.split(' - ')[1] || '',
-      ASURANSI: pasien?.NAMAASURANSI || '',
-      JUMLAHBAYAR: selectedInvoice.SISA_TAGIHAN || 0,
-      TOTALDEPOSIT: selectedInvoice.TOTALDEPOSIT || 0,
-      METODEPEMBAYARAN: selectedInvoice.TOTALDEPOSIT > 0 ? 'Deposit' : '',
-    });
-  } else {
-    setForm({
-      ...form,
-      IDINVOICE: '',
-      NOINVOICE: '',
-      NIK: '',
-      NAMAPASIEN: '',
-      ASURANSI: '',
-      JUMLAHBAYAR: 0,
-      TOTALDEPOSIT: 0,  
-      METODEPEMBAYARAN: '',
-    });
-  }
-};
+  const handleInvoiceChange = (e) => {
+    const selectedInvoice = invoiceOptions.find((inv) => inv.value === e.value);
 
+    if (selectedInvoice) {
+      const pasien = pasienOptions.find((p) =>
+        selectedInvoice.label.includes(p.label.split(' - ')[1])
+      );
+
+      const totalDeposit = selectedInvoice.TOTALDEPOSIT || 0;
+      const totalTagihan = selectedInvoice.SISA_TAGIHAN || 0;
+
+      let metodePembayaran = '';
+      if (totalDeposit >= totalTagihan) {
+        metodePembayaran = 'Deposit';
+      } else {
+        metodePembayaran = '';
+      }
+
+      setForm({
+        ...form,
+        IDINVOICE: selectedInvoice.value,
+        NOINVOICE: selectedInvoice.label.split(' - ')[0],
+        NIK: pasien?.value || '',
+        NAMAPASIEN: pasien?.label.split(' - ')[1] || '',
+        ASURANSI: pasien?.NAMAASURANSI || '',
+        JUMLAHBAYAR: totalTagihan,
+        TOTALDEPOSIT: totalDeposit,
+        METODEPEMBAYARAN: metodePembayaran,
+      });
+    } else {
+      setForm({
+        ...form,
+        IDINVOICE: '',
+        NOINVOICE: '',
+        NIK: '',
+        NAMAPASIEN: '',
+        ASURANSI: '',
+        JUMLAHBAYAR: 0,
+        TOTALDEPOSIT: 0,
+        METODEPEMBAYARAN: '',
+      });
+    }
+  };
 
   return (
     <Dialog
@@ -86,17 +97,16 @@ const handleInvoiceChange = (e) => {
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">No Pembayaran</label>
           <InputText
             className={classNames('w-full mt-2')}
             value={form.NOPEMBAYARAN || 'Otomatis'}
             readOnly
           />
-          {errors.NOPEMBAYARAN && <small className="p-error">{errors.NOPEMBAYARAN}</small>}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">Invoice</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDINVOICE })}
@@ -112,37 +122,50 @@ const handleInvoiceChange = (e) => {
           {errors.IDINVOICE && <small className="p-error">{errors.IDINVOICE}</small>}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">NIK</label>
           <InputText
             className={classNames('w-full mt-2', { 'p-invalid': errors.NIK })}
             value={form.NIK}
             readOnly
           />
-          {errors.NIK && <small className="p-error">{errors.NIK}</small>}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">Nama Pasien</label>
           <InputText
             className={classNames('w-full mt-2', { 'p-invalid': errors.NAMAPASIEN })}
             value={form.NAMAPASIEN}
             readOnly
           />
-          {errors.NAMAPASIEN && <small className="p-error">{errors.NAMAPASIEN}</small>}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">Asuransi</label>
           <InputText
             className={classNames('w-full mt-2', { 'p-invalid': errors.ASURANSI })}
             value={form.ASURANSI}
             readOnly
           />
-          {errors.ASURANSI && <small className="p-error">{errors.ASURANSI}</small>}
         </div>
 
-        <div className ="mt-2">
+        {form.ASURANSI && form.ASURANSI !== 'Umum' && (
+          <div className="mt-2">
+            <label className="font-medium">Jenis Pembayaran</label>
+            <Dropdown
+              className="w-full mt-2"
+              value={form.JENIS_PEMBAYARAN}
+              options={[
+                { label: 'Bayar Lunas', value: 'PASIEN' },
+                { label: 'Cover Asuransi', value: 'ASURANSI' },
+              ]}
+              onChange={(e) => setForm({ ...form, JENIS_PEMBAYARAN: e.value })}
+              placeholder="Pilih Jenis Pembayaran"
+            />
+          </div>
+        )}
+
+        <div className="mt-2">
           <label className="font-medium">Tanggal Bayar</label>
           <Calendar
             className={classNames('w-full mt-2', { 'p-invalid': errors.TANGGALBAYAR })}
@@ -158,34 +181,33 @@ const handleInvoiceChange = (e) => {
             showButtonBar
             placeholder="Pilih Tanggal"
           />
-          {errors.TANGGALBAYAR && <small className="p-error">{errors.TANGGALBAYAR}</small>}
         </div>
 
-        {form.TOTALDEPOSIT > 0 ? (
-          <div className="mt-2">
-            <label className="font-medium">Metode Pembayaran</label>
-            <InputText
-              className="w-full mt-2"
-              value="Deposit"
-              readOnly
-            />
-          </div>
-        ) : (
-          <div className="mt-2">
-            <label className="font-medium">Metode Pembayaran</label>
-            <Dropdown
-              className={classNames('w-full mt-2', { 'p-invalid': errors.METODEPEMBAYARAN })}
-              value={form.METODEPEMBAYARAN}
-              options={metodeOptions}
-              onChange={(e) => setForm({ ...form, METODEPEMBAYARAN: e.value })}
-              placeholder="Pilih Metode"
-            />
-            {errors.METODEPEMBAYARAN && <small className="p-error">{errors.METODEPEMBAYARAN}</small>}
-          </div>
+        {form.JENIS_PEMBAYARAN !== 'ASURANSI' && (
+          <>
+            {form.TOTALDEPOSIT >= form.JUMLAHBAYAR ? (
+              <div className="mt-2">
+                <label className="font-medium">Metode Pembayaran</label>
+                <InputText className="w-full mt-2" value="Deposit" readOnly />
+              </div>
+            ) : (
+              <div className="mt-2">
+                <label className="font-medium">Metode Pembayaran</label>
+                <Dropdown
+                  className={classNames('w-full mt-2', { 'p-invalid': errors.METODEPEMBAYARAN })}
+                  value={form.METODEPEMBAYARAN}
+                  options={metodeOptions}
+                  onChange={(e) => setForm({ ...form, METODEPEMBAYARAN: e.value })}
+                  placeholder="Pilih Metode"
+                />
+                {errors.METODEPEMBAYARAN && <small className="p-error">{errors.METODEPEMBAYARAN}</small>}
+              </div>
+            )}
+          </>
         )}
 
         {form.METODEPEMBAYARAN === 'Transfer Bank' && (
-          <div className ="mt-2">
+          <div className="mt-2">
             <label className="font-medium">Pilih Rekening Bank</label>
             <Dropdown
               className="w-full mt-2"
@@ -201,7 +223,7 @@ const handleInvoiceChange = (e) => {
           </div>
         )}
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">Jumlah Bayar</label>
           <InputNumber
             className={classNames('w-full mt-2', { 'p-invalid': errors.JUMLAHBAYAR })}
@@ -212,10 +234,9 @@ const handleInvoiceChange = (e) => {
             locale="id-ID"
             readOnly={form.METODEPEMBAYARAN === 'Deposit'}
           />
-          {errors.JUMLAHBAYAR && <small className="p-error">{errors.JUMLAHBAYAR}</small>}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">Keterangan</label>
           <InputText
             className="w-full mt-2"
@@ -227,12 +248,7 @@ const handleInvoiceChange = (e) => {
         </div>
 
         <div className="text-right pt-3">
-          <Button
-            type="submit"
-            label="Simpan"
-            icon="pi pi-save"
-            className="p-button-primary"
-          />
+          <Button type="submit" label="Simpan" icon="pi pi-save" className="p-button-primary" />
         </div>
       </form>
     </Dialog>
