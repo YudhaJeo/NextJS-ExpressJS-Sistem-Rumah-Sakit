@@ -53,9 +53,20 @@ const AppMenu = () => {
               { label: "Tenaga Non Medis", icon: "pi pi-fw pi-users", to: "/master/tenaga_non_medis" },
               { label: "Metode Pembayaran", icon: "pi pi-fw pi-credit-card", to: "/master/metode_pembayaran" },
               { label: "Supplier", icon: "pi pi-fw pi-user", to: "/master/supplier" },
-              { label: "Berita", icon: "pi pi-fw pi-send", to: "/master/berita" },
-              { label: "Kritik Saran", icon: "pi pi-fw pi-inbox", to: "/master/kritik_saran" },
-              { label: "Notifikasi", icon: "pi pi-fw pi-bell", to: "/master/notifikasi" },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Mobile App",
+        items: [
+          { label: "Dashboard Mobile", icon: "pi pi-fw pi-chart-bar", to: "/mobile/dashboard" },
+          {
+            label: "Menu",
+            items: [
+              { label: "Berita", icon: "pi pi-fw pi-send", to: "/mobile/menu/berita" },
+              { label: "Kritik Saran", icon: "pi pi-fw pi-inbox", to: "/mobile/menu/kritik_saran" },
+              { label: "Notifikasi", icon: "pi pi-fw pi-bell", to: "/mobile/menu/notifikasi" },
             ],
           },
         ],

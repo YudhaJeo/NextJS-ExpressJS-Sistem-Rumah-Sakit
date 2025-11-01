@@ -46,9 +46,16 @@ export async function updateReservasi(req, res) {
 
   try {
     const id = req.params.id;
-    const { NIK, IDPOLI, IDDOKTER, TANGGALRESERVASI, JAMRESERVASI, STATUS, KETERANGAN } = req.body;
+    const {
+      NIK,
+      IDPOLI,
+      IDDOKTER,
+      TANGGALRESERVASI,
+      JAMRESERVASI,
+      STATUS,
+      KETERANGAN,
+    } = req.body;
 
-    // 🔹 Update data reservasi utama
     await trx("reservasi").where("IDRESERVASI", id).update({
       NIK,
       IDPOLI,
@@ -59,14 +66,13 @@ export async function updateReservasi(req, res) {
       KETERANGAN,
     });
 
-    // 🔹 Jika status dikonfirmasi → buatkan pendaftaran & rawat jalan
+    let responseMsg = "Reservasi berhasil diperbarui & masuk ke Rawat Jalan";
+
     if (STATUS?.toLowerCase() === "dikonfirmasi") {
-      // Cek apakah sudah ada pendaftaran
       let pendaftaran = await trx("pendaftaran")
         .where({ NIK, IDPOLI, TANGGALKUNJUNGAN: TANGGALRESERVASI })
         .first();
 
-      // 🔹 Jika belum ada → buat pendaftaran baru
       if (!pendaftaran) {
         const insertResult = await trx("pendaftaran").insert({
           NIK,
@@ -76,17 +82,15 @@ export async function updateReservasi(req, res) {
           STATUSKUNJUNGAN: "Dalam Antrian",
         });
 
-        // MySQL mengembalikan array [insertId]
         const idPendaftaran = insertResult[0];
         pendaftaran = { IDPENDAFTARAN: idPendaftaran };
       }
 
-      // 🔹 Cek apakah sudah ada rawat jalan terkait
+      // 🔹 Cek apakah sudah ada rawat jalan
       const existingRJ = await trx("rawat_jalan")
         .where("IDPENDAFTARAN", pendaftaran.IDPENDAFTARAN)
         .first();
 
-      // 🔹 Jika belum ada → buat rawat jalan
       if (!existingRJ) {
         await trx("rawat_jalan").insert({
           IDPENDAFTARAN: pendaftaran.IDPENDAFTARAN,
@@ -98,38 +102,50 @@ export async function updateReservasi(req, res) {
         });
       }
 
-      // 🔹 Cek apakah notifikasi sudah pernah dibuat
-      const existingNotif = await trx("notifikasi_user")
-        .where({ NIK, JUDUL: "Reservasi dikonfirmasi", TANGGALRESERVASI })
-        .first();
+      const pasien = await trx("pasien").where({ NIK }).select("PASSWORD").first();
+      const hasMobileAccount = pasien?.PASSWORD && pasien.PASSWORD.trim() !== "";
 
-      // 🔹 Jika belum ada → buat notifikasi baru
-      if (!existingNotif) {
-        const detail = await trx("poli")
-          .join("dokter", "dokter.IDPOLI", "poli.IDPOLI")
-          .join("master_tenaga_medis", "dokter.IDTENAGAMEDIS", "master_tenaga_medis.IDTENAGAMEDIS")
-          .select("poli.NAMAPOLI", "master_tenaga_medis.NAMALENGKAP as NAMADOKTER")
-          .where("poli.IDPOLI", IDPOLI)
-          .andWhere("dokter.IDDOKTER", IDDOKTER)
+      if (hasMobileAccount) {
+        const existingNotif = await trx("notifikasi_user")
+          .where({ NIK, JUDUL: "Reservasi dikonfirmasi", TANGGALRESERVASI })
           .first();
 
-        const namaPoli = detail?.NAMAPOLI || `Poli ${IDPOLI}`;
-        const namaDokter = detail?.NAMADOKTER || `Dokter ${IDDOKTER}`;
+        if (!existingNotif) {
+          const detail = await trx("poli")
+            .join("dokter", "dokter.IDPOLI", "poli.IDPOLI")
+            .join(
+              "master_tenaga_medis",
+              "dokter.IDTENAGAMEDIS",
+              "master_tenaga_medis.IDTENAGAMEDIS"
+            )
+            .select(
+              "poli.NAMAPOLI",
+              "master_tenaga_medis.NAMALENGKAP as NAMADOKTER"
+            )
+            .where("poli.IDPOLI", IDPOLI)
+            .andWhere("dokter.IDDOKTER", IDDOKTER)
+            .first();
 
-        await trx("notifikasi_user").insert({
-          NIK,
-          TANGGALRESERVASI,
-          JUDUL: "Reservasi dikonfirmasi",
-          PESAN: `Reservasi anda dikonfirmasi. Silakan datang pada tanggal ${TANGGALRESERVASI} di poli ${namaPoli} bersama dokter ${namaDokter}.`,
-          IDPOLI,
-          IDDOKTER,
-          STATUS: false,
-        });
+          const namaPoli = detail?.NAMAPOLI || `Poli ${IDPOLI}`;
+          const namaDokter = detail?.NAMADOKTER || `Dokter ${IDDOKTER}`;
+
+          await trx("notifikasi_user").insert({
+            NIK,
+            TANGGALRESERVASI,
+            JUDUL: "Reservasi dikonfirmasi",
+            PESAN: `Reservasi anda dikonfirmasi. Silakan datang pada tanggal ${TANGGALRESERVASI} di poli ${namaPoli} bersama dokter ${namaDokter}.`,
+            IDPOLI,
+            IDDOKTER,
+            STATUS: false,
+          });
+        }
+      } else {
+        responseMsg += " (Perubahan berhasil. Notifikasi tidak dikirim karena pasien belum memiliki akun mobile)";
       }
     }
 
     await trx.commit();
-    res.json({ message: "Reservasi berhasil diperbarui & masuk ke Rawat Jalan" });
+    res.json({ message: responseMsg });
   } catch (err) {
     await trx.rollback();
     console.error("❌ Error updateReservasi:", err);
