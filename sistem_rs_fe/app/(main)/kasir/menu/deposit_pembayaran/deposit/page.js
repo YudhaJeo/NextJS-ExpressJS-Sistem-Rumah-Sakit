@@ -74,7 +74,7 @@ const Page = () => {
 
   const fetchInvoices = async () => {
     try {
-      const res = await axios.get(`${API_URL}/invoice`);
+      const res = await axios.get(`${API_URL}/invoice/umum`);
       const options = res.data.data.map((inv) => ({
         label: `${inv.NOINVOICE} - ${inv.NAMAPASIEN}`,
         value: inv.IDINVOICE,

@@ -7,6 +7,10 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import HeaderBar from "@/app/components/headerbar";
 import TabelBerita from "./components/tabelBerita";
 import FormDialogBerita from "./components/formDialogBerita";
+import { Button } from "primereact/button";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
+import { Dialog } from "primereact/dialog";
+import dynamic from "next/dynamic";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -14,6 +18,11 @@ export default function Page() {
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
   const [form, setForm] = useState({
     IDBERITA: 0,
     JUDUL: "",
@@ -52,7 +61,7 @@ export default function Page() {
     if (!form.JUDUL.trim()) newErrors.JUDUL = "Judul berita wajib diisi";
     if (!form.DESKRIPSISINGKAT.trim()) newErrors.DESKRIPSISINGKAT = "Deskripsi singkat wajib diisi";
     if (!form.URL.trim()) newErrors.URL = "URL berita wajib diisi";
-    
+
     if (!form.PRATINJAU && !form.IDBERITA)
       newErrors.PRATINJAU = "File wajib diunggah";
 
@@ -80,7 +89,7 @@ export default function Page() {
       } else {
         await axios.post(`${API_URL}/berita`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
-        });        
+        });
         showToast("success", "Berhasil", "Berita berhasil ditambahkan");
       }
 
@@ -160,13 +169,20 @@ export default function Page() {
       <ConfirmDialog />
 
       <h3 className="text-xl font-semibold">Manajemen Berita</h3>
-
-      <HeaderBar
-        title=""
-        placeholder="Cari berita..."
-        onSearch={handleSearch}
-        onAddClick={() => setDialogVisible(true)}
-      />
+      <div className="flex items-center justify-end">
+        <Button
+          icon="pi pi-print"
+          className="p-button-warning mt-3"
+          tooltip="Cetak Data"
+          onClick={() => setAdjustDialog(true)}
+        />
+        <HeaderBar
+          title=""
+          placeholder="Cari berita..."
+          onSearch={handleSearch}
+          onAddClick={() => setDialogVisible(true)}
+        />
+      </div>
 
       <TabelBerita
         data={data}
@@ -187,6 +203,26 @@ export default function Page() {
         errors={errors}
         inputClass={inputClass}
       />
+
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        dataBerita={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: "90vw", height: "90vh" }}
+        header="Preview PDF"
+      >
+        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+      </Dialog>
     </div>
   );
 }

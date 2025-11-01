@@ -19,7 +19,19 @@ export const getAll = () => {
 
 export const getById = (id) => {
   return db('angsuran')
-    .where('IDANGSURAN', id)
+    .join('invoice', 'angsuran.IDINVOICE', 'invoice.IDINVOICE')
+    .join('pasien', 'invoice.NIK', 'pasien.NIK')
+    .leftJoin('asuransi', 'pasien.IDASURANSI', 'asuransi.IDASURANSI')
+    .leftJoin('bank_account', 'angsuran.IDBANK', 'bank_account.IDBANK')
+    .select(
+      'angsuran.*',
+      'invoice.NOINVOICE',
+      'bank_account.NAMA_BANK',
+      'pasien.NIK',
+      'pasien.NAMALENGKAP',
+      'asuransi.NAMAASURANSI'
+    )
+    .where('angsuran.IDANGSURAN', id)
     .first();
 };
 

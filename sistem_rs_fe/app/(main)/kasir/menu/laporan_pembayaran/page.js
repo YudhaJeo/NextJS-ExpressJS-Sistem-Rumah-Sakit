@@ -40,14 +40,18 @@ const Page = () => {
         setLoading(true);
         try {
             const res = await axios.get(`${API_URL}/laporan_pembayaran`);
-            setData(res.data.data);
-            setOriginalData(res.data.data);
+            const sortedData = res.data.data.sort(
+                (a, b) => new Date(b.TANGGALINVOICE) - new Date(a.TANGGALINVOICE)
+            );
+            setData(sortedData);
+            setOriginalData(sortedData);
         } catch (err) {
             console.error('Gagal ambil data laporan pembayaran:', err);
         } finally {
             setLoading(false);
         }
     };
+
 
     const handleSearch = (keyword) => {
         if (!keyword) return setData(originalData);

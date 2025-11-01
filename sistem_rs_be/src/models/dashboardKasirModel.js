@@ -59,3 +59,22 @@ export const getStatusDeposit = async () => {
     throw error;
   }
 };
+
+export const getDaftarInvoiceTerbaru = async () => {
+  try {
+    return await db('invoice')
+      .join('pasien', 'invoice.NIK', 'pasien.NIK')
+      .select(
+        'invoice.NOINVOICE as nomor_invoice',
+        'pasien.NAMALENGKAP as nama_pasien',
+        'invoice.TANGGALINVOICE as tanggal',
+        'invoice.TOTALTAGIHAN as total',
+        'invoice.STATUS as status_pembayaran'
+      )
+      .orderBy('invoice.TANGGALINVOICE', 'desc')
+      .limit(5);
+  } catch (error) {
+    console.error('Error getDaftarInvoiceTerbaru:', error);
+    throw error;
+  }
+};

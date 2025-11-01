@@ -48,17 +48,21 @@ export async function createAngsuran(req, res) {
       return res.status(400).json({ success: false, message: 'Nominal melebihi sisa tagihan' });
     }
 
+    // ambil semua deposit aktif untuk invoice ini
     const deposits = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
       .andWhere('STATUS', 'AKTIF');
 
     let sisaBayar = NOMINAL;
+    let totalPakaiDeposit = 0;
 
+    // gunakan deposit terlebih dahulu
     for (const dep of deposits) {
       if (sisaBayar <= 0) break;
 
-      let pakai = Math.min(dep.SALDO_SISA, sisaBayar);
+      const pakai = Math.min(dep.SALDO_SISA, sisaBayar);
       sisaBayar -= pakai;
+      totalPakaiDeposit += pakai;
 
       if (pakai > 0) {
         await trx('deposit')
@@ -92,54 +96,55 @@ export async function createAngsuran(req, res) {
     const tanggalBayar = new Date().toISOString();
     const NOANGSURAN = await generateNoAngsuran(tanggalBayar, trx);
 
-    if (sisaBayar > 0) {
+    // logika utama:
+    // 1️⃣ kalau deposit cukup → pakai deposit penuh
+    // 2️⃣ kalau deposit kurang → sisanya dibayar metode lain
+    let metodeBayar = 'Deposit';
+    let nominalBayar = NOMINAL;
+
+    if (totalPakaiDeposit < NOMINAL) {
+      // masih ada sisa → pakai metode tambahan
+      metodeBayar = METODE; // misalnya Cash / Transfer
       if (METODE === 'Transfer Bank' && !IDBANK) {
         await trx.rollback();
         return res.status(400).json({ success: false, message: 'Bank wajib dipilih untuk Transfer Bank' });
       }
-
-      await AngsuranModel.create({
-        NOANGSURAN,
-        IDINVOICE,
-        NOMINAL: sisaBayar,
-        METODE,
-        IDBANK: METODE === 'Transfer Bank' ? IDBANK : null,
-        KETERANGAN
-      }, trx);
-
-      const totalSetelahBayar = (invoice.TOTALANGSURAN || 0) + sisaBayar;
-      const sisaTagihanBaru = invoice.SISA_TAGIHAN - NOMINAL;
-
-      await trx('invoice')
-        .where('IDINVOICE', IDINVOICE)
-        .update({
-          TOTALANGSURAN: totalSetelahBayar,
-          SISA_TAGIHAN: sisaTagihanBaru,
-          STATUS: sisaTagihanBaru <= 0 ? 'LUNAS' : 'BELUM_LUNAS',
-          UPDATED_AT: trx.fn.now()
-        });
-    } else {
-      await AngsuranModel.create({
-        NOANGSURAN,
-        IDINVOICE,
-        NOMINAL: NOMINAL,
-        METODE: 'Deposit',
-        IDBANK: null,
-        KETERANGAN: 'Pembayaran dengan deposit penuh'
-      }, trx);
-
-      const sisaTagihanBaru = invoice.SISA_TAGIHAN - NOMINAL;
-      await trx('invoice')
-        .where('IDINVOICE', IDINVOICE)
-        .update({
-          SISA_TAGIHAN: sisaTagihanBaru,
-          STATUS: sisaTagihanBaru <= 0 ? 'LUNAS' : 'BELUM_LUNAS',
-          UPDATED_AT: trx.fn.now()
-        });
     }
 
+    await AngsuranModel.create({
+      NOANGSURAN,
+      IDINVOICE,
+      NOMINAL: nominalBayar,
+      METODE: metodeBayar,
+      IDBANK: metodeBayar === 'Transfer Bank' ? IDBANK : null,
+      KETERANGAN: totalPakaiDeposit > 0 && totalPakaiDeposit < NOMINAL
+        ? `Kombinasi pembayaran: Deposit ${totalPakaiDeposit} + ${metodeBayar} ${NOMINAL - totalPakaiDeposit}`
+        : (metodeBayar === 'Deposit' ? 'Pembayaran penuh menggunakan deposit' : KETERANGAN)
+    }, trx);
+
+    // update invoice
+    const sisaTagihanBaru = invoice.SISA_TAGIHAN - NOMINAL;
+    const totalSetelahBayar = (invoice.TOTALANGSURAN || 0) + NOMINAL;
+
+    await trx('invoice')
+      .where('IDINVOICE', IDINVOICE)
+      .update({
+        TOTALANGSURAN: totalSetelahBayar,
+        SISA_TAGIHAN: sisaTagihanBaru,
+        STATUS: sisaTagihanBaru <= 0 ? 'LUNAS' : 'BELUM_LUNAS',
+        UPDATED_AT: trx.fn.now()
+      });
+
     await trx.commit();
-    res.status(201).json({ success: true, message: 'Angsuran berhasil ditambahkan (memakai deposit jika ada)' });
+    res.status(201).json({
+      success: true,
+      message: totalPakaiDeposit === NOMINAL
+        ? 'Pembayaran berhasil menggunakan deposit penuh'
+        : (totalPakaiDeposit > 0
+            ? 'Pembayaran berhasil menggunakan kombinasi deposit + metode lain'
+            : 'Pembayaran berhasil tanpa menggunakan deposit')
+    });
+
   } catch (err) {
     await trx.rollback();
     console.error('Create Angsuran Error:', err);
@@ -150,10 +155,10 @@ export async function createAngsuran(req, res) {
 export async function updateAngsuran(req, res) {
   const trx = await db.transaction();
   try {
-    const { IDANGSURAN } = req.params;
+    const { id } = req.params;
     const { NOMINAL, METODE, IDBANK, KETERANGAN } = req.body;
 
-    const angsuran = await trx('angsuran').where('IDANGSURAN', IDANGSURAN).first();
+    const angsuran = await trx('angsuran').where('IDANGSURAN', id).first();
     if (!angsuran) {
       await trx.rollback();
       return res.status(404).json({ success: false, message: 'Angsuran tidak ditemukan' });
@@ -203,7 +208,7 @@ export async function updateAngsuran(req, res) {
 
     if (sisaBayar > 0) {
       await trx('angsuran')
-        .where('IDANGSURAN', IDANGSURAN)
+        .where('IDANGSURAN', id) 
         .update({
           NOMINAL: sisaBayar,
           METODE,
@@ -213,7 +218,7 @@ export async function updateAngsuran(req, res) {
         });
     } else {
       await trx('angsuran')
-        .where('IDANGSURAN', IDANGSURAN)
+        .where('IDANGSURAN', id)
         .update({
           NOMINAL,
           METODE: 'Deposit',
@@ -235,6 +240,7 @@ export async function updateAngsuran(req, res) {
 
     await trx.commit();
     res.json({ success: true, message: 'Angsuran berhasil diperbarui' });
+
   } catch (err) {
     await trx.rollback();
     console.error('Update Angsuran Error:', err);

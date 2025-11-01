@@ -13,8 +13,10 @@ export const getAll = async () => {
       'poli.NAMAPOLI',
       'dokter.IDDOKTER',
       'master_tenaga_medis.NAMALENGKAP as NAMADOKTER',
-    );
-
+    )
+    .orderBy('reservasi.TANGGALRESERVASI', 'desc')
+    .orderBy('reservasi.IDRESERVASI', 'desc');
+    
   const result = {};
   rows.forEach((row) => {
     if (!result[row.IDRESERVASI]) {

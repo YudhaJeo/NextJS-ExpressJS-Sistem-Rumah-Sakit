@@ -8,6 +8,7 @@ export const getDashboardKasir = async (req, res) => {
     const totalDepositPenggunaan = await DashboardModel.getTotalDepositPenggunaan();
     const statusInvoice = await DashboardModel.getStatusInvoice();
     const statusDeposit = await DashboardModel.getStatusDeposit();
+     const daftarInvoice = await DashboardModel.getDaftarInvoiceTerbaru();
 
     const invoiceStatusMap = {
       LUNAS: 0,
@@ -33,6 +34,7 @@ export const getDashboardKasir = async (req, res) => {
       totalDepositPenggunaan: totalDepositPenggunaan?.total || 0,
       statusInvoice: invoiceStatusMap,
       statusDeposit: depositStatusMap,
+      transaksi: daftarInvoice,
     });
   } catch (error) {
     console.error('Gagal ambil data dashboard kasir:', error);
