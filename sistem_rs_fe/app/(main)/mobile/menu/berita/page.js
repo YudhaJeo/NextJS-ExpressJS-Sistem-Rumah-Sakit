@@ -8,7 +8,6 @@ import HeaderBar from "@/app/components/headerbar";
 import TabelBerita from "./components/tabelBerita";
 import FormDialogBerita from "./components/formDialogBerita";
 import { Button } from "primereact/button";
-import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 import { Dialog } from "primereact/dialog";
 import dynamic from "next/dynamic";
 
@@ -18,11 +17,6 @@ export default function Page() {
   const [data, setData] = useState([]);
   const [originalData, setOriginalData] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [adjustDialog, setAdjustDialog] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState("");
-  const [fileName, setFileName] = useState("");
-  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
   const [form, setForm] = useState({
     IDBERITA: 0,
     JUDUL: "",
@@ -203,26 +197,6 @@ export default function Page() {
         errors={errors}
         inputClass={inputClass}
       />
-
-      <AdjustPrintMarginLaporan
-        adjustDialog={adjustDialog}
-        setAdjustDialog={setAdjustDialog}
-        selectedRow={null}
-        dataBerita={data}
-        setPdfUrl={setPdfUrl}
-        setFileName={setFileName}
-        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
-      />
-
-      <Dialog
-        visible={jsPdfPreviewOpen}
-        onHide={() => setJsPdfPreviewOpen(false)}
-        modal
-        style={{ width: "90vw", height: "90vh" }}
-        header="Preview PDF"
-      >
-        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
-      </Dialog>
     </div>
   );
 }

@@ -67,6 +67,7 @@ const AppMenu = () => {
               { label: "Berita", icon: "pi pi-fw pi-send", to: "/mobile/menu/berita" },
               { label: "Kritik Saran", icon: "pi pi-fw pi-inbox", to: "/mobile/menu/kritik_saran" },
               { label: "Notifikasi", icon: "pi pi-fw pi-bell", to: "/mobile/menu/notifikasi" },
+              { label: "Profile", icon: "pi pi-fw pi-user", to: "/mobile/menu/profile_mobile" },
             ],
           },
         ],
