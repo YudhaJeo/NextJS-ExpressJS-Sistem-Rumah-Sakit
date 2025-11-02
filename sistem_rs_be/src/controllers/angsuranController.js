@@ -48,7 +48,6 @@ export async function createAngsuran(req, res) {
       return res.status(400).json({ success: false, message: 'Nominal melebihi sisa tagihan' });
     }
 
-    // ambil semua deposit aktif untuk invoice ini
     const deposits = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
       .andWhere('STATUS', 'AKTIF');
@@ -56,7 +55,6 @@ export async function createAngsuran(req, res) {
     let sisaBayar = NOMINAL;
     let totalPakaiDeposit = 0;
 
-    // gunakan deposit terlebih dahulu
     for (const dep of deposits) {
       if (sisaBayar <= 0) break;
 
@@ -96,15 +94,11 @@ export async function createAngsuran(req, res) {
     const tanggalBayar = new Date().toISOString();
     const NOANGSURAN = await generateNoAngsuran(tanggalBayar, trx);
 
-    // logika utama:
-    // 1️⃣ kalau deposit cukup → pakai deposit penuh
-    // 2️⃣ kalau deposit kurang → sisanya dibayar metode lain
     let metodeBayar = 'Deposit';
     let nominalBayar = NOMINAL;
 
     if (totalPakaiDeposit < NOMINAL) {
-      // masih ada sisa → pakai metode tambahan
-      metodeBayar = METODE; // misalnya Cash / Transfer
+      metodeBayar = METODE; 
       if (METODE === 'Transfer Bank' && !IDBANK) {
         await trx.rollback();
         return res.status(400).json({ success: false, message: 'Bank wajib dipilih untuk Transfer Bank' });
@@ -122,7 +116,6 @@ export async function createAngsuran(req, res) {
         : (metodeBayar === 'Deposit' ? 'Pembayaran penuh menggunakan deposit' : KETERANGAN)
     }, trx);
 
-    // update invoice
     const sisaTagihanBaru = invoice.SISA_TAGIHAN - NOMINAL;
     const totalSetelahBayar = (invoice.TOTALANGSURAN || 0) + NOMINAL;
 

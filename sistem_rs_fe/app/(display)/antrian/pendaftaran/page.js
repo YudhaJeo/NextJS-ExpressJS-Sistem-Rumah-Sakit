@@ -264,10 +264,8 @@ function DisplayAntrian() {
 
   const handleCetakAntrian = async () => {
     try {
-      // Gunakan printer yang dipilih
       const config = getPrinterConfig();
       
-      // ... sisa kode pencetakan tetap sama ...
     } catch (error) {
       toast.current.show({
         severity: 'error',

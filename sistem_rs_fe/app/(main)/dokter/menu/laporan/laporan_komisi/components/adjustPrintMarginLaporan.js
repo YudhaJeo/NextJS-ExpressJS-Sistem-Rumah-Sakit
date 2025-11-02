@@ -8,7 +8,7 @@ import { InputNumber } from 'primereact/inputnumber'
 import { Toolbar } from 'primereact/toolbar'
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import * as XLSX from 'xlsx' // <-- Perbaikan import
+import * as XLSX from 'xlsx' 
 
 export default function AdjustPrintMarginLaporan({
   adjustDialog,

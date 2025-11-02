@@ -20,12 +20,10 @@ export default function PrinterSelector() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Otomatis fetch printer saat komponen dimuat
     handleFetchPrinters();
   }, [isQzReady]);
 
   useEffect(() => {
-    // Tampilkan error jika ada
     if (connectionError) {
       toast.current.show({
         severity: 'error', 

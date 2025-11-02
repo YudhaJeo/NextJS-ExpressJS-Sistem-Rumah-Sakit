@@ -81,9 +81,9 @@ const TabelRiwayatJalan = ({ data, loading, rajalOptions }) => {
     const severity = () => {
       switch (status) {
         case "Rawat Jalan":
-          return "info";   // biru
+          return "info";   
         case "Rawat Inap":
-          return "success"; // hijau
+          return "success"; 
         default:
           return "warning";
       }

@@ -86,7 +86,6 @@ export async function updateReservasi(req, res) {
         pendaftaran = { IDPENDAFTARAN: idPendaftaran };
       }
 
-      // 🔹 Cek apakah sudah ada rawat jalan
       const existingRJ = await trx("rawat_jalan")
         .where("IDPENDAFTARAN", pendaftaran.IDPENDAFTARAN)
         .first();

@@ -1,4 +1,3 @@
-// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_be\src\controllers\notifikasiController.js
 import * as NotifikasiModel from '../models/notifikasiModel.js';
 
 export async function getAllNotifikasi(req, res) {
