@@ -1,4 +1,3 @@
-// src/controllers/beritaController.js
 import * as BeritaModel from "../models/beritaModel.js";
 import { uploadToMinio } from "../utils/uploadMinio.js";
 import { deleteFromMinio } from "../utils/deleteMinio.js";
@@ -27,7 +26,6 @@ export const createBerita = async (req, res) => {
       return res.status(400).json({ error: "File harus diupload" });
     }
 
-    // Upload file ke folder "berita" di bucket "uploads"
     const filePath = await uploadToMinio(file, "berita");
 
     const newBerita = {

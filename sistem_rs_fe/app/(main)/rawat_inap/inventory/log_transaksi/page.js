@@ -110,7 +110,6 @@ const MonitoringPemesananPage = () => {
       }));
       const merged = [...pemesananDetailData, ...obatInapData, ...alkesInapData];
   
-      // Urutkan data berdasarkan tanggal terbaru
       const sortedData = merged.sort((a, b) => new Date(b.TANGGAL) - new Date(a.TANGGAL));
 
       setData(sortedData);
@@ -147,13 +146,11 @@ const MonitoringPemesananPage = () => {
   const handleDateFilter = () => {
     if (!startDate && !endDate) return setData(originalData);
     const filtered = originalData.filter((item) => {
-      // Gunakan TANGGAL untuk semua tipe transaksi
       const visitDate = new Date(item.TANGGAL);
       const from = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
       const to = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
       return (!from || visitDate >= from) && (!to || visitDate <= to);
     });
-    // Tetap urutkan setelah filter
     const sortedFiltered = filtered.sort((a, b) => new Date(b.TANGGAL) - new Date(a.TANGGAL));
     setData(sortedFiltered);
   };

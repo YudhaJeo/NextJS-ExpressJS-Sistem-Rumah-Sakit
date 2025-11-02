@@ -105,11 +105,11 @@ const Dashboard = () => {
               }
             },
             y: {
-              beginAtZero: true, // mulai dari 0
+              beginAtZero: true, 
               suggestedMax: Math.max(
                 ...(resData.trend?.pasien ?? []),
                 ...(resData.trend?.dokter ?? [])
-              ) + 2, // kasih margin 2 biar gak mentok
+              ) + 2, 
               ticks: {
                 color: style.getPropertyValue('--text-color')
               }

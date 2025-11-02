@@ -18,7 +18,7 @@ export default function TabelKalender({ refresh }) {
   const [events, setEvents] = useState([]);
   const [selectedEvents, setSelectedEvents] = useState([]);
   const [visible, setVisible] = useState(false);
-  const toast = useRef(null); // ✅ pakai useRef, bukan useState
+  const toast = useRef(null);
 
   useEffect(() => {
     fetchKalender();
@@ -28,7 +28,6 @@ export default function TabelKalender({ refresh }) {
     try {
       const kalenderRes = await axios.get(`${API_URL}/kalender`);
 
-      // kelompokkan data per tanggal
       const grouped = kalenderRes.data.reduce((acc, item) => {
         const date = item.TANGGAL;
         if (!acc[date]) acc[date] = [];

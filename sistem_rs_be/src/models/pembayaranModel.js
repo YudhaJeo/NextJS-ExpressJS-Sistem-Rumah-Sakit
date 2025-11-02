@@ -3,7 +3,7 @@ import db from '../core/config/knex.js';
 export const getAll = () => {
   return db('pembayaran')
     .join('invoice', 'pembayaran.IDINVOICE', 'invoice.IDINVOICE')
-    .join('pasien', 'invoice.NIK', 'pasien.NIK') // ambil NIK dari invoice agar selalu konsisten
+    .join('pasien', 'invoice.NIK', 'pasien.NIK') 
     .leftJoin('asuransi', 'pasien.IDASURANSI', 'asuransi.IDASURANSI')
     .leftJoin('bank_account', 'pembayaran.IDBANK', 'bank_account.IDBANK')
     .select(

@@ -96,7 +96,6 @@ function DisplayAntrianPoli() {
     if (typeof window !== 'undefined' && window.qz) {
       const connectQzTray = async () => {
         try {
-          // Coba disconnect terlebih dahulu jika ada koneksi aktif
           if (window.qz.websocket?.disconnect) {
             try {
               await window.qz.websocket.disconnect();
@@ -105,7 +104,6 @@ function DisplayAntrianPoli() {
             }
           }
 
-          // Sambungkan kembali dengan timeout
           await Promise.race([
             window.qz.websocket.connect(),
             new Promise((_, reject) => 
@@ -117,7 +115,6 @@ function DisplayAntrianPoli() {
         } catch (err) {
           console.error("QZ Tray koneksi gagal:", err);
           
-          // Tangani berbagai jenis error koneksi
           const connectionErrorMessages = [
             'An open connection with QZ Tray already exists',
             'Connection attempt cancelled by user',
@@ -221,12 +218,10 @@ function DisplayAntrianPoli() {
     try {
       if (!window.qz) throw new Error("QZ Tray tidak tersedia");
 
-      // Pastikan websocket tersedia dan terhubung
       if (!window.qz.websocket) {
         throw new Error("WebSocket tidak tersedia");
       }
 
-      // Coba sambungkan websocket dengan timeout
       await Promise.race([
         window.qz.websocket.connect(),
         new Promise((_, reject) => 
@@ -234,7 +229,6 @@ function DisplayAntrianPoli() {
         )
       ]);
 
-      // Pastikan konfigurasi printer tersedia
       const config = window.qz.configs?.create 
         ? window.qz.configs.create("POS-58")
         : null;
@@ -282,14 +276,12 @@ function DisplayAntrianPoli() {
         '\x1D\x56\x01'
       ];
 
-      // Pastikan metode print tersedia
       if (!window.qz.print) {
         throw new Error("Metode print tidak tersedia");
       }
 
       await window.qz.print(config, data);
       
-      // Disconnect websocket setelah print
       try {
         await window.qz.websocket.disconnect();
       } catch (disconnectError) {
@@ -298,7 +290,6 @@ function DisplayAntrianPoli() {
     } catch (err) {
       console.error("Gagal print:", err);
       
-      // Tangani berbagai jenis error
       const printErrorMessages = [
         'Cannot read properties of null (reading \'sendData\')',
         'Connection attempt cancelled by user',
@@ -348,10 +339,8 @@ function DisplayAntrianPoli() {
 
   const handleCetakAntrian = async () => {
     try {
-      // Gunakan printer yang dipilih
       const config = getPrinterConfig();
       
-      // ... sisa kode pencetakan tetap sama ...
     } catch (error) {
       toast.current.show({
         severity: 'error',

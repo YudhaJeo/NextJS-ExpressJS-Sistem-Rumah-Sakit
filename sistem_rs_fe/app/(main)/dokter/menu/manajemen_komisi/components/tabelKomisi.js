@@ -28,7 +28,7 @@ export const TabelKomisiDokter = ({ data, loading, onEdit, onDelete }) => {
       size="small"
       scrollable
       sortField="TANGGALKUNJUNGAN"
-      sortOrder={-1}  // -1 = descending
+      sortOrder={-1}  
     >
       <Column field="NAMADOKTER" header="Nama Dokter" />
       <Column field="NAMAPASIEN" header="Nama Pasien" />
