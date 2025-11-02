@@ -54,6 +54,7 @@ export async function createAngsuran(req, res) {
 
     let sisaBayar = NOMINAL;
     let totalPakaiDeposit = 0;
+    const usedDepositIds = [];
 
     for (const dep of deposits) {
       if (sisaBayar <= 0) break;
@@ -79,11 +80,14 @@ export async function createAngsuran(req, res) {
           CREATED_AT: trx.fn.now(),
           UPDATED_AT: trx.fn.now()
         });
+
+        usedDepositIds.push(dep.IDDEPOSIT);
       }
     }
 
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
+      .andWhere('STATUS', 'AKTIF')
       .sum('SALDO_SISA as total')
       .first();
 
@@ -94,15 +98,12 @@ export async function createAngsuran(req, res) {
     const tanggalBayar = new Date().toISOString();
     const NOANGSURAN = await generateNoAngsuran(tanggalBayar, trx);
 
-    let metodeBayar = 'Deposit';
+    let metodeBayar = totalPakaiDeposit >= NOMINAL ? 'Deposit' : METODE;
     let nominalBayar = NOMINAL;
 
-    if (totalPakaiDeposit < NOMINAL) {
-      metodeBayar = METODE; 
-      if (METODE === 'Transfer Bank' && !IDBANK) {
-        await trx.rollback();
-        return res.status(400).json({ success: false, message: 'Bank wajib dipilih untuk Transfer Bank' });
-      }
+    if (metodeBayar === 'Transfer Bank' && !IDBANK) {
+      await trx.rollback();
+      return res.status(400).json({ success: false, message: 'Bank wajib dipilih untuk Transfer Bank' });
     }
 
     await AngsuranModel.create({
@@ -111,11 +112,14 @@ export async function createAngsuran(req, res) {
       NOMINAL: nominalBayar,
       METODE: metodeBayar,
       IDBANK: metodeBayar === 'Transfer Bank' ? IDBANK : null,
-      KETERANGAN: totalPakaiDeposit > 0 && totalPakaiDeposit < NOMINAL
-        ? `Kombinasi pembayaran: Deposit ${totalPakaiDeposit} + ${metodeBayar} ${NOMINAL - totalPakaiDeposit}`
-        : (metodeBayar === 'Deposit' ? 'Pembayaran penuh menggunakan deposit' : KETERANGAN)
+      KETERANGAN:
+        totalPakaiDeposit > 0 && totalPakaiDeposit < NOMINAL
+          ? `Kombinasi pembayaran: Deposit Rp ${totalPakaiDeposit.toLocaleString('id-ID')} + ${metodeBayar} Rp ${(NOMINAL - totalPakaiDeposit).toLocaleString('id-ID')}`
+          : (metodeBayar === 'Deposit'
+              ? 'Pembayaran penuh menggunakan deposit'
+              : KETERANGAN)
     }, trx);
-
+    
     const sisaTagihanBaru = invoice.SISA_TAGIHAN - NOMINAL;
     const totalSetelahBayar = (invoice.TOTALANGSURAN || 0) + NOMINAL;
 
@@ -128,14 +132,38 @@ export async function createAngsuran(req, res) {
         UPDATED_AT: trx.fn.now()
       });
 
+    if (sisaTagihanBaru <= 0 && usedDepositIds.length > 0) {
+      await trx('deposit')
+        .whereIn('IDDEPOSIT', usedDepositIds)
+        .update({
+          STATUS: 'REFUND',
+          KETERANGAN: 'Deposit direfund karena invoice sudah lunas',
+          UPDATED_AT: trx.fn.now()
+        });
+
+      const totalDepositFinal = await trx('deposit')
+        .where('IDINVOICE', IDINVOICE)
+        .andWhere('STATUS', 'AKTIF')
+        .sum('SALDO_SISA as total')
+        .first();
+
+      await trx('invoice')
+        .where('IDINVOICE', IDINVOICE)
+        .update({
+          TOTALDEPOSIT: totalDepositFinal.total || 0,
+          UPDATED_AT: trx.fn.now()
+        });
+    }
+
     await trx.commit();
     res.status(201).json({
       success: true,
-      message: totalPakaiDeposit === NOMINAL
-        ? 'Pembayaran berhasil menggunakan deposit penuh'
-        : (totalPakaiDeposit > 0
-            ? 'Pembayaran berhasil menggunakan kombinasi deposit + metode lain'
-            : 'Pembayaran berhasil tanpa menggunakan deposit')
+      message:
+        totalPakaiDeposit === NOMINAL
+          ? 'Pembayaran berhasil menggunakan deposit penuh, invoice lunas.'
+          : totalPakaiDeposit > 0
+          ? 'Pembayaran berhasil menggunakan kombinasi deposit + metode lain.'
+          : 'Pembayaran angsuran berhasil.'
     });
 
   } catch (err) {
@@ -163,12 +191,17 @@ export async function updateAngsuran(req, res) {
       return res.status(400).json({ success: false, message: 'Invoice tidak ditemukan' });
     }
 
-    let sisaTagihan = invoice.SISA_TAGIHAN + angsuran.NOMINAL;
-
+    const penggunaanLama = await trx('deposit_penggunaan').where('IDINVOICE', angsuran.IDINVOICE);
+    for (const p of penggunaanLama) {
+      await trx('deposit')
+        .where('IDDEPOSIT', p.IDDEPOSIT)
+        .increment('SALDO_SISA', p.JUMLAH_PEMAKAIAN)
+        .update({ STATUS: 'AKTIF', UPDATED_AT: trx.fn.now() });
+    }
     await trx('deposit_penggunaan').where('IDINVOICE', angsuran.IDINVOICE).del();
 
     let sisaBayar = NOMINAL;
-
+    const usedDepositIds = [];
     const deposits = await trx('deposit')
       .where('IDINVOICE', angsuran.IDINVOICE)
       .andWhere('STATUS', 'AKTIF');
@@ -176,7 +209,7 @@ export async function updateAngsuran(req, res) {
     for (const dep of deposits) {
       if (sisaBayar <= 0) break;
 
-      let pakai = Math.min(dep.SALDO_SISA, sisaBayar);
+      const pakai = Math.min(dep.SALDO_SISA, sisaBayar);
       sisaBayar -= pakai;
 
       if (pakai > 0) {
@@ -196,44 +229,54 @@ export async function updateAngsuran(req, res) {
           CREATED_AT: trx.fn.now(),
           UPDATED_AT: trx.fn.now()
         });
+
+        usedDepositIds.push(dep.IDDEPOSIT);
       }
     }
 
-    if (sisaBayar > 0) {
-      await trx('angsuran')
-        .where('IDANGSURAN', id) 
+    await trx('angsuran')
+      .where('IDANGSURAN', id)
+      .update({
+        NOMINAL,
+        METODE,
+        IDBANK: METODE === 'Transfer Bank' ? IDBANK : null,
+        KETERANGAN,
+        UPDATED_AT: trx.fn.now()
+      });
+
+    const sisaTagihanBaru = invoice.SISA_TAGIHAN - NOMINAL;
+    await trx('invoice')
+      .where('IDINVOICE', angsuran.IDINVOICE)
+      .update({
+        SISA_TAGIHAN: sisaTagihanBaru,
+        STATUS: sisaTagihanBaru <= 0 ? 'LUNAS' : 'BELUM_LUNAS',
+        UPDATED_AT: trx.fn.now()
+      });
+
+    if (sisaTagihanBaru <= 0 && usedDepositIds.length > 0) {
+      await trx('deposit')
+        .whereIn('IDDEPOSIT', usedDepositIds)
+        .update({ 
+          STATUS: 'REFUND', 
+          KETERANGAN: 'Deposit direfund karena invoice sudah lunas',
+          UPDATED_AT: trx.fn.now() });
+
+      const totalDepositFinal = await trx('deposit')
+        .where('IDINVOICE', angsuran.IDINVOICE)
+        .andWhere('STATUS', 'AKTIF')
+        .sum('SALDO_SISA as total')
+        .first();
+
+      await trx('invoice')
+        .where('IDINVOICE', angsuran.IDINVOICE)
         .update({
-          NOMINAL: sisaBayar,
-          METODE,
-          IDBANK: METODE === 'Transfer Bank' ? IDBANK : null,
-          KETERANGAN,
-          UPDATED_AT: trx.fn.now()
-        });
-    } else {
-      await trx('angsuran')
-        .where('IDANGSURAN', id)
-        .update({
-          NOMINAL,
-          METODE: 'Deposit',
-          IDBANK: null,
-          KETERANGAN: 'Update angsuran menggunakan deposit penuh',
+          TOTALDEPOSIT: totalDepositFinal.total || 0,
           UPDATED_AT: trx.fn.now()
         });
     }
 
-    sisaTagihan -= NOMINAL;
-
-    await trx('invoice')
-      .where('IDINVOICE', angsuran.IDINVOICE)
-      .update({
-        SISA_TAGIHAN: sisaTagihan,
-        STATUS: sisaTagihan <= 0 ? 'LUNAS' : 'BELUM_LUNAS',
-        UPDATED_AT: trx.fn.now()
-      });
-
     await trx.commit();
     res.json({ success: true, message: 'Angsuran berhasil diperbarui' });
-
   } catch (err) {
     await trx.rollback();
     console.error('Update Angsuran Error:', err);
@@ -268,7 +311,6 @@ export async function deleteAngsuran(req, res) {
     }
 
     await trx('deposit_penggunaan').where('IDINVOICE', IDINVOICE).del();
-
     await trx('angsuran').where('IDANGSURAN', id).del();
 
     const totalSetelahHapus = (invoice.TOTALANGSURAN || 0) - NOMINAL;
@@ -276,6 +318,7 @@ export async function deleteAngsuran(req, res) {
 
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
+      .andWhere('STATUS', 'AKTIF')
       .sum('SALDO_SISA as total')
       .first();
 

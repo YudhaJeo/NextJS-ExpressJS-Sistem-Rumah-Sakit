@@ -151,12 +151,13 @@ export async function createPembayaran(req, res) {
         .orderBy('IDDEPOSIT', 'asc');
 
       let sisaBayar = jumlahBayarOtomatis;
-      let totalDikurangi = 0;
+      const usedDepositIds = [];
 
       for (const dep of deposits) {
         if (sisaBayar <= 0) break;
-
         const pakai = Math.min(dep.SALDO_SISA, sisaBayar);
+        if (pakai <= 0) continue;
+
         const saldoBaru = dep.SALDO_SISA - pakai;
 
         await trx('deposit')
@@ -176,8 +177,8 @@ export async function createPembayaran(req, res) {
           UPDATED_AT: trx.fn.now(),
         });
 
-        totalDikurangi += pakai;
         sisaBayar -= pakai;
+        usedDepositIds.push(dep.IDDEPOSIT);
       }
 
       await trx('pembayaran').insert({
@@ -201,6 +202,15 @@ export async function createPembayaran(req, res) {
           STATUS: 'LUNAS',
           UPDATED_AT: trx.fn.now(),
         });
+
+      if (usedDepositIds.length > 0) {
+        await trx('deposit')
+          .whereIn('IDDEPOSIT', usedDepositIds)
+          .update({ 
+            STATUS: 'REFUND', 
+            KETERANGAN: 'Deposit direfund karena invoice sudah lunas',
+            UPDATED_AT: trx.fn.now() });
+      }
 
       const totalDeposit = await trx('deposit')
         .where('IDINVOICE', IDINVOICE)
@@ -249,11 +259,7 @@ export async function createPembayaran(req, res) {
   } catch (error) {
     console.error('Create Pembayaran Error:', error);
     await trx.rollback();
-    res.status(500).json({
-      success: false,
-      message: 'Gagal menambahkan pembayaran.',
-      error: error.message,
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 }
 
@@ -276,34 +282,58 @@ export async function updatePembayaran(req, res) {
     }
 
     let sisaTagihan = invoice.SISA_TAGIHAN + pembayaran.JUMLAHBAYAR;
+
+    const previousPenggunaan = await trx('deposit_penggunaan')
+      .where('IDINVOICE', pembayaran.IDINVOICE);
+
+    for (const pakai of previousPenggunaan) {
+      await trx('deposit')
+        .where('IDDEPOSIT', pakai.IDDEPOSIT)
+        .increment('SALDO_SISA', pakai.JUMLAH_PEMAKAIAN)
+        .update({ STATUS: 'AKTIF', UPDATED_AT: trx.fn.now() });
+    }
     await trx('deposit_penggunaan').where('IDINVOICE', pembayaran.IDINVOICE).del();
 
-    let sisaBayar = JUMLAHBAYAR;
-    const deposits = await trx('deposit').where('IDINVOICE', pembayaran.IDINVOICE).andWhere('STATUS', 'AKTIF');
+    let usedDepositIds = [];
+    if (METODEPEMBAYARAN === 'Deposit') {
+      let sisaBayar = JUMLAHBAYAR;
+      const deposits = await trx('deposit').where('IDINVOICE', pembayaran.IDINVOICE).andWhere('STATUS', 'AKTIF');
 
-    for (const dep of deposits) {
-      if (sisaTagihan <= 0 || sisaBayar <= 0) break;
-      let pakai = Math.min(dep.SALDO_SISA, sisaBayar, sisaTagihan);
-      if (pakai > 0) {
-        sisaTagihan -= pakai;
-        sisaBayar -= pakai;
+      for (const dep of deposits) {
+        if (sisaTagihan <= 0 || sisaBayar <= 0) break;
+        let pakai = Math.min(dep.SALDO_SISA, sisaBayar, sisaTagihan);
+        if (pakai > 0) {
+          sisaTagihan -= pakai;
+          sisaBayar -= pakai;
 
-        await trx('deposit')
-          .where('IDDEPOSIT', dep.IDDEPOSIT)
-          .update({
-            SALDO_SISA: dep.SALDO_SISA - pakai,
-            STATUS: dep.SALDO_SISA - pakai <= 0 ? 'HABIS' : 'AKTIF',
+          await trx('deposit')
+            .where('IDDEPOSIT', dep.IDDEPOSIT)
+            .update({
+              SALDO_SISA: dep.SALDO_SISA - pakai,
+              STATUS: dep.SALDO_SISA - pakai <= 0 ? 'HABIS' : 'AKTIF',
+              UPDATED_AT: trx.fn.now(),
+            });
+
+          await trx('deposit_penggunaan').insert({
+            IDDEPOSIT: dep.IDDEPOSIT,
+            IDINVOICE: pembayaran.IDINVOICE,
+            JUMLAH_PEMAKAIAN: pakai,
+            TANGGALPEMAKAIAN: trx.fn.now(),
+            CREATED_AT: trx.fn.now(),
             UPDATED_AT: trx.fn.now(),
           });
 
-        await trx('deposit_penggunaan').insert({
-          IDDEPOSIT: dep.IDDEPOSIT,
-          IDINVOICE: pembayaran.IDINVOICE,
-          JUMLAH_PEMAKAIAN: pakai,
-          TANGGALPEMAKAIAN: trx.fn.now(),
-          CREATED_AT: trx.fn.now(),
-          UPDATED_AT: trx.fn.now(),
-        });
+          usedDepositIds.push(dep.IDDEPOSIT);
+        }
+      }
+
+      if (usedDepositIds.length > 0 && sisaTagihan <= 0) {
+        await trx('deposit')
+          .whereIn('IDDEPOSIT', usedDepositIds)
+          .update({ 
+            STATUS: 'REFUND', 
+            KETERANGAN: 'Deposit direfund karena invoice sudah lunas',
+            UPDATED_AT: trx.fn.now() });
       }
     }
 
@@ -330,6 +360,7 @@ export async function updatePembayaran(req, res) {
 
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', pembayaran.IDINVOICE)
+      .andWhere('STATUS', 'AKTIF')
       .sum('SALDO_SISA as total')
       .first();
 
@@ -382,6 +413,7 @@ export async function deletePembayaran(req, res) {
 
     const totalDeposit = await trx('deposit')
       .where('IDINVOICE', IDINVOICE)
+      .andWhere('STATUS', 'AKTIF')
       .sum('SALDO_SISA as total')
       .first();
 

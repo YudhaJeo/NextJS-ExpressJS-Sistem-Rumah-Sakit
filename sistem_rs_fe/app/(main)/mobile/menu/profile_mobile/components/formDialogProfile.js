@@ -155,7 +155,7 @@ const FormDialogProfile = ({
                 const file = e.files[0];
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                  setForm({ ...form, FOTOLOGO: reader.result }); // base64 string
+                  setForm({ ...form, FOTOLOGO: reader.result }); 
                   setFotoPreview(reader.result);
                 };
                 reader.readAsDataURL(file);
