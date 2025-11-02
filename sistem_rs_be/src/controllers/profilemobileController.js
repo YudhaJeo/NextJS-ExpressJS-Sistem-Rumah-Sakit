@@ -3,7 +3,6 @@ import { uploadToMinio } from "../utils/uploadMinio.js";
 import { deleteFromMinio } from "../utils/deleteMinio.js";
 import db from "../core/config/knex.js";
 
-// 🔵 GET — Ambil profil rumah sakit
 export async function getProfile(req, res) {
   try {
     const data = await ProfileMobileModel.getProfile();
@@ -19,7 +18,6 @@ export async function getProfile(req, res) {
   }
 }
 
-// 🟡 UPDATE — Edit profil rumah sakit
 export async function updateProfile(req, res) {
   const trx = await db.transaction();
   try {
@@ -34,9 +32,8 @@ export async function updateProfile(req, res) {
       VISI,
       MISI,
     } = req.body;
-    const file = req.file; // ambil file logo dari form multipart/form-data
+    const file = req.file; 
 
-    // Ambil profil pertama (karena hanya 1)
     const existingProfile = await trx("profile_mobile").first();
     if (!existingProfile) {
       await trx.rollback();
@@ -47,7 +44,6 @@ export async function updateProfile(req, res) {
 
     let FOTOLOGO = existingProfile.FOTOLOGO;
 
-    // Jika user upload logo baru, hapus yang lama dari MinIO dan upload baru
     if (file) {
       try {
         if (existingProfile.FOTOLOGO) {
@@ -57,12 +53,10 @@ export async function updateProfile(req, res) {
         console.warn("⚠️ Gagal hapus logo lama:", e.message);
       }
 
-      // Upload baru ke folder "profile"
       const newPath = await uploadToMinio(file, "profile");
       FOTOLOGO = newPath;
     }
 
-    // Update semua data profil
     await trx("profile_mobile")
       .where({ IDPROFILE: existingProfile.IDPROFILE })
       .update({

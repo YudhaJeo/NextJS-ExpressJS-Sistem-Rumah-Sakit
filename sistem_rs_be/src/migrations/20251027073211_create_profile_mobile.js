@@ -15,7 +15,6 @@ export const up = async function (knex) {
     table.timestamp("UPDATED_AT").defaultTo(knex.fn.now());
   });
 
-  // 🟢 Insert data default setelah tabel dibuat
   await knex("profile_mobile").insert({
     NAMARS: "RS Bayza Medika",
     ALAMAT:

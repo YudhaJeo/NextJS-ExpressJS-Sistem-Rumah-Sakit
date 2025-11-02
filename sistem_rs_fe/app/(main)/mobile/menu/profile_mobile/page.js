@@ -63,13 +63,12 @@ export default function Page() {
  const handleSubmit = async () => {
   if (!validateForm()) return;
   try {
-    // Jika user memilih gambar, konversi jadi base64
     let updatedForm = { ...form };
 
     if (form.FOTOLOGO instanceof File) {
       const reader = new FileReader();
       reader.onloadend = async () => {
-        updatedForm.FOTOLOGO = reader.result; // base64 string
+        updatedForm.FOTOLOGO = reader.result; 
         await submitData(updatedForm);
       };
       reader.readAsDataURL(form.FOTOLOGO);
@@ -82,7 +81,6 @@ export default function Page() {
   }
 };
 
-// Fungsi bantu untuk kirim data ke API
 const submitData = async (data) => {
   await axios.put(`${API_URL}/profile_mobile`, data, {
     headers: { "Content-Type": "application/json" },
