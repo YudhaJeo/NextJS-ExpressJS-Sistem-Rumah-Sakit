@@ -36,6 +36,15 @@ export const getTotalDepositPenggunaan = async () => {
   }
 };
 
+export const getTotalAngsuran = async () => {
+  try {
+    return await db('angsuran').count('IDANGSURAN as total').first();
+  } catch (error) {
+    console.error('Error getTotalAngsuran:', error);
+    throw error;
+  }
+};
+
 export const getStatusInvoice = async () => {
   try {
     return await db('invoice')
