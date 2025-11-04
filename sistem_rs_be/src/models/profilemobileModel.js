@@ -4,6 +4,10 @@ export async function getProfile() {
   return db('profile_mobile').first();
 }
 
+export const getById = (id) => {
+  return db('profile_mobile').where('IDPROFILE', id).first();
+};
+
 export async function updateProfile(id, data) {
   return db('profile_mobile')
     .where({ IDPROFILE: id })

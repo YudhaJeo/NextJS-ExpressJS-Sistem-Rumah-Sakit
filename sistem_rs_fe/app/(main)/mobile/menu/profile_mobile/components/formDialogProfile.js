@@ -56,7 +56,6 @@ const FormDialogProfile = ({
           <label>Alamat</label>
           <InputTextarea
             className={inputClass("ALAMAT")}
-            rows={3}
             value={form.ALAMAT || ""}
             onChange={(e) => setForm({ ...form, ALAMAT: e.target.value })}
           />
@@ -65,7 +64,7 @@ const FormDialogProfile = ({
           )}
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="">
            <div className = "mt-3">
             <label>Email</label>
             <InputText
@@ -86,7 +85,7 @@ const FormDialogProfile = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="">
            <div className = "mt-3">
             <label>No. Telp Ambulan</label>
             <InputText
@@ -112,7 +111,6 @@ const FormDialogProfile = ({
          <div className = "mt-3">
           <label>Deskripsi</label>
           <InputTextarea
-            rows={3}
             className="w-full mt-2"
             value={form.DESKRIPSI || ""}
             onChange={(e) => setForm({ ...form, DESKRIPSI: e.target.value })}
@@ -122,7 +120,6 @@ const FormDialogProfile = ({
          <div className = "mt-3">
           <label>Visi</label>
           <InputTextarea
-            rows={3}
             className="w-full mt-2"
             value={form.VISI || ""}
             onChange={(e) => setForm({ ...form, VISI: e.target.value })}
@@ -132,44 +129,43 @@ const FormDialogProfile = ({
          <div className = "mt-3">
           <label>Misi</label>
           <InputTextarea
-            rows={3}
             className="w-full mt-2"
             value={form.MISI || ""}
             onChange={(e) => setForm({ ...form, MISI: e.target.value })}
           />
         </div>
 
-         <div className = "mt-3">
+        <div className ="mt-3">
           <label>Logo Rumah Sakit</label>
-         <FileUpload
+          <FileUpload 
             className="mt-1"
             mode="basic"
             name="file"
             accept="image/*"
             maxFileSize={1000000}
-            auto={false}
-            customUpload={true}
-            chooseLabel="Pilih Logo"
+            auto={false}          
+            customUpload={true} 
+            chooseLabel="Pilih File"
             onSelect={(e) => {
               if (e.files && e.files.length > 0) {
                 const file = e.files[0];
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  setForm({ ...form, FOTOLOGO: reader.result }); 
-                  setFotoPreview(reader.result);
-                };
-                reader.readAsDataURL(file);
+                setForm({ ...form, FOTOLOGO: file }); 
+                if (file.type.startsWith("image/")) {
+                  setFotoPreview(URL.createObjectURL(file));
+                } else {
+                  setFotoPreview(null);
+                }
               }
             }}
           />
-
           {fotoPreview && (
             <img
               src={fotoPreview}
-              alt="Logo"
-              className="w-5 h-5 object-contain border rounded-lg shadow-sm"
+              alt="Preview"
+              className="mt-3 w-full h-40 object-contain border rounded"
             />
           )}
+          {errors.file && <small className="text-red-500">{errors.file}</small>}
         </div>
 
         <div className="text-right pt-3">
