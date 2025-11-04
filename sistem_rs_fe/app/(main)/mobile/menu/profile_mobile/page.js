@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Toast } from "primereact/toast";
-import { Button } from "primereact/button";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import HeaderBar from "@/app/components/headerbar";
 import TabelProfile from "./components/tabelProfile";
@@ -25,7 +24,7 @@ export default function Page() {
     DESKRIPSI: "",
     VISI: "",
     MISI: "",
-    FOTOLOGO: "",
+    FOTOLOGO: undefined,
   });
 
   const [errors, setErrors] = useState({});
@@ -56,41 +55,55 @@ export default function Page() {
     const newErrors = {};
     if (!form.NAMARS.trim()) newErrors.NAMARS = "Nama rumah sakit wajib diisi";
     if (!form.ALAMAT.trim()) newErrors.ALAMAT = "Alamat wajib diisi";
+    if (!form.EMAIL.trim()) newErrors.EMAIL = "Email wajib diisi";
+    if (!form.NOTELPAMBULAN.trim()) newErrors.NOTELPAMBULAN = "Telp Ambulan wajib diisi";
+    if (!form.NOAMBULANWA.trim()) newErrors.NOAMBULANWA = "Ambulan WA wajib diisi";
+    if (!form.NOMORHOTLINE.trim()) newErrors.NOMORHOTLINE = "Hotline wajib diisi";
+    if (!form.DESKRIPSI.trim()) newErrors.DESKRIPSI = "Deskripsi wajib diisi";
+    if (!form.VISI.trim()) newErrors.VISI = "Visi wajib diisi";
+    if (!form.MISI.trim()) newErrors.MISI = "Misi wajib diisi";
+    if (!form.FOTOLOGO) newErrors.FOTOLOGO = "Logo wajib diunggah";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
  const handleSubmit = async () => {
   if (!validateForm()) return;
-  try {
-    let updatedForm = { ...form };
 
+  try {
+    const formData = new FormData();
+    formData.append("NAMARS", form.NAMARS);
+    formData.append("ALAMAT", form.ALAMAT);
+    formData.append("EMAIL", form.EMAIL);
+    formData.append("NOTELPAMBULAN", form.NOTELPAMBULAN);
+    formData.append("NOAMBULANWA", form.NOAMBULANWA);
+    formData.append("NOMORHOTLINE", form.NOMORHOTLINE);
+    formData.append("DESKRIPSI", form.DESKRIPSI);
+    formData.append("VISI", form.VISI);
+    formData.append("MISI", form.MISI);
     if (form.FOTOLOGO instanceof File) {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        updatedForm.FOTOLOGO = reader.result; 
-        await submitData(updatedForm);
-      };
-      reader.readAsDataURL(form.FOTOLOGO);
-    } else {
-      await submitData(updatedForm);
+      formData.append("FOTOLOGO", form.FOTOLOGO);
     }
+
+    if (form.IDPROFILE) {
+      await axios.put(`${API_URL}/profile_mobile/${form.IDPROFILE}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      showToast("success", "Berhasil", "Berita berhasil diperbarui");
+    } else {
+      await axios.post(`${API_URL}/profile_mobile`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      showToast("success", "Berhasil", "Berita berhasil ditambahkan");
+    }
+
+    fetchData();
+    setDialogVisible(false);
   } catch (err) {
     console.error("Gagal menyimpan profil:", err);
     showToast("error", "Gagal", "Terjadi kesalahan saat menyimpan profil");
   }
 };
-
-const submitData = async (data) => {
-  await axios.put(`${API_URL}/profile_mobile`, data, {
-    headers: { "Content-Type": "application/json" },
-  });
-
-  showToast("success", "Berhasil", "Profil berhasil diperbarui");
-  setDialogVisible(false);
-  fetchData();
-};
-
 
   const handleEdit = (row) => {
     setForm(row);
@@ -106,14 +119,6 @@ const submitData = async (data) => {
       <ConfirmDialog />
 
       <h3 className="text-xl font-semibold mb-3">Profil Rumah Sakit</h3>
-
-      <div className="flex justify-end mb-3">
-        <HeaderBar
-          title=""
-          placeholder="Cari profil..."
-          onSearch={() => {}}
-        />
-      </div>
 
       <TabelProfile data={data} onEdit={handleEdit} loading={false} />
 

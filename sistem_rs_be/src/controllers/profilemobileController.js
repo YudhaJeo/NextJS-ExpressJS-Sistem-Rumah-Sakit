@@ -1,7 +1,6 @@
 import * as ProfileMobileModel from "../models/profilemobileModel.js";
 import { uploadToMinio } from "../utils/uploadMinio.js";
 import { deleteFromMinio } from "../utils/deleteMinio.js";
-import db from "../core/config/knex.js";
 
 export async function getProfile(req, res) {
   try {
@@ -19,8 +18,8 @@ export async function getProfile(req, res) {
 }
 
 export async function updateProfile(req, res) {
-  const trx = await db.transaction();
   try {
+    const { id } = req.params;
     const {
       NAMARS,
       ALAMAT,
@@ -34,9 +33,8 @@ export async function updateProfile(req, res) {
     } = req.body;
     const file = req.file; 
 
-    const existingProfile = await trx("profile_mobile").first();
+    const existingProfile = await ProfileMobileModel.getById(id);
     if (!existingProfile) {
-      await trx.rollback();
       return res
         .status(404)
         .json({ message: "Profil rumah sakit belum dibuat" });
@@ -46,9 +44,7 @@ export async function updateProfile(req, res) {
 
     if (file) {
       try {
-        if (existingProfile.FOTOLOGO) {
-          await deleteFromMinio(existingProfile.FOTOLOGO);
-        }
+        await deleteFromMinio(existingProfile.FOTOLOGO);
       } catch (e) {
         console.warn("⚠️ Gagal hapus logo lama:", e.message);
       }
@@ -57,41 +53,25 @@ export async function updateProfile(req, res) {
       FOTOLOGO = newPath;
     }
 
-    await trx("profile_mobile")
-      .where({ IDPROFILE: existingProfile.IDPROFILE })
-      .update({
-        NAMARS,
-        ALAMAT: ALAMAT || null,
-        EMAIL: EMAIL || null,
-        NOTELPAMBULAN: NOTELPAMBULAN || null,
-        NOAMBULANWA: NOAMBULANWA || null,
-        NOMORHOTLINE: NOMORHOTLINE || null,
-        DESKRIPSI: DESKRIPSI || null,
-        VISI: VISI || null,
-        MISI: MISI || null,
-        FOTOLOGO: FOTOLOGO || null,
-        UPDATED_AT: db.fn.now(),
-      });
+    const updatedData = {
+      NAMARS: NAMARS || existingProfile.NAMARS,
+      ALAMAT: ALAMAT || existingProfile.ALAMAT,
+      EMAIL: EMAIL || existingProfile.EMAIL,
+      NOTELPAMBULAN: NOTELPAMBULAN || existingProfile.NOTELPAMBULAN,
+      NOAMBULANWA: NOAMBULANWA || existingProfile.NOAMBULANWA,
+      NOMORHOTLINE: NOMORHOTLINE || existingProfile.NOMORHOTLINE,
+      DESKRIPSI: DESKRIPSI || existingProfile.DESKRIPSI,
+      VISI: VISI || existingProfile.VISI,
+      MISI: MISI || existingProfile.MISI,
+      FOTOLOGO: FOTOLOGO || existingProfile.FOTOLOGO,
+      UPDATED_AT: new Date(),
+    }
 
-    await trx.commit();
+    console.log(updatedData);
 
-    res.json({
-      message: "Profil rumah sakit berhasil diperbarui",
-      data: {
-        NAMARS,
-        ALAMAT,
-        EMAIL,
-        NOTELPAMBULAN,
-        NOAMBULANWA,
-        NOMORHOTLINE,
-        DESKRIPSI,
-        VISI,
-        MISI,
-        FOTOLOGO,
-      },
-    });
+    await ProfileMobileModel.updateProfile(id, updatedData);
+    res.json({ message: "Profil rumah sakit berhasil diperbarui", data: updatedData });
   } catch (err) {
-    await trx.rollback();
     console.error("Update Profile Error:", err.message);
     res.status(500).json({ error: err.message });
   }
