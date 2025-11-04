@@ -1,5 +1,6 @@
+// D:\MARSTECH\NextJS-ExpressJS-Final-System\sistem_rs_fe\app\(main)\layout.js
 import Layout from '../../layout/layout';
-import Providers from '../providers';
+import { PrimeReactProvider } from 'primereact/api';
 
 export const metadata = {
   title: 'Bayza Medika',
@@ -10,8 +11,8 @@ export const metadata = {
 
 export default function AppLayout({ children }) {
   return (
-    <Providers>
-      <Layout>{children}</Layout>
-    </Providers>
+    <Layout>
+      {children}
+    </Layout>
   );
 }
