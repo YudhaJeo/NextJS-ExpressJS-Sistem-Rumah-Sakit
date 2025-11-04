@@ -66,9 +66,7 @@ export async function updateProfile(req, res) {
       FOTOLOGO: FOTOLOGO || existingProfile.FOTOLOGO,
       UPDATED_AT: new Date(),
     }
-
-    console.log(updatedData);
-
+    
     await ProfileMobileModel.updateProfile(id, updatedData);
     res.json({ message: "Profil rumah sakit berhasil diperbarui", data: updatedData });
   } catch (err) {
