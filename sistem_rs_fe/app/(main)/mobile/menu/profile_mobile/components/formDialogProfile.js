@@ -74,7 +74,7 @@ const FormDialogProfile = ({
             />
           </div>
            <div className = "mt-3">
-            <label>No. Hotline</label>
+            <label>Customer Service</label>
             <InputText
               className="w-full mt-2"
               value={form.NOMORHOTLINE || ""}
