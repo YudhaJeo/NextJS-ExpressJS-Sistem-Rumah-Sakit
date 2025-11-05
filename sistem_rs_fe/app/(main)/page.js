@@ -7,7 +7,6 @@ import { Tag } from 'primereact/tag';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { TabView, TabPanel } from 'primereact/tabview';
-import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -23,7 +22,6 @@ const Dashboard = () => {
   const [poliChartOptions, setPoliChartOptions] = useState({});
   const [bedChartData, setBedChartData] = useState({});
   const [bedChartOptions, setBedChartOptions] = useState({});
-  const router = useRouter();
 
   useEffect(() => {
     axios
@@ -181,12 +179,27 @@ const Dashboard = () => {
       border: card.color,
     })) ?? [];
 
+  const [profileRs, setProfileRs] = useState(null);
+
+  const fetchProfileRs = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/profile_mobile`);
+      setProfileRs(res.data?.data || null);
+    } catch (err) {
+      console.error("Gagal mengambil profil RS:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfileRs();
+  }, []);
+
   return (
     <div className="grid">
       <div className="card col-12 mb-2">
         <div className="flex justify-content-center md:justify-content-between align-items-center">
           <h1 className="text-xl font-semibold mb-3 text-center md:text-left flex-1">
-            Rumah Sakit Bayza Medika
+            {profileRs?.NAMARS || "Memuat..."}
           </h1>
           <span className="text-sm font-bold text-700">
             {new Date().toLocaleDateString('id-ID', {
