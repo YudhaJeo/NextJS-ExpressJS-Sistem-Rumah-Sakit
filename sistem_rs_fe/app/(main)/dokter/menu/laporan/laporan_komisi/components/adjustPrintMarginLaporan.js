@@ -6,47 +6,85 @@ import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
 import { InputNumber } from 'primereact/inputnumber'
 import { Toolbar } from 'primereact/toolbar'
-import jsPDF from 'jspdf'
+import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import * as XLSX from 'xlsx' 
+import * as XLSX from 'xlsx'
 
 export default function AdjustPrintMarginLaporan({
   adjustDialog,
   setAdjustDialog,
-  selectedRow,
+  dataFormulir = [],
   setPdfUrl,
   setFileName,
-  setJsPdfPreviewOpen
+  setJsPdfPreviewOpen,
 }) {
-  const [loadingExport, setLoadingExport] = useState(false)
-  const [loadingExcel, setLoadingExcel] = useState(false)
+  const [loadingExport, setLoadingExport] = useState(false);
   const [dataAdjust, setDataAdjust] = useState({
     marginTop: 10,
     marginBottom: 10,
     marginRight: 10,
     marginLeft: 10,
     paperSize: 'A4',
-    orientation: 'portrait'
-  })
+    orientation: 'landscape',
+  });
 
   const paperSizes = [
     { name: 'A4', value: 'A4' },
     { name: 'Letter', value: 'Letter' },
-    { name: 'Legal', value: 'Legal' }
-  ]
+    { name: 'Legal', value: 'Legal' },
+  ];
   const orientationOptions = [
     { label: 'Potrait', value: 'portrait' },
-    { label: 'Lanskap', value: 'landscape' }
-  ]
+    { label: 'Lanskap', value: 'landscape' },
+  ];
 
   const onInputChangeNumber = (e, name) => {
-    setDataAdjust((prev) => ({ ...prev, [name]: e.value || 0 }))
-  }
-  const onInputChange = (e, name) => {
-    setDataAdjust((prev) => ({ ...prev, [name]: e.value }))
-  }
+    setDataAdjust((prev) => ({ ...prev, [name]: e.value || 0 }));
+  };
 
-  async function exportPDF(detail, adjustConfig) {
+  const onInputChange = (e, name) => {
+    setDataAdjust((prev) => ({ ...prev, [name]: e.value }));
+  };
+
+  const addHeader = (doc, title, marginLeft, marginTop, marginRight) => {
+    const pageWidth = doc.internal.pageSize.width;
+
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(41, 128, 185);
+    doc.text('REKAP TABEL DATA', pageWidth / 2, marginTop + 5, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(80, 80, 80);
+    doc.text('Jl. A. Yani No. 84, Pangongangan, Kec. Manguharjo, Kota Madiun, Jawa Timur', pageWidth / 2, marginTop + 12, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(80, 80, 80);
+    doc.text('Telp: (0351) 876-9090', pageWidth / 2, marginTop + 17, { align: 'center' });
+
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(marginLeft, marginTop + 22, pageWidth - marginRight, marginTop + 22);
+
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
+    doc.text(title, pageWidth / 2, marginTop + 29, { align: 'center' });
+
+    const today = new Date().toLocaleDateString('id-ID', {
+      day: 'numeric', month: 'long', year: 'numeric',
+    });
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'italic');
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Dicetak: ${today}`, marginLeft, marginTop + 37, { align: 'left' });
+
+    return marginTop + 43;
+  };
+
+  async function exportPDF(adjustConfig) {
     const doc = new jsPDF({
       orientation: adjustConfig.orientation,
       unit: 'mm',
@@ -57,174 +95,68 @@ export default function AdjustPrintMarginLaporan({
     const marginTop = parseFloat(adjustConfig.marginTop);
     const marginRight = parseFloat(adjustConfig.marginRight);
 
-    let y = marginTop + 10;
-
-    const formatTanggal = (tanggal) =>
-      tanggal
-        ? new Date(tanggal).toLocaleDateString('id-ID', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        })
-        : '-';
-
-    const formatRupiah = (val) =>
-      new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-      }).format(val || 0);
-
-    doc.setFontSize(18);
-    doc.text('Komisi Dokter', doc.internal.pageSize.width / 2, y, { align: 'center' });
-    y += 5;
-
-    doc.setFontSize(10);
-    doc.text(`ID Transaksi: #${detail.IDKOMISI}`, doc.internal.pageSize.width / 2, y, { align: 'center' });
-    y += 15;
-
-    const labelX = marginLeft;
-    const valueX = marginLeft + 25;
-
-    doc.setFontSize(12);
-    doc.text('Informasi Komisi', labelX, y);
-    y += 6;
-
-    doc.setFontSize(10);
-    doc.text('Nama Pasien', labelX, y);
-    doc.text(`: ${detail.NAMAPASIEN}`, valueX - 2, y);
-    y += 6;
-
-    doc.text('Nama Dokter', labelX, y);
-    doc.text(`: ${detail.NAMADOKTER}`, valueX - 2, y);
-    y += 10;
-
-    doc.setFontSize(12);
-    doc.text('Periode Tanggal Kunjungan & Komisi', labelX, y);
-    y += 6;
-
-    doc.setFontSize(10);
-    doc.text('Tanggal', labelX, y);
-    doc.text(`: ${formatTanggal(detail.TANGGALKUNJUNGAN)}`, valueX - 2, y);
-    y += 6;
-
-    const services = [
-      [
-        1,
-        `Biaya Komisi Dokter (${detail.NAMAPASIEN})`,
-        '-',
-        1,
-        'Komisi',
-        formatRupiah(detail.NILAIKOMISI),
-        formatRupiah(detail.NILAIKOMISI)
-      ]
-    ]
+    const startY = addHeader(doc, 'Laporan Komisi', marginLeft, marginTop, marginRight);
 
     autoTable(doc, {
-      startY: y,
-      head: [['#', 'Layanan', 'Satuan/Kategori', 'Qty', 'Jenis', 'Harga Satuan', 'Total']],
-      body: services,
-      styles: { fontSize: 9, lineColor: [200, 200, 200], lineWidth: 0.1 },
-      headStyles: {
-        fillColor: [245, 246, 250],
-        textColor: 20,
-        halign: 'center',
-        fontStyle: 'bold',
-      },
-      bodyStyles: {
-        fillColor: [255, 255, 255],
-        textColor: 20,
-      },
-      columnStyles: {
-        0: { halign: 'center', cellWidth: 8 },
-        2: { halign: 'center', cellWidth: 25 },
-        3: { halign: 'center', cellWidth: 12 },
-        4: { halign: 'center', cellWidth: 25 },
-        5: { halign: 'right' },
-        6: { halign: 'right' },
-      },
+      startY: startY,
+      head: [['ID', 'Dokter', 'Pasien', 'Tanggal Tagihan', 'Komisi', 'Status']],
+      body: dataFormulir.map((formulir) => [
+        formulir.IDKOMISI,
+        formulir.NAMADOKTER,
+        formulir.NAMAPASIEN,
+        formulir.CREATED_AT ? new Date(formulir.CREATED_AT).toLocaleDateString('id-ID', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+        }) : '-',
+        formulir.NILAIKOMISI ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(formulir.NILAIKOMISI)
+          : '-',
+        formulir.STATUS,
+      ]),
       margin: { left: marginLeft, right: marginRight },
+      styles: { fontSize: 9, cellPadding: 2 },
+      headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+      alternateRowStyles: { fillColor: [248, 249, 250] },
     });
-
-    let y2 = doc.lastAutoTable.finalY + 10;
-
-    doc.setFontSize(12);
-    doc.text('Ringkasan Biaya', marginLeft, y2);
-    y2 += 6;
-
-    doc.setFontSize(10);
-    doc.text('Biaya Komisi Dokter', marginLeft, y2);
-    doc.text(formatRupiah(detail.NILAIKOMISI), doc.internal.pageSize.width - marginRight, y2, { align: 'right' });
-    y2 += 10;
-
-    doc.setFontSize(9);
-    doc.text(
-      'Terima kasih atas kepercayaan anda menggunakan layanan kami.',
-      doc.internal.pageSize.width / 2,
-      y2,
-      { align: 'center' }
-    );
 
     return doc.output('datauristring');
   }
 
+  const exportExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(dataFormulir);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Formulir');
+    XLSX.writeFile(wb, 'Pendaftaran Pasien.xlsx');
+  };
+
   const handleExportPdf = async () => {
-    if (!selectedRow) return
     try {
-      setLoadingExport(true)
-      const pdfDataUrl = await exportPDF(selectedRow, dataAdjust)
-      setPdfUrl(pdfDataUrl)
-      setFileName(`Laporan_Komisi_${selectedRow.NAMAPASIEN}`)
-      setAdjustDialog(false)
-      setJsPdfPreviewOpen(true)
+      setLoadingExport(true);
+      const pdfDataUrl = await exportPDF(dataAdjust);
+      setPdfUrl(pdfDataUrl);
+      setFileName('Pendaftaran_Pasien');
+      setAdjustDialog(false);
+      setJsPdfPreviewOpen(true);
     } finally {
-      setLoadingExport(false)
+      setLoadingExport(false);
     }
-  }
-
-  const handleExportExcel = async () => {
-    if (!selectedRow) return
-    try {
-      setLoadingExcel(true)
-
-      const row = selectedRow
-      const data = [{
-        ID: row.IDKOMISI,
-        Dokter: row.NAMADOKTER,
-        Pasien: row.NAMAPASIEN,
-        'Tanggal Kunjungan': new Date(row.TANGGALKUNJUNGAN).toLocaleDateString('id-ID'),
-        Komisi: row.NILAIKOMISI,
-        Status: row.STATUS
-      }]
-
-      const ws = XLSX.utils.json_to_sheet(data)
-      const wb = XLSX.utils.book_new()
-      XLSX.utils.book_append_sheet(wb, ws, 'Laporan Komisi')
-
-      XLSX.writeFile(wb, `Laporan_Komisi_${row.NAMAPASIEN}.xlsx`)
-      setAdjustDialog(false)
-    } finally {
-      setLoadingExcel(false)
-    }
-  }
+  };
 
   const footer = () => (
     <div className="flex flex-row gap-2">
       <Button
+        label="Export Excel"
+        icon="pi pi-file-excel"
+        severity="success"
+        onClick={exportExcel}
+      />
+      <Button
         label="Export PDF"
         icon="pi pi-file-pdf"
-        className="p-button-danger"
+        severity="danger"
         onClick={handleExportPdf}
         loading={loadingExport}
       />
-      <Button
-        label="Export Excel"
-        icon="pi pi-file-excel"
-        className="p-button-success"
-        onClick={handleExportExcel}
-        loading={loadingExcel}
-      />
     </div>
-  )
+  );
 
   return (
     <Dialog
@@ -281,5 +213,5 @@ export default function AdjustPrintMarginLaporan({
       </div>
       <Toolbar className="py-2 justify-content-end" end={footer} />
     </Dialog>
-  )
+  );
 }

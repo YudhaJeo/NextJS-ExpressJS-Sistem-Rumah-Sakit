@@ -8,7 +8,7 @@ import { Dialog } from 'primereact/dialog'
 import { Tag } from "primereact/tag";
 import dynamic from 'next/dynamic'
 import axios from 'axios'
-import AdjustPrintMarginLaporan from './adjustPrintMarginLaporan'
+import AdjustPrintMarginLaporan from './adjustPrintMarginData'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -70,7 +70,7 @@ const TabelLaporanKomisi = ({ data, loading }) => {
       <DataTable value={data} paginator rows={10} rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]} loading={loading} size="small" scrollable>
         <Column field="NAMADOKTER" header="Dokter" />
         <Column field="NAMAPASIEN" header="Pasien" />
-        <Column field="TANGGALKUNJUNGAN" header="Total Tagihan" body={(r) => formatTanggal(r.TANGGALKUNJUNGAN)} />
+        <Column field="TANGGALKUNJUNGAN" header="Tanggal Tagihan" body={(r) => formatTanggal(r.TANGGALKUNJUNGAN)} />
         <Column field="NILAIKOMISI" header="Komisi" body={(r) => formatRupiah(r.NILAIKOMISI)} />
         <Column
           header="Status"
