@@ -5,7 +5,17 @@ import { Button } from 'primereact/button';
 
 const TabelPemesanan = ({ data, loading, onDetail, onAccept, onCancel }) => {
   return (
-    <DataTable value={data} loading={loading} paginator rows={10} rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]} size="small" scrollable>
+    <DataTable
+      value={data}
+      loading={loading}
+      paginator
+      rows={10}
+      rowsPerPageOptions={[10, 25, 50, 75, 100, 250, 500, 1000]}
+      size="small"
+      scrollable
+      sortField="TGLPEMESANAN"
+      sortOrder={-1}
+    >
       <Column field="IDPEMESANAN" header="ID" />
       <Column field="TGLPEMESANAN" header="Tanggal" />
       <Column field="NAMASUPPLIER" header="Supplier" />
