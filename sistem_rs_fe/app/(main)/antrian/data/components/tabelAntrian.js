@@ -77,7 +77,7 @@ const TabelAntrian = ({ data, loketList, loading, onPanggil, onReset, currentId,
     return (
       <div key={loketName} className="card mb-6">
         <div className="mb-3">
-          <h3 className="font-semibold text-lg mb-2">Loket {loketName}</h3>
+          <h3 className="font-semibold text-lg mb-2">{loketName}</h3>
           <Button
             label="Reset Antrian"
             icon="pi pi-refresh"
