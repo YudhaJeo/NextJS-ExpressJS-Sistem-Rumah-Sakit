@@ -169,6 +169,7 @@ const DokterPage = () => {
         setFormData({
             IDDOKTER: row.IDDOKTER,
             IDTENAGAMEDIS: row.IDTENAGAMEDIS,
+            NAMAPOLI: row.NAMAPOLI || "",
             IDPOLI: row.IDPOLI,
             JADWAL: jadwal
         });
