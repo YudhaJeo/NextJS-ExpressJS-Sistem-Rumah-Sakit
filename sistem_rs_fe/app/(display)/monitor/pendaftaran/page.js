@@ -279,6 +279,39 @@ function MonitorAntrian() {
     );
   };
 
+  
+  const [data, setData] = useState([]);
+  const MINIO_URL = process.env.NEXT_PUBLIC_MINIO_URL;
+
+  const fetchProfileRs = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/profile_mobile`);
+      if (res.data?.data) {
+        setData([res.data.data]);
+      } else {
+        setData([]);
+      }
+    } catch (err) {
+      console.error("Gagal mengambil data profil RS:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfileRs();
+  }, []);
+
+  if (!data || data.length === 0)
+    return <p className="p-4 text-center">Memuat profil RS...</p>;
+
+  const profile_rs = data[0];
+  const cleanPath = profile_rs.FOTOLOGO?.startsWith("/")
+    ? profile_rs.FOTOLOGO.substring(1)
+    : profile_rs.FOTOLOGO;
+
+  const imageUrl = profile_rs.FOTOLOGO
+    ? `${MINIO_URL}/${cleanPath}`
+    : null;
+
   return (
     <div className="surface-ground h-screen flex flex-column overflow-hidden relative">
       <Toast ref={toast} position="top-right" />
@@ -310,8 +343,12 @@ function MonitorAntrian() {
 
       <div className="surface-section px-6 py-4 flex justify-content-between align-items-center">
         <div className="flex align-items-center gap-3">
-          <img src="/layout/images/logo.png" alt="Logo" style={{ height: '50px' }} />
-          <h2 className="text-lg font-semibold text-color m-0">RUMAH SAKIT</h2>
+          <img
+            src={imageUrl}
+            alt="Logo RS"
+            style={{ height: '50px' }}
+          />
+          <h2 className="text-lg font-semibold text-color m-0">{profile_rs.NAMARS}</h2>
         </div>
         <div className="font-bold text-sm">
           {time?.toLocaleString("id-ID", {
@@ -333,7 +370,7 @@ function MonitorAntrian() {
           scrollamount="2"
           className="text-primary-700 font-semibold text-xl"
         >
-          Selamat datang di RSUD Bayza Medika • Harap menunggu dengan tertib • Gunakan masker • Jaga jarak •
+          Selamat datang di {profile_rs.NAMARS} • Harap menunggu dengan tertib • Gunakan masker • Jaga jarak •
           Cuci tangan sebelum masuk ruangan • Antrian akan dipanggil sesuai urutan • Terima kasih atas kesabaran Anda
         </marquee>
       </div>

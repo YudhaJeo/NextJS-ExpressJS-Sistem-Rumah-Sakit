@@ -253,7 +253,7 @@ function DisplayAntrianPoli() {
         '\x1B\x61\x01',
 
         '\x1B\x21\x08',
-        '*** BAYZA MEDIKA ***\n',
+        '*** STRUK RUMAH SAKIT ***\n',
         '--------------------------\n',
 
         '\x1B\x21\x18',
@@ -410,6 +410,39 @@ function DisplayAntrianPoli() {
 
   const config = getResponsiveConfig(screenSize, poliList.length);
 
+  const [data, setData] = useState([]);
+  const MINIO_URL = process.env.NEXT_PUBLIC_MINIO_URL;
+
+  const fetchProfileRs = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/profile_mobile`);
+      if (res.data?.data) {
+        setData([res.data.data]);
+      } else {
+        setData([]);
+      }
+    } catch (err) {
+      console.error("Gagal mengambil data profil RS:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfileRs();
+  }, []);
+
+  if (!data || data.length === 0)
+    return <p className="p-4 text-center">Memuat profil RS...</p>;
+
+  const profile_rs = data[0];
+  const cleanPath = profile_rs.FOTOLOGO?.startsWith("/")
+    ? profile_rs.FOTOLOGO.substring(1)
+    : profile_rs.FOTOLOGO;
+
+  const imageUrl = profile_rs.FOTOLOGO
+    ? `${MINIO_URL}/${cleanPath}`
+    : null;
+
+
   return (
     <div className="h-screen flex flex-column overflow-hidden relative">
       {!isFullScreen && (
@@ -430,8 +463,12 @@ function DisplayAntrianPoli() {
 
       <div className="px-6 py-4 flex justify-content-between align-items-center flex-wrap gap-4">
         <div className="flex align-items-center gap-4">
-          <img src="/layout/images/logo.png" alt="Logo" className="h-[50px]" />
-          <h2 className="text-lg font-semibold text-black m-0">RUMAH SAKIT</h2>
+          <img
+            src={imageUrl}
+            alt="Logo RS"
+            className="h-[50px]"
+          />
+          <h2 className="text-lg font-semibold text-black m-0">{profile_rs.NAMARS}</h2>
         </div>
 
         {/* Tambahkan PrinterSelector di sini */}

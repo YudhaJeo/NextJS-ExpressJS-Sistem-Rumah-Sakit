@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import "@/styles/gradient.css";
 import ToastNotifier from "@/app/components/toastNotifier";
 
 const URL = process.env.NEXT_PUBLIC_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -69,6 +70,27 @@ const LoginPage = () => {
     }
   };
 
+  const [profileRs, setProfileRs] = useState(null);
+
+  const fetchProfileRs = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/profile_mobile`);
+      if (res.data && typeof res.data === "object") {
+        setProfileRs(res.data.data || null);
+      } else {
+        console.warn("Response bukan JSON valid:", res.data);
+        setProfileRs(null);
+      }
+    } catch (err) {
+      console.error("Gagal mengambil profil RS:", err);
+      setProfileRs(null);
+    }
+  };  
+
+  useEffect(() => {
+    fetchProfileRs();
+  }, []);
+
   return (
     <div className="min-h-screen flex justify-content-center align-items-center">
       <ToastNotifier ref={toastRef} />
@@ -79,7 +101,7 @@ const LoginPage = () => {
             <div className="col-12 md:col-6 flex flex-col justify-center h-full px-4">
               <div>
                 <h3 className="text-2xl text-center font-semibold mb-5">
-                  {process.env.NEXT_PUBLIC_APP_NAME || "RUMAH SAKIT"}
+                  Login {profileRs?.NAMARS || "Rumah Sakit"}
                 </h3>
 
                 <form onSubmit={handleLogin} className="grid">
