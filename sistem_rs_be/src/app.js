@@ -59,6 +59,8 @@ import beritaRoutes from './routes/beritaRoutes.js';
 import notifikasiRoutes from './routes/notifikasiRoutes.js';
 import kritikSaranRoutes from './routes/kritikSaranRoutes.js';
 import profilemobileRoutes from './routes/profilemobileRoutes.js';
+import dashboardInformasiRoutes from './routes/dashboardMobileRoutes.js';
+
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -139,5 +141,7 @@ app.use('/api/berita', beritaRoutes);
 app.use('/api/notifikasi', notifikasiRoutes);
 app.use('/api/kritik_saran', kritikSaranRoutes);
 app.use('/api/profile_mobile', profilemobileRoutes);
+app.use('/api/dashboard_mobile', dashboardInformasiRoutes);
+
 
 export default app;
