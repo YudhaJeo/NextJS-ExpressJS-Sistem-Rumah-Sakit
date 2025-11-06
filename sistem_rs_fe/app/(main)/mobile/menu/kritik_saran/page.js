@@ -7,7 +7,7 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 import TabelKritikSaran from "./components/TabelKritikSaran";
 import HeaderBar from "@/app/components/headerbar";
 import { Button } from "primereact/button";
-import AdjustPrintMarginLaporan from "./components/adjustPrintMarginLaporan";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 import { Dialog } from "primereact/dialog";
 import dynamic from "next/dynamic";
 
@@ -19,7 +19,7 @@ export default function PageKritikSaran() {
   const [pdfUrl, setPdfUrl] = useState("");
   const [fileName, setFileName] = useState("");
   const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
-  const PDFViewer = dynamic(() => import("./components/PDFViewer"), { ssr: false });
+  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
   const toastRef = useRef(null);
 
   const fetchData = async () => {
