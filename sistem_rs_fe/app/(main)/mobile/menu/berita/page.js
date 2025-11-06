@@ -10,6 +10,7 @@ import FormDialogBerita from "./components/formDialogBerita";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import dynamic from "next/dynamic";
+import AdjustPrintMarginLaporan from "./print/adjustPrintMarginLaporan";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -25,6 +26,11 @@ export default function Page() {
     URL: "",
     PRATINJAU: undefined,
   });
+  const [adjustDialog, setAdjustDialog] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [jsPdfPreviewOpen, setJsPdfPreviewOpen] = useState(false);
+  const PDFViewer = dynamic(() => import("./print/PDFViewer"), { ssr: false });
 
   const [errors, setErrors] = useState({});
   const toastRef = useRef(null);
@@ -197,6 +203,26 @@ export default function Page() {
         errors={errors}
         inputClass={inputClass}
       />
+
+      <AdjustPrintMarginLaporan
+        adjustDialog={adjustDialog}
+        setAdjustDialog={setAdjustDialog}
+        selectedRow={null}
+        data={data}
+        setPdfUrl={setPdfUrl}
+        setFileName={setFileName}
+        setJsPdfPreviewOpen={setJsPdfPreviewOpen}
+      />
+
+      <Dialog
+        visible={jsPdfPreviewOpen}
+        onHide={() => setJsPdfPreviewOpen(false)}
+        modal
+        style={{ width: "90vw", height: "90vh" }}
+        header="Preview PDF"
+      >
+        <PDFViewer pdfUrl={pdfUrl} fileName={fileName} paperSize="A4" />
+      </Dialog>
     </div>
   );
 }
