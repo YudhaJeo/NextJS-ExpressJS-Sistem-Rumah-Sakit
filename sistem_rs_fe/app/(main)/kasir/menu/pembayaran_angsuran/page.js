@@ -276,6 +276,7 @@ const Page = () => {
         invoiceOptions={invoiceOptions}
         metodeOptions={metodeOptions}
         bankOptions={bankOptions}
+        isEdit={!!form.IDANGSURAN}
       />
 
       <AdjustPrintMarginLaporan

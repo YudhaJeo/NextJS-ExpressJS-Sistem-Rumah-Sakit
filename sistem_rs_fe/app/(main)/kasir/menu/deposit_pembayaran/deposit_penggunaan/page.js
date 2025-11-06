@@ -143,7 +143,9 @@ const Page = () => {
     setForm({
       IDPENGGUNAAN: row.IDPENGGUNAAN,
       IDDEPOSIT: row.IDDEPOSIT,
+      NODEPOSIT: row.NODEPOSIT,
       IDINVOICE: row.IDINVOICE,
+      NOINVOICE: row.NOINVOICE,
       TANGGALPEMAKAIAN: row.TANGGALPEMAKAIAN?.split('T')[0] || '',
       JUMLAH_PEMAKAIAN: row.JUMLAH_PEMAKAIAN,
       NIK: row.NIK,

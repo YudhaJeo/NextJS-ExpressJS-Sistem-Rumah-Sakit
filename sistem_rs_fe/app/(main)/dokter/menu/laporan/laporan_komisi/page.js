@@ -108,10 +108,6 @@ const LaporanKomisiPage = () => {
           title=""
           placeholder="Cari nama atau NIK..."
           onSearch={handleSearch}
-          onAddClick={() => {
-            resetForm();
-            setDialogVisible(true);
-          }}
         />
       </div>
 

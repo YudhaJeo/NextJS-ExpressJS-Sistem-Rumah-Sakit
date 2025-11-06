@@ -18,6 +18,7 @@ const FormDialogAngsuran = ({
   invoiceOptions,
   metodeOptions,
   bankOptions,
+  isEdit = false, // ➤ Tambahkan prop untuk mode edit
 }) => {
   const [errors, setErrors] = useState({});
 
@@ -38,36 +39,35 @@ const FormDialogAngsuran = ({
   };
 
   const handleInvoiceChange = (e) => {
-  const selectedInvoice = invoiceOptions.find((inv) => inv.value === e.value);
-  if (selectedInvoice) {
-    setForm({
-      ...form,
-      IDINVOICE: selectedInvoice.value,
-      NOINVOICE: selectedInvoice.label,
-      NIK: selectedInvoice.NIK || '',
-      NAMAPASIEN: selectedInvoice.NAMAPASIEN || '',
-      NAMAASURANSI: selectedInvoice.NAMAASURANSI || '',
-      TOTALDEPOSIT: selectedInvoice.TOTALDEPOSIT || 0, 
-      METODE: selectedInvoice.TOTALDEPOSIT > 0 ? 'Deposit' : '', 
-    });
-  } else {
-    setForm({
-      ...form,
-      IDINVOICE: '',
-      NOINVOICE: '',
-      NIK: '',
-      NAMAPASIEN: '',
-      NAMAASURANSI: '',
-      TOTALDEPOSIT: 0,
-      METODE: '',
-    });
-  }
-};
-
+    const selectedInvoice = invoiceOptions.find((inv) => inv.value === e.value);
+    if (selectedInvoice) {
+      setForm({
+        ...form,
+        IDINVOICE: selectedInvoice.value,
+        NOINVOICE: selectedInvoice.label,
+        NIK: selectedInvoice.NIK || '',
+        NAMAPASIEN: selectedInvoice.NAMAPASIEN || '',
+        NAMAASURANSI: selectedInvoice.NAMAASURANSI || '',
+        TOTALDEPOSIT: selectedInvoice.TOTALDEPOSIT || 0,
+        METODE: selectedInvoice.TOTALDEPOSIT > 0 ? 'Deposit' : '',
+      });
+    } else {
+      setForm({
+        ...form,
+        IDINVOICE: '',
+        NOINVOICE: '',
+        NIK: '',
+        NAMAPASIEN: '',
+        NAMAASURANSI: '',
+        TOTALDEPOSIT: 0,
+        METODE: '',
+      });
+    }
+  };
 
   return (
     <Dialog
-      header="Input Pembayaran Angsuran"
+      header={isEdit ? 'Edit Pembayaran Angsuran' : 'Tambah Pembayaran Angsuran'} // 👈 Judul otomatis
       visible={visible}
       onHide={() => {
         setErrors({});
@@ -76,16 +76,12 @@ const FormDialogAngsuran = ({
       style={{ width: '40vw' }}
     >
       <form className="space-y-3" onSubmit={handleSubmit}>
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">No Angsuran</label>
-          <InputText
-            className="w-full mt-2"
-            value={form.NOANGSURAN || 'Otomatis'}
-            readOnly
-          />
+          <InputText className="w-full mt-2" value={form.NOANGSURAN || 'Otomatis'} readOnly />
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">No Invoice</label>
           <Dropdown
             className={classNames('w-full mt-2', { 'p-invalid': errors.IDINVOICE })}
@@ -97,26 +93,27 @@ const FormDialogAngsuran = ({
             optionValue="value"
             filter
             showClear
+            disabled={isEdit} // 🔒 tidak bisa ubah invoice saat edit
           />
           {errors.IDINVOICE && <small className="p-error">{errors.IDINVOICE}</small>}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">NIK</label>
           <InputText className="w-full mt-2" value={form.NIK || ''} readOnly />
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">Nama Pasien</label>
           <InputText className="w-full mt-2" value={form.NAMAPASIEN || form.NAMALENGKAP || ''} readOnly />
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">Asuransi</label>
           <InputText className="w-full mt-2" value={form.NAMAASURANSI || ''} readOnly />
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">Tanggal Bayar</label>
           <Calendar
             className={classNames('w-full mt-2', { 'p-invalid': errors.TANGGALBAYAR })}
@@ -135,7 +132,7 @@ const FormDialogAngsuran = ({
           {errors.TANGGALBAYAR && <small className="p-error">{errors.TANGGALBAYAR}</small>}
         </div>
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">Jumlah Bayar</label>
           <InputNumber
             className={classNames('w-full mt-2', { 'p-invalid': errors.NOMINAL })}
@@ -151,11 +148,7 @@ const FormDialogAngsuran = ({
         {form.TOTALDEPOSIT > 0 && form.NOMINAL <= form.TOTALDEPOSIT ? (
           <div className="mt-2">
             <label className="font-medium">Metode Pembayaran</label>
-            <InputText
-              className="w-full mt-2"
-              value="Deposit"
-              readOnly
-            />
+            <InputText className="w-full mt-2" value="Deposit" readOnly />
           </div>
         ) : (
           <div className="mt-2">
@@ -167,13 +160,11 @@ const FormDialogAngsuran = ({
               onChange={(e) => setForm({ ...form, METODE: e.value })}
               placeholder="Pilih Metode"
             />
-            {errors.METODE && (
-              <small className="p-error">{errors.METODE}</small>
-            )}
+            {errors.METODE && <small className="p-error">{errors.METODE}</small>}
           </div>
         )}
 
-        <div className ="mt-2">
+        <div className="mt-2">
           <label className="font-medium">Keterangan</label>
           <InputText
             className="w-full mt-2"
