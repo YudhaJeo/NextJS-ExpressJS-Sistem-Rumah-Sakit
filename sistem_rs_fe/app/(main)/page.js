@@ -6,7 +6,7 @@ import { Chart } from 'primereact/chart';
 import { Tag } from 'primereact/tag';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { TabView, TabPanel } from 'primereact/tabview';
+import { TabMenu } from 'primereact/tabmenu';
 import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -14,6 +14,9 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const Dashboard = () => {
   const [data, setData] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [profileRs, setProfileRs] = useState(null);
+
+  // Chart states
   const [barChartData, setBarChartData] = useState({});
   const [barChartOptions, setBarChartOptions] = useState({});
   const [lineChartData, setLineChartData] = useState({});
@@ -23,6 +26,7 @@ const Dashboard = () => {
   const [bedChartData, setBedChartData] = useState({});
   const [bedChartOptions, setBedChartOptions] = useState({});
 
+  // Fetch dashboard data
   useEffect(() => {
     axios
       .get(`${API_URL}/dashboard`)
@@ -32,6 +36,7 @@ const Dashboard = () => {
 
         const style = getComputedStyle(document.documentElement);
 
+        // Bar chart
         const labels = resData.chart?.labels ?? [];
         const values = resData.chart?.datasets?.[0]?.data ?? [];
         const backgroundColors = [
@@ -68,6 +73,7 @@ const Dashboard = () => {
           },
         });
 
+        // Line chart
         const lineLabels = resData.trend?.labels ?? ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
         setLineChartData({
           labels: lineLabels,
@@ -88,34 +94,24 @@ const Dashboard = () => {
             },
           ],
         });
-       setLineChartOptions({
+        setLineChartOptions({
           plugins: {
             legend: {
-              labels: {
-                color: style.getPropertyValue('--text-color')
-              }
-            }
+              labels: { color: style.getPropertyValue('--text-color') },
+            },
           },
           scales: {
-            x: {
-              ticks: {
-                color: style.getPropertyValue('--text-color')
-              }
-            },
+            x: { ticks: { color: style.getPropertyValue('--text-color') } },
             y: {
-              beginAtZero: true, 
-              suggestedMax: Math.max(
-                ...(resData.trend?.pasien ?? []),
-                ...(resData.trend?.dokter ?? [])
-              ) + 2, 
-              ticks: {
-                color: style.getPropertyValue('--text-color')
-              }
-            }
-          }
+              beginAtZero: true,
+              suggestedMax:
+                Math.max(...(resData.trend?.pasien ?? []), ...(resData.trend?.dokter ?? [])) + 2,
+              ticks: { color: style.getPropertyValue('--text-color') },
+            },
+          },
         });
 
-
+        // Poli chart
         const poliLabels = resData.distribusi?.labels ?? ['Umum', 'Gigi', 'Anak', 'Bedah'];
         const poliValues = resData.distribusi?.data ?? [10, 5, 7, 3];
         const poliColors = [
@@ -132,13 +128,17 @@ const Dashboard = () => {
             {
               data: poliValues,
               backgroundColor: poliLabels.map((_, i) => poliColors[i % poliColors.length]),
-              borderColor: poliLabels.map((_, i) => poliColors[i % poliColors.length].replace('0.6', '1')),
+              borderColor: poliLabels.map((_, i) =>
+                poliColors[i % poliColors.length].replace('0.6', '1')
+              ),
               borderWidth: 1,
             },
           ],
         });
         setPoliChartOptions({
-          plugins: { legend: { position: 'bottom', labels: { color: style.getPropertyValue('--text-color') } } },
+          plugins: {
+            legend: { position: 'bottom', labels: { color: style.getPropertyValue('--text-color') } },
+          },
           scales: {
             r: {
               angleLines: { color: style.getPropertyValue('--surface-border') },
@@ -148,6 +148,7 @@ const Dashboard = () => {
           },
         });
 
+        // Bed chart
         const totalBed = resData.bed?.total ?? 10;
         const usedBed = resData.bed?.used ?? 7;
         setBedChartData({
@@ -171,35 +172,284 @@ const Dashboard = () => {
       });
   }, []);
 
-  const cards =
-    data?.cards?.map((card) => ({
-      title: card.title,
-      value: card.value,
-      icon: card.icon,
-      border: card.color,
-    })) ?? [];
-
-  const [profileRs, setProfileRs] = useState(null);
-
-  const fetchProfileRs = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/profile_mobile`);
-      setProfileRs(res.data?.data || null);
-    } catch (err) {
-      console.error("Gagal mengambil profil RS:", err);
-    }
-  };
-
+  // Fetch profile RS
   useEffect(() => {
+    const fetchProfileRs = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/profile_mobile`);
+        setProfileRs(res.data?.data || null);
+      } catch (err) {
+        console.error('Gagal mengambil profil RS:', err);
+      }
+    };
     fetchProfileRs();
   }, []);
 
+  // Tab menu items
+  const tabMenu = [
+    { label: 'Statistik & Ringkasan', icon: 'pi pi-chart-line' },
+    { label: 'Data Terkini', icon: 'pi pi-database' },
+  ];
+
+  // Render isi tab berdasarkan activeIndex
+  const renderContent = () => {
+    if (activeIndex === 0) {
+      const cards =
+        data?.cards?.map((card) => ({
+          title: card.title,
+          value: card.value,
+          icon: card.icon,
+          border: card.color,
+        })) ?? [];
+
+      return (
+        <div className="grid mt-1">
+          {cards.map((card, i) => (
+            <div className="col-12 md:col-6 xl:col-3" key={i}>
+              <Card className="shadow-md" style={{ borderTop: `4px solid ${card.border}` }}>
+                <div className="flex justify-content-between">
+                  <div>
+                    <span className="block text-500 mb-2">{card.title}</span>
+                    <span className="text-900 font-bold text-xl md:text-2xl">{card.value}</span>
+                  </div>
+                  <div>
+                    <div
+                      className="flex align-items-center justify-content-center border-round"
+                      style={{ width: '2.5rem', height: '2.5rem' }}
+                    >
+                      <i className={`${card.icon} text-xl`} />
+                    </div>
+                    <Tag value="Live" severity="info" />
+                  </div>
+                </div>
+              </Card>
+            </div>
+          ))}
+
+          <div className="col-12 md:col-6">
+            <Card>
+              <div className="flex justify-content-between mb-3">
+                <span className="font-medium text-lg text-900">Tren Pasien & Dokter</span>
+                <Tag value="Live" severity="info" />
+              </div>
+              <Chart type="line" data={lineChartData} options={lineChartOptions} className="w-full" />
+            </Card>
+          </div>
+
+          <div className="col-12 md:col-6">
+            <Card>
+              <div className="flex justify-content-between mb-3">
+                <span className="font-medium text-lg text-900">Statistik Umum</span>
+                <Tag value="Live" severity="info" />
+              </div>
+              <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
+            </Card>
+          </div>
+
+          <div className="col-12 md:col-6">
+            <Card>
+              <div className="flex justify-content-between mb-3">
+                <span className="font-medium text-lg text-900">Distribusi Pasien per Poli</span>
+                <Tag value="Live" severity="info" />
+              </div>
+              <Chart type="polarArea" data={poliChartData} options={poliChartOptions} className="w-full" />
+            </Card>
+          </div>
+
+          <div className="col-12 md:col-6">
+            <Card>
+              <div className="flex justify-content-between mb-3">
+                <span className="font-medium text-lg text-900">Statistik Bed</span>
+                <Tag value="Live" severity="info" />
+              </div>
+              <Chart type="doughnut" data={bedChartData} options={bedChartOptions} className="w-full" />
+            </Card>
+          </div>
+        </div>
+      );
+    }
+
   return (
-    <div className="grid">
+    <div className="grid mt-1">
+      {/* Kalender Dokter */}
+      <div className="col-12">
+        <Card>
+          <div className="flex justify-content-between mb-1">
+            <span className="font-medium text-lg text-900">Kalender Dokter</span>
+            <Tag value="Live" severity="info" />
+          </div>
+          <DataTable
+            value={data?.kalender ?? []}
+            paginator
+            rows={3}
+            responsiveLayout="scroll"
+          >
+            <Column field="NAMA_DOKTER" header="Nama Dokter" sortable />
+            <Column
+              field="TANGGAL"
+              header="Tanggal"
+              sortable
+              body={(rowData) => {
+                const date = new Date(rowData.TANGGAL);
+                return date.toLocaleDateString('id-ID', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                });
+              }}
+            />
+            <Column
+              field="STATUS"
+              header="Status"
+              sortable
+              body={(rowData) => {
+                switch (rowData.STATUS) {
+                  case 'info':
+                    return <Tag severity="info" value="perjanjian" />;
+                  case 'warning':
+                    return <Tag severity="warning" value="libur" />;
+                  default:
+                    return <Tag severity="secondary" value={rowData.STATUS} />;
+                }
+              }}
+            />
+            <Column field="KETERANGAN" header="Keterangan" />
+          </DataTable>
+        </Card>
+      </div>
+
+      {/* Jadwal Reservasi */}
+      <div className="col-12">
+        <Card>
+          <div className="flex justify-content-between mb-1">
+            <span className="font-medium text-lg text-900">Jadwal Reservasi</span>
+            <Tag value="Live" severity="info" />
+          </div>
+          <DataTable
+            value={data?.reservasi ?? []}
+            paginator
+            rows={3}
+            responsiveLayout="scroll"
+          >
+            <Column field="NAMALENGKAP" header="Nama Pasien" />
+            <Column
+              field="TANGGALRESERVASI"
+              header="Tanggal Reservasi"
+              body={(rowData) => {
+                const date = new Date(rowData.TANGGALRESERVASI);
+                return date.toLocaleDateString('id-ID', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                });
+              }}
+            />
+            <Column field="NAMAPOLI" header="Poli" />
+            <Column field="NAMADOKTER" header="Nama Dokter" />
+            <Column field="JAMRESERVASI" header="Jam" />
+            <Column field="KETERANGAN" header="Keluhan" />
+            <Column
+              header="Status"
+              body={(row) => {
+                const status = row.STATUS;
+                const severity = () => {
+                  switch (status) {
+                    case 'Menunggu':
+                      return 'info';
+                    case 'Dikonfirmasi':
+                      return 'success';
+                    case 'Dibatalkan':
+                      return 'danger';
+                    default:
+                      return 'info';
+                  }
+                };
+                return <Tag value={status} severity={severity()} />;
+              }}
+            />
+          </DataTable>
+        </Card>
+      </div>
+
+      {/* Laporan Kasir */}
+      <div className="col-12">
+        <Card>
+          <div className="flex justify-content-between mb-1">
+            <span className="font-medium text-lg text-900">Laporan Kasir</span>
+            <Tag value="Live" severity="info" />
+          </div>
+          <DataTable
+            value={data?.laporankasir ?? []}
+            paginator
+            rows={3}
+            responsiveLayout="scroll"
+          >
+            <Column field="NOINVOICE" header="No Invoice" />
+            <Column field="NIK" header="NIK" />
+            <Column field="NAMAPASIEN" header="Nama Pasien" />
+            <Column field="ASURANSI" header="Asuransi" />
+            <Column
+              field="TANGGALINVOICE"
+              header="Tgl Invoice"
+              body={(rowData) => {
+                const tgl = new Date(rowData.TANGGALINVOICE);
+                return tgl.toLocaleDateString('id-ID', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric',
+                });
+              }}
+            />
+            <Column
+              field="TOTALTAGIHAN"
+              header="Total Tagihan"
+              body={(rowData) =>
+                `Rp ${Number(rowData.TOTALTAGIHAN).toLocaleString('id-ID')}`
+              }
+            />
+            <Column
+              field="TOTALDEPOSIT"
+              header="Total Deposit"
+              body={(rowData) =>
+                `Rp ${Number(rowData.TOTALDEPOSIT).toLocaleString('id-ID')}`
+              }
+            />
+            <Column
+              field="TOTALANGSURAN"
+              header="Total Angsuran"
+              body={(rowData) =>
+                `Rp ${Number(rowData.TOTALANGSURAN).toLocaleString('id-ID')}`
+              }
+            />
+            <Column
+              field="SISA_TAGIHAN"
+              header="Sisa Tagihan"
+              body={(rowData) =>
+                `Rp ${Number(rowData.SISA_TAGIHAN || 0).toLocaleString('id-ID')}`
+              }
+            />
+            <Column
+              field="TOTALPEMBAYARAN"
+              header="Total Pembayaran"
+              body={(rowData) =>
+                `Rp ${Number(rowData.TOTALPEMBAYARAN || 0).toLocaleString('id-ID')}`
+              }
+            />
+            <Column field="METODE" header="Metode" />
+            <Column field="STATUS" header="Status" />
+          </DataTable>
+        </Card>
+      </div>
+    </div>
+    );
+  };
+
+  return (
+    <div className="grid mb-0">
       <div className="card col-12 mb-2">
         <div className="flex justify-content-center md:justify-content-between align-items-center">
           <h1 className="text-xl font-semibold mb-3 text-center md:text-left flex-1">
-            {profileRs?.NAMARS || "Memuat..."}
+            {profileRs?.NAMARS || 'Memuat...'}
           </h1>
           <span className="text-sm font-bold text-700">
             {new Date().toLocaleDateString('id-ID', {
@@ -213,250 +463,10 @@ const Dashboard = () => {
       </div>
 
       <div className="col-12">
-        <TabView activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)}>
-          {/* TAB 1 - Statistik & Cards */}
-          <TabPanel header="Statistik & Ringkasan">
-            <div className="grid">
-              {cards.map((card, i) => (
-                <div className="col-12 md:col-6 xl:col-3" key={i}>
-                  <Card className="shadow-md" style={{ borderTop: `4px solid ${card.border}` }}>
-                    <div className="flex justify-content-between">
-                      <div>
-                        <span className="block text-500 mb-2">{card.title}</span>
-                        <span className="text-900 font-bold text-xl md:text-2xl">{card.value}</span>
-                      </div>
-                      <div>
-                        <div
-                          className="flex align-items-center justify-content-center border-round"
-                          style={{
-                            width: '2.5rem',
-                            height: '2.5rem',
-                          }}
-                        >
-                          <i className={`${card.icon} text-xl`} />
-                        </div>
-                        <Tag value="Live" severity="info" />
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              ))}
-
-              <div className="col-12 md:col-6">
-                <Card>
-                  <div className="flex justify-content-between mb-3">
-                    <span className="font-medium text-lg text-900">Tren Pasien & Dokter</span>
-                    <Tag value="Live" severity="info" />
-                  </div>
-                  <Chart type="line" data={lineChartData} options={lineChartOptions} className="w-full" />
-                </Card>
-              </div>
-
-              <div className="col-12 md:col-6">
-                <Card>
-                  <div className="flex justify-content-between mb-3">
-                    <span className="font-medium text-lg text-900">Statistik Umum</span>
-                    <Tag value="Live" severity="info" />
-                  </div>
-                  <Chart type="bar" data={barChartData} options={barChartOptions} className="w-full" />
-                </Card>
-              </div>
-
-              <div className="col-12 md:col-6">
-                <Card>
-                  <div className="flex justify-content-between mb-3">
-                    <span className="font-medium text-lg text-900">Distribusi Pasien per Poli</span>
-                    <Tag value="Live" severity="info" />
-                  </div>
-                  <Chart type="polarArea" data={poliChartData} options={poliChartOptions} className="w-full" />
-                </Card>
-              </div>
-
-              <div className="col-12 md:col-6">
-                <Card>
-                  <div className="flex justify-content-between mb-3">
-                    <span className="font-medium text-lg text-900">Statistik Bed</span>
-                    <Tag value="Live" severity="info" />
-                  </div>
-                  <Chart type="doughnut" data={bedChartData} options={bedChartOptions} className="w-full" />
-                </Card>
-              </div>
-            </div>
-          </TabPanel>
-
-          {/* TAB 2 - Data Tabel */}
-          <TabPanel header="Data Terkini">
-            <div className="grid">
-              {data?.table && (
-                <div className="col-12">
-                  <Card>
-                    <div className="flex justify-content-between mb-1">
-                      <span className="font-medium text-lg text-900">Data Tabel Terkini</span>
-                      <Tag value="Live" severity="info" />
-                    </div>
-                    <DataTable value={data.table} paginator rows={5} responsiveLayout="scroll">
-                      {Object.keys(data.table[0] || {}).map((field, idx) => (
-                        <Column key={idx} field={field} header={field.toUpperCase()} sortable />
-                      ))}
-                    </DataTable>
-                  </Card>
-                </div>
-              )}
-
-              <div className="col-12">
-                <Card>
-                  <div className="flex justify-content-between mb-1">
-                    <span className="font-medium text-lg text-900">Kalender Dokter</span>
-                    <Tag value="Live" severity="info" />
-                  </div>
-                  <DataTable value={data?.kalender ?? []} paginator rows={3} responsiveLayout="scroll">
-                    <Column field="NAMA_DOKTER" header="Nama Dokter" sortable />
-                    <Column
-                      field="TANGGAL"
-                      header="Tanggal"
-                      sortable
-                      body={(rowData) => {
-                        const date = new Date(rowData.TANGGAL);
-                        return date.toLocaleDateString('id-ID', {
-                          day: '2-digit',
-                          month: 'long',
-                          year: 'numeric',
-                        });
-                      }}
-                    />
-                    <Column
-                      field="STATUS"
-                      header="Status"
-                      sortable
-                      body={(rowData) => {
-                        switch (rowData.STATUS) {
-                          case 'info':
-                            return <Tag severity="info" value="perjanjian" />;
-                          case 'warning':
-                            return <Tag severity="warning" value="libur" />;
-                          default:
-                            return <Tag severity="secondary" value={rowData.STATUS} />;
-                        }
-                      }}
-                    />
-                    <Column field="KETERANGAN" header="Keterangan" />
-                  </DataTable>
-                </Card>
-              </div>
-
-              <div className="col-12">
-                <Card>
-                  <div className="flex justify-content-between mb-1">
-                    <span className="font-medium text-lg text-900">Jadwal Reservasi</span>
-                    <Tag value="Live" severity="info" />
-                  </div>
-                  <DataTable value={data?.reservasi ?? []} paginator rows={3} responsiveLayout="scroll">
-                    <Column field="NAMALENGKAP" header="Nama Pasien" />
-                    <Column
-                      field="TANGGALRESERVASI"
-                      header="Tanggal Reservasi"
-                      body={(rowData) => {
-                        const date = new Date(rowData.TANGGALRESERVASI);
-                        return date.toLocaleDateString('id-ID', {
-                          day: '2-digit',
-                          month: 'long',
-                          year: 'numeric',
-                        });
-                      }}
-                    />
-                    <Column field="NAMAPOLI" header="Poli" />
-                    <Column field="NAMADOKTER" header="Nama Dokter" />
-                    <Column field="JAMRESERVASI" header="Jam" />
-                    <Column field="KETERANGAN" header="Keluhan" />
-                    <Column
-                      header="Status"
-                      body={(row) => {
-                        const status = row.STATUS;
-                        const severity = () => {
-                          switch (status) {
-                            case "Menunggu":
-                              return "info";
-                            case "Dikonfirmasi":
-                              return "success";
-                            case "Dibatalkan":
-                              return "danger";
-                            default:
-                              return "info";
-                          }
-                        };
-                        return <Tag value={status} severity={severity()} />;
-                      }}
-                    />
-                  </DataTable>
-                </Card>
-              </div>
-
-              <div className="col-12">
-                <Card>
-                  <div className="flex justify-content-between mb-1">
-                    <span className="font-medium text-lg text-900">Laporan Kasir</span>
-                    <Tag value="Live" severity="info" />
-                  </div>
-                  <DataTable value={data?.laporankasir ?? []} paginator rows={3} responsiveLayout="scroll">
-                   <Column field="NOINVOICE" header="No Invoice" />
-                               <Column field="NIK" header="NIK" />
-                               <Column field="NAMAPASIEN" header="Nama Pasien" />
-                               <Column field="ASURANSI" header="Asuransi" />
-                               <Column
-                                   field="TANGGALINVOICE"
-                                   header="Tgl Invoice"
-                                   body={(rowData) => {
-                                       const tgl = new Date(rowData.TANGGALINVOICE);
-                                       return tgl.toLocaleDateString("id-ID", {
-                                           day: "numeric",
-                                           month: "long",
-                                           year: "numeric",
-                                       });
-                                   }}
-                               />
-                               <Column
-                                   field="TOTALTAGIHAN"
-                                   header="Total Tagihan"
-                                   body={(rowData) =>
-                                       `Rp ${Number(rowData.TOTALTAGIHAN).toLocaleString("id-ID")}`
-                                   }
-                               />
-                               <Column
-                                   field="TOTALDEPOSIT"
-                                   header="Total Deposit"
-                                   body={(rowData) =>
-                                       `Rp ${Number(rowData.TOTALDEPOSIT).toLocaleString("id-ID")}`
-                                   }
-                               />
-                               <Column
-                                   field="TOTALANGSURAN"
-                                   header="Total Angsuran"
-                                   body={(rowData) =>
-                                       `Rp ${Number(rowData.TOTALANGSURAN).toLocaleString("id-ID")}`
-                                   }
-                               />
-                               <Column
-                                   field="SISA_TAGIHAN"
-                                   header="Sisa Tagihan"
-                                   body={(rowData) =>
-                                       `Rp ${Number(rowData.SISA_TAGIHAN || 0).toLocaleString("id-ID")}`
-                                   }
-                               />
-                               <Column
-                                   field="TOTALPEMBAYARAN"
-                                   header="Total Pembayaran"
-                                   body={(rowData) =>
-                                       `Rp ${Number(rowData.TOTALPEMBAYARAN || 0).toLocaleString("id-ID")}`
-                                   }
-                               />
-                               <Column field="METODE" header="Metode" />
-                               <Column field="STATUS" header="Status" />
-                  </DataTable>
-                </Card>
-              </div>
-            </div>
-          </TabPanel>
-        </TabView>
+        <Card className="shadow-md">
+          <TabMenu model={tabMenu} activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)} />
+          {renderContent()}
+        </Card>
       </div>
     </div>
   );
