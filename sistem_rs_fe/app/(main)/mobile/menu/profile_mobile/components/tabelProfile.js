@@ -1,8 +1,29 @@
+'use client'
+
+import { Panel } from "primereact/panel";
 import { Button } from "primereact/button";
+import { Avatar } from "primereact/avatar";
+import { Card } from "primereact/card";
 
 export default function TabelProfile({ data, onEdit, loading }) {
-  if (loading) return <p>Loading...</p>;
-  if (!data || data.length === 0) return <p>Tidak ada data profil.</p>;
+  if (loading) {
+    return (
+      <div className="flex justify-content-center align-items-center" style={{ minHeight: "400px" }}>
+        <i className="pi pi-spin pi-spinner" style={{ fontSize: "2rem" }}></i>
+      </div>
+    );
+  }
+
+  if (!data || data.length === 0) {
+    return (
+      <Card>
+        <div className="flex flex-column align-items-center justify-content-center" style={{ minHeight: "300px" }}>
+          <i className="pi pi-info-circle text-500" style={{ fontSize: "3rem" }}></i>
+          <p className="mt-3 text-600">Tidak ada data profil.</p>
+        </div>
+      </Card>
+    );
+  }
 
   const MINIO_URL = process.env.NEXT_PUBLIC_MINIO_URL;
   const profile = data[0];
@@ -11,16 +32,22 @@ export default function TabelProfile({ data, onEdit, loading }) {
     : profile.FOTOLOGO;
   const imageUrl = profile.FOTOLOGO ? `${MINIO_URL}/${cleanPath}` : null;
 
-  const textTemplate = (text) =>
-    text && text.length > 100 ? text.slice(0, 100) + "..." : text || "-";
+  const ProfileField = ({ label, value, icon }) => (
+    <div className="mb-4">
+      <div className="flex align-items-center mb-2">
+        {icon && <i className={`${icon} text-500 mr-2`}></i>}
+        <span className="text-sm font-medium text-600">{label}</span>
+      </div>
+      <div className="text-900 font-semibold">{value || '-'}</div>
+    </div>
+  );
 
   return (
-    <div className="p-4">
-      <div className="grid">
-        {/* Kolom kiri */}
-        <div className="col-12 md:col-4">
-          <div className="surface-card p-4 shadow-1 border-round">
-            <div className="flex flex-column align-items-center">
+    <div className="grid">
+      {/* Kolom Kiri - Profile Card */}
+      <div className="col-12 md:col-4">
+        <Card className="mb-4">
+          <div className="flex flex-column align-items-center">
               {imageUrl ? (
                 <img
                   src={imageUrl}
@@ -32,85 +59,70 @@ export default function TabelProfile({ data, onEdit, loading }) {
                   <span className="pi pi-user text-4xl text-500"></span>
                 </div>
               )}
-              <h3 className="mt-0 mb-2 text-900">{profile.NAMARS || "Nama RS"}</h3>
-              <div className="flex flex-column gap-2 w-full mb-4">
-                <div className="flex align-items-center gap-2">
-                  <i className="pi pi-envelope text-600"></i>
-                  <span className="text-600">{profile.EMAIL || "-"}</span>
-                </div>
-                <div className="flex align-items-center gap-2">
-                  <i className="pi pi-phone text-600"></i>
-                  <span className="text-600">{profile.NOMORHOTLINE || "-"}</span>
-                </div>
-              </div>
-              <Button
-                icon="pi pi-pencil"
-                label="Edit Profil"
-                className="w-full"
-                outlined
-                onClick={() => onEdit(profile)}
-              />
+
+            <h3 className="mt-0 mb-3 text-center text-900">{profile.NAMARS || "Nama RS"}</h3>
+
+            <Button
+              icon="pi pi-pencil"
+              label="Edit Profil"
+              className="w-full mb-4"
+              outlined
+              onClick={() => onEdit(profile)}
+            />
+
+            <div className="w-full">
+              <ProfileField label="Email" value={profile.EMAIL} icon="pi pi-envelope" />
+              <ProfileField label="Hotline" value={profile.NOMORHOTLINE} icon="pi pi-phone" />
+              <ProfileField label="Telp Ambulan" value={profile.NOTELPAMBULAN} icon="pi pi-car" />
+              <ProfileField label="WA Ambulan" value={profile.NOAMBULANWA} icon="pi pi-whatsapp" />
             </div>
           </div>
-        </div>
+        </Card>
+      </div>
 
-        {/* Kolom kanan */}
-        <div className="col-12 md:col-8">
-          <div className="surface-card p-4 shadow-1 border-round">
-            <h4 className="text-xl mb-4 mt-0 font-semibold text-900">
-              Informasi Rumah Sakit
-            </h4>
-            <div className="grid">
-              <div className="col-12 md:col-6">
-                <div className="mb-4">
-                  <label className="block text-600 font-medium mb-2">Alamat</label>
-                  <p className="mt-0 mb-0 text-900 line-height-3">
-                    {textTemplate(profile.ALAMAT)}
-                  </p>
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-600 font-medium mb-2">Deskripsi</label>
-                  <p className="mt-0 mb-0 text-900 line-height-3">
-                    {textTemplate(profile.DESKRIPSI)}
-                  </p>
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-600 font-medium mb-2">
-                    Telp Ambulan
-                  </label>
-                  <p className="mt-0 mb-0 text-900">
-                    {profile.NOTELPAMBULAN || "-"}
-                  </p>
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-600 font-medium mb-2">
-                    No. WA Ambulan
-                  </label>
-                  <p className="mt-0 mb-0 text-900">{profile.NOAMBULANWA || "-"}</p>
-                </div>
-              </div>
-
-              <div className="col-12 md:col-6">
-                <div className="mb-4">
-                  <label className="block text-600 font-medium mb-2">Visi</label>
-                  <p className="mt-0 mb-0 text-900 line-height-3">
-                    {textTemplate(profile.VISI)}
-                  </p>
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-600 font-medium mb-2">Misi</label>
-                  <p className="mt-0 mb-0 text-900 line-height-3">
-                    {textTemplate(profile.MISI)}
-                  </p>
-                </div>
-              </div>
+      {/* Kolom Kanan - Detail Information */}
+      <div className="col-12 md:col-8">
+        <Panel header="Informasi Umum" className="mb-4">
+          <div className="grid">
+            <div className="col-12">
+              <ProfileField label="Nama Rumah Sakit" value={profile.NAMARS} icon="pi pi-building" />
+            </div>
+            <div className="col-12">
+              <ProfileField label="Alamat" value={profile.ALAMAT} icon="pi pi-map-marker" />
+            </div>
+            <div className="col-12 md:col-6">
+              <ProfileField label="Email" value={profile.EMAIL} icon="pi pi-envelope" />
+            </div>
+            <div className="col-12 md:col-6">
+              <ProfileField label="Nomor Hotline" value={profile.NOMORHOTLINE} icon="pi pi-phone" />
             </div>
           </div>
-        </div>
+        </Panel>
+
+        <Panel header="Layanan Ambulan" className="mb-4">
+          <div className="grid">
+            <div className="col-12 md:col-6">
+              <ProfileField label="Telp Ambulan" value={profile.NOTELPAMBULAN} icon="pi pi-car" />
+            </div>
+            <div className="col-12 md:col-6">
+              <ProfileField label="WhatsApp Ambulan" value={profile.NOAMBULANWA} icon="pi pi-whatsapp" />
+            </div>
+          </div>
+        </Panel>
+
+        <Panel header="Tentang Rumah Sakit" className="mb-4">
+          <div className="grid">
+            <div className="col-12">
+              <ProfileField label="Deskripsi" value={profile.DESKRIPSI} icon="pi pi-align-left" />
+            </div>
+            <div className="col-12">
+              <ProfileField label="Visi" value={profile.VISI} icon="pi pi-eye" />
+            </div>
+            <div className="col-12">
+              <ProfileField label="Misi" value={profile.MISI} icon="pi pi-flag" />
+            </div>
+          </div>
+        </Panel>
       </div>
     </div>
   );
