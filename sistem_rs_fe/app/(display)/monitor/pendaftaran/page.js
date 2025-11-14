@@ -25,6 +25,35 @@ function MonitorAntrian() {
 
   const toast = useRef(null);
   const ws = useRef(null);
+  const soundQueue = useRef([]);
+  const isPlaying = useRef(false);
+
+  const playNextSound = () => {
+    if (isPlaying.current || soundQueue.current.length === 0) return;
+
+    isPlaying.current = true;
+    const panggilan = soundQueue.current.shift();
+
+    const ding = new Audio("/sounds/opening.mp3");
+    ding.play().catch(() => { });
+
+    ding.onended = () => {
+      const suara = new SpeechSynthesisUtterance();
+      suara.lang = "id-ID";
+      suara.text = `Nomor antrian ${panggilan.no
+        .split("")
+        .join(" ")}, silakan menuju ${panggilan.loket}`;
+      suara.rate = 0.9;
+
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(suara);
+
+      suara.onend = () => {
+        isPlaying.current = false;
+        playNextSound(); 
+      };
+    };
+  };
 
   useEffect(() => {
     fetchData(true);
@@ -56,24 +85,20 @@ function MonitorAntrian() {
     const interval = setInterval(() => {
       const stored = localStorage.getItem("lastPanggilan");
       if (!stored) return;
+
       const panggilan = JSON.parse(stored);
-      if (!panggilan || panggilan.no === lastNoDipanggil) return;
+      if (!panggilan) return;
+
+      if (panggilan.no === lastNoDipanggil) return;
+
       setLastNoDipanggil(panggilan.no);
+
       if (userHasInteracted) {
-        const ding = new Audio("/sounds/opening.mp3");
-        ding.play().catch(() => { });
-        ding.onended = () => {
-          const suara = new SpeechSynthesisUtterance();
-          suara.lang = "id-ID";
-          suara.text = `Nomor antrian ${panggilan.no
-            .split("")
-            .join(" ")}, silakan menuju loket ${panggilan.loket}`;
-          suara.rate = 0.9;
-          window.speechSynthesis.cancel();
-          window.speechSynthesis.speak(suara);
-        };
+        soundQueue.current.push(panggilan);
+        playNextSound(); 
       }
-    }, 1000);
+    }, 700);
+
     return () => clearInterval(interval);
   }, [lastNoDipanggil, userHasInteracted]);
 
