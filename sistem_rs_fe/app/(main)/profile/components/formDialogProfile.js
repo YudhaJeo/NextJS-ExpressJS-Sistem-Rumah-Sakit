@@ -18,14 +18,10 @@ export default function FormDialogProfile({
   errors,
   setErrors
 }) {
-  const [preview, setPreview] = useState(null)
+
   const [totalSize, setTotalSize] = useState(0)
   const toast = useRef(null)
   const fileUploadRef = useRef(null)
-
-  useEffect(() => {
-    if (form.FOTOPROFIL) setPreview(form.FOTOPROFIL)
-  }, [form.FOTOPROFIL])
 
   const validate = () => {
     const newErrors = {}
@@ -85,7 +81,6 @@ export default function FormDialogProfile({
     )
   }
 
-
   const itemTemplate = (file, props) => {
     return (
       <div className="flex align-items-center flex-wrap">
@@ -129,23 +124,6 @@ export default function FormDialogProfile({
   return (
     <Dialog header="Edit Profil" visible={visible} onHide={onHide} style={{ width: '30vw' }}>
       <Toast ref={toast} />
-
-      <div className="flex flex-col items-center space-y-4 mb-4">
-        <div className="relative">
-          {preview ? (
-            <img
-              src={preview}
-              alt="Preview"
-              style={{ maxWidth: '120px', maxHeight: '120px', objectFit: 'cover', borderRadius: '50%' }}
-              className="w-24 h-24 rounded-full object-cover border shadow"
-            />
-          ) : (
-            <div className="w-32 h-32 flex items-center justify-center rounded-full bg-gray-100 border border-gray-300 shadow-inner">
-              <i className="pi pi-user text-4xl text-gray-500"></i>
-            </div>
-          )}
-        </div>
-      </div>
 
       <FileUpload
         ref={fileUploadRef}
