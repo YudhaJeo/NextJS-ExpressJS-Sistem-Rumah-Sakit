@@ -179,57 +179,64 @@ function DisplayAntrian() {
   };
 
   const printStruk = async (nomorBaru, loketName) => {
-    try {
-      if (!window.qz) throw new Error("QZ Tray belum tersedia");
+  try {
+    if (!window.qz) throw new Error("QZ Tray belum tersedia");
 
+    if (!window.qz.websocket.isActive()) {
       await window.qz.websocket.connect();
-      const config = window.qz.configs.create("POS-58");
-
-      const now = new Date();
-      const jam = now
-        .toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false })
-        .replace(/\./g, ':');
-      const tanggal = now.toLocaleDateString('id-ID', {
-        weekday: 'long',
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      });
-
-      const data = [
-        '\x1B\x40',
-        '\x1B\x61\x01',
-
-        '\x1B\x21\x08',
-        '*** STRUK RUMAH SAKIT ***\n',
-        '--------------------------\n',
-
-        '\x1B\x21\x18',
-        'NOMOR ANTRIAN ANDA\n',
-
-        '\x1B\x21\x30',
-        `${nomorBaru.toString().toUpperCase()}\n`,
-        '----------------\n',
-
-        '\x1B\x21\x00',
-        '\x1B\x61\x00',
-        `LOKET  : ${loketName}\n`,
-        `TANGGAL: ${tanggal}\n`,
-        `JAM    : ${jam}\n`,
-
-        '\x1B\x61\x01',
-        '--------------------------\n',
-
-        'Harap tunggu panggilan\n\n\n',
-        '\x1D\x56\x01'
-      ];
-
-      await window.qz.print(config, data);
-      await window.qz.websocket.disconnect();
-    } catch (err) {
-      console.error("Gagal print:", err);
     }
-  };
+
+    const config = window.qz.configs.create("POS-58(copy of 3)");
+
+    const now = new Date();
+    const jam = now
+      .toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(/\./g, ":");
+    const tanggal = now.toLocaleDateString("id-ID", {
+      weekday: "long",
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+
+    const data = [
+      "\x1B\x40",
+      "\x1B\x61\x01",
+
+      "\x1B\x21\x08",
+      "*** BAYZA MEDIKA ***\n",
+      "--------------------------\n",
+
+      "\x1B\x21\x18",
+      "NOMOR ANTRIAN ANDA\n",
+
+      "\x1B\x21\x30",
+      `${nomorBaru.toString().toUpperCase()}\n`,
+      "----------------\n",
+
+      "\x1B\x21\x00",
+      "\x1B\x61\x00",
+      `LOKET  : ${loketName}\n`,
+      `TANGGAL: ${tanggal}\n`,
+      `JAM    : ${jam}\n`,
+
+      "\x1B\x61\x01",
+      "--------------------------\n",
+
+      "Harap tunggu panggilan\n\n\n",
+      "\x1D\x56\x01",
+    ];
+
+    await window.qz.print(config, data);
+
+  } catch (err) {
+    console.error("Gagal print:", err);
+  }
+};
 
   const handleAmbilTiket = async (loketName) => {
     try {
@@ -381,8 +388,7 @@ function DisplayAntrian() {
           />
           <h2 className="text-lg font-semibold text-black m-0">{profile_rs.NAMARS}</h2>
         </div>
-
-        {/* Tambahkan PrinterSelector di sini */}
+        
         <PrinterSelector />
 
         {hydrated && (

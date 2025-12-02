@@ -222,20 +222,7 @@ function DisplayAntrianPoli() {
         throw new Error("WebSocket tidak tersedia");
       }
 
-      await Promise.race([
-        window.qz.websocket.connect(),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Koneksi WebSocket timeout')), 5000)
-        )
-      ]);
-
-      const config = window.qz.configs?.create 
-        ? window.qz.configs.create("POS-58")
-        : null;
-
-      if (!config) {
-        throw new Error("Konfigurasi printer tidak dapat dibuat");
-      }
+   const config = window.qz.configs.create("POS-58(copy of 3)");
 
       const now = new Date();
       const jam = now
@@ -253,7 +240,7 @@ function DisplayAntrianPoli() {
         '\x1B\x61\x01',
 
         '\x1B\x21\x08',
-        '*** STRUK RUMAH SAKIT ***\n',
+        '*** BAYZA MEDIKA ***\n',
         '--------------------------\n',
 
         '\x1B\x21\x18',
@@ -276,35 +263,12 @@ function DisplayAntrianPoli() {
         '\x1D\x56\x01'
       ];
 
-      if (!window.qz.print) {
-        throw new Error("Metode print tidak tersedia");
-      }
-
       await window.qz.print(config, data);
       
-      try {
-        await window.qz.websocket.disconnect();
-      } catch (disconnectError) {
-        console.log('Gagal disconnect websocket:', disconnectError);
-      }
-    } catch (err) {
-      console.error("Gagal print:", err);
-      
-      const printErrorMessages = [
-        'Cannot read properties of null (reading \'sendData\')',
-        'Connection attempt cancelled by user',
-        'WebSocket is closed before the connection is established'
-      ];
-
-      const isPrintError = printErrorMessages.some(msg => 
-        err.message.includes(msg)
-      );
-
-      if (isPrintError) {
-        console.log('Error pencetakan dapat diabaikan');
-      }
-    }
-  };
+  } catch (err) {
+    console.error("Gagal print:", err);
+  }
+};
 
   const handleAmbilTiket = async (poliName) => {
     try {
@@ -471,7 +435,6 @@ function DisplayAntrianPoli() {
           <h2 className="text-lg font-semibold text-black m-0">{profile_rs.NAMARS}</h2>
         </div>
 
-        {/* Tambahkan PrinterSelector di sini */}
         <PrinterSelector />
 
         {hydrated && (
